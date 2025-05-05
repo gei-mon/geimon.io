@@ -1,15 +1,58 @@
 game-title {
     font-family: 'Racing Sans One';
     font-style: 'bold';
+    font-size:  160%;
     color: white;
   }
 
 h1 {
-    font-family: 'Arial';
+    font-family: 'Verdana';
     color: white;
   }
 
 h2 {
-    font-family: 'Arial';
+    font-family: 'Verdana';
     color: white;
+    font-size:  100%;
   }
+
+a:link {
+color: white;
+background-color: transparent;
+text-decoration: none;
+}
+
+a:visited {
+color: pink;
+background-color: transparent;
+text-decoration: none;
+}
+
+a:hover {
+color: blue;
+background-color: transparent;
+text-decoration: underline;
+}
+
+a:active {
+color: pink;
+background-color: transparent;
+text-decoration: underline;
+}
+
+b:link, b:visited {
+  background-color: pink;
+  color: black;
+  padding: 14px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+b:hover {
+  background-color: rgb(177, 177, 234);
+}
+
+b:active {
+  background-color: purple;
+}
