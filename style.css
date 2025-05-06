@@ -16,16 +16,21 @@ h2 {
     font-size:  100%;
   }
 
+h3 {
+    font-family: 'Verdana';
+    color: white;
+    font-size:  80%;
+  }
+
 a:link {
 color: white;
 background-color: transparent;
 text-decoration: none;
 }
 
-a:visited {
+a:visited, a:active {
 color: pink;
 background-color: transparent;
-text-decoration: none;
 }
 
 a:hover {
@@ -34,25 +39,27 @@ background-color: transparent;
 text-decoration: underline;
 }
 
-a:active {
-color: pink;
-background-color: transparent;
-text-decoration: underline;
-}
-
-b:link, b:visited {
-  background-color: pink;
+.button, .button:link, .button:visited {
+  border: 5px solid white;
+  background-color: rgb(255, 150, 150);
   color: black;
-  padding: 14px 25px;
+  padding: 15px 32px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
+  font-family: 'Arial';
+  font-size: 48px;
+  margin: 4px 2px;
+  cursor: pointer;
+  table-layout: fixed;
+  border-collapse: collapse;
+  width: 30%;
 }
 
-b:hover {
+.button:hover {
   background-color: rgb(177, 177, 234);
 }
 
-b:active {
+.button:active {
   background-color: purple;
 }
