@@ -88,3 +88,28 @@ text-decoration: underline;
 .buttonSmall:active {
   background-color: purple;
 }
+
+.buttonEvenSmaller, .buttonEvenSmaller:link, .buttonEvenSmaller:visited {
+  border: 5px solid white;
+  background-color: rgb(255, 150, 150);
+  color: black;
+  padding: 10px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-family: 'Arial';
+  font-size: 14px;
+  margin: 4px 2px;
+  cursor: pointer;
+  table-layout: fixed;
+  border-collapse: collapse;
+  width: 6%;
+}
+
+.buttonEvenSmaller:hover {
+  background-color: rgb(177, 177, 234);
+}
+
+.buttonEvenSmaller:active {
+  background-color: purple;
+}
