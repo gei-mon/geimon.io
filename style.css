@@ -63,3 +63,28 @@ text-decoration: underline;
 .button:active {
   background-color: purple;
 }
+
+.buttonSmall, .buttonSmall:link, .buttonSmall:visited {
+  border: 5px solid white;
+  background-color: rgb(255, 150, 150);
+  color: black;
+  padding: 15px 15px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-family: 'Arial';
+  font-size: 24px;
+  margin: 4px 2px;
+  cursor: pointer;
+  table-layout: fixed;
+  border-collapse: collapse;
+  width: 10%;
+}
+
+.buttonSmall:hover {
+  background-color: rgb(177, 177, 234);
+}
+
+.buttonSmall:active {
+  background-color: purple;
+}

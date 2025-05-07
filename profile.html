@@ -15,7 +15,19 @@
             <p style="font-size: 200%""><game-title>Geimon!</game-title></p>
             <h2>Profile Page</h2>
         </div>
-        <button class="button button" onclick="location.href='index.html'">Home</button>
+        <button class="button buttonSmall" onclick="location.href='index.html'">Home</button>
+        <br><br><br>
+        <form action="/login" method="post">
+            <div class="container">
+            <h2><label for="username">Username:&nbsp;</label>&nbsp;<input type="text" id="username" name="username" required><br><br></h2>
+            <h2><label for="password">Password:&nbsp;</label>&nbsp;<input type="password" id="password" name="password" required><br><br></h2>
+            <label>
+                <h2>Remember me &nbsp;<input type="checkbox" checked="checked" name="remember"> </h2>
+            </label>
+            <br>
+            <input type="submit" value="Login">
+            </div>
+          </form>
     </body>
 </body>
 </html>
