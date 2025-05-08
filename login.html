@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Racing Sans One' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+    <title>LOGIN PAGE</title>
+</head>
+<body style="background-color:rgb(0, 0, 0);">
+        <p style="font-size: 200%""><game-title>Geimon!</game-title></p>
+        <h1>Login!</h1>
+        <br>
+  <input type="text" style="font-size: 20px;" id="username" placeholder="Username" required><br><br>
+  <input type="password" style="font-size: 20px;" id="password" placeholder="Password" required><br><br>
+  <button class="button buttonSmall" onclick="login()">Login</button>
+  <script>
+function login() {
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+
+  fetch('http://localhost:3000/login', {
+    method: 'POST',
+    credentials: 'include', // Include cookies for session management
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
+  })
+  .then(res => {
+    console.log("Response received:", res); // Log response
+    if (!res.ok) {
+      console.error("Failed to login: ", res);
+      throw new Error('Login failed');
+    }
+    return res.json(); // Return the JSON response
+  })
+  .then(data => {
+    console.log("Login successful:", data); // Log the data
+    document.getElementById('status').textContent = data.message;
+    status.style.color = 'white';
+
+    if (data.message === 'Login successful') {
+      alert("Login Successful!");
+      window.location.href = 'index.html';
+    }
+  })
+  .catch(err => {
+    const status = document.getElementById('status');
+    status.textContent = 'Error logging in.';
+    status.style.color = 'red';
+  });
+}
+
+    function checkLogin() {
+    fetch('http://localhost:3000/me', {
+        method: 'GET',
+        credentials: 'include'
+    })
+    .then(res => res.json())
+    .then(data => {
+        const status = document.getElementById('status');
+        if (data.loggedIn) {
+        status.textContent = `Logged in as ${data.username}`;
+        status.style.color = 'green';
+        } else {
+        status.textContent = 'Not logged in';
+        status.style.color = 'red';
+        }
+    })
+    .catch(err => {
+        const status = document.getElementById('status');
+        status.textContent = 'Error checking login status';
+        status.style.color = 'red';
+    });
+    }
+    window.onload = checkLogin;
+  </script>
+    <br><br>
+    <button class="button buttonEvenSmaller" onclick="location.href='register.html'">New User?</button>
+    &nbsp;
+    <button class="button buttonEvenSmaller" onclick="location.href='index.html'">Cancel</button>
+    <br><br>
+</body>
+</html>

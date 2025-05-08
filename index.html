@@ -18,7 +18,35 @@
     &nbsp;&nbsp;
     <button class="button button" onclick="location.href='solo.html'">Solo Game</button>
     <br>
-    <button class="button button" onclick="location.href='profile.html'">User Profile</button>
+    <button class="button button" id="dynamicButton">Loading...</button>
+    <script>
+          function checkLoginStatus() {
+          fetch('http://localhost:3000/me', {
+                method: 'GET',
+                credentials: 'include'
+              })
+              .then(res => {
+                if (!res.ok) throw new Error('Network response was not ok');
+                return res.json();
+              })
+              .then(data => {
+                const button = document.getElementById('dynamicButton');
+                if (data.loggedIn) {
+                  button.textContent = 'User Profile';
+                  button.onclick = () => window.location.href = 'profile.html';
+                } else {
+                  button.textContent = 'Login';
+                  button.onclick = () => window.location.href = 'login.html';
+                }
+              })
+              .catch(err => {
+                  const button = document.getElementById('dynamicButton');
+                  button.textContent = 'Login';
+                  button.onclick = () => window.location.href = 'login.html';
+              });
+            }
+    window.onload = checkLoginStatus;
+    </script>
     &nbsp;&nbsp;
     <button class="button button" onclick="location.href='single.html'">Single Game</button>
     <br>
