@@ -89,8 +89,25 @@
             });
         };
         </script>
-
     <script>
+        window.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
+            credentials: 'include'
+            });
+            const data = await res.json();
+
+            if (res.ok && data.loggedIn) {
+            const img = document.getElementById('profilePic');
+            img.src = data.profilePic || 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/default-image.png';
+            }
+        } catch (err) {
+            console.error('Failed to load profile picture:', err);
+        }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
         document.getElementById('upload-form').addEventListener('submit', async function (e) {
         e.preventDefault();
         const form = new FormData();
@@ -123,23 +140,7 @@
             console.error(err);
         }
         });
-    </script>
-    <script>
-        window.addEventListener('DOMContentLoaded', async () => {
-        try {
-            const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
-            credentials: 'include'
-            });
-            const data = await res.json();
-
-            if (res.ok && data.loggedIn) {
-            const img = document.getElementById('profilePic');
-            img.src = data.profilePic || '/Public/Images/Uploads/default.jpg';
-            }
-        } catch (err) {
-            console.error('Failed to load profile picture:', err);
-        }
-        });
+    }
     </script>
     <br>
     <button class="button" onclick="location.href='index.html'">Return to Home</button>
