@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="style.css">
     <title>MAIN PAGE</title>
     <body style="background-color:rgb(0, 0, 0);">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
     <div class="container">
@@ -26,53 +27,57 @@
     &nbsp;&nbsp;
     <button class="button button" onclick="location.href='match.html'" id="matchButton" style="display: none;">Match Game</button>
 <script>
-  window.onload = function checkLoginStatus() {
-    fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
-      method: 'GET',
-      credentials: 'include'
-    })
-    .then(res => {
-      if (!res.ok) throw new Error('Not logged in');
-      return res.json();
-    })
-    .then(data => {
-      const button = document.getElementById('dynamicButton');
-      const logoutBtn = document.getElementById('logoutButton'); // Get the logout button
-      const deckBtn = document.getElementById('deckButton');
-      const soloBtn = document.getElementById('soloButton');
-      const singleBtn = document.getElementById('singleButton');
-      const matchBtn = document.getElementById('matchButton');
+        // Initialize Supabase client
+        const supabaseUrl = 'https://your-project-id.supabase.co';  // Replace with your Supabase URL
+        const supabaseKey = 'your-anon-key';  // Replace with your Supabase public anon key
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-      if (data.loggedIn) {
-        button.textContent = 'User Profile';
-        button.onclick = () => window.location.href = 'profile.html';
+        // Check login status using Supabase session
+        window.onload = async function checkLoginStatus() {
+            const user = supabase.auth.user(); // Check if user is logged in using Supabase's auth.user()
 
-        // Show logout button and hide about button
-        logoutBtn.style.display = 'inline-block';  // Show the logout button
-        soloBtn.style.display = 'inline-block';
-        singleBtn.style.display = 'inline-block';
-        deckBtn.style.display = 'inline-block';
-        matchBtn.style.display = 'inline-block';
-        logoutBtn.onclick = () => {
-          fetch('https://geimon-app-833627ba44e0.herokuapp.com/logout', {
-            method: 'GET',
-            credentials: 'include'
-          }).then(() => location.reload());
+            const button = document.getElementById('dynamicButton');
+            const logoutBtn = document.getElementById('logoutButton'); // Get the logout button
+            const deckBtn = document.getElementById('deckButton');
+            const soloBtn = document.getElementById('soloButton');
+            const singleBtn = document.getElementById('singleButton');
+            const matchBtn = document.getElementById('matchButton');
+
+            if (user) {  // If the user is logged in
+                button.textContent = 'User Profile';
+                button.onclick = () => window.location.href = 'profile.html';
+
+                // Show logout button and hide other buttons
+                logoutBtn.style.display = 'inline-block';
+                soloBtn.style.display = 'inline-block';
+                singleBtn.style.display = 'inline-block';
+                deckBtn.style.display = 'inline-block';
+                matchBtn.style.display = 'inline-block';
+
+                // Logout functionality
+                logoutBtn.onclick = async () => {
+                    await supabase.auth.signOut();  // Log the user out using Supabase's signOut method
+                    location.reload();  // Reload the page to reflect changes
+                };
+            } else {  // If the user is not logged in
+                button.textContent = 'Login';
+                button.onclick = () => window.location.href = 'login.html';
+
+                // Hide logout and game buttons if not logged in
+                logoutBtn.style.display = 'none';
+            }
         };
-      } else {
-        button.textContent = 'Login';
-        button.onclick = () => window.location.href = 'login.html';
 
-        // Hide the logout button if not logged in
-        logoutBtn.style.display = 'none';
-      }
-    })
-    .catch(err => {
-      const button = document.getElementById('dynamicButton');
-      button.textContent = 'Login';
-      button.onclick = () => window.location.href = 'login.html';
-    });
-  };
-</script>
+        // Handle dynamic button click based on login status
+        const button = document.getElementById('dynamicButton');
+        button.onclick = async function() {
+            const user = supabase.auth.user(); // Get the logged-in user
+            if (user) {
+                window.location.href = 'profile.html'; // Redirect to profile page if logged in
+            } else {
+                window.location.href = 'login.html'; // Otherwise redirect to login page
+            }
+        };
+    </script>
 </body>
 </html>
