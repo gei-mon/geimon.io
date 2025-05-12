@@ -34,8 +34,7 @@
 
         // Check login status using Supabase session
         document.addEventListener('DOMContentLoaded', async function() {
-            const user = supabase.auth.user(); // Check if user is logged in using Supabase's auth.user()
-            alert(user);
+            const { data: { user } } = await supabase.auth.getUser(); // Check if user is logged in using Supabase's auth.user()
 
             const button = document.getElementById('dynamicButton');
             const logoutBtn = document.getElementById('logoutButton'); // Get the logout button
@@ -70,7 +69,6 @@
         });
 
         // Handle dynamic button click based on login status
-        const button = document.getElementById('dynamicButton');
         button.onclick = async function() {
             const user = supabase.auth.user(); // Get the logged-in user
             if (user) {
