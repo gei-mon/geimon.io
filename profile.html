@@ -64,85 +64,99 @@
     </form>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@1.35.6/dist/supabase.js"></script>
     <script>
-        // Assuming the user data (name) is being sent by the server
+        // Initialize Supabase client
+        const supabaseUrl = 'https://hptpfajsevuezirmdmrp.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwdHBmYWpzZXZ1ZXppcm1kbXJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcwNzY4MzQsImV4cCI6MjA2MjY1MjgzNH0.iyytlalrzZ3YGAZbf9i5TZnPaDlh-XiP0RWJKdLCKC4'; // You should use your public anon key here
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
         window.onload = function() {
-            fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
-                method: 'GET',
-                credentials: 'include'
-            })
-            .then(res => {
-                if (!res.ok) throw new Error('Network response was not ok');
-                return res.json();
-            })
-            .then(data => {
-                if (data.loggedIn) {
-                    // Display the username
-                    document.getElementById('username').textContent = `Welcome, ${data.username}!`;
-                } else {
-                    // If the user is not logged in, redirect to the login page
-                    window.location.href = 'login.html';
-                }
-            })
-            .catch(err => {
-                console.error('Error fetching user profile:', err);
-                window.location.href = 'login.html'; // Redirect to login if there's an error
-            });
+            // Fetch user data from Supabase
+            fetchUserProfile();
         };
-        </script>
-    <script>
-        window.addEventListener('DOMContentLoaded', async () => {
-        try {
-            const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
-            credentials: 'include'
-            });
-            const data = await res.json();
 
-            if (res.ok && data.loggedIn) {
-            const img = document.getElementById('profilePic');
-            img.src = 'https://geimon-app-833627ba44e0.herokuapp.com' + (data.profilePic || '/Images/Profile Pictures/default-image.png');
-            }
-        } catch (err) {
-            console.error('Failed to load profile picture:', err);
-        }
-        });
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-        document.getElementById('upload-form').addEventListener('submit', async function (e) {
-        e.preventDefault();
-        const form = new FormData();
-        const fileInput = document.getElementById('profileUploadInput');
+        // Function to fetch the user profile from Supabase
+        async function fetchUserProfile() {
+            const user = supabase.auth.user();
 
-        if (!fileInput.files.length) return;
+            if (user) {
+                // Display the username
+                document.getElementById('username').textContent = `Welcome, ${user.email}!`;
 
-        form.append('profilePic', fileInput.files[0]);
+                // Fetch profile picture URL from the user's metadata (if exists)
+                const { data, error } = await supabase
+                    .from('users')
+                    .select('profile_pic')
+                    .eq('id', user.id)
+                    .single();
 
-        try {
-            const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/upload-profile-picture', {
-            method: 'POST',
-            body: form,
-            credentials: 'include', // send cookies for session
-            });
-
-            const data = await res.json();
-
-            if (res.ok) {
-            document.getElementById('upload-status').textContent = data.message;
-
-            // Update profile image with cache buster
-            const imageEl = document.getElementById('profilePic');
-            imageEl.src = data.filePath + '?t=' + new Date().getTime(); // bust browser cache
-            window.location.reload();
+                if (data && data.profile_pic) {
+                    document.getElementById('profilePic').src = data.profile_pic;
+                }
             } else {
-            document.getElementById('upload-status').textContent = data.message || 'Upload failed';
+                // If user is not logged in, redirect to the login page
+                window.location.href = 'login.html';
             }
-        } catch (err) {
-            document.getElementById('upload-status').textContent = 'An error occurred during upload.';
-            console.error(err);
         }
+
+        // Handle profile picture upload
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('upload-form').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const form = new FormData();
+                const fileInput = document.getElementById('profileUploadInput');
+
+                if (!fileInput.files.length) return;
+
+                form.append('profilePic', fileInput.files[0]);
+
+                try {
+                    const user = supabase.auth.user();
+                    if (!user) {
+                        alert('You must be logged in to upload a profile picture.');
+                        return;
+                    }
+
+                    // Upload the profile picture to Supabase Storage
+                    const { data: fileData, error: uploadError } = await supabase.storage
+                        .from('profile-pictures')
+                        .upload(`public/${user.id}/profilePic.png`, fileInput.files[0]);
+
+                    if (uploadError) {
+                        throw new Error(uploadError.message);
+                    }
+
+                    // Get the public URL of the uploaded file
+                    const { publicURL, error: urlError } = supabase.storage
+                        .from('profile-pictures')
+                        .getPublicUrl(fileData.path);
+
+                    if (urlError) {
+                        throw new Error(urlError.message);
+                    }
+
+                    // Update the user's profile with the new image URL
+                    const { error: updateError } = await supabase
+                        .from('users')
+                        .update({ profile_pic: publicURL })
+                        .eq('id', user.id);
+
+                    if (updateError) {
+                        throw new Error(updateError.message);
+                    }
+
+                    document.getElementById('upload-status').textContent = 'Profile picture uploaded successfully!';
+
+                    // Update profile image immediately
+                    document.getElementById('profilePic').src = publicURL;
+                    window.location.reload(); // Refresh to show updated profile picture
+                } catch (err) {
+                    document.getElementById('upload-status').textContent = `Error: ${err.message}`;
+                    console.error('Upload failed:', err);
+                }
+            });
         });
-    });
     </script>
     <br>
     <button class="button" onclick="location.href='index.html'">Return to Home</button>

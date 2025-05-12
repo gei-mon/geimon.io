@@ -18,13 +18,15 @@
   "homepage": "https://github.com/KieranFl12/geimon.io#readme",
   "description": "",
   "dependencies": {
+    "@supabase/supabase-js": "^2.49.4",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "formidable": "^3.5.4",
     "heroku": "^8.7.1",
     "loader": "^2.1.1",
-    "multer": "^1.4.5-lts.2"
+    "multer": "^1.4.5-lts.2",
+    "pg": "^8.16.0"
   },
   "engines": {
     "node": "22.15.0"

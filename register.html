@@ -19,31 +19,61 @@
 
         <pre id="output" style="font-size: 18px; color: white;"></pre>
 
-        <script>
-            function registerUser() {
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.7.0/dist/supabase.js"></script>
 
-            fetch('https://geimon-app-833627ba44e0.herokuapp.com/users', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password }),
-                credentials: 'include'
-            })
-            .then(res => res.json())
-            .then(data => {
-                document.getElementById('output').textContent = JSON.stringify(data, null, 2);
-            })
-            .catch(err => console.error(err));
+        <script>
+            // Initialize Supabase client
+            const supabaseUrl = 'https://hptpfajsevuezirmdmrp.supabase.co';  // Replace with your Supabase URL
+            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwdHBmYWpzZXZ1ZXppcm1kbXJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcwNzY4MzQsImV4cCI6MjA2MjY1MjgzNH0.iyytlalrzZ3YGAZbf9i5TZnPaDlh-XiP0RWJKdLCKC4'; // Replace with your Supabase public anonymous key
+            const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+            async function registerUser() {
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const email = username + '@example.com';
+
+                if (!username || !password) {
+                    document.getElementById('output').textContent = 'Please fill in both fields.';
+                    return;
+                }
+
+                // Call Supabase to sign up the user
+                try {
+                    const { user, error } = await supabase.auth.signUp({
+                        email: username,  // Using username as email here
+                        password: password
+                    });
+
+                    if (error) {
+                        document.getElementById('output').textContent = `Error: ${error.message}`;
+                        return;
+                    }
+
+                    // Optional: Store additional user data in the 'users' table
+                    const { data, error: insertError } = await supabase
+                        .from('users')
+                        .insert([{ id: user.id, username: username, profile_pic: '' }]);
+
+                    if (insertError) {
+                        document.getElementById('output').textContent = `Error storing user data: ${insertError.message}`;
+                        return;
+                    }
+
+                    document.getElementById('output').textContent = `User registered successfully: ${user.email}`;
+
+                } catch (err) {
+                    console.error('Signup failed:', err);
+                    document.getElementById('output').textContent = `Signup failed: ${err.message}`;
+                }
             }
 
             function loadUsers() {
-            fetch('https://geimon-app-833627ba44e0.herokuapp.com/users')
-                .then(res => res.json())
-                .then(data => {
-                document.getElementById('output').textContent = JSON.stringify(data, null, 2);
-                })
-                .catch(err => console.error(err));
+                fetch('https://geimon-app-833627ba44e0.herokuapp.com/users')
+                    .then(res => res.json())
+                    .then(data => {
+                        document.getElementById('output').textContent = JSON.stringify(data, null, 2);
+                    })
+                    .catch(err => console.error(err));
             }
         </script>
                 <br>

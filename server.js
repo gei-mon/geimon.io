@@ -1,37 +1,27 @@
 const express = require('express');
-const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const formidable = require('formidable');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const db = require('./db');
+const { createClient } = require('@supabase/supabase-js');
+
+const SUPABASE_URL = 'https://hptpfajsevuezirmdmrp.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwdHBmYWpzZXZ1ZXppcm1kbXJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcwNzY4MzQsImV4cCI6MjA2MjY1MjgzNH0.iyytlalrzZ3YGAZbf9i5TZnPaDlh-XiP0RWJKdLCKC4';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const app = express();
-const USERS_FILE = 'users.json';
 const PUBLIC_DIR = path.join(__dirname, 'Public');
 const UPLOAD_DIR = path.join(PUBLIC_DIR, 'Images', 'Uploads');
 
 // In-memory storage
-let users = [];
 let sessions = {};
 
 // Ensure upload directory exists
 if (!fs.existsSync(UPLOAD_DIR)) {
   fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-}
-
-// Load users from file
-if (fs.existsSync(USERS_FILE)) {
-  try {
-    users = JSON.parse(fs.readFileSync(USERS_FILE));
-  } catch (err) {
-    console.error('Error reading users file:', err);
-    users = [];
-  }
-}
-
-function saveUsersToFile() {
-  fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
 }
 
 function generateSessionId() {
@@ -70,42 +60,57 @@ app.get('/users', (req, res) => {
 });
 
 // POST /users (Register)
-app.post('/users', (req, res) => {
+app.post('/users', async (req, res) => {
   const { username, password } = req.body;
 
-  if (typeof username === 'string' && typeof password === 'string') {
-    if (users.find(u => u.username === username)) {
-      return res.status(409).json({ message: 'User already exists' });
-    }
+  const { data: existingUser, error: findError } = await supabase
+    .from('users')
+    .select('id')
+    .eq('username', username)
+    .single();
 
-    users.push({ username, password, profilePic: '' });
-    saveUsersToFile();
-    return res.status(200).json({ message: 'User added successfully' });
+  if (existingUser) {
+    return res.status(409).json({ message: 'User already exists' });
   }
 
-  res.status(400).json({ message: 'Invalid input' });
+  const { error: insertError } = await supabase.from('users').insert([
+    { username, password, profile_pic: '' }
+  ]);
+
+  if (insertError) {
+    return res.status(500).json({ message: 'Database error', details: insertError.message });
+  }
+
+  res.status(200).json({ message: 'User added successfully' });
 });
 
 // POST /login
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
   const { username, password } = req.body;
-  const user = users.find(u => u.username === username);
 
-  if (user && user.password === password) {
-    const sessionId = generateSessionId();
-    sessions[sessionId] = user.username;
+  // Retrieve user from database
+  const { data: user, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('username', username)
+    .single();
 
-    res.cookie('session', sessionId, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'None',
-      path: '/',
-    });
-
-    return res.status(200).json({ message: 'Login successful' });
+  if (error || !user || user.password !== password) {
+    return res.status(401).json({ message: 'Invalid credentials' });
   }
 
-  res.status(401).json({ message: 'Invalid credentials' });
+  // Create session
+  const sessionId = generateSessionId();
+  sessions[sessionId] = user.username;
+
+  res.cookie('session', sessionId, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'None',
+    path: '/',
+  });
+
+  res.status(200).json({ message: 'Login successful' });
 });
 
 // GET /logout
@@ -128,15 +133,21 @@ app.get('/logout', (req, res) => {
 });
 
 // GET /me
-app.get('/me', (req, res) => {
+app.get('/me', async (req, res) => {
   const sessionId = req.cookies.session;
   const username = sessions[sessionId];
 
   if (username) {
-    const user = users.find(u => u.username === username);
-    const profilePic = user.profilePic || '/Images/Profile Pictures/default-image.png';
+    const { data: user } = await supabase
+      .from('users')
+      .select('username, profile_pic')
+      .eq('username', username)
+      .single();
 
-    return res.json({ loggedIn: true, username, profilePic });
+    if (user) {
+      const profilePic = user.profile_pic || '/Images/Profile Pictures/default-image.png';
+      return res.json({ loggedIn: true, username: user.username, profilePic });
+    }
   }
 
   res.status(401).json({ loggedIn: false });
@@ -150,7 +161,7 @@ app.post('/upload-profile-picture', (req, res) => {
     multiples: false,
   });
 
-  form.parse(req, (err, fields, files) => {
+  form.parse(req, async (err, fields, files) => {
     if (err || !files.profilePic) {
       return res.status(400).json({ message: 'Upload failed' });
     }
@@ -160,10 +171,14 @@ app.post('/upload-profile-picture', (req, res) => {
     const username = sessions[sessionId];
 
     if (username) {
-      const user = users.find(u => u.username === username);
-      if (user) {
-        user.profilePic = `/Images/Uploads/${uploadedPath}`;
-        saveUsersToFile();
+      // Update user's profile picture in the database
+      const { error } = await supabase
+        .from('users')
+        .update({ profile_pic: `/Images/Uploads/${uploadedPath}` })
+        .eq('username', username);
+
+      if (error) {
+        return res.status(500).json({ message: 'Database error', details: error.message });
       }
 
       return res.status(200).json({

@@ -16,68 +16,80 @@
   <input type="password" style="font-size: 20px;" id="password" placeholder="Password" required><br><br>
   <button class="button buttonSmall" onclick="login()">Login</button>
   <p id="status" style="font-size: 18px; color: white;"></p>
-  <script>
-function login() {
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
+      <script>
+        // Initialize Supabase client
+        const supabaseUrl = 'https://hptpfajsevuezirmdmrp.supabase.co'; // Replace with your Supabase URL
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwdHBmYWpzZXZ1ZXppcm1kbXJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcwNzY4MzQsImV4cCI6MjA2MjY1MjgzNH0.iyytlalrzZ3YGAZbf9i5TZnPaDlh-XiP0RWJKdLCKC4'; // Replace with your Supabase public anonymous key
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-  fetch('https://geimon-app-833627ba44e0.herokuapp.com/login', {
-    method: 'POST',
-    credentials: 'include', // Include cookies for session management
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password })
-  })
-  .then(async res => {
-  const data = await res.json();
-  const status = document.getElementById('status');
+        // Login function with Supabase authentication
+        async function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
 
-  if (!res.ok) {
-    console.error("Login failed:", data.message);
-    status.textContent = `Login failed: ${data.message || 'Unknown error'}`;
-    status.style.color = 'red';
-    return;
-  }
+            // Check if both fields are filled
+            if (!username || !password) {
+                const status = document.getElementById('status');
+                status.textContent = 'Please enter both username and password.';
+                status.style.color = 'red';
+                return;
+            }
 
-  status.textContent = data.message;
-  status.style.color = 'white';
+            try {
+                // Attempt to sign in the user with Supabase
+                const { data, error } = await supabase.auth.signInWithPassword({
+                    email: username,  // Using username as email
+                    password: password
+                });
 
-  if (data.message === 'Login successful') {
-    //alert("Login Successful!");
-    window.location.href = 'index.html';
-  }
-})
-  .catch(err => {
-    const status = document.getElementById('status');
-    status.textContent = 'Error logging in.';
-    status.style.color = 'red';
-    console.error('Error during login:', err);
-  });
-}
+                const status = document.getElementById('status');
 
-    function checkLogin() {
-    fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
-        method: 'GET',
-        credentials: 'include'
-    })
-    .then(res => res.json())
-    .then(data => {
-        const status = document.getElementById('status');
-        if (data.loggedIn) {
-        status.textContent = `Logged in as ${data.username}`;
-        status.style.color = 'green';
-        } else {
-        status.textContent = 'Not logged in';
-        status.style.color = 'red';
+                if (error) {
+                    console.error("Login failed:", error.message);
+                    status.textContent = `Login failed: ${error.message}`;
+                    status.style.color = 'red';
+                    return;
+                }
+
+                status.textContent = 'Login successful';
+                status.style.color = 'white';
+
+                // Redirect to homepage after successful login
+                window.location.href = 'index.html';
+            } catch (err) {
+                const status = document.getElementById('status');
+                status.textContent = 'Error logging in.';
+                status.style.color = 'red';
+                console.error('Error during login:', err);
+            }
         }
-    })
-    .catch(err => {
-    const status = document.getElementById('status');
-    status.textContent = 'Error checking login status: ' + err.message;
-    status.style.color = 'red';
-});
-    }
-    window.onload = checkLogin;
-  </script>
+
+        // Check login status using Supabase
+        async function checkLogin() {
+            try {
+                // Get the current session (user's authentication state)
+                const { data, error } = await supabase.auth.getSession();
+
+                const status = document.getElementById('status');
+                if (error) {
+                    status.textContent = `Error checking login status: ${error.message}`;
+                    status.style.color = 'red';
+                } else if (data.session) {
+                    status.textContent = `Logged in as ${data.session.user.email}`;
+                    status.style.color = 'green';
+                } else {
+                    status.textContent = 'Not logged in';
+                    status.style.color = 'red';
+                }
+            } catch (err) {
+                const status = document.getElementById('status');
+                status.textContent = 'Error checking login status: ' + err.message;
+                status.style.color = 'red';
+            }
+        }
+
+        window.onload = checkLogin;
+    </script>
     <br><br>
     <button class="button buttonEvenSmaller" onclick="location.href='register.html'">New User?</button>
     &nbsp;
