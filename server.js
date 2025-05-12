@@ -67,6 +67,19 @@ const server = http.createServer((req, res) => {
   return;
 }
 
+  if (req.url === '/' && req.method === 'GET') {
+    const indexPath = path.join(PUBLIC_DIR, 'index.html');
+    fs.readFile(indexPath, (err, data) => {
+      if (err) {
+        res.writeHead(500, { 'Content-Type': 'text/plain' });
+        return res.end('Error loading main page');
+      }
+      res.writeHead(200, { 'Content-Type': 'text/html' });
+      return res.end(data);
+    });
+    return;
+  }
+
     if (req.url === '/upload-profile-picture' && req.method === 'POST') {
     const form = new formidable.IncomingForm({
       uploadDir: UPLOAD_DIR,
@@ -233,11 +246,8 @@ else if (req.url === '/me' && req.method === 'GET') {
   }
 }
 
-  // Handle unknown routes
-  else {
-    res.writeHead(404, { 'Content-Type': 'application/json' });
-    return res.end(JSON.stringify({ message: 'Not Found' }));
-  }
+  res.writeHead(404, { 'Content-Type': 'application/json' });
+  return res.end(JSON.stringify({ message: 'Not Found' }));
 });
 
 function saveUsersToFile() {
