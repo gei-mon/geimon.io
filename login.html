@@ -74,7 +74,6 @@ function login() {
     const status = document.getElementById('status');
     status.textContent = 'Error checking login status: ' + err.message;
     status.style.color = 'red';
-    console.error('Login status error:', err);
 });
     }
     window.onload = checkLogin;
