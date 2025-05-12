@@ -9,19 +9,6 @@ const path = require('path');
 let users = [];
 let sessions = {};
 
-if (req.url === '/' && req.method === 'GET') {
-  const indexPath = path.join(__dirname, 'Public', 'index.html');
-  fs.readFile(indexPath, (err, data) => {
-    if (err) {
-      res.writeHead(500, { 'Content-Type': 'text/plain' });
-      return res.end('Error loading main page');
-    }
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.end(data);
-  });
-  return;
-}
-
 const PUBLIC_DIR = path.join(__dirname, 'Public');
 const UPLOAD_DIR = path.join(PUBLIC_DIR, 'Images', 'Uploads');
 
@@ -76,6 +63,19 @@ const server = http.createServer((req, res) => {
       res.writeHead(200, { 'Content-Type': 'image/jpeg' }); // Change Content-Type as needed
       res.end(data);
     }
+  });
+  return;
+}
+
+if (req.url === '/' && req.method === 'GET') {
+  const indexPath = path.join(__dirname, 'Public', 'index.html');
+  fs.readFile(indexPath, (err, data) => {
+    if (err) {
+      res.writeHead(500, { 'Content-Type': 'text/plain' });
+      return res.end('Error loading main page');
+    }
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.end(data);
   });
   return;
 }
