@@ -57,7 +57,8 @@
     <div id="profile-container">
         <img id="profilePic" src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/default-image.png" alt="Profile Picture">
     <form id="upload-form" enctype="multipart/form-data" method="POST" action="https://geimon-app-833627ba44e0.herokuapp.com/upload-profile-picture">
-        <input type="file" name="profilePic" id="profilePic" accept="image/*" required>
+        <input type="file" name="profilePic" id="profileUploadInput" accept="image/*" required>
+        <div id="upload-status" style="color: lightgreen; font-size: 16px; margin-top: 10px;"></div>
         <br>
         <button type="submit" class="btn">Upload Picture</button>
     </form>
@@ -99,7 +100,7 @@
 
             if (res.ok && data.loggedIn) {
             const img = document.getElementById('profilePic');
-            img.src = data.profilePic || 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/default-image.png';
+            img.src = 'https://geimon-app-833627ba44e0.herokuapp.com' + (data.profilePic || '/Images/Profile Pictures/default-image.png');
             }
         } catch (err) {
             console.error('Failed to load profile picture:', err);
@@ -111,7 +112,7 @@
         document.getElementById('upload-form').addEventListener('submit', async function (e) {
         e.preventDefault();
         const form = new FormData();
-        const fileInput = document.getElementById('profilePic');
+        const fileInput = document.getElementById('profileUploadInput');
 
         if (!fileInput.files.length) return;
 

@@ -134,7 +134,7 @@ app.get('/me', (req, res) => {
 
   if (username) {
     const user = users.find(u => u.username === username);
-    const profilePic = user.profilePic || 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/default-image.png';
+    const profilePic = user.profilePic || '/Images/Profile Pictures/default-image.png';
 
     return res.json({ loggedIn: true, username, profilePic });
   }
@@ -162,7 +162,7 @@ app.post('/upload-profile-picture', (req, res) => {
     if (username) {
       const user = users.find(u => u.username === username);
       if (user) {
-        user.profilePic = `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Uploads/${uploadedPath}`;
+        user.profilePic = `/Images/Uploads/${uploadedPath}`;
         saveUsersToFile();
       }
 
