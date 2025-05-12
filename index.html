@@ -35,35 +35,46 @@
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
         document.addEventListener('DOMContentLoaded', async function () {
-            const { data: { session } } = await supabase.auth.getSession();
-            const user = session?.user;
+    const button = document.getElementById('dynamicButton');
+    const logoutBtn = document.getElementById('logoutButton');
+    const deckBtn = document.getElementById('deckButton');
+    const soloBtn = document.getElementById('soloButton');
+    const singleBtn = document.getElementById('singleButton');
+    const matchBtn = document.getElementById('matchButton');
 
-            const button = document.getElementById('dynamicButton');
-            const logoutBtn = document.getElementById('logoutButton');
-            const deckBtn = document.getElementById('deckButton');
-            const soloBtn = document.getElementById('soloButton');
-            const singleBtn = document.getElementById('singleButton');
-            const matchBtn = document.getElementById('matchButton');
-
-            if (user) {
-                button.textContent = 'User Profile';
-                button.onclick = () => window.location.href = 'profile.html';
-
-                logoutBtn.style.display = 'inline-block';
-                soloBtn.style.display = 'inline-block';
-                singleBtn.style.display = 'inline-block';
-                deckBtn.style.display = 'inline-block';
-                matchBtn.style.display = 'inline-block';
-
-                logoutBtn.onclick = async () => {
-                    await supabase.auth.signOut();
-                    location.reload();
-                };
-            } else {
-                button.textContent = 'Login';
-                button.onclick = () => window.location.href = 'login.html';
-            }
+    try {
+        const res = await fetch('/me', {
+            credentials: 'include' // Important: include cookies
         });
+
+        const data = await res.json();
+
+        if (data.loggedIn) {
+            button.textContent = 'User Profile';
+            button.onclick = () => window.location.href = 'profile.html';
+
+            logoutBtn.style.display = 'inline-block';
+            soloBtn.style.display = 'inline-block';
+            singleBtn.style.display = 'inline-block';
+            deckBtn.style.display = 'inline-block';
+            matchBtn.style.display = 'inline-block';
+
+            logoutBtn.onclick = async () => {
+                await fetch('/logout', {
+                    credentials: 'include'
+                });
+                location.reload();
+            };
+        } else {
+            throw new Error('Not logged in');
+        }
+    } catch (err) {
+        console.log('User not logged in:', err);
+        button.textContent = 'Login';
+        button.onclick = () => window.location.href = 'login.html';
+        logoutBtn.style.display = 'none';
+    }
+});
     </script>
 </body>
 </html>
