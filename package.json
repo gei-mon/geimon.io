@@ -1,0 +1,26 @@
+{
+  "name": "geimon.io",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KieranFl12/geimon.io.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/KieranFl12/geimon.io/issues"
+  },
+  "homepage": "https://github.com/KieranFl12/geimon.io#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0",
+    "formidable": "^3.5.4",
+    "multer": "^1.4.5-lts.2"
+  }
+}

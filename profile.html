@@ -7,13 +7,141 @@
     <link href='https://fonts.googleapis.com/css?family=Racing Sans One' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
     <title>LOGIN PAGE</title>
-    <body style="background-color:rgb(0, 0, 0);">
+    <style>
+        .profile-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 10px;
+        }
+        #profile-image {
+            width: 20vw;
+            max-width: 120px;
+            height: auto;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        input[type="file"] {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="file"]:hover {
+            background-color: #45a049;
+        }
+        .btn {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background-color: #007B9A;
+        }
+    </style>
 </head>
-<body>
-    <div class="wrapper">
-        <p style="font-size: 200%""><game-title>Geimon!</game-title></p>
-        <h1>You made it to the profile page without having one! Great!</h1>
-        <br>
+<body style="background-color:rgb(0, 0, 0); color: white; font-family: 'Racing Sans One', sans-serif; font-size:  200%;">
+    <div>
+        <h1>User Profile</h1>
+        <p id="username">Loading...</p> <!-- Placeholder for user's name -->
     </div>
+
+    <div id="profile-container">
+        <img id="profile-image" src="/Public/Images/Profile Pictures/default-image.png" alt="Profile Picture">
+    <form id="upload-form" enctype="multipart/form-data" method="POST" action="http://localhost:3000/upload-profile-picture">
+        <input type="file" name="profilePic" id="profilePic" accept="image/*" required>
+        <br>
+        <button type="submit" class="btn">Upload Picture</button>
+    </form>
+    </div>
+
+    <script>
+        // Assuming the user data (name) is being sent by the server
+        window.onload = function() {
+            fetch('http://localhost:3000/me', {
+                method: 'GET',
+                credentials: 'include'
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Network response was not ok');
+                return res.json();
+            })
+            .then(data => {
+                if (data.loggedIn) {
+                    // Display the username
+                    document.getElementById('username').textContent = `Welcome, ${data.username}!`;
+                } else {
+                    // If the user is not logged in, redirect to the login page
+                    window.location.href = 'login.html';
+                }
+            })
+            .catch(err => {
+                console.error('Error fetching user profile:', err);
+                window.location.href = 'login.html'; // Redirect to login if there's an error
+            });
+        };
+        </script>
+
+    <script>
+        document.getElementById('upload-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const form = new FormData();
+        const fileInput = document.getElementById('profilePic');
+
+        if (!fileInput.files.length) return;
+
+        form.append('profilePic', fileInput.files[0]);
+
+        try {
+            const res = await fetch('http://localhost:3000/upload-profile-picture', {
+            method: 'POST',
+            body: form,
+            credentials: 'include', // send cookies for session
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+            document.getElementById('upload-status').textContent = data.message;
+
+            // Update profile image with cache buster
+            const imageEl = document.getElementById('profile-image');
+            imageEl.src = data.filePath + '?t=' + new Date().getTime(); // bust browser cache
+            } else {
+            document.getElementById('upload-status').textContent = data.message || 'Upload failed';
+            }
+        } catch (err) {
+            document.getElementById('upload-status').textContent = 'An error occurred during upload.';
+            console.error(err);
+        }
+        });
+    </script>
+    <script>
+        window.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const res = await fetch('http://localhost:3000/me', {
+            credentials: 'include'
+            });
+            const data = await res.json();
+
+            if (res.ok && data.loggedIn) {
+            const img = document.getElementById('profile-image');
+            img.src = data.profilePic || '/Public/Images/Uploads/default.jpg';
+            }
+        } catch (err) {
+            console.error('Failed to load profile picture:', err);
+        }
+        });
+    </script>
+    <br>
+    <button class="button" onclick="location.href='index.html'">Return to Home</button>
 </body>
 </html>

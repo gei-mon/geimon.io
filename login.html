@@ -15,6 +15,7 @@
   <input type="text" style="font-size: 20px;" id="username" placeholder="Username" required><br><br>
   <input type="password" style="font-size: 20px;" id="password" placeholder="Password" required><br><br>
   <button class="button buttonSmall" onclick="login()">Login</button>
+  <p id="status" style="font-size: 18px; color: white;"></p>
   <script>
 function login() {
   const username = document.getElementById('username').value;
@@ -26,24 +27,25 @@ function login() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ username, password })
   })
-  .then(res => {
-    console.log("Response received:", res); // Log response
-    if (!res.ok) {
-      console.error("Failed to login: ", res);
-      throw new Error('Login failed');
-    }
-    return res.json(); // Return the JSON response
-  })
-  .then(data => {
-    console.log("Login successful:", data); // Log the data
-    document.getElementById('status').textContent = data.message;
-    status.style.color = 'white';
+  .then(async res => {
+  const data = await res.json();
+  const status = document.getElementById('status');
 
-    if (data.message === 'Login successful') {
-      alert("Login Successful!");
-      window.location.href = 'index.html';
-    }
-  })
+  if (!res.ok) {
+    console.error("Login failed:", data.message);
+    status.textContent = `Login failed: ${data.message || 'Unknown error'}`;
+    status.style.color = 'red';
+    return;
+  }
+
+  status.textContent = data.message;
+  status.style.color = 'white';
+
+  if (data.message === 'Login successful') {
+    //alert("Login Successful!");
+    window.location.href = 'index.html';
+  }
+})
   .catch(err => {
     const status = document.getElementById('status');
     status.textContent = 'Error logging in.';
@@ -68,10 +70,11 @@ function login() {
         }
     })
     .catch(err => {
-        const status = document.getElementById('status');
-        status.textContent = 'Error checking login status';
-        status.style.color = 'red';
-    });
+    const status = document.getElementById('status');
+    status.textContent = 'Error checking login status: ' + err.message;
+    status.style.color = 'red';
+    console.error('Login status error:', err);
+});
     }
     window.onload = checkLogin;
   </script>

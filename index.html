@@ -19,34 +19,38 @@
     <button class="button button" onclick="location.href='solo.html'">Solo Game</button>
     <br>
     <button class="button button" id="dynamicButton">Loading...</button>
-    <script>
-          function checkLoginStatus() {
-          fetch('http://localhost:3000/me', {
-                method: 'GET',
-                credentials: 'include'
-              })
-              .then(res => {
-                if (!res.ok) throw new Error('Network response was not ok');
-                return res.json();
-              })
-              .then(data => {
-                const button = document.getElementById('dynamicButton');
-                if (data.loggedIn) {
-                  button.textContent = 'User Profile';
-                  button.onclick = () => window.location.href = 'profile.html';
-                } else {
-                  button.textContent = 'Login';
-                  button.onclick = () => window.location.href = 'login.html';
-                }
-              })
-              .catch(err => {
-                  const button = document.getElementById('dynamicButton');
-                  button.textContent = 'Login';
-                  button.onclick = () => window.location.href = 'login.html';
-              });
-            }
-    window.onload = checkLoginStatus;
-    </script>
+<script>
+  window.onload = function checkLoginStatus() {
+    fetch('http://localhost:3000/me', {
+      method: 'GET',
+      credentials: 'include'
+    })
+    .then(res => {
+      console.log("Response status:", res.status); // Log response status
+      if (!res.ok) throw new Error('Network response was not ok');
+      return res.json();
+    })
+    .then(data => {
+      console.log("Server response data:", data); // Log the server response data
+      const button = document.getElementById('dynamicButton');
+      if (data.loggedIn) {
+        // If logged in, show 'User Profile' and redirect to profile page on click
+        button.textContent = 'User Profile';
+        button.onclick = () => window.location.href = 'profile.html';
+      } else {
+        // If not logged in, show 'Login' and redirect to login page on click
+        button.textContent = 'Login';
+        button.onclick = () => window.location.href = 'login.html';
+      }
+    })
+    .catch(err => {
+      console.error('Error checking login status:', err); // Log error to console
+      const button = document.getElementById('dynamicButton');
+      button.textContent = 'Login';
+      button.onclick = () => window.location.href = 'login.html';
+    });
+  };
+</script>
     &nbsp;&nbsp;
     <button class="button button" onclick="location.href='single.html'">Single Game</button>
     <br>
