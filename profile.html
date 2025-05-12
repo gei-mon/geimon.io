@@ -67,7 +67,7 @@
     <script>
         window.onload = async function() {
             try {
-                const res = await fetch('/me', {
+                const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
                     credentials: 'include'
                 });
                 const data = await res.json();
