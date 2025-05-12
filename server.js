@@ -32,7 +32,7 @@ if (fs.existsSync(USERS_FILE)) {
 
 
 app.get('/debug-list-files', (req, res) => {
-  const publicPath = path.join(__dirname, 'Public', 'Images');
+  const publicPath = path.join(__dirname, 'Public', 'Images', 'Profile Pictures');
 
   fs.readdir(publicPath, { withFileTypes: true }, (err, files) => {
     if (err) {
