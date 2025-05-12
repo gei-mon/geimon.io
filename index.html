@@ -27,7 +27,7 @@
     <button class="button button" onclick="location.href='match.html'" id="matchButton" style="display: none;">Match Game</button>
 <script>
   window.onload = function checkLoginStatus() {
-    fetch('http://localhost:3000/me', {
+    fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
       method: 'GET',
       credentials: 'include'
     })
@@ -54,7 +54,7 @@
         deckBtn.style.display = 'inline-block';
         matchBtn.style.display = 'inline-block';
         logoutBtn.onclick = () => {
-          fetch('http://localhost:3000/logout', {
+          fetch('https://geimon-app-833627ba44e0.herokuapp.com/logout', {
             method: 'GET',
             credentials: 'include'
           }).then(() => location.reload());
