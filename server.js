@@ -146,7 +146,7 @@ app.get('/me', async (req, res) => {
       .single();
 
     if (user) {
-      const profilePic = user.profile_pic || '/Public/Images/Profile Pictures/default-image.png';
+      const profilePic = user.profile_pic || '/Images/Profile Pictures/default-image.png';
       return res.json({ loggedIn: true, username: user.username, profilePic });
     }
   }
@@ -175,7 +175,7 @@ app.post('/upload-profile-picture', (req, res) => {
       // Update user's profile picture in the database
       const { error } = await supabase
         .from('users')
-        .update({ profile_pic: `/Public/Images/Uploads/${uploadedPath}` })
+        .update({ profile_pic: `/Images/Uploads/${uploadedPath}` })
         .eq('username', username);
 
       if (error) {
