@@ -67,16 +67,6 @@
                 logoutBtn.style.display = 'none';
             }
         });
-
-        // Handle dynamic button click based on login status
-        button.onclick = async function() {
-            const { data: { user } } = await supabase.auth.getUser(); // Get the logged-in user
-            if (user) {
-                window.location.href = 'profile.html'; // Redirect to profile page if logged in
-            } else {
-                window.location.href = 'login.html'; // Otherwise redirect to login page
-            }
-        };
     </script>
 </body>
 </html>
