@@ -67,19 +67,6 @@ const server = http.createServer((req, res) => {
   return;
 }
 
-if (req.url === '/' && req.method === 'GET') {
-  const indexPath = path.join(__dirname, 'index.html');
-  fs.readFile(indexPath, (err, data) => {
-    if (err) {
-      res.writeHead(500, { 'Content-Type': 'text/plain' });
-      return res.end('Error loading main page');
-    }
-    res.writeHead(200, { 'Content-Type': 'text/html' });
-    res.end(data);
-  });
-  return;
-}
-
     if (req.url === '/upload-profile-picture' && req.method === 'POST') {
     const form = new formidable.IncomingForm({
       uploadDir: UPLOAD_DIR,
