@@ -133,6 +133,7 @@
             // Update profile image with cache buster
             const imageEl = document.getElementById('profilePic');
             imageEl.src = data.filePath + '?t=' + new Date().getTime(); // bust browser cache
+            window.location.reload();
             } else {
             document.getElementById('upload-status').textContent = data.message || 'Upload failed';
             }
