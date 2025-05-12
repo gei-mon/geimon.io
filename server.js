@@ -232,6 +232,12 @@ else if (req.url === '/me' && req.method === 'GET') {
     return res.end(JSON.stringify({ loggedIn: false }));
   }
 }
+
+  // Handle unknown routes
+  else {
+    res.writeHead(404, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ message: 'Not Found' }));
+  }
 });
 
 function saveUsersToFile() {
