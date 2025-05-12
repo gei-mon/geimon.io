@@ -36,7 +36,7 @@ function generateSessionId() {
 const server = http.createServer((req, res) => {
   // Add CORS headers
   //res.setHeader('Access-Control-Allow-Origin', '*');
-  const allowedOrigins = ['http://127.0.0.1:5500', 'http://localhost:5500'];
+  const allowedOrigins = ['http://127.0.0.1:5500', 'http://localhost:5500', 'https://gei-mon.github.io/geimon.io/'];
   const origin = req.headers.origin;
 
   if (allowedOrigins.includes(origin)) {
