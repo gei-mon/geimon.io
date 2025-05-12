@@ -9,82 +9,56 @@
     <title>LOGIN PAGE</title>
 </head>
 <body style="background-color:rgb(0, 0, 0);">
-        <p style="font-size: 200%""><game-title>Geimon!</game-title></p>
-        <h1>Login!</h1>
-        <br>
-  <input type="text" style="font-size: 20px;" id="username" placeholder="Username" required><br><br>
-  <input type="password" style="font-size: 20px;" id="password" placeholder="Password" required><br><br>
-  <button class="button buttonSmall" onclick="login()">Login</button>
-  <p id="status" style="font-size: 18px; color: white;"></p>
-      <script>
-        // Login function with Supabase authentication
+    <p style="font-size: 200%"><game-title>Geimon!</game-title></p>
+    <h1>Login!</h1>
+    <br>
+    <input type="text" style="font-size: 20px;" id="username" placeholder="Username" required><br><br>
+    <input type="password" style="font-size: 20px;" id="password" placeholder="Password" required><br><br>
+    <button class="button buttonSmall" onclick="login()">Login</button>
+    <p id="status" style="font-size: 18px; color: white;"></p>
+
+    <script>
         async function login() {
             const username = document.getElementById('username').value;
             const password = document.getElementById('password').value;
+            const status = document.getElementById('status');
 
-            // Check if both fields are filled
             if (!username || !password) {
-                const status = document.getElementById('status');
                 status.textContent = 'Please enter both username and password.';
                 status.style.color = 'red';
                 return;
             }
 
             try {
-                // Attempt to sign in the user with Supabase
-                const { data, error } = await supabase.auth.signInWithPassword({
-                    email: username,  // Using username as email
-                    password: password
+                const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include', // Needed to save the session cookie
+                    body: JSON.stringify({ username, password })
                 });
 
-                const status = document.getElementById('status');
+                const data = await res.json();
 
-                if (error) {
-                    console.error("Login failed:", error.message);
-                    status.textContent = `Login failed: ${error.message}`;
+                if (!res.ok) {
+                    status.textContent = `Login failed: ${data.message}`;
                     status.style.color = 'red';
                     return;
                 }
 
-                status.textContent = 'Login successful';
-                status.style.color = 'white';
+                status.textContent = 'Login successful!';
+                status.style.color = 'lightgreen';
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
 
-                // Redirect to homepage after successful login
-                window.location.href = 'index.html';
             } catch (err) {
-                const status = document.getElementById('status');
                 status.textContent = 'Error logging in.';
                 status.style.color = 'red';
-                console.error('Error during login:', err);
+                console.error('Login error:', err);
             }
         }
-
-        // Check login status using Supabase
-        async function checkLogin() {
-            try {
-                // Get the current session (user's authentication state)
-                const { data, error } = await supabase.auth.getSession();
-
-                const status = document.getElementById('status');
-                if (error) {
-                    status.textContent = `Error checking login status: ${error.message}`;
-                    status.style.color = 'red';
-                } else if (data.session) {
-                    status.textContent = `Logged in as ${data.session.user.email}`;
-                    status.style.color = 'green';
-                } else {
-                    status.textContent = 'Not logged in';
-                    status.style.color = 'red';
-                }
-            } catch (err) {
-                const status = document.getElementById('status');
-                status.textContent = 'Error checking login status: ' + err.message;
-                status.style.color = 'red';
-            }
-        }
-
-        window.onload = checkLogin;
     </script>
+
     <br><br>
     <button class="button buttonEvenSmaller" onclick="location.href='register.html'">New User?</button>
     &nbsp;

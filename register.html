@@ -30,43 +30,27 @@
                     return;
                 }
 
-                // Call Supabase to sign up the user
                 try {
-                    const { user, error } = await supabase.auth.signUp({
-                        email: username,  // Using username as email here
-                        password: password
+                    const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/users', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ username, password }),
+                        credentials: 'include'
                     });
 
-                    if (error) {
-                        document.getElementById('output').textContent = `Error: ${error.message}`;
-                        return;
+                    const data = await res.json();
+
+                    if (!res.ok) {
+                        document.getElementById('output').textContent = `Error: ${data.message}`;
+                    } else {
+                        document.getElementById('output').textContent = 'User registered successfully! You may now log in.';
                     }
-
-                    // Optional: Store additional user data in the 'users' table
-                    const { data, error: insertError } = await supabase
-                        .from('users')
-                        .insert([{ id: user.id, username: username, profile_pic: '' }]);
-
-                    if (insertError) {
-                        document.getElementById('output').textContent = `Error storing user data: ${insertError.message}`;
-                        return;
-                    }
-
-                    document.getElementById('output').textContent = `User registered successfully: ${user.email}`;
-
                 } catch (err) {
                     console.error('Signup failed:', err);
-                    document.getElementById('output').textContent = `Signup failed: ${err.message}`;
+                    document.getElementById('output').textContent = 'Signup failed. Please try again later.';
                 }
-            }
-
-            function loadUsers() {
-                fetch('https://geimon-app-833627ba44e0.herokuapp.com/users')
-                    .then(res => res.json())
-                    .then(data => {
-                        document.getElementById('output').textContent = JSON.stringify(data, null, 2);
-                    })
-                    .catch(err => console.error(err));
             }
         </script>
                 <br>
