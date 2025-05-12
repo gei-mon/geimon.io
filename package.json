@@ -18,6 +18,7 @@
   "homepage": "https://github.com/KieranFl12/geimon.io#readme",
   "description": "",
   "dependencies": {
+    "cors": "^2.8.5",
     "express": "^5.1.0",
     "formidable": "^3.5.4",
     "heroku": "^8.7.1",

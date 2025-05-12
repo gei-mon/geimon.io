@@ -4,6 +4,7 @@ const fs = require('fs');
 const USERS_FILE = 'users.json';
 const formidable = require('formidable');
 const path = require('path');
+const cors = require('cors');
 
 // Declare variables
 let users = [];
