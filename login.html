@@ -50,6 +50,7 @@ function login() {
     const status = document.getElementById('status');
     status.textContent = 'Error logging in.';
     status.style.color = 'red';
+    console.error('Error during login:', err);
   });
 }
 

@@ -174,31 +174,34 @@ if (req.url === '/users' && req.method === 'GET') {
   // Handle the /login POST method (login a user)
   else if (req.url === '/login' && req.method === 'POST') {
     let body = '';
-    req.on('data', chunk => body += chunk);
-
-    req.on('end', () => {
-      const data = JSON.parse(body);
-      const user = users.find(u => u.username === data.username);
-
-      if (user && user.password === data.password) {
-        const sessionId = generateSessionId();
-        sessions[sessionId] = data.username;
-
-        res.writeHead(200, {
-          'Content-Type': 'application/json',
-          'Set-Cookie': `session=${sessionId}; HttpOnly; Path=/; SameSite=None; Secure`
-        });
-        return res.end(JSON.stringify({ message: 'Login successful' }));
-      } else {
-        res.writeHead(401, { 'Content-Type': 'application/json' });
-        return res.end(JSON.stringify({ message: 'Invalid credentials' }));
-      }
+    req.on('data', chunk => {
+      body += chunk;
     });
 
-    req.on('error', (err) => {
-      console.error('Request error:', err);
-      res.writeHead(500, { 'Content-Type': 'application/json' });
-      return res.end(JSON.stringify({ message: 'Internal Server Error' }));
+      req.on('end', () => {
+      try {
+        const { username, password } = JSON.parse(body);
+        const users = JSON.parse(fs.readFileSync(USERS_FILE));
+
+        const user = users.find(u => u.username === username);
+
+        if (user && user.password === password) {
+          const sessionId = generateSessionId();
+          sessions[sessionId] = user.username;
+
+          // Set session cookie (with HttpOnly, Secure, and SameSite=None)
+          res.setHeader('Set-Cookie', `session=${sessionId}; HttpOnly; Path=/; SameSite=None; Secure`);
+
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ message: 'Login successful' }));
+        } else {
+          res.writeHead(401, { 'Content-Type': 'application/json' });
+          return res.end(JSON.stringify({ message: 'Invalid credentials' }));
+        }
+      } catch (error) {
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        return res.end(JSON.stringify({ message: 'Internal Server Error' }));
+      }
     });
   }
 
