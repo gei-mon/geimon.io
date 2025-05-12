@@ -7,7 +7,6 @@
     <link href='https://fonts.googleapis.com/css?family=Racing Sans One' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
     <title>MAIN PAGE</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body style="background-color:rgb(0, 0, 0);">
     <div class="container">
@@ -30,51 +29,47 @@
     <button class="button button" onclick="location.href='match.html'" id="matchButton" style="display: none;">Match Game</button>
 
     <script>
-        const supabaseUrl = 'https://hptpfajsevuezirmdmrp.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // Shortened for clarity
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
         document.addEventListener('DOMContentLoaded', async function () {
-    const button = document.getElementById('dynamicButton');
-    const logoutBtn = document.getElementById('logoutButton');
-    const deckBtn = document.getElementById('deckButton');
-    const soloBtn = document.getElementById('soloButton');
-    const singleBtn = document.getElementById('singleButton');
-    const matchBtn = document.getElementById('matchButton');
+        const button = document.getElementById('dynamicButton');
+        const logoutBtn = document.getElementById('logoutButton');
+        const deckBtn = document.getElementById('deckButton');
+        const soloBtn = document.getElementById('soloButton');
+        const singleBtn = document.getElementById('singleButton');
+        const matchBtn = document.getElementById('matchButton');
 
-    try {
-        const res = await fetch('/me', {
-            credentials: 'include' // Important: include cookies
-        });
+        try {
+            const res = await fetch('/me', {
+                credentials: 'include' // Important: include cookies
+            });
 
-        const data = await res.json();
+            const data = await res.json();
 
-        if (data.loggedIn) {
-            button.textContent = 'User Profile';
-            button.onclick = () => window.location.href = 'profile.html';
+            if (data.loggedIn) {
+                button.textContent = 'User Profile';
+                button.onclick = () => window.location.href = 'profile.html';
 
-            logoutBtn.style.display = 'inline-block';
-            soloBtn.style.display = 'inline-block';
-            singleBtn.style.display = 'inline-block';
-            deckBtn.style.display = 'inline-block';
-            matchBtn.style.display = 'inline-block';
+                logoutBtn.style.display = 'inline-block';
+                soloBtn.style.display = 'inline-block';
+                singleBtn.style.display = 'inline-block';
+                deckBtn.style.display = 'inline-block';
+                matchBtn.style.display = 'inline-block';
 
-            logoutBtn.onclick = async () => {
-                await fetch('/logout', {
-                    credentials: 'include'
-                });
-                location.reload();
-            };
-        } else {
-            throw new Error('Not logged in');
+                logoutBtn.onclick = async () => {
+                    await fetch('/logout', {
+                        credentials: 'include'
+                    });
+                    location.reload();
+                };
+            } else {
+                throw new Error('Not logged in');
+            }
+        } catch (err) {
+            console.log('User not logged in:', err);
+            button.textContent = 'Login';
+            button.onclick = () => window.location.href = 'login.html';
+            logoutBtn.style.display = 'none';
         }
-    } catch (err) {
-        console.log('User not logged in:', err);
-        button.textContent = 'Login';
-        button.onclick = () => window.location.href = 'login.html';
-        logoutBtn.style.display = 'none';
-    }
-});
+    });
     </script>
 </body>
 </html>

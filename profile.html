@@ -7,7 +7,6 @@
     <link href='https://fonts.googleapis.com/css?family=Racing Sans One' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
     <title>LOGIN PAGE</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <style>
         .profile-container {
             display: flex;
@@ -64,14 +63,7 @@
         <button type="submit" class="btn">Upload Picture</button>
     </form>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@1.35.6/dist/supabase.js"></script>
     <script>
-        // Initialize Supabase client
-        const supabaseUrl = 'https://hptpfajsevuezirmdmrp.supabase.co';
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwdHBmYWpzZXZ1ZXppcm1kbXJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcwNzY4MzQsImV4cCI6MjA2MjY1MjgzNH0.iyytlalrzZ3YGAZbf9i5TZnPaDlh-XiP0RWJKdLCKC4'; // You should use your public anon key here
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
         window.onload = function() {
             // Fetch user data from Supabase
             fetchUserProfile();
@@ -79,8 +71,6 @@
 
         // Function to fetch the user profile from Supabase
         async function fetchUserProfile() {
-            const user = supabase.auth.user();
-
             if (user) {
                 // Display the username
                 document.getElementById('username').textContent = `Welcome, ${user.email}!`;
@@ -113,7 +103,6 @@
                 form.append('profilePic', fileInput.files[0]);
 
                 try {
-                    const user = supabase.auth.user();
                     if (!user) {
                         alert('You must be logged in to upload a profile picture.');
                         return;

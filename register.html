@@ -7,7 +7,6 @@
     <link href='https://fonts.googleapis.com/css?family=Racing Sans One' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
     <title>SIGNUP PAGE</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body style="background-color:rgb(0, 0, 0);">
     <div class="wrapper">
@@ -20,14 +19,7 @@
 
         <pre id="output" style="font-size: 18px; color: white;"></pre>
 
-        <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.7.0/dist/supabase.js"></script>
-
         <script>
-            // Initialize Supabase client
-            const supabaseUrl = 'https://hptpfajsevuezirmdmrp.supabase.co';  // Replace with your Supabase URL
-            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwdHBmYWpzZXZ1ZXppcm1kbXJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcwNzY4MzQsImV4cCI6MjA2MjY1MjgzNH0.iyytlalrzZ3YGAZbf9i5TZnPaDlh-XiP0RWJKdLCKC4'; // Replace with your Supabase public anonymous key
-            const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
             async function registerUser() {
                 const username = document.getElementById('username').value;
                 const password = document.getElementById('password').value;
