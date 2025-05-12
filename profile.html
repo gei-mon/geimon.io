@@ -56,7 +56,7 @@
 
     <div id="profile-container" class="profile-container">
         <img id="profilePic" src="/Images/Profile Pictures/default-image.png" alt="Profile Picture">
-        <form id="upload-form" enctype="multipart/form-data" method="POST" action="https://geimon-app-833627ba44e0.herokuapp.com/upload-profile-picture">
+        <form id="upload-form" enctype="multipart/form-data" method="POST" action="/upload-profile-picture">
             <input type="file" name="profilePic" id="profileUploadInput" accept="image/*" required>
             <div id="upload-status" style="color: lightgreen; font-size: 16px; margin-top: 10px;"></div>
             <br>
@@ -67,7 +67,7 @@
     <script>
         window.onload = async function() {
             try {
-                const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
+                const res = await fetch('/me', {
                     credentials: 'include'
                 });
                 const data = await res.json();
