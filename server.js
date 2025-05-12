@@ -30,6 +30,24 @@ if (fs.existsSync(USERS_FILE)) {
   }
 }
 
+
+app.get('/debug-list-files', (req, res) => {
+  const publicPath = path.join(__dirname, 'Public');
+
+  fs.readdir(publicPath, { withFileTypes: true }, (err, files) => {
+    if (err) {
+      return res.status(500).json({ error: 'Could not read directory', details: err.message });
+    }
+
+    const fileList = files.map(f => ({
+      name: f.name,
+      type: f.isDirectory() ? 'directory' : 'file'
+    }));
+
+    res.json({ path: publicPath, contents: fileList });
+  });
+});
+
 function saveUsersToFile() {
   fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
 }
@@ -134,7 +152,7 @@ app.get('/me', (req, res) => {
 
   if (username) {
     const user = users.find(u => u.username === username);
-    const profilePic = user.profilePic || 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Uploads/default.jpg';
+    const profilePic = user.profilePic || 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/default-image.png';
 
     return res.json({ loggedIn: true, username, profilePic });
   }
