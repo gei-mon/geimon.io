@@ -30,24 +30,6 @@ if (fs.existsSync(USERS_FILE)) {
   }
 }
 
-
-app.get('/debug-list-files', (req, res) => {
-  const publicPath = path.join(__dirname, 'Public', 'Images', 'Profile Pictures');
-
-  fs.readdir(publicPath, { withFileTypes: true }, (err, files) => {
-    if (err) {
-      return res.status(500).json({ error: 'Could not read directory', details: err.message });
-    }
-
-    const fileList = files.map(f => ({
-      name: f.name,
-      type: f.isDirectory() ? 'directory' : 'file'
-    }));
-
-    res.json({ path: publicPath, contents: fileList });
-  });
-});
-
 function saveUsersToFile() {
   fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2));
 }
