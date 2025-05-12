@@ -167,7 +167,7 @@ app.post('/upload-profile-picture', (req, res) => {
       }
 
       return res.status(200).json({
-        message: 'Profile picture uploaded successfully',
+        message: 'Profile Picture Uploaded Successfully',
         filePath: `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Uploads/${uploadedPath}`,
       });
     }
