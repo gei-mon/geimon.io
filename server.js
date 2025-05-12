@@ -55,13 +55,13 @@ app.use(cors({
 }));
 
 // GET /users
-app.get('/users', (req, res) => {
+app.get('https://geimon-app-833627ba44e0.herokuapp.com/users', (req, res) => {
   const usersSafe = users.map(({ username, profilePic }) => ({ username, profilePic }));
   res.json(usersSafe);
 });
 
 // POST /users (Register)
-app.post('/users', async (req, res) => {
+app.post('https://geimon-app-833627ba44e0.herokuapp.com/users', async (req, res) => {
   const { username, password } = req.body;
 
   const { data: existingUser, error: findError } = await supabase
@@ -86,7 +86,7 @@ app.post('/users', async (req, res) => {
 });
 
 // POST /login
-app.post('/login', async (req, res) => {
+app.post('https://geimon-app-833627ba44e0.herokuapp.com/login', async (req, res) => {
   const { username, password } = req.body;
 
   // Retrieve user from database
@@ -115,7 +115,7 @@ app.post('/login', async (req, res) => {
 });
 
 // GET /logout
-app.get('/logout', (req, res) => {
+app.get('https://geimon-app-833627ba44e0.herokuapp.com/logout', (req, res) => {
   const sessionId = req.cookies.session;
   if (sessionId && sessions[sessionId]) {
     delete sessions[sessionId];
@@ -134,7 +134,7 @@ app.get('/logout', (req, res) => {
 });
 
 // GET /me
-app.get('/me', async (req, res) => {
+app.get('https://geimon-app-833627ba44e0.herokuapp.com/me', async (req, res) => {
   const sessionId = req.cookies.session;
   const username = sessions[sessionId];
 
@@ -155,7 +155,7 @@ app.get('/me', async (req, res) => {
 });
 
 // POST /upload-profile-picture
-app.post('/upload-profile-picture', (req, res) => {
+app.post('https://geimon-app-833627ba44e0.herokuapp.com/upload-profile-picture', (req, res) => {
   const form = new formidable.IncomingForm({
     uploadDir: UPLOAD_DIR,
     keepExtensions: true,
