@@ -9,6 +9,43 @@ const path = require('path');
 let users = [];
 let sessions = {};
 
+if (req.method === 'GET' && req.url.startsWith('/Public/')) {
+  const filePath = path.join(__dirname, req.url);
+  fs.readFile(filePath, (err, data) => {
+    if (err) {
+      res.writeHead(404);
+      res.end('File not found');
+    } else {
+      const ext = path.extname(filePath);
+      const contentType = {
+        '.html': 'text/html',
+        '.css': 'text/css',
+        '.js': 'application/javascript',
+        '.jpg': 'image/jpeg',
+        '.jpeg': 'image/jpeg',
+        '.png': 'image/png'
+      }[ext] || 'application/octet-stream';
+
+      res.writeHead(200, { 'Content-Type': contentType });
+      res.end(data);
+    }
+  });
+  return;
+}
+
+if (req.url === '/' && req.method === 'GET') {
+  const indexPath = path.join(__dirname, 'Public', 'index.html');
+  fs.readFile(indexPath, (err, data) => {
+    if (err) {
+      res.writeHead(500, { 'Content-Type': 'text/plain' });
+      return res.end('Error loading main page');
+    }
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    res.end(data);
+  });
+  return;
+}
+
 const PUBLIC_DIR = path.join(__dirname, 'Public');
 const UPLOAD_DIR = path.join(PUBLIC_DIR, 'Images', 'Uploads');
 
@@ -36,7 +73,7 @@ function generateSessionId() {
 const server = http.createServer((req, res) => {
   // Add CORS headers
   //res.setHeader('Access-Control-Allow-Origin', '*');
-  const allowedOrigins = ['http://127.0.0.1:5500', 'http://localhost:5500', 'https://gei-mon.github.io/geimon.io/'];
+  const allowedOrigins = ['http://127.0.0.1:5500', 'http://localhost:5500', 'https://gei-mon.github.io/geimon.io/', 'https://geimon-app-833627ba44e0.herokuapp.com/'];
   const origin = req.headers.origin;
 
   if (allowedOrigins.includes(origin)) {
