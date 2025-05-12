@@ -21,7 +21,7 @@ function login() {
   const username = document.getElementById('username').value;
   const password = document.getElementById('password').value;
 
-  fetch('http://localhost:3000/login', {
+  fetch('https://geimon-app-833627ba44e0.herokuapp.com/login', {
     method: 'POST',
     credentials: 'include', // Include cookies for session management
     headers: { 'Content-Type': 'application/json' },
@@ -54,7 +54,7 @@ function login() {
 }
 
     function checkLogin() {
-    fetch('http://localhost:3000/me', {
+    fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
         method: 'GET',
         credentials: 'include'
     })
