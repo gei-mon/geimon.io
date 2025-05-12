@@ -188,6 +188,27 @@ if (req.url === '/users' && req.method === 'GET') {
     });
   }
 
+  else if (req.url === '/logout' && req.method === 'GET') {
+  const cookieHeader = req.headers.cookie || '';
+  const sessionMatch = cookieHeader.match(/session=([a-f0-9]+)/);
+  const sessionId = sessionMatch ? sessionMatch[1] : null;
+
+  if (sessionId && sessions[sessionId]) {
+    // Delete the session to log the user out
+    delete sessions[sessionId];
+
+    // Set a cookie to expire immediately, effectively clearing it
+    res.writeHead(200, {
+      'Content-Type': 'application/json',
+      'Set-Cookie': 'session=; Expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; Path=/; SameSite=None; Secure'
+    });
+    return res.end(JSON.stringify({ message: 'Logout successful' }));
+  } else {
+    res.writeHead(400, { 'Content-Type': 'application/json' });
+    return res.end(JSON.stringify({ message: 'No session found' }));
+  }
+}
+
   // Handle the /me GET method (check login status)
 else if (req.url === '/me' && req.method === 'GET') {
   const cookieHeader = req.headers.cookie || '';

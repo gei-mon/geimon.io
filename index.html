@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang=""en">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv=""X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://fonts.googleapis.com/css?family=Racing Sans One' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
@@ -14,11 +14,17 @@
         <a href="https://docs.google.com/document/d/1xF4fIeB9r2qQyF3x0cW7tvZFpIDo4apNW4Uhx_H95bo/edit?usp=sharing" target="_blank"><p style="font-size: 260%""><h1>Welcome to <game-title>Geimon!</game-title></a></h1></p>
         <h2>Home Page</h2>
     </div>
-    <button class="button button" onclick="location.href='deck.html'">Deck Editor</button>
+    <button class="button button" onclick="location.href='deck.html'" id="deckButton" style="display: none;">Deck Editor</button>
     &nbsp;&nbsp;
-    <button class="button button" onclick="location.href='solo.html'">Solo Game</button>
+    <button class="button button" onclick="location.href='solo.html'" id="soloButton" style="display: none;">Solo Game</button>
     <br>
     <button class="button button" id="dynamicButton">Loading...</button>
+    &nbsp;&nbsp;
+    <button class="button button" onclick="location.href='single.html'" id="singleButton" style="display: none;">Single Game</button>
+    <br>
+    <button class="button button" id="logoutButton" style="display: none;">Logout</button> <!-- This is where the Logout button will appear -->
+    &nbsp;&nbsp;
+    <button class="button button" onclick="location.href='match.html'" id="matchButton" style="display: none;">Match Game</button>
 <script>
   window.onload = function checkLoginStatus() {
     fetch('http://localhost:3000/me', {
@@ -26,36 +32,47 @@
       credentials: 'include'
     })
     .then(res => {
-      console.log("Response status:", res.status); // Log response status
-      if (!res.ok) throw new Error('Network response was not ok');
+      if (!res.ok) throw new Error('Not logged in');
       return res.json();
     })
     .then(data => {
-      console.log("Server response data:", data); // Log the server response data
       const button = document.getElementById('dynamicButton');
+      const logoutBtn = document.getElementById('logoutButton'); // Get the logout button
+      const deckBtn = document.getElementById('deckButton');
+      const soloBtn = document.getElementById('soloButton');
+      const singleBtn = document.getElementById('singleButton');
+      const matchBtn = document.getElementById('matchButton');
+
       if (data.loggedIn) {
-        // If logged in, show 'User Profile' and redirect to profile page on click
         button.textContent = 'User Profile';
         button.onclick = () => window.location.href = 'profile.html';
+
+        // Show logout button and hide about button
+        logoutBtn.style.display = 'inline-block';  // Show the logout button
+        soloBtn.style.display = 'inline-block';
+        singleBtn.style.display = 'inline-block';
+        deckBtn.style.display = 'inline-block';
+        matchBtn.style.display = 'inline-block';
+        logoutBtn.onclick = () => {
+          fetch('http://localhost:3000/logout', {
+            method: 'GET',
+            credentials: 'include'
+          }).then(() => location.reload());
+        };
       } else {
-        // If not logged in, show 'Login' and redirect to login page on click
         button.textContent = 'Login';
         button.onclick = () => window.location.href = 'login.html';
+
+        // Hide the logout button if not logged in
+        logoutBtn.style.display = 'none';
       }
     })
     .catch(err => {
-      console.error('Error checking login status:', err); // Log error to console
       const button = document.getElementById('dynamicButton');
       button.textContent = 'Login';
       button.onclick = () => window.location.href = 'login.html';
     });
   };
 </script>
-    &nbsp;&nbsp;
-    <button class="button button" onclick="location.href='single.html'">Single Game</button>
-    <br>
-    <button class="button button" onclick="location.href='about.html'">About Us</button>
-    &nbsp;&nbsp;
-    <button class="button button" onclick="location.href='match.html'">Match Game</button>
 </body>
 </html>
