@@ -14,7 +14,7 @@
             gap: 16px;
             padding: 10px;
         }
-        #profile-image {
+        #profilePic {
             width: 20vw;
             max-width: 120px;
             height: auto;
@@ -55,7 +55,7 @@
     </div>
 
     <div id="profile-container">
-        <img id="profile-image" src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/default-image.png" alt="Profile Picture">
+        <img id="profilePic" src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/default-image.png" alt="Profile Picture">
     <form id="upload-form" enctype="multipart/form-data" method="POST" action="https://geimon-app-833627ba44e0.herokuapp.com/upload-profile-picture">
         <input type="file" name="profilePic" id="profilePic" accept="image/*" required>
         <br>
@@ -113,7 +113,7 @@
             document.getElementById('upload-status').textContent = data.message;
 
             // Update profile image with cache buster
-            const imageEl = document.getElementById('profile-image');
+            const imageEl = document.getElementById('profilePic');
             imageEl.src = data.filePath + '?t=' + new Date().getTime(); // bust browser cache
             } else {
             document.getElementById('upload-status').textContent = data.message || 'Upload failed';
@@ -133,7 +133,7 @@
             const data = await res.json();
 
             if (res.ok && data.loggedIn) {
-            const img = document.getElementById('profile-image');
+            const img = document.getElementById('profilePic');
             img.src = data.profilePic || '/Public/Images/Uploads/default.jpg';
             }
         } catch (err) {
