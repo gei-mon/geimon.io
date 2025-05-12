@@ -7,14 +7,16 @@
     <link href='https://fonts.googleapis.com/css?family=Racing Sans One' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
     <title>MAIN PAGE</title>
-    <body style="background-color:rgb(0, 0, 0);">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
-<body>
+<body style="background-color:rgb(0, 0, 0);">
     <div class="container">
-        <a href="https://docs.google.com/document/d/1xF4fIeB9r2qQyF3x0cW7tvZFpIDo4apNW4Uhx_H95bo/edit?usp=sharing" target="_blank"><p style="font-size: 260%""><h1>Welcome to <game-title>Geimon!</game-title></a></h1></p>
+        <a href="https://docs.google.com/document/d/1xF4fIeB9r2qQyF3x0cW7tvZFpIDo4apNW4Uhx_H95bo/edit?usp=sharing" target="_blank">
+            <h1 style="font-size: 260%">Welcome to <game-title>Geimon!</game-title></h1>
+        </a>
         <h2>Home Page</h2>
     </div>
+
     <button class="button button" onclick="location.href='deck.html'" id="deckButton" style="display: none;">Deck Editor</button>
     &nbsp;&nbsp;
     <button class="button button" onclick="location.href='solo.html'" id="soloButton" style="display: none;">Solo Game</button>
@@ -23,48 +25,43 @@
     &nbsp;&nbsp;
     <button class="button button" onclick="location.href='single.html'" id="singleButton" style="display: none;">Single Game</button>
     <br>
-    <button class="button button" id="logoutButton" style="display: none;">Logout</button> <!-- This is where the Logout button will appear -->
+    <button class="button button" id="logoutButton" style="display: none;">Logout</button>
     &nbsp;&nbsp;
     <button class="button button" onclick="location.href='match.html'" id="matchButton" style="display: none;">Match Game</button>
-<script>
-        // Initialize Supabase client
-        const supabaseUrl = 'https://hptpfajsevuezirmdmrp.supabase.co';  // Replace with your Supabase URL
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwdHBmYWpzZXZ1ZXppcm1kbXJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcwNzY4MzQsImV4cCI6MjA2MjY1MjgzNH0.iyytlalrzZ3YGAZbf9i5TZnPaDlh-XiP0RWJKdLCKC4';  // Replace with your Supabase public anon key
+
+    <script>
+        const supabaseUrl = 'https://hptpfajsevuezirmdmrp.supabase.co';
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'; // Shortened for clarity
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        // Check login status using Supabase session
-        document.addEventListener('DOMContentLoaded', async function() {
-            const { data: { user } } = await supabase.auth.getUser(); // Check if user is logged in using Supabase's auth.user()
+        document.addEventListener('DOMContentLoaded', async function () {
+            const { data: { session } } = await supabase.auth.getSession();
+            const user = session?.user;
 
             const button = document.getElementById('dynamicButton');
-            const logoutBtn = document.getElementById('logoutButton'); // Get the logout button
+            const logoutBtn = document.getElementById('logoutButton');
             const deckBtn = document.getElementById('deckButton');
             const soloBtn = document.getElementById('soloButton');
             const singleBtn = document.getElementById('singleButton');
             const matchBtn = document.getElementById('matchButton');
 
-            if (user) {  // If the user is logged in
+            if (user) {
                 button.textContent = 'User Profile';
                 button.onclick = () => window.location.href = 'profile.html';
 
-                // Show logout button and hide other buttons
                 logoutBtn.style.display = 'inline-block';
                 soloBtn.style.display = 'inline-block';
                 singleBtn.style.display = 'inline-block';
                 deckBtn.style.display = 'inline-block';
                 matchBtn.style.display = 'inline-block';
 
-                // Logout functionality
                 logoutBtn.onclick = async () => {
-                    await supabase.auth.signOut();  // Log the user out using Supabase's signOut method
-                    location.reload();  // Reload the page to reflect changes
+                    await supabase.auth.signOut();
+                    location.reload();
                 };
-            } else {  // If the user is not logged in
+            } else {
                 button.textContent = 'Login';
                 button.onclick = () => window.location.href = 'login.html';
-
-                // Hide logout and game buttons if not logged in
-                logoutBtn.style.display = 'none';
             }
         });
     </script>
