@@ -68,7 +68,7 @@ const server = http.createServer((req, res) => {
 }
 
 if (req.url === '/' && req.method === 'GET') {
-  const indexPath = path.join(__dirname, 'Public', 'index.html');
+  const indexPath = path.join(__dirname, 'index.html');
   fs.readFile(indexPath, (err, data) => {
     if (err) {
       res.writeHead(500, { 'Content-Type': 'text/plain' });
