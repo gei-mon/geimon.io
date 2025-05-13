@@ -25,14 +25,27 @@ const PROFILE_DIR = path.join(PUBLIC_DIR, 'Images', 'Profile Pictures');
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
-const imageList = fs.readdirSync(PROFILE_DIR).filter(file => /\.(png|jpg|jpeg)$/i.test(file));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.get('/profile-images', (req, res) => {
-  res.json(imageList); // From earlier: const imageList = [...]
+  const dirPath = path.join(__dirname, 'Public', 'Images', 'Profile Pictures');
+
+  fs.readdir(dirPath, (err, files) => {
+    if (err) {
+      console.error('Error reading profile pictures directory:', err);
+      return res.status(500).json({ error: 'Could not read image directory' });
+    }
+
+    // Only send .png/.jpg/etc. files
+    const imageFiles = files.filter(file =>
+      /\.(png|jpg|jpeg|gif)$/i.test(file)
+    );
+
+    res.json(imageFiles);
+  });
 });
 
 app.post('/select-profile-image', async (req, res) => {
