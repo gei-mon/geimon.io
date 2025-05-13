@@ -7,14 +7,36 @@
     <link href='https://fonts.googleapis.com/css?family=Racing Sans One' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
     <title>MAIN PAGE</title>
+    <style>
+        .header-container {
+            display: flex;
+            align-items: center; /* Vertically center the items */
+            justify-content: space-between;
+        }
+        .profile-pic {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-left: 20px;
+        }
+        h1 {
+            font-size: 260%;
+            margin: 0;
+        }
+        h2 {
+            margin-top: 0;
+        }
+    </style>
 </head>
 <body style="background-color:rgb(0, 0, 0);">
-    <div class="container">
+    <div class="header-container">
         <a href="https://docs.google.com/document/d/1xF4fIeB9r2qQyF3x0cW7tvZFpIDo4apNW4Uhx_H95bo/edit?usp=sharing" target="_blank">
-            <h1 style="font-size: 260%">Welcome to <game-title>Geimon!</game-title></h1>
+            <h1>Welcome to <game-title>Geimon!</game-title></h1>
         </a>
-        <h2>Home Page</h2>
+        <img id="profilePic" class="profile-pic" src="" alt="Profile Picture" style="display: none;">
     </div>
+        <h2>Home Page</h2>
 
     <button class="button button" onclick="location.href='deck.html'" id="deckButton" style="display: none;">Deck Editor</button>
     &nbsp;&nbsp;
@@ -36,6 +58,7 @@
         const soloBtn = document.getElementById('soloButton');
         const singleBtn = document.getElementById('singleButton');
         const matchBtn = document.getElementById('matchButton');
+        const profilePic = document.getElementById('profilePic');
 
         try {
             const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
@@ -60,6 +83,13 @@
                     });
                     location.reload();
                 };
+                if (data.profilePic && data.profilePic !== 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/Sharpshooter-Square.png') {
+                        profilePic.src = data.profilePic;  // Set profile picture URL
+                        profilePic.style.display = 'inline';  // Show profile picture
+                    } else {
+                        // If no profile picture or default, hide it
+                        profilePic.style.display = 'none';
+                    }
             } else {
                 throw new Error('Not logged in');
             }
