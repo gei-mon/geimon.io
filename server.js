@@ -20,6 +20,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const app = express();
 const PUBLIC_DIR = path.join(__dirname, 'Public');
+app.use('/Public', express.static(path.join(__dirname, 'Public')));
 const PROFILE_DIR = path.join(PUBLIC_DIR, 'Images', 'Profile Pictures');
 
 app.set('view engine', 'ejs');

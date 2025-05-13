@@ -42,7 +42,7 @@
       .then(images => {
         images.forEach(img => {
           const imgEl = document.createElement('img');
-          imgEl.src = `/Images/Profile Pictures/${img}`;
+          imgEl.src = `/Public/Images/Profile Pictures/${img}`;
           imgEl.className = 'thumbnail';
           imgEl.onclick = () => {
             document.querySelectorAll('.thumbnail').forEach(el => el.classList.remove('selected'));
