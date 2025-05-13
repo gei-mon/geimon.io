@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const imageList = fs.readdirSync(PROFILE_DIR).filter(file => /\.(png|jpg|jpeg)$/i.test(file));
 
 app.get('/', (req, res) => {
-  res.render('index', { images: imageList });
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 app.get('/profile-images', (req, res) => {
@@ -181,6 +181,11 @@ app.get('/logout', (req, res) => {
 // GET /me
 app.get('/me', async (req, res) => {
   const sessionId = req.cookies.session;
+  console.log('Session ID:', sessionId);  // Log the session ID
+
+  if (!sessionId || !sessions[sessionId]) {
+    return res.status(401).json({ loggedIn: false });
+  }
   const username = sessions[sessionId];
 
   if (username) {
