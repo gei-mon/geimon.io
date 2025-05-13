@@ -7,6 +7,8 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const db = require('./db');
 const { createClient } = require('@supabase/supabase-js');
+const bodyParser = require('body-parser');
+require('dotenv').config();
 
 const SUPABASE_URL = 'https://hptpfajsevuezirmdmrp.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwdHBmYWpzZXZ1ZXppcm1kbXJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcwNzY4MzQsImV4cCI6MjA2MjY1MjgzNH0.iyytlalrzZ3YGAZbf9i5TZnPaDlh-XiP0RWJKdLCKC4';
@@ -15,15 +17,51 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 const app = express();
 const PUBLIC_DIR = path.join(__dirname, 'Public');
-const UPLOAD_DIR = path.join(PUBLIC_DIR, 'Images', 'Uploads');
+const PROFILE_DIR = path.join(PUBLIC_DIR, 'Images', 'Profile Pictures');
+
+app.set('view engine', 'ejs');
+app.use(bodyParser.urlencoded({ extended: true }));
+const imageList = fs.readdirSync(PROFILE_DIR).filter(file => /\.(png|jpg|jpeg)$/i.test(file));
+
+app.get('/', (req, res) => {
+  res.render('index', { images: imageList });
+});
+
+app.get('/profile-images', (req, res) => {
+  res.json(imageList); // From earlier: const imageList = [...]
+});
+
+app.post('/select-profile-image', async (req, res) => {
+  const sessionId = req.cookies.session;
+  const username = sessions[sessionId];
+  const selectedImage = req.body.selectedImage;
+
+  if (!username) {
+    return res.status(401).json({ message: 'Not logged in' });
+  }
+
+  try {
+    const { error } = await supabase
+      .from('users')
+      .update({ profile_pic: selectedImage })
+      .eq('username', username);
+
+    if (error) {
+      throw error;
+    }
+
+    res.status(200).json({ message: 'Profile picture updated successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to update profile picture', error: err.message });
+  }
+});
+
+app.get('/profile', (req, res) => {
+  res.sendFile(path.join(__dirname, '/profile.html'));
+});
 
 // In-memory storage
 let sessions = {};
-
-// Ensure upload directory exists
-if (!fs.existsSync(UPLOAD_DIR)) {
-  fs.mkdirSync(UPLOAD_DIR, { recursive: true });
-}
 
 function generateSessionId() {
   return crypto.randomBytes(16).toString('hex');
@@ -146,50 +184,12 @@ app.get('/me', async (req, res) => {
       .single();
 
     if (user) {
-      const profilePic = user.profile_pic || '/Public/Images/Profile Pictures/default-image.png';
+      const profilePic = user.profile_pic || '/Public/Images/Profile Pictures/Sharpshooter-Square.png';
       return res.json({ loggedIn: true, username: user.username, profilePic });
     }
   }
 
   res.status(401).json({ loggedIn: false });
-});
-
-// POST /upload-profile-picture
-app.post('/upload-profile-picture', (req, res) => {
-  const form = new formidable.IncomingForm({
-    uploadDir: UPLOAD_DIR,
-    keepExtensions: true,
-    multiples: false,
-  });
-
-  form.parse(req, async (err, fields, files) => {
-    if (err || !files.profilePic) {
-      return res.status(400).json({ message: 'Upload failed' });
-    }
-
-    const uploadedPath = path.basename(files.profilePic[0].filepath);
-    const sessionId = req.cookies.session;
-    const username = sessions[sessionId];
-
-    if (username) {
-      // Update user's profile picture in the database
-      const { error } = await supabase
-        .from('users')
-        .update({ profile_pic: `/Public/Images/Uploads/${uploadedPath}` })
-        .eq('username', username);
-
-      if (error) {
-        return res.status(500).json({ message: 'Database error', details: error.message });
-      }
-
-      return res.status(200).json({
-        message: 'Profile Picture Uploaded Successfully',
-        filePath: `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Uploads/${uploadedPath}`,
-      });
-    }
-
-    res.status(401).json({ message: 'User not logged in' });
-  });
 });
 
 // 404 handler
