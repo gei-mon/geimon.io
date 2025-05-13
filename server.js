@@ -183,9 +183,6 @@ app.get('/me', async (req, res) => {
   const sessionId = req.cookies.session;
   console.log('Session ID:', sessionId);  // Log the session ID
 
-  if (!sessionId || !sessions[sessionId]) {
-    return res.status(401).json({ loggedIn: false });
-  }
   const username = sessions[sessionId];
 
   if (username) {
@@ -199,6 +196,8 @@ app.get('/me', async (req, res) => {
       const profilePic = user.profile_pic || '/Public/Images/Profile Pictures/Sharpshooter-Square.png';
       return res.json({ loggedIn: true, username: user.username, profilePic });
     }
+
+  res.status(401).json({ loggedIn: false });
   }
 });
 
