@@ -144,10 +144,6 @@ app.get('/profile-images', (req, res) => {
     const imageFiles = files.filter(file =>
       /\.(png|jpg|jpeg|gif)$/i.test(file)
     );
-    
-    const imageUrls = imageFiles.map(file => {
-      return `${herokuBaseUrl}/Public/Images/Profile Pictures/${file}`;
-    });
 
     res.json(imageFiles);
   });
@@ -161,7 +157,7 @@ app.post('/select-profile-image', async (req, res) => {
   try {
     const { error } = await supabase
       .from('users')
-      .update({ profile_pic: `${herokuBaseUrl}/Public/Images/Profile Pictures/${selectedImage}` })
+      .update({ profile_pic: selectedImage })
       .eq('username', username);
 
     if (error) {
