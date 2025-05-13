@@ -214,7 +214,7 @@ app.get('/me', async (req, res) => {
     console.log('User from Supabase:', user);
 
     if (user) {
-      const profilePic = user.profile_pic || '/Public/Images/Profile Pictures/Sharpshooter-Square.png';
+      const profilePic = user.profile_pic || 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/Sharpshooter-Square.png';
       return res.json({ loggedIn: true, username: user.username, profilePic });
     }
 
