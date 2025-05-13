@@ -75,33 +75,44 @@
         });
     </script>
 
-    <script>
-        window.onload = async function() {
-            try {
-                const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
-                    credentials: 'include'
-                });
-                const data = await res.json();
+<script>
+    window.onload = async function() {
+        try {
+            // Send request to check login status, include cookies for authentication
+            const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
+                credentials: 'include', // Ensures cookies are sent with the request
+            });
 
-                if (!data.loggedIn) {
-                    window.location.href = 'login.html';
-                    return;
-                }
-
-                document.getElementById('username').textContent = `Welcome, ${data.username}!`;
-
-                if (data.profilePic && data.profilePic !== '/Public/Images/Profile Pictures/Sharpshooter-Square.png') {
-                    document.getElementById('profilePic').src = data.profilePic; // Update the src of profile picture
-                } else {
-                    // Optional: Set to default if there's no profile picture
-                    document.getElementById('profilePic').src = '/Public/Images/Profile Pictures/Sharpshooter-Square.png';
-                }
-            } catch (err) {
-                console.error('Failed to load user profile:', err);
-                window.location.href = 'login.html';
+            // Check if the response is successful
+            if (!res.ok) {
+                throw new Error('Server responded with an error');
             }
-        };
-    </script>
+
+            const data = await res.json();
+
+            // Check if the user is logged in by examining the 'loggedIn' property in the response
+            if (!data.loggedIn) {
+                console.log('User is not logged in, redirecting to login page');
+                window.location.href = 'login.html';  // Redirect if not logged in
+                return;
+            }
+
+            // If logged in, display the username
+            document.getElementById('username').textContent = `Welcome, ${data.username}!`;
+
+            // Check if the profile picture exists and is not the default image
+            if (data.profilePic && data.profilePic !== '/Public/Images/Profile Pictures/Sharpshooter-Square.png') {
+                document.getElementById('profilePic').src = data.profilePic; // Update the src of profile picture
+            } else {
+                // Set a default profile picture if none is provided
+                document.getElementById('profilePic').src = '/Public/Images/Profile Pictures/Sharpshooter-Square.png';
+            }
+        } catch (err) {
+            console.error('Failed to load user profile:', err);
+            window.location.href = 'login.html';  // Redirect to login if there was an error
+        }
+    };
+</script>
 
     <br>
     <button class="button" onclick="location.href='index.html'">Return to Home</button>
