@@ -42,6 +42,8 @@ app.use(cors({
   credentials: true,
 }));
 
+const herokuBaseUrl = process.env.HEROKU_BASE_URL || 'https://geimon-app-833627ba44e0.herokuapp.com';
+
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -62,34 +64,13 @@ app.get('/profile-images', (req, res) => {
     const imageFiles = files.filter(file =>
       /\.(png|jpg|jpeg|gif)$/i.test(file)
     );
+    
+    const imageUrls = imageFiles.map(file => {
+      return `${herokuBaseUrl}/Public/Images/Profile Pictures/${file}`;
+    });
 
     res.json(imageFiles);
   });
-});
-
-app.post('/select-profile-image', async (req, res) => {
-  const sessionId = req.cookies.session;
-  const username = sessions[sessionId];
-  const selectedImage = req.body.selectedImage;
-
-  if (!username) {
-    return res.status(401).json({ message: 'Not logged in' });
-  }
-
-  try {
-    const { error } = await supabase
-      .from('users')
-      .update({ profile_pic: selectedImage })
-      .eq('username', username);
-
-    if (error) {
-      throw error;
-    }
-
-    res.status(200).json({ message: 'Profile picture updated successfully' });
-  } catch (err) {
-    res.status(500).json({ message: 'Failed to update profile picture', error: err.message });
-  }
 });
 
 app.get('/profile', (req, res) => {
@@ -170,6 +151,31 @@ app.post('/login', async (req, res) => {
   });
 
   res.status(200).json({ message: 'Login successful' });
+});
+
+app.post('/select-profile-image', async (req, res) => {
+  const sessionId = req.cookies.session;
+  const username = sessions[sessionId];
+  const selectedImage = req.body.selectedImage;
+
+  if (!username) {
+    return res.status(401).json({ message: 'Not logged in' });
+  }
+
+  try {
+    const { error } = await supabase
+      .from('users')
+      .update({ profile_pic: selectedImage })
+      .eq('username', username);
+
+    if (error) {
+      throw error;
+    }
+
+    res.status(200).json({ message: 'Profile picture updated successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to update profile picture', error: err.message });
+  }
 });
 
 // GET /logout
