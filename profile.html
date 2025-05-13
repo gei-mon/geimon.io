@@ -41,7 +41,7 @@
       .then(images => {
         images.forEach(img => {
           const imgEl = document.createElement('img');
-          imgEl.src = `/Public/Images/Profile Pictures/${img}`;
+          imgEl.src = `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/${img}`;
           imgEl.className = 'thumbnail';
           imgEl.onclick = () => {
             document.querySelectorAll('.thumbnail').forEach(el => el.classList.remove('selected'));
@@ -101,11 +101,11 @@
             document.getElementById('username').textContent = `Welcome, ${data.username}!`;
 
             // Check if the profile picture exists and is not the default image
-            if (data.profilePic && data.profilePic !== '/Public/Images/Profile Pictures/Sharpshooter-Square.png') {
+            if (data.profilePic && data.profilePic !== 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/Sharpshooter-Square.png') {
                 document.getElementById('profilePic').src = data.profilePic; // Update the src of profile picture
             } else {
                 // Set a default profile picture if none is provided
-                document.getElementById('profilePic').src = '/Public/Images/Profile Pictures/Sharpshooter-Square.png';
+                document.getElementById('profilePic').src = 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/Sharpshooter-Square.png';
             }
         } catch (err) {
             console.error('Failed to load user profile:', err);
