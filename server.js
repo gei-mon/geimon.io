@@ -183,6 +183,9 @@ app.get('/me', async (req, res) => {
   const sessionId = req.cookies.session;
   console.log('Session ID:', sessionId);  // Log the session ID
 
+  if (!sessionId || !sessions[sessionId]) {
+    return res.status(401).json({ loggedIn: false });
+  }
   const username = sessions[sessionId];
 
   if (username) {
