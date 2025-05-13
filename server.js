@@ -91,8 +91,7 @@ const allowedOrigins = [
   'http://127.0.0.1:5500',
   'http://localhost:5500',
   'https://gei-mon.github.io',
-  'https://gei-mon.github.io/geimon.io/',
-  'https://geimon-app-833627ba44e0.herokuapp.com/',
+  'https://geimon-app-833627ba44e0.herokuapp.com',
 ];
 
 app.use(cors({
