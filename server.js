@@ -13,6 +13,16 @@ require('dotenv').config();
 // In-memory storage
 let sessions = {};
 
+const SUPABASE_URL = 'https://hptpfajsevuezirmdmrp.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwdHBmYWpzZXZ1ZXppcm1kbXJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcwNzY4MzQsImV4cCI6MjA2MjY1MjgzNH0.iyytlalrzZ3YGAZbf9i5TZnPaDlh-XiP0RWJKdLCKC4';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+const app = express();
+const PUBLIC_DIR = path.join(__dirname, 'Public');
+app.use('/Public', express.static(path.join(__dirname, 'Public')));
+const PROFILE_DIR = path.join(PUBLIC_DIR, 'Images', 'Profile Pictures');
+
 // CORS setup
 const allowedOrigins = [
   'http://127.0.0.1:5500',
@@ -31,16 +41,6 @@ app.use(cors({
   },
   credentials: true,
 }));
-
-const SUPABASE_URL = 'https://hptpfajsevuezirmdmrp.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwdHBmYWpzZXZ1ZXppcm1kbXJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcwNzY4MzQsImV4cCI6MjA2MjY1MjgzNH0.iyytlalrzZ3YGAZbf9i5TZnPaDlh-XiP0RWJKdLCKC4';
-
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-
-const app = express();
-const PUBLIC_DIR = path.join(__dirname, 'Public');
-app.use('/Public', express.static(path.join(__dirname, 'Public')));
-const PROFILE_DIR = path.join(PUBLIC_DIR, 'Images', 'Profile Pictures');
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
