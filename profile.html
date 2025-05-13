@@ -36,7 +36,7 @@
     const imageGrid = document.getElementById('imageGrid');
     let selectedImage = '';
 
-    fetch('/profile-images')
+    fetch('https://geimon-app-833627ba44e0.herokuapp.com/profile-images')
       .then(res => res.json())
       .then(images => {
         images.forEach(img => {
@@ -60,7 +60,7 @@
             return;
         }
 
-        const res = await fetch('/select-profile-image', {
+        const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/select-profile-image', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
             body: `selectedImage=${encodeURIComponent(selectedImage)}`
