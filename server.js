@@ -199,8 +199,6 @@ app.get('/me', async (req, res) => {
       const profilePic = user.profile_pic || '/Public/Images/Profile Pictures/Sharpshooter-Square.png';
       return res.json({ loggedIn: true, username: user.username, profilePic });
     }
-
-  res.status(401).json({ loggedIn: false });
   }
 });
 
