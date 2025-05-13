@@ -44,9 +44,6 @@ app.use(cors({
 
 const herokuBaseUrl = process.env.HEROKU_BASE_URL || 'https://geimon-app-833627ba44e0.herokuapp.com';
 
-app.set('view engine', 'ejs');
-app.use(bodyParser.urlencoded({ extended: true }));
-
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
@@ -61,8 +58,11 @@ function generateSessionId() {
 
 // Middleware
 app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(PUBLIC_DIR));
+
+app.set('view engine', 'ejs');
 
 // GET /users
 app.get('/users', async (req, res) => {
@@ -161,7 +161,7 @@ app.post('/select-profile-image', async (req, res) => {
   try {
     const { error } = await supabase
       .from('users')
-      .update({ profile_pic: selectedImage })
+      .update({ profile_pic: `${herokuBaseUrl}/Public/Images/Profile Pictures/${selectedImage}` })
       .eq('username', username);
 
     if (error) {
