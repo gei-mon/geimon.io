@@ -1,120 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href='https://fonts.googleapis.com/css?family=Racing Sans One' rel='stylesheet'>
-    <link rel="stylesheet" href="style.css">
-    <title>LOGIN PAGE</title>
-    <style>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href='https://fonts.googleapis.com/css?family=Racing Sans One' rel='stylesheet'>
+  <link rel="stylesheet" href="style.css">
+  <title>LOGIN PAGE</title>
+  <style>
     .thumbnail {
-    width: 5vw;
-    object-fit: cover;
-    margin: 10px;
-    border: 3px solid transparent;
-    cursor: pointer;
+      width: 5vw;
+      object-fit: cover;
+      margin: 10px;
+      border: 3px solid transparent;
+      cursor: pointer;
     }
     .thumbnail.selected {
-    border-color: blue;
+      border-color: blue;
     }
-    </style>
+  </style>
 </head>
 <body style="background-color:rgb(0, 0, 0); color: white; font-family: 'Racing Sans One', sans-serif; font-size:  200%;">
-    <div>
-        <h1>User Profile</h1>
-        <p id="username">Loading...</p>
-        <img id="profilePic" alt="Profile Picture" class="thumbnail" />
-    </div>
+  <div>
+    <h1>User Profile</h1>
+    <p id="username">Loading...</p>
+    <img id="profilePic" alt="Profile Picture" class="thumbnail" />
+  </div>
 
-    <form id="picForm">
-        <div id="imageGrid"></div>
+  <form id="picForm">
+    <div id="imageGrid"></div>
     <button type="submit">Confirm</button>
   </form>
 
   <script>
-    const imageGrid = document.getElementById('imageGrid');
-    let selectedImage = '';
+    document.addEventListener('DOMContentLoaded', () => {
+      const imageGrid = document.getElementById('imageGrid');
+      let selectedImage = '';
 
-    fetch('https://geimon-app-833627ba44e0.herokuapp.com/profile-images')
-      .then(res => res.json())
-      .then(images => {
-        images.forEach(img => {
-          const imgEl = document.createElement('img');
-          imgEl.src = `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/${img}`;
-          imgEl.className = 'thumbnail';
-          imgEl.onclick = () => {
-            document.querySelectorAll('.thumbnail').forEach(el => el.classList.remove('selected'));
-            imgEl.classList.add('selected');
-            selectedImage = img;
-          };
-          imageGrid.appendChild(imgEl);
+      // Load profile images
+      fetch('https://geimon-app-833627ba44e0.herokuapp.com/profile-images')
+        .then(res => res.json())
+        .then(images => {
+          images.forEach(img => {
+            const imgEl = document.createElement('img');
+            imgEl.src = `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/${img}`;
+            imgEl.className = 'thumbnail';
+            imgEl.onclick = () => {
+              document.querySelectorAll('.thumbnail').forEach(el => el.classList.remove('selected'));
+              imgEl.classList.add('selected');
+              selectedImage = img;
+              console.log('Selected image:', selectedImage);
+            };
+            imageGrid.appendChild(imgEl);
+          });
         });
-      });
 
-        document.getElementById('picForm').addEventListener('submit', async e => {
-        e.preventDefault();
+      // Handle form submission
+      const form = document.getElementById('picForm');
+      form.addEventListener('submit', async e => {
+        e.preventDefault(); // Prevent form from reloading the page
 
         if (!selectedImage) {
-            alert('Please select an image.');
-            return;
+          alert('Please select an image.');
+          return;
         }
 
-        const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/select-profile-image', {
+        try {
+          const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/select-profile-image', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            credentials: 'include',
             body: `selectedImage=${encodeURIComponent(selectedImage)}`
-        });
+          });
 
-        if (res.ok) {
+          if (res.ok) {
             alert('Profile picture updated!');
             window.location.reload();
-        } else {
+          } else {
             alert('Error updating profile picture.');
-        }
-        });
-    </script>
-
-<script>
-    window.onload = async function() {
-        try {
-            // Send request to check login status, include cookies for authentication
-            const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
-                credentials: 'include', // Ensures cookies are sent with the request
-            });
-
-            // Check if the response is successful
-            if (!res.ok) {
-                throw new Error('Server responded with an error');
-            }
-
-            const data = await res.json();
-
-            // Check if the user is logged in by examining the 'loggedIn' property in the response
-            if (!data.loggedIn) {
-                console.log('User is not logged in, redirecting to login page');
-                window.location.href = 'login.html';  // Redirect if not logged in
-                return;
-            }
-
-            // If logged in, display the username
-            document.getElementById('username').textContent = `Welcome, ${data.username}!`;
-
-            // Check if the profile picture exists and is not the default image
-            if (data.profilePic && data.profilePic !== 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/Sharpshooter-Square.png') {
-                document.getElementById('profilePic').src = `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/${data.profilePic}`;
-            } else {
-                document.getElementById('profilePic').src = 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/Sharpshooter-Square.png';
-            }
+          }
         } catch (err) {
-            console.error('Failed to load user profile:', err);
-            window.location.href = 'login.html';  // Redirect to login if there was an error
+          console.error('Submission failed:', err);
+          alert('Failed to submit profile picture.');
         }
-    };
-</script>
+      });
 
-    <br>
-    <button class="button" onclick="location.href='index.html'">Return to Home</button>
+      // Load user info
+      (async function loadUser() {
+        try {
+          const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
+            credentials: 'include',
+          });
+
+          if (!res.ok) throw new Error('Response error');
+
+          const data = await res.json();
+          if (!data.loggedIn) {
+            console.log('Not logged in, redirecting...');
+            window.location.href = 'login.html';
+            return;
+          }
+
+          document.getElementById('username').textContent = `Welcome, ${data.username}!`;
+          const profilePic = data.profilePic || 'Sharpshooter-Square.png';
+          document.getElementById('profilePic').src = `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/${profilePic}`;
+        } catch (err) {
+          console.error('Failed to load profile:', err);
+          window.location.href = 'login.html';
+        }
+      })();
+    });
+  </script>
+
+  <br>
+  <button class="button" onclick="location.href='index.html'">Return to Home</button>
 </body>
-<!-- To disable the dyno (and not get charged) type ' heroku ps:scale web=0 ' in the search bar, change it to 1 to start it again -->
 </html>
