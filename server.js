@@ -161,7 +161,7 @@ app.post('/select-profile-image', async (req, res) => {
   try {
     const { error } = await supabase
       .from('users')
-      .update({ profile_pic: selectedImage })
+      .update({ profile_pic: `${herokuBaseUrl}/Public/Images/Profile Pictures/${selectedImage}` })
       .eq('username', username);
 
     if (error) {
