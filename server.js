@@ -51,28 +51,6 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-app.get('/profile-images', (req, res) => {
-  const dirPath = path.join(__dirname, 'Public', 'Images', 'Profile Pictures');
-
-  fs.readdir(dirPath, (err, files) => {
-    if (err) {
-      console.error('Error reading profile pictures directory:', err);
-      return res.status(500).json({ error: 'Could not read image directory' });
-    }
-
-    // Only send .png/.jpg/etc. files
-    const imageFiles = files.filter(file =>
-      /\.(png|jpg|jpeg|gif)$/i.test(file)
-    );
-    
-    const imageUrls = imageFiles.map(file => {
-      return `${herokuBaseUrl}/Public/Images/Profile Pictures/${file}`;
-    });
-
-    res.json(imageFiles);
-  });
-});
-
 app.get('/profile', (req, res) => {
   res.sendFile(path.join(__dirname, '/profile.html'));
 });
@@ -153,14 +131,32 @@ app.post('/login', async (req, res) => {
   res.status(200).json({ message: 'Login successful' });
 });
 
+app.get('/profile-images', (req, res) => {
+  const dirPath = path.join(__dirname, 'Public', 'Images', 'Profile Pictures');
+
+  fs.readdir(dirPath, (err, files) => {
+    if (err) {
+      console.error('Error reading profile pictures directory:', err);
+      return res.status(500).json({ error: 'Could not read image directory' });
+    }
+
+    // Only send .png/.jpg/etc. files
+    const imageFiles = files.filter(file =>
+      /\.(png|jpg|jpeg|gif)$/i.test(file)
+    );
+    
+    const imageUrls = imageFiles.map(file => {
+      return `${herokuBaseUrl}/Public/Images/Profile Pictures/${file}`;
+    });
+
+    res.json(imageFiles);
+  });
+});
+
 app.post('/select-profile-image', async (req, res) => {
   const sessionId = req.cookies.session;
   const username = sessions[sessionId];
   const selectedImage = req.body.selectedImage;
-
-  if (!username) {
-    return res.status(401).json({ message: 'Not logged in' });
-  }
 
   try {
     const { error } = await supabase
