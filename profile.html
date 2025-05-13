@@ -90,8 +90,11 @@
 
                 document.getElementById('username').textContent = `Welcome, ${data.username}!`;
 
-                if (data.profilePic) {
-                    document.getElementById('profilePic').src = data.profilePic;
+                if (data.profilePic && data.profilePic !== '/Public/Images/Profile Pictures/Sharpshooter-Square.png') {
+                    document.getElementById('profilePic').src = data.profilePic; // Update the src of profile picture
+                } else {
+                    // Optional: Set to default if there's no profile picture
+                    document.getElementById('profilePic').src = '/Public/Images/Profile Pictures/Sharpshooter-Square.png';
                 }
             } catch (err) {
                 console.error('Failed to load user profile:', err);
