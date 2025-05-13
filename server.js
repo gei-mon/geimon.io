@@ -10,6 +10,9 @@ const { createClient } = require('@supabase/supabase-js');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 
+// In-memory storage
+let sessions = {};
+
 const SUPABASE_URL = 'https://hptpfajsevuezirmdmrp.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwdHBmYWpzZXZ1ZXppcm1kbXJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcwNzY4MzQsImV4cCI6MjA2MjY1MjgzNH0.iyytlalrzZ3YGAZbf9i5TZnPaDlh-XiP0RWJKdLCKC4';
 
@@ -60,9 +63,6 @@ app.get('/profile', (req, res) => {
   res.sendFile(path.join(__dirname, '/profile.html'));
 });
 
-// In-memory storage
-let sessions = {};
-
 function generateSessionId() {
   return crypto.randomBytes(16).toString('hex');
 }
@@ -93,9 +93,16 @@ app.use(cors({
 }));
 
 // GET /users
-app.get('/users', (req, res) => {
-  const usersSafe = users.map(({ username, profilePic }) => ({ username, profilePic }));
-  res.json(usersSafe);
+app.get('/users', async (req, res) => {
+  const { data: users, error } = await supabase
+    .from('users')
+    .select('username, profile_pic');
+
+  if (error) {
+    return res.status(500).json({ message: 'Error fetching users' });
+  }
+
+  res.json(users);
 });
 
 // POST /users (Register)
