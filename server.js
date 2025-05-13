@@ -13,6 +13,25 @@ require('dotenv').config();
 // In-memory storage
 let sessions = {};
 
+// CORS setup
+const allowedOrigins = [
+  'http://127.0.0.1:5500',
+  'http://localhost:5500',
+  'https://gei-mon.github.io',
+  'https://geimon-app-833627ba44e0.herokuapp.com',
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+}));
+
 const SUPABASE_URL = 'https://hptpfajsevuezirmdmrp.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhwdHBmYWpzZXZ1ZXppcm1kbXJwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDcwNzY4MzQsImV4cCI6MjA2MjY1MjgzNH0.iyytlalrzZ3YGAZbf9i5TZnPaDlh-XiP0RWJKdLCKC4';
 
@@ -85,25 +104,6 @@ function generateSessionId() {
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.static(PUBLIC_DIR));
-
-// CORS setup
-const allowedOrigins = [
-  'http://127.0.0.1:5500',
-  'http://localhost:5500',
-  'https://gei-mon.github.io',
-  'https://geimon-app-833627ba44e0.herokuapp.com',
-];
-
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-}));
 
 // GET /users
 app.get('/users', async (req, res) => {
