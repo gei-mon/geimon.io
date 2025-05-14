@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Racing Sans One' rel='stylesheet'>
+    <link rel="stylesheet" href="style.css">
+    <title>Deck Page</title>
+    <body style="background-color:rgb(78, 78, 78);">
+    <style>
+        .bg-image {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            opacity: 0.3;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .menu-list {
+            list-style-type: none;
+            padding: 0;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .menu-item {
+            width: 30%;
+            margin-bottom: -8px;
+            font-family: 'Racing Sans One', sans-serif;
+        }
+
+        .menu-item a {
+            text-decoration: none;
+            color: #000000;
+            font-size: 3em;
+            padding: 10px 20px;
+            display: block;
+            background-color: #c7c7c7;
+            border-radius: 0px;
+            text-align: center;
+            transition: background-color 0.3s, color 0.3s;
+            border: 8px solid #000000;
+        }
+
+        .menu-item a:hover {
+            background-color: #949494;
+            color: #000000;
+        }
+        .deck-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .deck-list li {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+  <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
+  <div class="container">
+        <p style="text-align:center; font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;"><game-title>Geimon!</game-title></p>
+        <h1 style="color:white; text-align:center; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Manage your decks!</h1>
+        </div>
+        <button class="button buttonEvenSmaller" onclick="location.href='index.html'" style="display: block; margin: 0 auto;">Home</button>
+        <div class="menu-container">
+            <ul class="menu-list">
+                <li class="menu-item"><a href="deck.html" target="_blank">Deck A</a></li>
+                <li class="menu-item"><a href="deck.html" target="_blank">Deck A... Again!</a></li>
+            </ul>
+        </div>
+    <br>
+    <button class="button buttonEvenSmaller deck-button" id="create-deck-button" style="display: block; margin: 0 auto;">Create Deck</button>
+
+    <!-- List of user's decks -->
+    <ul id="deck-list" class="deck-list"></ul>
+
+    <script>
+        // Supabase setup
+        const supabaseUrl = 'https://YOUR_PROJECT_URL.supabase.co';
+        const supabaseKey = 'YOUR_SUPABASE_KEY';
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        const userName = "exampleUser"; // Hardcoded for example purposes. Replace with actual logged-in username.
+
+        // Button click event to create deck
+        document.getElementById("create-deck-button").addEventListener("click", async () => {
+            const deckName = prompt("Enter a name for your new deck:");
+            
+            if (deckName && deckName.trim() !== "") {
+                // Check if deck name already exists for the user
+                const { data, error } = await supabase
+                    .from('decks')
+                    .select('deck_id')
+                    .eq('user_name', userName)
+                    .eq('deck_name', deckName.trim()); // Check for exact match
+
+                if (data.length > 0) {
+                    alert("You already have a deck with that name. Please choose a different name.");
+                } else {
+                    // Insert the new deck into the database
+                    const { error: insertError } = await supabase
+                        .from('decks')
+                        .insert([
+                            {
+                                user_name: userName,
+                                deck_name: deckName.trim(),
+                                card_ids: [],  // Blank deck list for now
+                                legal: false    // Initially marked as illegal
+                            }
+                        ]);
+
+                    if (insertError) {
+                        alert("Error creating deck: " + insertError.message);
+                    } else {
+                        alert("Deck created successfully!");
+                        loadDecks(); // Reload the decks after creation
+                    }
+                }
+            } else {
+                alert("Please enter a valid deck name.");
+            }
+        });
+
+        // Function to load all decks of the user
+        async function loadDecks() {
+            const { data, error } = await supabase
+                .from('decks')
+                .select('deck_id, deck_name')
+                .eq('user_name', userName); // Get decks for this user
+
+            if (error) {
+                console.error("Error fetching decks:", error.message);
+                return;
+            }
+
+            const deckList = document.getElementById("deck-list");
+            deckList.innerHTML = ''; // Clear current list
+
+            // Add each deck to the list
+            data.forEach(deck => {
+                const li = document.createElement("li");
+                li.textContent = `${deck.deck_name} (ID: ${deck.deck_id})`;
+                deckList.appendChild(li);
+            });
+        }
+
+        // Load user's decks when the page is ready
+        window.onload = loadDecks;
+    </script>
+</body>
+</html>

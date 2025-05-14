@@ -7,6 +7,7 @@
     <link href='https://fonts.googleapis.com/css?family=Racing Sans One' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
     <title>MAIN PAGE</title>
+    <body style="background-color:rgb(79, 79, 79);">
     <style>
         .page-wrapper {
             max-width: 800px;       /* or any fixed width you want */
@@ -72,7 +73,7 @@
 
     <div class="container">
         <div class="column left">
-            <button class="button button" onclick="location.href='deck.html'" id="deckButton" style="display: none;">Deck Editor</button>
+            <button class="button button" onclick="location.href='selector.html'" id="deckButton" style="display: none;">Deck Editor</button>
             <br>
             <button class="button button" id="dynamicButton">Loading...</button>
             <br>
@@ -140,5 +141,6 @@
         }
     });
     </script>
+    <!-- heroku ps:scale web=0 -->
 </body>
 </html>
