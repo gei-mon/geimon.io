@@ -65,8 +65,8 @@ text-decoration: underline;
 }
 
 .buttonSmall, .buttonSmall:link, .buttonSmall:visited {
-  border: 5px solid white;
-  background-color: rgb(255, 150, 150);
+  border: 5px solid rgb(0, 0, 0);
+  background-color: rgb(165, 159, 206);
   color: black;
   padding: 15px 15px;
   text-align: center;
@@ -90,8 +90,8 @@ text-decoration: underline;
 }
 
 .buttonEvenSmaller, .buttonEvenSmaller:link, .buttonEvenSmaller:visited {
-  border: 5px solid white;
-  background-color: rgb(255, 150, 150);
+  border: 5px solid rgb(0, 0, 0);
+  background-color: rgb(165, 159, 206);
   color: black;
   padding: 10px 10px;
   text-align: center;
