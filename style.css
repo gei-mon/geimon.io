@@ -43,17 +43,17 @@ text-decoration: underline;
   border: 5px solid white;
   background-color: rgb(255, 150, 150);
   color: black;
-  padding: 15px 32px;
+  padding: 15px 15px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
   font-family: 'Arial';
   font-size: 48px;
-  margin: 4px 2px;
+  margin: 10px;
   cursor: pointer;
   table-layout: fixed;
   border-collapse: collapse;
-  width: 30%;
+  width: 440px;
 }
 
 .button:hover {
