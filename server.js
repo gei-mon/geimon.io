@@ -187,7 +187,7 @@ app.post('/createDeck', async (req, res) => {
         // Insert the new deck into the database
         const { error } = await supabase
             .from('decks')
-            .insert([{ deck_id: deckId, user_name: username, deck_name: deckName, card_ids: [] }]);
+            .insert([{ deck_id: deckId, user_name: username, deck_name: deckName, card_ids: [], legal: false }]);
 
         if (error) throw error;
 
