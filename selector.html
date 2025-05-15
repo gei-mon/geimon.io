@@ -56,6 +56,9 @@
         .deck-list {
             list-style-type: none;
             padding: 0;
+            color: #000000;
+            font-family: 'Racing Sans One', sans-serif;
+            font-size: 3em;
         }
         .deck-list li {
             margin: 10px 0;
@@ -78,7 +81,6 @@
     <br>
     <button class="button buttonEvenSmaller deck-button" id="create-deck-button" style="display: block; margin: 0 auto;">Create Deck</button>
 
-    <!-- Dynamic Deck List Section -->
     <div class="deck-list-container">
         <h2 style="color:white; text-align:center;">Your Decks:</h2>
         <ul id="deck-list" class="deck-list"></ul>
@@ -118,7 +120,9 @@
             const deckList = document.getElementById("deck-list");
 
             try {
-                const response = await fetch(`https://geimon-app-833627ba44e0.herokuapp.com/getUserDecks`);
+                const response = await fetch(`https://geimon-app-833627ba44e0.herokuapp.com/getUserDecks`, {
+                    credentials: 'include',
+                });
                 const data = await response.json();
 
                 if (data.success) {

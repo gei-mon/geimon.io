@@ -191,7 +191,7 @@ app.post('/createDeck', async (req, res) => {
 
         if (fetchError) throw fetchError;
         if (existingDecks.length > 0) {
-            return res.status(409).json({ success: false, message: 'Deck name already exists' });
+            return res.status(200).json({ success: false, message: 'Deck name already exists' });
         }
 
         const deckId = uuidv4();
