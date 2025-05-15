@@ -193,7 +193,11 @@ app.post('/createDeck', async (req, res) => {
 
         res.status(200).json({ success: true, message: 'Deck created successfully', deckId });
     } catch (err) {
-      console.error('Error creating deck:', err);
+      console.error('Error creating deck:', {
+          message: err.message,
+          stack: err.stack,
+          originalError: err,
+      });
       res.status(500).json({ success: false, message: 'Error creating deck', error: err });
     }
 });
