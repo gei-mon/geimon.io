@@ -187,14 +187,14 @@ app.post('/createDeck', async (req, res) => {
         // Insert the new deck into the database
         const { error } = await supabase
             .from('decks')
-            .insert([{ deck_id: deckId, user_name: username, deck_name: deckName, card_ids: [], legal: false }]);
+            .insert([{ deck_id: deckId, user_name: username, deck_name: deckName }]);
 
         if (error) throw error;
 
         res.status(200).json({ success: true, message: 'Deck created successfully', deckId });
     } catch (err) {
-        console.error('Error creating deck:', err);
-        res.status(500).json({ success: false, message: 'Error creating deck' });
+      console.error('Error creating deck:', err);
+      res.status(500).json({ success: false, message: 'Error creating deck', error: err });
     }
 });
 
