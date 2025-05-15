@@ -173,14 +173,11 @@ app.post('/select-profile-image', async (req, res) => {
 app.post('/createDeck', async (req, res) => {
     const sessionId = req.cookies.session;
     const username = sessions[sessionId];
-    const { deck_name } = req.body;
+    const deckName = req.body.deck_name;
+    if (!deckName) return res.status(400).json({ success: false, error: "Deck name required" });
 
     if (!username) {
         return res.status(401).json({ success: false, message: 'User not authenticated' });
-    }
-
-    if (!deck_name) {
-        return res.status(400).json({ success: false, message: 'Deck name is required' });
     }
 
     try {
@@ -190,7 +187,7 @@ app.post('/createDeck', async (req, res) => {
         // Insert the new deck into the database
         const { error } = await supabase
             .from('decks')
-            .insert([{ deck_id: deckId, user_name: username, deck_name, cards: [] }]);
+            .insert([{ deck_id: deckId, user_name: username, deck_name: deckName, cards: [] }]);
 
         if (error) throw error;
 
