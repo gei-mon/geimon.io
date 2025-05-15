@@ -181,8 +181,7 @@ app.post('/createDeck', async (req, res) => {
     }
 
     try {
-        // Generate a unique deck ID
-        const deckId = crypto.randomBytes(8).toString('hex');
+        const deckId = crypto.randomBytes(4).toString('hex');
 
         // Insert the new deck into the database
         const { error } = await supabase
