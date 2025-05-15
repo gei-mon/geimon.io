@@ -9,6 +9,7 @@ const db = require('./db');
 const { createClient } = require('@supabase/supabase-js');
 const bodyParser = require('body-parser');
 require('dotenv').config();
+import { v4 as uuidv4 } from 'uuid';
 
 // In-memory storage
 let sessions = {};
@@ -181,7 +182,7 @@ app.post('/createDeck', async (req, res) => {
     }
 
     try {
-        const deckId = crypto.randomBytes(4).toString('hex');
+        const deckId = uuidv4();
 
         // Insert the new deck into the database
         const { error } = await supabase
