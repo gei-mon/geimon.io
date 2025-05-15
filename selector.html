@@ -105,6 +105,7 @@
                         credentials: 'include',
                         body: JSON.stringify({ deck_name: deckName })
                     });
+                    const data = await response.json();
 
                     if (data.success) {
                         alert("Deck created successfully!");
