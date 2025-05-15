@@ -182,24 +182,34 @@ app.post('/createDeck', async (req, res) => {
     }
 
     try {
+        // Check for duplicate deck name
+        const { data: existingDecks, error: fetchError } = await supabase
+            .from('decks')
+            .select('deck_name')
+            .eq('user_name', username)
+            .eq('deck_name', deckName);
+
+        if (fetchError) throw fetchError;
+        if (existingDecks.length > 0) {
+            return res.status(409).json({ success: false, message: 'Deck name already exists' });
+        }
+
         const deckId = uuidv4();
 
-        const { error } = await supabase
+        // Insert the new deck into the database
+        const { error: insertError } = await supabase
             .from('decks')
-            .insert([{ deck_id: deckId, user_name: username, deck_name: deckName, card_ids: [], legal: false }]);
+            .insert([{ deck_id: deckId, user_name: username, deck_name: deckName }]);
 
-        if (error) throw error;
+        if (insertError) throw insertError;
 
         res.status(200).json({ success: true, message: 'Deck created successfully', deckId });
     } catch (err) {
-      console.error('Error creating deck:', {
-          message: err.message,
-          stack: err.stack,
-          originalError: err,
-      });
-      res.status(500).json({ success: false, message: 'Error creating deck', error: err });
+        console.error('Error creating deck:', err);
+        res.status(500).json({ success: false, message: 'Error creating deck', error: err.message });
     }
 });
+
 
 // Endpoint to get decks by user
 app.get('/getUserDecks', async (req, res) => {
