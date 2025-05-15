@@ -9,7 +9,6 @@ const db = require('./db');
 const { createClient } = require('@supabase/supabase-js');
 const bodyParser = require('body-parser');
 require('dotenv').config();
-import { v4 as uuidv4 } from 'uuid';
 
 // In-memory storage
 let sessions = {};
@@ -171,6 +170,7 @@ app.post('/select-profile-image', async (req, res) => {
   }
 });
 
+const { v4: uuidv4 } = require('uuid');
 app.post('/createDeck', async (req, res) => {
     const sessionId = req.cookies.session;
     const username = sessions[sessionId];
