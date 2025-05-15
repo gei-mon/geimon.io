@@ -20,7 +20,6 @@
             z-index: -1;
             pointer-events: none;
         }
-
         .menu-list {
             list-style-type: none;
             padding: 0;
@@ -32,36 +31,19 @@
 
         .menu-item {
             width: 30%;
-            margin-bottom: -8px;
             font-family: 'Racing Sans One', sans-serif;
-        }
-
-        .menu-item a {
-            text-decoration: none;
-            color: #000000;
-            font-size: 3em;
-            padding: 10px 20px;
-            display: block;
             background-color: #c7c7c7;
-            border-radius: 0px;
-            text-align: center;
-            transition: background-color 0.3s, color 0.3s;
             border: 8px solid #000000;
+            color: #000000;
+            padding: 10px 20px;
+            font-size: 3em;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
 
-        .menu-item a:hover {
+        .menu-item:hover {
             background-color: #949494;
-            color: #000000;
-        }
-        .deck-list {
-            list-style-type: none;
-            padding: 0;
-            color: #000000;
-            font-family: 'Racing Sans One', sans-serif;
-            font-size: 3em;
-        }
-        .deck-list li {
-            margin: 10px 0;
         }
     </style>
 </head>
@@ -72,19 +54,13 @@
         <h1 style="color:white; text-align:center; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Manage your decks!</h1>
         </div>
         <button class="button buttonEvenSmaller" onclick="location.href='index.html'" style="display: block; margin: 0 auto;">Home</button>
+    <br>
+        <button class="button buttonEvenSmaller deck-button" id="create-deck-button" style="display: block; margin: 0 auto;">Create Deck</button>
         <div class="menu-container">
             <ul class="menu-list">
-                <li class="menu-item"><a href="deck.html" target="_blank">Deck A</a></li>
-                <li class="menu-item"><a href="deck.html" target="_blank">Deck A... Again!</a></li>
+                <ul class="menu-list" id="deck-list"></ul>
             </ul>
         </div>
-    <br>
-    <button class="button buttonEvenSmaller deck-button" id="create-deck-button" style="display: block; margin: 0 auto;">Create Deck</button>
-
-    <div class="deck-list-container">
-        <h2 style="color:white; text-align:center;">Your Decks:</h2>
-        <ul id="deck-list" class="deck-list"></ul>
-    </div>
 
     <script>
         document.addEventListener("DOMContentLoaded", async () => {
@@ -118,6 +94,7 @@
             });
 
             const deckList = document.getElementById("deck-list");
+            deckList.innerHTML = "";
 
             try {
                 const response = await fetch(`https://geimon-app-833627ba44e0.herokuapp.com/getUserDecks`, {
@@ -127,9 +104,14 @@
 
                 if (data.success) {
                     data.decks.forEach(deckName => {
-                        const li = document.createElement("li");
-                        li.textContent = deckName;
-                        deckList.appendChild(li);
+                        const button = document.createElement("button");
+                        button.textContent = deckName;
+                        button.className = "menu-item";
+                        button.onclick = () => {
+                            alert(`Selected deck: ${deckName}`);
+                        };
+
+                        deckList.appendChild(button);
                     });
                 }
             } catch (err) {
