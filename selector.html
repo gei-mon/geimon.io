@@ -78,81 +78,61 @@
     <br>
     <button class="button buttonEvenSmaller deck-button" id="create-deck-button" style="display: block; margin: 0 auto;">Create Deck</button>
 
-    <!-- List of user's decks -->
-    <ul id="deck-list" class="deck-list"></ul>
+    <!-- Dynamic Deck List Section -->
+    <div class="deck-list-container">
+        <h2 style="color:white; text-align:center;">Your Decks:</h2>
+        <ul id="deck-list" class="deck-list"></ul>
+    </div>
 
     <script>
-        // Supabase setup
-        const supabaseUrl = 'https://YOUR_PROJECT_URL.supabase.co';
-        const supabaseKey = 'YOUR_SUPABASE_KEY';
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        document.addEventListener("DOMContentLoaded", async () => {
+            const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
+                credentials: 'include',
+            });
 
-        const userName = "exampleUser"; // Hardcoded for example purposes. Replace with actual logged-in username.
+            const data = await res.json();
+            const userName = data.username;
 
-        // Button click event to create deck
-        document.getElementById("create-deck-button").addEventListener("click", async () => {
-            const deckName = prompt("Enter a name for your new deck:");
-            
-            if (deckName && deckName.trim() !== "") {
-                // Check if deck name already exists for the user
-                const { data, error } = await supabase
-                    .from('decks')
-                    .select('deck_id')
-                    .eq('user_name', userName)
-                    .eq('deck_name', deckName.trim()); // Check for exact match
+            const createDeckButton = document.getElementById("create-deck-button");
+            createDeckButton.addEventListener("click", async () => {
+                const deckName = prompt("Enter a name for the new deck:");
+                if (!deckName) return;
 
-                if (data.length > 0) {
-                    alert("You already have a deck with that name. Please choose a different name.");
-                } else {
-                    // Insert the new deck into the database
-                    const { error: insertError } = await supabase
-                        .from('decks')
-                        .insert([
-                            {
-                                user_name: userName,
-                                deck_name: deckName.trim(),
-                                card_ids: [],  // Blank deck list for now
-                                legal: false    // Initially marked as illegal
-                            }
-                        ]);
+                try {
+                    const response = await fetch("/createDeck", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ deck_name: deckName })
+                    });
+                    const data = await response.json();
 
-                    if (insertError) {
-                        alert("Error creating deck: " + insertError.message);
-                    } else {
+                    if (data.success) {
                         alert("Deck created successfully!");
-                        loadDecks(); // Reload the decks after creation
+                    } else {
+                        alert("Error creating deck.");
                     }
+                } catch (err) {
+                    console.error("Error creating deck:", err);
                 }
-            } else {
-                alert("Please enter a valid deck name.");
-            }
-        });
-
-        // Function to load all decks of the user
-        async function loadDecks() {
-            const { data, error } = await supabase
-                .from('decks')
-                .select('deck_id, deck_name')
-                .eq('user_name', userName); // Get decks for this user
-
-            if (error) {
-                console.error("Error fetching decks:", error.message);
-                return;
-            }
+            });
 
             const deckList = document.getElementById("deck-list");
-            deckList.innerHTML = ''; // Clear current list
 
-            // Add each deck to the list
-            data.forEach(deck => {
-                const li = document.createElement("li");
-                li.textContent = `${deck.deck_name} (ID: ${deck.deck_id})`;
-                deckList.appendChild(li);
-            });
-        }
+            try {
+                const response = await fetch(`/getUserDecks?user=${userName}`);
+                const data = await response.json();
 
-        // Load user's decks when the page is ready
-        window.onload = loadDecks;
+                if (data.success) {
+                    data.decks.forEach(deck => {
+                        const li = document.createElement("li");
+                        li.textContent = deck.deck_name;
+                        deckList.appendChild(li);
+                    });
+                }
+            } catch (err) {
+                console.error("Error fetching decks:", err);
+            }
+        });
     </script>
 </body>
 </html>

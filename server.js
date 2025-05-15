@@ -170,6 +170,56 @@ app.post('/select-profile-image', async (req, res) => {
   }
 });
 
+app.post('/createDeck', async (req, res) => {
+    const sessionId = req.cookies.session;
+    const username = sessions[sessionId];
+    const { deck_name } = req.body;
+
+    if (!username) {
+        return res.status(401).json({ success: false, message: 'User not authenticated' });
+    }
+
+    if (!deck_name) {
+        return res.status(400).json({ success: false, message: 'Deck name is required' });
+    }
+
+    try {
+        // Generate a unique deck ID
+        const deckId = crypto.randomBytes(8).toString('hex');
+
+        // Insert the new deck into the database
+        const { error } = await supabase
+            .from('decks')
+            .insert([{ deck_id: deckId, user_name: username, deck_name, cards: [] }]);
+
+        if (error) throw error;
+
+        res.status(200).json({ success: true, message: 'Deck created successfully', deckId });
+    } catch (err) {
+        console.error('Error creating deck:', err);
+        res.status(500).json({ success: false, message: 'Error creating deck' });
+    }
+});
+
+// Endpoint to get decks by user
+app.get('/getUserDecks', async (req, res) => {
+    const { user } = req.query;
+
+    try {
+        const { data, error } = await supabase
+            .from('decks')
+            .select('deck_id, user_name')
+            .eq('user_name', user);
+
+        if (error) throw error;
+
+        res.json({ success: true, decks: data });
+    } catch (err) {
+        console.error("Error fetching decks:", err);
+        res.status(500).json({ success: false, message: "Error fetching decks" });
+    }
+});
+
 // GET /logout
 app.get('/logout', (req, res) => {
   const sessionId = req.cookies.session;
