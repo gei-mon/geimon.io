@@ -118,13 +118,13 @@
             const deckList = document.getElementById("deck-list");
 
             try {
-                const response = await fetch(`https://geimon-app-833627ba44e0.herokuapp.com/getUserDecks?user=${userName}`);
+                const response = await fetch(`https://geimon-app-833627ba44e0.herokuapp.com/getUserDecks`);
                 const data = await response.json();
 
                 if (data.success) {
-                    data.decks.forEach(deck => {
+                    data.decks.forEach(deckName => {
                         const li = document.createElement("li");
-                        li.textContent = deck.deck_name;
+                        li.textContent = deckName;
                         deckList.appendChild(li);
                     });
                 }

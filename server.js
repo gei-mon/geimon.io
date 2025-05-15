@@ -203,17 +203,19 @@ app.post('/createDeck', async (req, res) => {
 
 // Endpoint to get decks by user
 app.get('/getUserDecks', async (req, res) => {
-    const { user } = req.query;
+    const sessionId = req.cookies.session;
+    const username = sessions[sessionId];
 
     try {
         const { data, error } = await supabase
             .from('decks')
-            .select('deck_id, user_name')
-            .eq('user_name', user);
+            .select('deck_name')
+            .eq('user_name', username);
 
         if (error) throw error;
 
-        res.json({ success: true, decks: data });
+        const deckNames = data.map(deck => deck.deck_name);
+        res.json({ success: true, decks: deckNames });
     } catch (err) {
         console.error("Error fetching decks:", err);
         res.status(500).json({ success: false, message: "Error fetching decks" });
