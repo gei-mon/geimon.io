@@ -144,142 +144,145 @@
 
             container.innerHTML = "";  // Clear container before rendering
 
-            const storedCards = localStorage.getItem("selectedDeckCards");
-            const cardIds = storedCards ? JSON.parse(storedCards) : [];
+            let storedCards = localStorage.getItem("selectedDeckCards");
+            let cardIds = storedCards ? JSON.parse(storedCards) : [];
 
-            if (cardIds.length === 0) {
-                emptyMessage.style.display = "block";
-            } else {
-                emptyMessage.style.display = "none";
+            function saveDeck() {
+                localStorage.setItem("selectedDeckCards", JSON.stringify(cardIds));
+                updateDeckInfo(
+                    cardIds
+                        .map(id => cards.find(card => String(card.id) === String(id)))
+                        .filter(Boolean)
+                );
+            }
 
-                const deckCards = cardIds
-                    .map(id => cards.find(card => String(card.id) === String(id)))
-                    .filter(Boolean);
-
-                updateDeckInfo(deckCards);
-
-                console.log("Deck Card IDs:", cardIds);
-                console.log("Matching cards found:");
-                deckCards.forEach(card => console.log(card));
-
-                deckCards.forEach(card => {
-                const cardElement = renderCard(card, container);
-                console.log("Attaching event listener to:", cardElement);
-                if (cardElement) {
-                    const button = document.createElement("button");
-                    button.classList.add("card-button");
-                    button.addEventListener("click", () => {
-                        console.log(`Card clicked: ${card.name}`);
-                    });
-
-                    cardElement.appendChild(button);
-
-                    cardElement.addEventListener("mouseenter", () => {
-                        console.log("Mouse entered card:", cardElement);
-                        scaledCardContainer.innerHTML = "";
-                        const clone = cardElement.cloneNode(true);
-                        const cloneButton = clone.querySelector(".card-button");
-                            if (cloneButton) {
-                                cloneButton.remove();
-                            }
-                        clone.classList.add("scaled-card");
-                        scaledCardContainer.appendChild(clone);
-                        addTooltipListeners(clone);
-                        console.log("Checking cloned card keywords:");
-                        clone.querySelectorAll(".keyword").forEach((keyword, index) => {
-                            console.log(`Keyword ${index + 1}:`, keyword.textContent, "Description:", keyword.dataset.description);
-                        });
-                        lastHoveredCard = clone;
-                    });
+            function renderDeck() {
+                container.innerHTML = "";
+                if (cardIds.length === 0) {
+                    emptyMessage.style.display = "block";
                 } else {
-                    console.warn("No card element found for card:", card);
-                }
-            });
+                    emptyMessage.style.display = "none";
 
-            container.addEventListener("mouseleave", () => {
-                if (lastHoveredCard) {
-                    console.log("Mouse left container");
-                    lastHoveredCard = null;
-                }
-            });
-        }
+                    const deckCards = cardIds
+                        .map(id => cards.find(card => String(card.id) === String(id)))
+                        .filter(Boolean);
 
-    const sortedCards = [...cards].sort((a, b) => a.name.localeCompare(b.name));
+                    updateDeckInfo(deckCards);
 
-    function updateDeckInfo(deckCards) {
-        // Initialize counts
-        const counts = {
-            Champions: 0,
-            Actions: 0,
-            Equipments: 0,
-            Obelisks: 0,
-            Rush: 0,
-            Reflex: 0,
-        };
+                    console.log("Deck Card IDs:", cardIds);
+                    console.log("Matching cards found:");
+                    deckCards.forEach(card => console.log(card));
 
-        deckCards.forEach(cards => {
-            // Count by type (assuming card.type holds the card type string)
-            // Adjust this if your property names differ
-            switch (cards.type) {
-            case 'Champion':
-                counts.Champions++;
-                break;
-            case 'Action':
-                counts.Actions++;
-                break;
-            case 'Equipment':
-                counts.Equipments++;
-                break;
-            case 'Obelisk':
-                counts.Obelisks++;
-                break;
-            case 'Rush':
-                counts.Rush++;
-                break;
-            case 'Reflex':
-                counts.Reflex++;
-                break;
-        }
-    });
-        const total = deckCards.length;
-        const deckInfoDiv = document.getElementById('deck-info');
+                    deckCards.forEach(card => {
+                    const cardElement = renderCard(card, container);
+                    console.log("Attaching event listener to:", cardElement);
+                    if (cardElement) {
+                        const button = document.createElement("button");
+                        button.classList.add("card-button");
+                        button.addEventListener("click", () => {
+                            const index = cardIds.indexOf(card.id);
+                            if (index !== -1) {
+                                cardIds.splice(index, 1); // remove the card id
+                                saveDeck();
+                                renderDeck();
+                            }
+                        });
 
-        let isLegal = false;
-        async function checkLegality(deckName) {
-            try {
-                const response = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/isLegal', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ deck_name: deckName })
+                        cardElement.appendChild(button);
+
+                        cardElement.addEventListener("mouseenter", () => {
+                            console.log("Mouse entered card:", cardElement);
+                            scaledCardContainer.innerHTML = "";
+                            const clone = cardElement.cloneNode(true);
+                            const cloneButton = clone.querySelector(".card-button");
+                                if (cloneButton) {
+                                    cloneButton.remove();
+                                }
+                            clone.classList.add("scaled-card");
+                            scaledCardContainer.appendChild(clone);
+                            addTooltipListeners(clone);
+                            console.log("Checking cloned card keywords:");
+                            clone.querySelectorAll(".keyword").forEach((keyword, index) => {
+                                console.log(`Keyword ${index + 1}:`, keyword.textContent, "Description:", keyword.dataset.description);
+                            });
+                            lastHoveredCard = clone;
+                        });
+                    } else {
+                        console.warn("No card element found for card:", card);
+                    }
                 });
-                const data = await response.json();
-                return data.legal;
-            } catch (error) {
-                console.warn("Error fetching deck legality status:", error);
-                return false;
+
+                container.addEventListener("mouseleave", () => {
+                    if (lastHoveredCard) {
+                        console.log("Mouse left container");
+                        lastHoveredCard = null;
+                    }
+                });
             }
         }
 
-        async function updateDeckInfo(deckName, counts) {
-            isLegal = await checkLegality(deckName);
+    renderDeck();
 
-            const total = Object.values(counts).reduce((acc, val) => acc + val, 0);
-            const deckSizeColor = isLegal ? "#4CAF50" : "#ff4d4d";
+    const sortedCards = [...cards].sort((a, b) => a.name.localeCompare(b.name));
 
-            deckInfoDiv.innerHTML = `
-                <span style="color: ${deckSizeColor};">Deck Size: ${total}</span>
-                <span>Champions: ${counts.Champions}</span>
-                <span>Actions: ${counts.Actions}</span>
-                <span>Equipments: ${counts.Equipments}</span>
-                <span>Obelisks: ${counts.Obelisks}</span>
-                <span>Rush: ${counts.Rush}</span>
-                <span>Reflex: ${counts.Reflex}</span>
-            `;
+    async function updateDeckInfo(deckCards) {
+    // Count card types
+    const counts = {
+        Champions: 0,
+        Actions: 0,
+        Equipments: 0,
+        Obelisks: 0,
+        Rush: 0,
+        Reflex: 0,
+    };
+
+    deckCards.forEach(card => {
+        switch (card.type) {
+            case 'Champion': counts.Champions++; break;
+            case 'Action': counts.Actions++; break;
+            case 'Equipment': counts.Equipments++; break;
+            case 'Obelisk': counts.Obelisks++; break;
+            case 'Rush': counts.Rush++; break;
+            case 'Reflex': counts.Reflex++; break;
+        }
+    });
+
+    const total = deckCards.length;
+    const deckInfoDiv = document.getElementById('deck-info');
+
+    // Show loading text while fetching legality
+    deckInfoDiv.textContent = "Loading deck info...";
+
+    async function checkLegality(deckName) {
+        try {
+            const response = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/isLegal', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ deck_name: deckName })
+            });
+            const data = await response.json();
+            return data.legal;
+        } catch (error) {
+            console.warn("Error fetching deck legality status:", error);
+            return false;
         }
     }
 
+    const storedDeckName = localStorage.getItem("selectedDeckName") || "My Deck";
+    const isLegal = await checkLegality(storedDeckName);
+    const deckSizeColor = isLegal ? "#4CAF50" : "#ff4d4d";
+
+    deckInfoDiv.innerHTML = `
+        <span style="color: ${deckSizeColor};">Deck Size: ${total}</span>
+        <span>Champions: ${counts.Champions}</span>
+        <span>Actions: ${counts.Actions}</span>
+        <span>Equipments: ${counts.Equipments}</span>
+        <span>Obelisks: ${counts.Obelisks}</span>
+        <span>Rush: ${counts.Rush}</span>
+        <span>Reflex: ${counts.Reflex}</span>
+    `;
+}
 
       // Render all cards initially in search results
       function renderSearchResults(filteredCards) {
@@ -290,16 +293,11 @@
             const button = document.createElement("button");
             button.classList.add("card-button");
             button.addEventListener("click", () => {
-              console.log(`Search panel card clicked: ${card.name}`);
-              // Optional: show card in scaled view on click here
-              scaledCardContainer.innerHTML = "";
-              const clone = cardElement.cloneNode(true);
-              const cloneButton = clone.querySelector(".card-button");
-              if (cloneButton) cloneButton.remove();
-              clone.classList.add("scaled-card");
-              scaledCardContainer.appendChild(clone);
-              addTooltipListeners(clone);
-              lastHoveredCard = clone;
+                if (!cardIds.includes(card.id)) {
+                    cardIds.push(card.id);
+                    saveDeck();
+                    renderDeck();
+                }
             });
             cardElement.appendChild(button);
 
