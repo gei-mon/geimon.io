@@ -340,17 +340,17 @@ app.get('/isLegal', async (req, res) => {
 });
 
 app.post('/saveDeck', (req, res) => {
-  const { deckName, cardIds } = req.body;
+  const { deck_name, card_ids } = req.body;
 
-  if (!deckName || !Array.isArray(cardIds)) {
-    return res.status(400).json({ error: 'Invalid data' });
+  if (!deck_name || !Array.isArray(card_ids)) {
+    return res.status(400).json({ success: false, error: 'Invalid data' });
   }
 
   // Update card_ids JSON for the given deckName
-  const cardIdsStr = JSON.stringify(cardIds);
+  const cardIdsStr = JSON.stringify(card_ids);
 
   const sql = `UPDATE decks SET card_ids = ? WHERE name = ?`;
-  db.run(sql, [cardIdsStr, deckName], function(err) {
+  db.run(sql, [cardIdsStr, deck_name], function(err) {
     if (err) {
       console.error(err);
       return res.status(500).json({ error: 'Database error' });
