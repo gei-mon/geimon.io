@@ -339,6 +339,32 @@ app.get('/isLegal', async (req, res) => {
   }
 });
 
+app.post('/saveDeck', (req, res) => {
+  const { deckName, cardIds } = req.body;
+
+  if (!deckName || !Array.isArray(cardIds)) {
+    return res.status(400).json({ error: 'Invalid data' });
+  }
+
+  // Update card_ids JSON for the given deckName
+  const cardIdsStr = JSON.stringify(cardIds);
+
+  const sql = `UPDATE decks SET card_ids = ? WHERE name = ?`;
+  db.run(sql, [cardIdsStr, deckName], function(err) {
+    if (err) {
+      console.error(err);
+      return res.status(500).json({ error: 'Database error' });
+    }
+
+    if (this.changes === 0) {
+      // No deck found with that name
+      return res.status(404).json({ error: 'Deck not found' });
+    }
+
+    res.json({ success: true, message: 'Deck saved' });
+  });
+});
+
 app.post('/deleteDeck', async (req, res) => {
   const sessionId = req.cookies.session;
   const username = sessions[sessionId];

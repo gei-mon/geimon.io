@@ -96,7 +96,14 @@
         <p style="font-size: 200%; text-align:center; font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;"><game-title>Geimon!</game-title></p>
         <h2 id="deck-name" style="font-size: 200%; color:white; text-align:center; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: 16px;"></h2>
     </div>
-    <button class="button buttonEvenSmaller" onclick="window.close()" style="margin: 0 auto; text-align: center; display: block; display: flex; justify-content: center;">Close Deck</button>
+    <div style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
+        <button id="save-deck-btn" class="button buttonEvenSmaller" style="background-color: purple; color: white; padding: 8px 16px; font-family: 'Racing Sans One', cursive; border-radius: 6px; cursor: pointer;">
+            Save Deck
+        </button>
+        <button id="close-deck-btn" class="button buttonEvenSmaller" style="background-color: rgb(187, 0, 0); color: white; padding: 8px 16px; font-family: 'Racing Sans One', cursive; border-radius: 6px; cursor: pointer;">
+            Close Deck
+        </button>
+    </div>
 
     <div id="deck-info" style="width: 60%; margin: 12px auto; padding: 8px 16px; background-color: #3a3a3a; color: white; font-family: 'Racing Sans One', cursive; font-size: 18px; border-radius: 8px; display: flex; gap: 8px; text-align: center; justify-content: space-between;">
         Loading deck info...
@@ -146,6 +153,45 @@
 
             let storedCards = localStorage.getItem("selectedDeckCards");
             let cardIds = storedCards ? JSON.parse(storedCards) : [];
+
+            const saveDeckBtn = document.getElementById("save-deck-btn");
+            const closeDeckBtn = document.getElementById("close-deck-btn");
+
+            // Save Deck button functionality
+            saveDeckBtn.addEventListener("click", () => {
+            const deckName = localStorage.getItem("selectedDeckName") || "My Deck";
+            // Assuming cardIds is your array of card IDs
+            fetch("https://geimon-app-833627ba44e0.herokuapp.com/saveDeck", {
+                method: "POST",
+                headers: {
+                "Content-Type": "application/json",
+                credentials: 'include'
+                },
+                body: JSON.stringify({
+                deckName: deckName,
+                cardIds: cardIds
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                alert("Deck saved successfully!");
+                // Also optionally update localStorage
+                localStorage.setItem("selectedDeckCards", JSON.stringify(cardIds));
+                } else {
+                alert("Error saving deck: " + (data.error || "Unknown error"));
+                }
+            })
+            .catch(error => {
+                console.error("Error saving deck:", error);
+                alert("Error saving deck. Check console for details.");
+            });
+            });
+
+            // Close Deck button functionality
+            closeDeckBtn.addEventListener("click", () => {
+            window.close();
+            });
 
             function saveDeck() {
                 localStorage.setItem("selectedDeckCards", JSON.stringify(cardIds));
