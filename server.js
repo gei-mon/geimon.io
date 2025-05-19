@@ -346,24 +346,24 @@ app.post('/saveDeck', (req, res) => {
     return res.status(400).json({ success: false, error: 'Invalid data' });
   }
 
-  // Update card_ids JSON for the given deckName
   const cardIdsStr = JSON.stringify(card_ids);
 
-  const sql = `UPDATE decks SET card_ids = ? WHERE name = ?`;
-  db.run(sql, [cardIdsStr, deck_name], function(err) {
+  const sql = `UPDATE decks SET card_ids = ? WHERE deck_name = ?`;
+
+  db.run(sql, [cardIdsStr, deck_name], function (err) {
     if (err) {
-      console.error(err);
+      console.error('Database error in saveDeck:', err);
       return res.status(500).json({ error: 'Database error' });
     }
 
     if (this.changes === 0) {
-      // No deck found with that name
       return res.status(404).json({ error: 'Deck not found' });
     }
 
     res.json({ success: true, message: 'Deck saved' });
   });
 });
+
 
 app.post('/deleteDeck', async (req, res) => {
   const sessionId = req.cookies.session;

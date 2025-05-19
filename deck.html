@@ -158,28 +158,35 @@
             const closeDeckBtn = document.getElementById("close-deck-btn");
 
             // Save Deck button functionality
-            saveDeckBtn.addEventListener("click", () => {
+            saveDeckBtn.addEventListener("click", async () => {
             const deckName = localStorage.getItem("selectedDeckName") || "My Deck";
-                const response = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/saveDeck', {
+
+            try {
+            const response = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/saveDeck', {
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ deck_name: deckName, card_ids: cardIds })
-                });
+            });
 
-                if (!response.ok) {
+            if (!response.ok) {
                 const text = await response.text();
                 throw new Error(`HTTP ${response.status}: ${text}`);
-                }
-
-                const data = await response.json();
-
-                if (data.success) {
-                alert("Deck saved!");
-                } else {
-                alert("Failed to save deck: " + data.error);
-                }
             }
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert("Deck saved!");
+            } else {
+                alert("Failed to save deck: " + data.error);
+            }
+            } catch (error) {
+            console.error("Error saving deck:", error);
+            alert("Error saving deck. See console for details.");
+            }
+        });
+
 
             // Close Deck button functionality
             closeDeckBtn.addEventListener("click", () => {
