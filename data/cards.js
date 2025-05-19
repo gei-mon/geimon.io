@@ -15,7 +15,7 @@ export const cards = [
     abilities: [
       {
         text: "Deathward <br> If Sent to Tomb: Retrieve 1 other Undead Champion.",
-        keywords: ["Deathward", "Retrieve"],
+        keywords: ["Deathward"],
         effect: "retrieve_1_undead"
       }
     ]
@@ -36,7 +36,7 @@ export const cards = [
     abilities: [
       {
         text: "Bloodrage, Deathward <br> If Sent to Tomb: Resurrect this card, but Obliterate it when it leaves the Zone.",
-        keywords: ["Deathward", "Bloodrage", "Resurrect", "Obliterate"]
+        keywords: ["Deathward", "Bloodrage"]
       }
     ]
   },
@@ -55,8 +55,8 @@ export const cards = [
     life: 20,
     abilities: [
       {
-        text: "Deathward, Warded <br> On Rally: Excavate 3; Add 1 revealed and Obliterate the other 2. <br> Mind Augus (Exhaustion): Excavate 6 from your opponent&apos;s deck; Obliterate 1 card, return the rest in the order they were in. <br> Shattered Connection (Reflex): If this card would be destroyed: Send 1 card from your hand or Zone to the Tomb; this card is not destroyed.",
-        keywords: ["Deathward", "Warded", "Excavate", "Add", "Obliterate", "Exhaustion", "Reflex"],
+        text: "Deathward, Warded <br> On Rally: Excavate 3; Add 1 revealed, Obliterate the other 2. <br> Mind Augus (Exhaustion): Excavate 5 from your opponent&apos;s deck; Obliterate 1, return the rest in the same order. <br> Shattered Connection (Reflex): If this card would be destroyed: Send 1 other card from your hand or Zone to the Tomb; it is not destroyed.",
+        keywords: ["Deathward", "Warded"],
         effect1: "Mind Augus",
         effect2: "Shattered Connection"
       }

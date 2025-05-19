@@ -36,7 +36,7 @@ const formattedLines = lines.map(line => {
   const isEffect = line.startsWith("If ");
 
   // Define key phrases to format
-  const keyPhrases = ["If Sent to Tomb", "On Rally"];
+  const keyPhrases = ["If Sent to Tomb", "On Rally", "On Resurrection"];
 
   // Process key phrases for formatting
   keyPhrases.forEach(phrase => {
@@ -72,6 +72,7 @@ const formattedLines = lines.map(line => {
     <div class="card-name">${card.name}</div>
     <div class="card-image"></div>
     <div class="card-tags">${tags}</div>
+    <div class="card-cost">Cost: ${card.cost}</div>
     <div class="card-text" style="padding: 0;">${abilitiesHTML}</div>
     <div class="bottom-bar">
       <div class="damage">${card.damage}</div>
@@ -133,7 +134,7 @@ function adjustTextSize(cardElement) {
 
   // Ensure the text fits vertically within the container
   while (textContainer.scrollHeight > maxHeight && fontSize > 6) {
-    fontSize -= 6.5;
+    fontSize -= 4.5;
     textContainer.style.fontSize = `${fontSize}px`;
   }
   

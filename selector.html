@@ -148,7 +148,8 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    data.decks.forEach(deckName => {
+                    const sortedDecks = data.decks.sort((a, b) => a.localeCompare(b));
+                    sortedDecks.forEach(deckName => {
                     // Create container div for row
                     const deckRow = document.createElement("div");
                     deckRow.className = "deck-row";
