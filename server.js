@@ -306,6 +306,38 @@ app.post('/renameDeck', async (req, res) => {
   }
 });
 
+app.get('/isLegal', async (req, res) => {
+  const sessionId = req.cookies.session;
+  const username = sessions[sessionId];
+  const { deck_name } = req.query;
+
+  if (!username) {
+    return res.status(401).json({ success: false, message: 'User not authenticated' });
+  }
+  if (!deck_name) {
+    return res.status(400).json({ success: false, message: 'Deck name is required' });
+  }
+
+  try {
+    const { data: deck, error } = await supabase
+      .from('decks')
+      .select('legal')
+      .eq('user_name', username)
+      .eq('deck_name', deck_name)
+      .single();
+
+    if (error) throw error;
+
+    if (!deck) {
+      return res.status(404).json({ success: false, message: 'Deck not found' });
+    }
+
+    res.status(200).json({ success: true, legal: deck.legal });
+  } catch (err) {
+    console.error('Error checking deck legality:', err);
+    res.status(500).json({ success: false, message: 'Error checking deck legality', error: err.message });
+  }
+});
 
 app.post('/deleteDeck', async (req, res) => {
   const sessionId = req.cookies.session;

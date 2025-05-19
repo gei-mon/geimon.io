@@ -9,8 +9,84 @@
     <title>Deck Page</title>
     <body style="background-color:rgb(78, 78, 78);">
     <style>
+        .card-button {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            pointer-events: all;
+        }
+        .card-wrapper button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+        .card-wrapper button:focus {
+            outline: none;
+        }
+        .card-wrapper button:hover {
+            outline: none;
+        }
+        .scaled-card, 
+        .scaled-card * {
+        pointer-events: auto !important;
+        user-select: text !important;  /* so you can try selecting text, verifying interaction */
+        }
+        .main-container {
+        display: flex;
+        height: 80vh; /* adjust as needed */
+        gap: 10px;
+        padding: 0 10px 10px 10px;
+        }
+        /* Left side: existing container */
         .container {
-            display: flex;
+        flex: 1;
+        display: flex;
+        gap: 10px;
+        overflow-y: auto;
+        }
+
+        /* Right side: search panel */
+        .search-panel {
+        width: 320px;
+        background-color: #2f2f2f;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        padding: 12px;
+        color: white;
+        box-shadow: 0 0 10px black;
+        overflow-y: auto;
+        }
+
+        .search-panel input[type="search"] {
+        padding: 8px 10px;
+        font-size: 16px;
+        border-radius: 6px;
+        border: none;
+        margin-bottom: 12px;
+        outline: none;
+        width: 100%;
+        box-sizing: border-box;
+        font-family: 'Racing Sans One', cursive;
+        }
+
+        .search-results {
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        }
+
+        /* Make cards in search-results have same style as .card-wrapper children */
+        #card-wrapper > div, 
+        .search-results > div {
+        /* Assuming renderCard puts cards as divs in the container */
+        cursor: pointer;
         }
     </style>
 </head>
@@ -22,12 +98,24 @@
     </div>
     <button class="button buttonEvenSmaller" onclick="window.close()" style="margin: 0 auto; text-align: center; display: block; display: flex; justify-content: center;">Close Deck</button>
 
+    <div id="deck-info" style="width: 60%; margin: 12px auto; padding: 8px 16px; background-color: #3a3a3a; color: white; font-family: 'Racing Sans One', cursive; font-size: 18px; border-radius: 8px; display: flex; gap: 8px; text-align: center; justify-content: space-between;">
+        Loading deck info...
+    </div>
+
+    <div class="main-container">
     <div class="container">
       <div class="viewing-window" id="viewing-window">
         <div class="scaled-card" id="scaled-card"></div>
       </div>
         <div class="card-wrapper" id="card-wrapper"></div>
     </div>
+
+    <div class="search-panel" id="search-panel">
+        <input type="search" id="search-input" placeholder="Search cards by name... (A-Z)" autocomplete="off" />
+        <div class="search-results" id="search-results"></div>
+        </div>
+    </div>
+
     <div id="tooltip" class="tooltip"></div>
 
     <p class="empty-deck-message" id="empty-message" style="display: none;">This deck is currently empty.</p>
@@ -35,6 +123,7 @@
     <script type="module">
         import { cards } from "./data/cards.js";
         import { renderCard } from "./utils/cardRenderer.js";
+        import { addTooltipListeners } from './utils/cardRenderer.js';
 
         document.addEventListener("DOMContentLoaded", () => {
             //const sortedCards = cards.sort((a, b) => a.name.localeCompare(b.name));
@@ -46,6 +135,9 @@
             const viewingWindow = document.getElementById("viewing-window");
             const scaledCardContainer = document.getElementById("scaled-card");
             let lastHoveredCard = null;
+
+            const searchInput = document.getElementById("search-input");
+            const searchResults = document.getElementById("search-results");
 
             const storedDeckName = localStorage.getItem("selectedDeckName") || "My Deck";
             deckNameElement.textContent = storedDeckName;
@@ -64,21 +156,39 @@
                     .map(id => cards.find(card => String(card.id) === String(id)))
                     .filter(Boolean);
 
+                updateDeckInfo(deckCards);
+
                 console.log("Deck Card IDs:", cardIds);
                 console.log("Matching cards found:");
                 deckCards.forEach(card => console.log(card));
 
                 deckCards.forEach(card => {
                 const cardElement = renderCard(card, container);
+                console.log("Attaching event listener to:", cardElement);
                 if (cardElement) {
-                    console.log("Attaching event listener to:", cardElement);
+                    const button = document.createElement("button");
+                    button.classList.add("card-button");
+                    button.addEventListener("click", () => {
+                        console.log(`Card clicked: ${card.name}`);
+                    });
+
+                    cardElement.appendChild(button);
+
                     cardElement.addEventListener("mouseenter", () => {
                         console.log("Mouse entered card:", cardElement);
                         scaledCardContainer.innerHTML = "";
                         const clone = cardElement.cloneNode(true);
+                        const cloneButton = clone.querySelector(".card-button");
+                            if (cloneButton) {
+                                cloneButton.remove();
+                            }
                         clone.classList.add("scaled-card");
                         scaledCardContainer.appendChild(clone);
                         addTooltipListeners(clone);
+                        console.log("Checking cloned card keywords:");
+                        clone.querySelectorAll(".keyword").forEach((keyword, index) => {
+                            console.log(`Keyword ${index + 1}:`, keyword.textContent, "Description:", keyword.dataset.description);
+                        });
                         lastHoveredCard = clone;
                     });
                 } else {
@@ -93,6 +203,135 @@
                 }
             });
         }
+
+    const sortedCards = [...cards].sort((a, b) => a.name.localeCompare(b.name));
+
+    function updateDeckInfo(deckCards) {
+        // Initialize counts
+        const counts = {
+            Champions: 0,
+            Actions: 0,
+            Equipments: 0,
+            Obelisks: 0,
+            Rush: 0,
+            Reflex: 0,
+        };
+
+        deckCards.forEach(cards => {
+            // Count by type (assuming card.type holds the card type string)
+            // Adjust this if your property names differ
+            switch (cards.type) {
+            case 'Champion':
+                counts.Champions++;
+                break;
+            case 'Action':
+                counts.Actions++;
+                break;
+            case 'Equipment':
+                counts.Equipments++;
+                break;
+            case 'Obelisk':
+                counts.Obelisks++;
+                break;
+            case 'Rush':
+                counts.Rush++;
+                break;
+            case 'Reflex':
+                counts.Reflex++;
+                break;
+        }
+    });
+        const total = deckCards.length;
+        const deckInfoDiv = document.getElementById('deck-info');
+
+        let isLegal = false;
+        async function checkLegality(deckName) {
+            try {
+                const response = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/isLegal', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ deck_name: deckName })
+                });
+                const data = await response.json();
+                return data.legal;
+            } catch (error) {
+                console.warn("Error fetching deck legality status:", error);
+                return false;
+            }
+        }
+
+        async function updateDeckInfo(deckName, counts) {
+            isLegal = await checkLegality(deckName);
+
+            const total = Object.values(counts).reduce((acc, val) => acc + val, 0);
+            const deckSizeColor = isLegal ? "#4CAF50" : "#ff4d4d";
+
+            deckInfoDiv.innerHTML = `
+                <span style="color: ${deckSizeColor};">Deck Size: ${total}</span>
+                <span>Champions: ${counts.Champions}</span>
+                <span>Actions: ${counts.Actions}</span>
+                <span>Equipments: ${counts.Equipments}</span>
+                <span>Obelisks: ${counts.Obelisks}</span>
+                <span>Rush: ${counts.Rush}</span>
+                <span>Reflex: ${counts.Reflex}</span>
+            `;
+        }
+    }
+
+
+      // Render all cards initially in search results
+      function renderSearchResults(filteredCards) {
+        searchResults.innerHTML = "";
+        filteredCards.forEach(card => {
+          const cardElement = renderCard(card, searchResults);
+          if (cardElement) {
+            const button = document.createElement("button");
+            button.classList.add("card-button");
+            button.addEventListener("click", () => {
+              console.log(`Search panel card clicked: ${card.name}`);
+              // Optional: show card in scaled view on click here
+              scaledCardContainer.innerHTML = "";
+              const clone = cardElement.cloneNode(true);
+              const cloneButton = clone.querySelector(".card-button");
+              if (cloneButton) cloneButton.remove();
+              clone.classList.add("scaled-card");
+              scaledCardContainer.appendChild(clone);
+              addTooltipListeners(clone);
+              lastHoveredCard = clone;
+            });
+            cardElement.appendChild(button);
+
+            cardElement.addEventListener("mouseenter", () => {
+              scaledCardContainer.innerHTML = "";
+              const clone = cardElement.cloneNode(true);
+              const cloneButton = clone.querySelector(".card-button");
+              if (cloneButton) cloneButton.remove();
+              clone.classList.add("scaled-card");
+              scaledCardContainer.appendChild(clone);
+              addTooltipListeners(clone);
+              lastHoveredCard = clone;
+            });
+          }
+        });
+
+        if (filteredCards.length === 0) {
+          searchResults.innerHTML = `<p style="color:#ccc; text-align:center; width:100%;">No cards found</p>`;
+        }
+      }
+
+      renderSearchResults(sortedCards);
+
+      searchInput.addEventListener("input", () => {
+        const query = searchInput.value.trim().toLowerCase();
+        if (query === "") {
+          renderSearchResults(sortedCards);
+        } else {
+          const filtered = sortedCards.filter(card => card.name.toLowerCase().includes(query));
+          renderSearchResults(filtered);
+        }
+      });
     });
     </script>
 </body>

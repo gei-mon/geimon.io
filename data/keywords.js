@@ -4,7 +4,6 @@ export const keywords = {
   Warded: "This Champion cannot be targeted.",
   Deathpower: "Decrease this Champion&apos;s Damage by your current Life.",
   Deathtouch: "If this card battles (attacks or is attacked): Destroy the other creature, damage calculation is not applied.",
-  Exhaustion: "Champion cannot attack the turn it uses this effect.",
   Heavy_Hands: "Decrease this card&apos;s attack by 2 for each card in your hand.",
   Lifebalance: "This card gains damage equal to the difference between yours and your opponent&apos;s Life.",
   Might_of_the_Small: "If your opponent&apos;s Life is higher than yours, double this card&apos;s damage.",
@@ -31,5 +30,6 @@ export const keywords = {
   Stack: "Place a designated card on top of the Deck.",
   Target: "Select a card to be the recipient of an effect.",
   Unleash: "Rally from the Void (ignoring cost). You must still meet conditions.",
-  Reflex: "You are able to activate this effect in response to another."
+  Reflex: "You are able to activate this effect in response to another.",
+  Exhaustion: "Champion cannot attack the turn it uses this effect."
 };

@@ -84,9 +84,10 @@ const formattedLines = lines.map(line => {
   adjustNameSize(cardElement);
   adjustTextSize(cardElement);
   const tooltip = document.getElementById("tooltip");
+  console.log("Ability HTML before cloning:", abilitiesHTML);
 
 cardElement.querySelectorAll(".keyword").forEach(keyword => {
-  keyword.addEventListener("mouseenter", (e) => {
+    keyword.addEventListener("mouseenter", (e) => {
     const description = e.target.dataset.description;
 
     if (description && description.trim() !== "") {
@@ -107,6 +108,10 @@ cardElement.querySelectorAll(".keyword").forEach(keyword => {
       tooltip.style.top = `${e.pageY - 40}px`;
     }
   });
+});
+console.log("Card Keywords for:", card.name);
+cardElement.querySelectorAll(".keyword").forEach((kw, index) => {
+    console.log(`Keyword ${index + 1}:`, kw.textContent, "Description:", kw.dataset.description);
 });
 return cardElement;
 }
@@ -147,26 +152,33 @@ function adjustTextSize(cardElement) {
 }
 
 export function addTooltipListeners(container) {
-  const tooltip = document.getElementById("tooltip");
-  const keywords = container.querySelectorAll(".keyword");
-  container.querySelectorAll(".keyword").forEach(keyword => {
-      keyword.addEventListener("mouseenter", (e) => {
-      const description = e.target.dataset.description;
-      if (description && description.trim() !== "") {
-          tooltip.textContent = description;
-          tooltip.style.display = "block";
-      } else {
-          tooltip.style.display = "none";
-      }
-      });
-      keyword.addEventListener("mouseleave", () => {
-      tooltip.style.display = "none";
-      });
-      keyword.addEventListener("mousemove", (e) => {
-      if (tooltip.style.display === "block") {
-          tooltip.style.left = `${e.pageX + 10}px`;
-          tooltip.style.top = `${e.pageY - 40}px`;
-      }
-      });
-  });
+    const keywords = container.querySelectorAll(".keyword");
+
+    console.log("Total keywords found for tooltips:", keywords.length);
+
+    const tooltip = document.getElementById("tooltip");
+
+    keywords.forEach(keyword => {
+        const description = keyword.dataset.description;
+
+        if (description && description.trim() !== "") {
+            console.log(`Assigning tooltip to keyword: ${keyword.textContent}, Description: ${description}`);
+
+            keyword.addEventListener("mouseenter", (e) => {
+                tooltip.textContent = description;
+                tooltip.style.display = "block";
+            });
+
+            keyword.addEventListener("mouseleave", () => {
+                tooltip.style.display = "none";
+            });
+
+            keyword.addEventListener("mousemove", (e) => {
+                if (tooltip.style.display === "block") {
+                    tooltip.style.left = `${e.pageX + 10}px`;
+                    tooltip.style.top = `${e.pageY - 40}px`;
+                }
+            });
+        }
+    });
 }
