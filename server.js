@@ -306,7 +306,7 @@ app.post('/renameDeck', async (req, res) => {
   }
 });
 
-app.get('/isLegal', async (req, res) => {
+app.post('/isLegal', async (req, res) => {
   const sessionId = req.cookies.session;
   const username = sessions[sessionId];
   const { deck_name } = req.query;
