@@ -339,30 +339,36 @@ app.get('/isLegal', async (req, res) => {
   }
 });
 
-app.post('/saveDeck', (req, res) => {
+app.post('/saveDeck', async (req, res) => {
+  const sessionId = req.cookies.session;
+  const username = sessions[sessionId];
   const { deck_name, card_ids } = req.body;
 
-  if (!deck_name || !Array.isArray(card_ids)) {
-    return res.status(400).json({ success: false, error: 'Invalid data' });
+  if (!username) {
+    return res.status(401).json({ success: false, message: 'User not authenticated' });
   }
 
-  const cardIdsStr = JSON.stringify(card_ids);
+  if (!deck_name || !Array.isArray(card_ids)) {
+    return res.status(400).json({ success: false, message: 'Invalid data' });
+  }
 
-  const sql = `UPDATE decks SET card_ids = ? WHERE deck_name = ?`;
+  try {
+    // Update the deck with new card IDs
+    const { error } = await supabase
+      .from('decks')
+      .update({ card_ids: card_ids })
+      .eq('user_name', username)
+      .eq('deck_name', deck_name);
 
-  db.run(sql, [cardIdsStr, deck_name], function (err) {
-    if (err) {
-      console.error('Database error in saveDeck:', err);
-      return res.status(500).json({ error: 'Database error' });
-    }
+    if (error) throw error;
 
-    if (this.changes === 0) {
-      return res.status(404).json({ error: 'Deck not found' });
-    }
-
-    res.json({ success: true, message: 'Deck saved' });
-  });
+    res.status(200).json({ success: true, message: 'Deck saved' });
+  } catch (err) {
+    console.error('Error saving deck:', err);
+    res.status(500).json({ success: false, message: 'Error saving deck', error: err.message });
+  }
 });
+
 
 
 app.post('/deleteDeck', async (req, res) => {
