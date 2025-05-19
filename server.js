@@ -265,6 +265,48 @@ app.post('/getDeckCards', async (req, res) => {
     }
 });
 
+app.post('/renameDeck', async (req, res) => {
+  const sessionId = req.cookies.session;
+  const username = sessions[sessionId];
+  const { old_deck_name, new_deck_name } = req.body;
+
+  if (!username) {
+    return res.status(401).json({ success: false, message: 'User not authenticated' });
+  }
+  if (!old_deck_name || !new_deck_name) {
+    return res.status(400).json({ success: false, message: 'Old and new deck names are required' });
+  }
+
+  try {
+    // Check if new deck name already exists for the user
+    const { data: existingDecks, error: fetchError } = await supabase
+      .from('decks')
+      .select('deck_name')
+      .eq('user_name', username)
+      .eq('deck_name', new_deck_name);
+
+    if (fetchError) throw fetchError;
+    if (existingDecks.length > 0) {
+      return res.status(400).json({ success: false, message: 'New deck name already exists' });
+    }
+
+    // Update the deck name
+    const { error: updateError } = await supabase
+      .from('decks')
+      .update({ deck_name: new_deck_name })
+      .eq('user_name', username)
+      .eq('deck_name', old_deck_name);
+
+    if (updateError) throw updateError;
+
+    res.status(200).json({ success: true, message: 'Deck renamed successfully' });
+  } catch (err) {
+    console.error('Error renaming deck:', err);
+    res.status(500).json({ success: false, message: 'Error renaming deck', error: err.message });
+  }
+});
+
+
 app.post('/deleteDeck', async (req, res) => {
   const sessionId = req.cookies.session;
   const username = sessions[sessionId];
