@@ -210,7 +210,6 @@ app.post('/createDeck', async (req, res) => {
     }
 });
 
-
 // Endpoint to get decks by user
 app.get('/getUserDecks', async (req, res) => {
     const sessionId = req.cookies.session;
@@ -229,6 +228,40 @@ app.get('/getUserDecks', async (req, res) => {
     } catch (err) {
         console.error("Error fetching decks:", err);
         res.status(500).json({ success: false, message: "Error fetching decks" });
+    }
+});
+
+app.post('/getDeckCards', async (req, res) => {
+    const sessionId = req.cookies.session;
+    const username = sessions[sessionId];
+    const { deck_name } = req.body;
+
+    if (!username) {
+        return res.status(401).json({ success: false, message: 'User not authenticated' });
+    }
+
+    if (!deck_name) {
+        return res.status(400).json({ success: false, message: 'Deck name is required' });
+    }
+
+    try {
+        const { data: deck, error } = await supabase
+            .from('decks')
+            .select('card_ids')
+            .eq('user_name', username)
+            .eq('deck_name', deck_name)
+            .single();
+
+        if (error) throw error;
+
+        if (!deck) {
+            return res.status(404).json({ success: false, message: 'Deck not found' });
+        }
+
+        res.status(200).json({ success: true, card_ids: deck.card_ids });
+    } catch (err) {
+        console.error('Error fetching deck cards:', err);
+        res.status(500).json({ success: false, message: 'Error fetching deck cards', error: err.message });
     }
 });
 
