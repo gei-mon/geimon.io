@@ -108,6 +108,7 @@ cardElement.querySelectorAll(".keyword").forEach(keyword => {
     }
   });
 });
+return cardElement;
 }
 function adjustNameSize(cardElement) {
   const nameContainer = cardElement.querySelector(".card-name");
@@ -142,5 +143,30 @@ function adjustTextSize(cardElement) {
   const bottomBar = cardElement.querySelector(".bottom-bar");
   bottomBar.querySelectorAll(".damage, .life").forEach(el => {
     el.style.fontSize = "1.6em";  // Keep damage and life text font size fixed
+  });
+}
+
+export function addTooltipListeners(container) {
+  const tooltip = document.getElementById("tooltip");
+  const keywords = container.querySelectorAll(".keyword");
+  container.querySelectorAll(".keyword").forEach(keyword => {
+      keyword.addEventListener("mouseenter", (e) => {
+      const description = e.target.dataset.description;
+      if (description && description.trim() !== "") {
+          tooltip.textContent = description;
+          tooltip.style.display = "block";
+      } else {
+          tooltip.style.display = "none";
+      }
+      });
+      keyword.addEventListener("mouseleave", () => {
+      tooltip.style.display = "none";
+      });
+      keyword.addEventListener("mousemove", (e) => {
+      if (tooltip.style.display === "block") {
+          tooltip.style.left = `${e.pageX + 10}px`;
+          tooltip.style.top = `${e.pageY - 40}px`;
+      }
+      });
   });
 }

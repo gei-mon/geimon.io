@@ -9,198 +9,25 @@
     <title>Deck Page</title>
     <body style="background-color:rgb(78, 78, 78);">
     <style>
-        .card-container {
+        .container {
             display: flex;
-            flex-wrap: wrap;  /* Allow the cards to wrap to the next row */
-            justify-content: flex-start;  /* Align items to the left */
-            gap: 0px;  /* Space between the cards */
-            margin: 0 auto;
-            padding: 16px;
-        }
-
-        .bg-image {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover;
-            opacity: 0.3;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        .champion {
-            background-color: pink;
-            border: 6px solid black;
-            font-family: 'Racing Sans One', sans-serif;
-        }
-
-        .cryptbound {
-            background-color: #2f2f2f;
-            color: #8ab58f;
-        }
-
-        .card-name {
-            width: 90%;            /* Fixed width to prevent overflow */
-            max-height: 5%;       /* Reduce the max height to make it shorter */
-            overflow: hidden;      /* Prevents overflow */
-            display: flex;
-            align-items: center;   /* Center vertically */
-            justify-content: center; /* Center horizontally */
-            font-size: 1.5em;      /* Base font size */
-            text-align: center;
-            padding: 0px;
-            box-sizing: border-box;
-            white-space: nowrap;
-            text-overflow: ellipsis; /* Show ... if text overflows */
-            text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;
-        }
-
-        .card-cost {
-            font-size: 0.8em;      /* Base font size */
-            padding-top: 4px;
-            text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;
-        }
-
-        .card-image {
-            width: 100%;
-            height: 150px;
-            background-color: #ddd;
-            margin-bottom: 4px;
-            border: 3px solid black;
-        }
-
-        .card-tags {
-            width: 100%;
-            background-color: black;
-            color: white;
-            padding: 4px;
-            text-align: center;
-            font-family: 'Racing Sans One', sans-serif;
-        }
-
-        .card-tags span {
-            background-color: #000;
-            color: #fff;
-            padding: 4px 8px;
-            border-radius: 4px;
-        }
-
-        .card-text {
-        list-style-type: none;
-        width: 100%;            /* Match the width of the card name */
-        max-height: 16em;       /* Limit the height of the text box (adjustable) */
-        overflow: hidden;      /* Prevents overflow */
-        padding: 0;        /* Reduce padding for the text box */
-        margin-top: 2px;       /* Reduced top margin to bring text closer to the name */
-        display: flex;
-        flex-direction: column;
-        text-align: left;
-        box-sizing: border-box;
-        flex-grow: 1; /* Allow the text content to take up space without affecting the bottom bar */
-        text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;
-        }
-
-        .card-text .effect {
-        margin-bottom: 4px;     /* Adjust margin between effects */
-        }
-
-        .card-text .keyword {
-        margin-bottom: 4px;     /* Adjust margin between keywords */
-        }
-
-        .card {
-        width: 240px;
-        height: 420px;
-        padding: 2px 8px;
-        margin: 16px;
-        border: 3px solid #000000;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: space-between;
-        position: relative;  /* Ensure that the .bottom-bar is positioned relative to the card */
-        overflow: hidden;
-        }
-
-        @media (max-width: 768px) {
-            .card {
-                width: calc(50% - 32px); /* Cards take up 50% of the container width on medium screens */
-            }
-        }
-
-        @media (max-width: 480px) {
-            .card {
-                width: calc(100% - 32px); /* Cards take up 100% of the container width on small screens */
-            }
-        }
-
-        .bottom-bar {
-        width: 70%;                  /* Reduced width */
-        height: 32px;
-        display: flex;
-        position: absolute;
-        bottom: 8px;                /* Moves the bar up from the very bottom of the card */
-        left: 50%;
-        transform: translateX(-50%); /* Center horizontally within the card */
-        background-color: #444;
-        color: white;
-        overflow: hidden;
-        border-radius: 4px;          /* Optional: rounded corners for a smooth effect */
-        }
-
-        .bottom-bar .damage,
-        .bottom-bar .life {
-        width: 50%;
-        display: flex;
-        align-items: center;         /* Vertically center the numbers */
-        justify-content: center;     /* Horizontally center the numbers */
-        text-align: center;
-        font-size: 1.2em;            /* Adjust font size */
-        font-weight: bold;
-        padding: 0;
-        }
-
-        .bottom-bar .damage {
-        background-color: #ff0000;
-        clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);
-        }
-
-        .bottom-bar .life {
-        background-color: #6057ff;
-        clip-path: polygon(10% 0, 100% 0, 100% 100%, 0% 100%);
-        }
-
-        .tooltip {
-            position: absolute;
-            background-color: black;
-            color: white;
-            border: 1px solid white;
-            padding: 8px;
-            pointer-events: none;
-            z-index: 1000;
-            display: none;
-            font-family: 'Racing Sans One', sans-serif;
-        }
-
-        .empty-deck-message {
-            color: white;
-            font-size: 1.5em;
-            text-align: center;
-            margin-top: 20px;
         }
     </style>
 </head>
 <body>
   <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
-    <div class="container">
+    <div>
         <p style="font-size: 200%; text-align:center; font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;"><game-title>Geimon!</game-title></p>
         <h2 id="deck-name" style="font-size: 200%; color:white; text-align:center; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: 16px;"></h2>
     </div>
     <button class="button buttonEvenSmaller" onclick="window.close()" style="margin: 0 auto; text-align: center; display: block; display: flex; justify-content: center;">Close Deck</button>
 
-    <div class="card-container" id="card-container"></div>
+    <div class="container">
+      <div class="viewing-window" id="viewing-window">
+        <div class="scaled-card" id="scaled-card"></div>
+      </div>
+        <div class="card-wrapper" id="card-wrapper"></div>
+    </div>
     <div id="tooltip" class="tooltip"></div>
 
     <p class="empty-deck-message" id="empty-message" style="display: none;">This deck is currently empty.</p>
@@ -213,9 +40,12 @@
             //const sortedCards = cards.sort((a, b) => a.name.localeCompare(b.name));
             //sortedCards.forEach(card => renderCard(card, container));
 
-            const container = document.getElementById("card-container");
+            const container = document.getElementById("card-wrapper");
             const emptyMessage = document.getElementById("empty-message");
             const deckNameElement = document.getElementById("deck-name");
+            const viewingWindow = document.getElementById("viewing-window");
+            const scaledCardContainer = document.getElementById("scaled-card");
+            let lastHoveredCard = null;
 
             const storedDeckName = localStorage.getItem("selectedDeckName") || "My Deck";
             deckNameElement.textContent = storedDeckName;
@@ -238,9 +68,32 @@
                 console.log("Matching cards found:");
                 deckCards.forEach(card => console.log(card));
 
-                deckCards.forEach(card => renderCard(card, container));
-            }
-        });
+                deckCards.forEach(card => {
+                const cardElement = renderCard(card, container);
+                if (cardElement) {
+                    console.log("Attaching event listener to:", cardElement);
+                    cardElement.addEventListener("mouseenter", () => {
+                        console.log("Mouse entered card:", cardElement);
+                        scaledCardContainer.innerHTML = "";
+                        const clone = cardElement.cloneNode(true);
+                        clone.classList.add("scaled-card");
+                        scaledCardContainer.appendChild(clone);
+                        addTooltipListeners(clone);
+                        lastHoveredCard = clone;
+                    });
+                } else {
+                    console.warn("No card element found for card:", card);
+                }
+            });
+
+            container.addEventListener("mouseleave", () => {
+                if (lastHoveredCard) {
+                    console.log("Mouse left container");
+                    lastHoveredCard = null;
+                }
+            });
+        }
+    });
     </script>
 </body>
 </html>
