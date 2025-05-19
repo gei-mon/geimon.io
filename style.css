@@ -316,8 +316,6 @@ clip-path: polygon(10% 0, 100% 0, 100% 100%, 0% 100%);
   margin-top: 20px;
 }
 
-
-
 .card-wrapper {
   display: flex;
   transform-origin: top left;  /* Adjust as needed */
