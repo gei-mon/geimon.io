@@ -231,6 +231,35 @@ app.get('/getUserDecks', async (req, res) => {
     }
 });
 
+app.get("/getDeck", async (req, res) => {
+    try {
+        const { deck_name } = req.query;
+
+        if (!deck_name) {
+            return res.status(400).json({ error: "Missing deck_name parameter" });
+        }
+
+        const { data, error } = await supabaseClient
+            .from("decks")
+            .select("card_ids")
+            .eq("deck_name", deck_name)
+            .single();
+
+        if (error) {
+            console.error("Error fetching deck:", error);
+            return res.status(500).json({ error: "Error fetching deck data" });
+        }
+
+        const cardIds = data ? data.card_ids : [];
+
+        res.json({ card_ids: cardIds });
+
+    } catch (err) {
+        console.error("Error in /getDeck:", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
 app.post('/getDeckCards', async (req, res) => {
     const sessionId = req.cookies.session;
     const username = sessions[sessionId];
