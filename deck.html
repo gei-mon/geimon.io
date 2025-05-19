@@ -178,30 +178,63 @@
             display: none;
             font-family: 'Racing Sans One', sans-serif;
         }
+
+        .empty-deck-message {
+            color: white;
+            font-size: 1.5em;
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
   <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
     <div class="container">
         <p style="font-size: 200%; text-align:center; font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;"><game-title>Geimon!</game-title></p>
-        <h2 style="color:white; text-align:center; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Deck-Constructor Placeholder</h2>
+        <h2 id="deck-name" style="font-size: 200%; color:white; text-align:center; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: 16px;"></h2>
     </div>
-    <button class="button buttonEvenSmaller" onclick="location.href='index.html'" style="margin: 0 auto; text-align: center; display: block; display: flex; justify-content: center;">Home</button>
+    <button class="button buttonEvenSmaller" onclick="window.close()" style="margin: 0 auto; text-align: center; display: block; display: flex; justify-content: center;">Close Deck</button>
 
     <div class="card-container" id="card-container"></div>
     <div id="tooltip" class="tooltip"></div>
 
+    <p class="empty-deck-message" id="empty-message" style="display: none;">This deck is currently empty.</p>
+
     <script type="module">
+        import { cards } from "./data/cards.js";
         import { renderCard } from "./utils/cardRenderer.js";
 
         document.addEventListener("DOMContentLoaded", () => {
-        const container = document.getElementById("card-container");
+            //const sortedCards = cards.sort((a, b) => a.name.localeCompare(b.name));
+            //sortedCards.forEach(card => renderCard(card, container));
 
-        // Sort cards by name alphabetically
-        const sortedCards = cards.sort((a, b) => a.name.localeCompare(b.name));
+            const container = document.getElementById("card-container");
+            const emptyMessage = document.getElementById("empty-message");
+            const deckNameElement = document.getElementById("deck-name");
 
-        // Render each card in order
-        sortedCards.forEach(card => renderCard(card, container));
+            const storedDeckName = localStorage.getItem("selectedDeckName") || "My Deck";
+            deckNameElement.textContent = storedDeckName;
+
+            container.innerHTML = "";  // Clear container before rendering
+
+            const storedCards = localStorage.getItem("selectedDeckCards");
+            const cardIds = storedCards ? JSON.parse(storedCards) : [];
+
+            if (cardIds.length === 0) {
+                emptyMessage.style.display = "block";
+            } else {
+                emptyMessage.style.display = "none";
+
+                const deckCards = cardIds
+                    .map(id => cards.find(card => String(card.id) === String(id)))
+                    .filter(Boolean);
+
+                console.log("Deck Card IDs:", cardIds);
+                console.log("Matching cards found:");
+                deckCards.forEach(card => console.log(card));
+
+                deckCards.forEach(card => renderCard(card, container));
+            }
         });
     </script>
 </body>

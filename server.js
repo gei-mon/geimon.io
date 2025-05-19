@@ -265,6 +265,37 @@ app.post('/getDeckCards', async (req, res) => {
     }
 });
 
+app.post('/deleteDeck', async (req, res) => {
+  const sessionId = req.cookies.session;
+  const username = sessions[sessionId];
+  const { deck_name } = req.body;
+
+  if (!username) {
+    return res.status(401).json({ success: false, message: 'User not authenticated' });
+  }
+  if (!deck_name) {
+    return res.status(400).json({ success: false, message: 'Deck name required' });
+  }
+
+  try {
+    // Delete deck owned by the logged-in user
+    const { error } = await supabase
+      .from('decks')
+      .delete()
+      .eq('user_name', username)
+      .eq('deck_name', deck_name);
+
+    if (error) {
+      throw error;
+    }
+
+    res.status(200).json({ success: true, message: 'Deck deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting deck:', err);
+    res.status(500).json({ success: false, message: 'Failed to delete deck', error: err.message });
+  }
+});
+
 // GET /logout
 app.get('/logout', (req, res) => {
   const sessionId = req.cookies.session;
