@@ -39,6 +39,7 @@
         height: 80vh; /* adjust as needed */
         gap: 10px;
         padding: 0 10px 10px 10px;
+        overflow: hidden; /* Prevent horizontal overflow */
         }
         /* Left side: existing container */
         .container {
@@ -58,7 +59,9 @@
         padding: 12px;
         color: white;
         box-shadow: 0 0 10px black;
-        overflow-y: auto;
+        height: 60vh;           /* fix height */
+        overflow-y: auto;     /* Allow scrolling */
+        overflow-x: hidden;   /* Prevent horizontal overflow */
         }
 
         .search-panel input[type="search"] {
@@ -71,16 +74,45 @@
         width: 100%;
         box-sizing: border-box;
         font-family: 'Racing Sans One', cursive;
+        flex-shrink: 0;         /* input should not shrink */
+        }
+        .shrink-wrapper {
+            flex-grow: 1;
+            overflow-y: auto;    /* Allow vertical scrolling */
+            overflow-x: hidden;  /* Prevent horizontal scroll */
+            position: relative;
+        }
+        .shrink {
+            width: 640px;          /* keep same width */
+            transform: scale(0.5);
+            transform-origin: top left;
+            height: auto;
+            overflow-y: auto;      /* scroll vertically here */
+            overflow-x: hidden;    /* disable horizontal scroll */
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            flex-grow: 0;
         }
 
         .search-results {
-        flex: 1;
-        overflow-y: auto;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        justify-content: center;
-        transform: scale(1);
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-start; /* align left */
+            max-width: 100%; /* prevent overflow */
+            overflow-x: hidden; /* disable horizontal scroll */
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: flex-start;
+            width: 100%;
+            overflow-x: hidden;
         }
 
         /* Make cards in search-results have same style as .card-wrapper children */
@@ -89,6 +121,7 @@
         /* Assuming renderCard puts cards as divs in the container */
         cursor: pointer;
         }
+
     </style>
 </head>
 <body>
@@ -119,8 +152,14 @@
     </div>
 
     <div class="search-panel" id="search-panel">
-        <input type="search" id="search-input" placeholder="Search cards by name... (A-Z)" autocomplete="off" />
-        <div class="search-results" id="search-results"></div>
+        <input type="search" id="search-input" placeholder="Search cards by name..." autocomplete="off" />
+            <div class="shrink-wrapper">
+            <div class="shrink">
+                <div class="row">
+                    <div class="search-results" id="search-results"></div>
+                </div>
+            </div>
+            </div>
         </div>
     </div>
 
