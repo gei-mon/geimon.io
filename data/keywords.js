@@ -2,7 +2,7 @@ export const keywords = {
   Bloodrage: "Increase this Champion&apos;s Damage equal to the Life it has lost.",
   Bulletproof: "This Champion cannot be damaged by battle. You take no Damage from battles involving this Champion.",
   Conscript: "Whichever player destroys this Champion by battle must activate this effect to Resurrect it under their control.",
-  Deathcurse: "Champions that battle this Champion take double the Deathcurse Champion&apos;s Damage value during each end phase while they both remain on the field.",
+  Deathcurse: "Champions that battle this Champion take double this Champion&apos;s Damage value during each end phase while they both remain on the field.",
   Deathpower: "Decrease this Champion&apos;s Damage by your current Life.",
   Deathtouch: "If this card battles: Destroy the other creature, damage calculation is not applied.",
   Deathward: "If this Champion is destroyed by battle, you take no further Damage from that battle.",

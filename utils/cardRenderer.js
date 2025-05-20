@@ -7,8 +7,15 @@ export function renderCard(card, container) {
   if (card.type === "Champion") {
     cardElement.classList.add("champion");
     if (card.tag1 === "Cryptbound") {
-      cardElement.classList.add("cryptbound");
-    }
+      cardElement.classList.add("cryptbound");}
+    if (card.tag1 === "Frontier") {
+      cardElement.classList.add("frontier");}
+    if (card.tag1 === "Clockwork") {
+      cardElement.classList.add("clockwork");}
+    if (card.tag1 === "Noble") {
+      cardElement.classList.add("noble");}
+    if (card.tag1 === "Vivisect") {
+      cardElement.classList.add("vivisect");}
   }
 
   const tags = [card.tag1, card.tag2, card.tag3, card.tag4, card.tag5, card.tag6]

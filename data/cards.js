@@ -173,5 +173,28 @@ export const cards = [
         effect1: "mill3"
       }
     ]
+  },
+  {
+    id: "8",
+    name: "Areza, Town Harlot",
+    image: `${cardArtFolder}/ArezaHarlot.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tag1: "Frontier",
+    tag2: "Citizen",
+    tag3: "",
+    tag4: "",
+    tag5: "",
+    tag6: "",
+    damage: 2,
+    life: 3,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Deathcurse, Lifetouch, Priority",
+        keywords: ["Deathcurse","Lifetouch","Priority"]
+      }
+    ]
   }
 ];
