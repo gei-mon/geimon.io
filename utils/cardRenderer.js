@@ -99,6 +99,7 @@ cardElement.querySelectorAll(".keyword").forEach(keyword => {
     if (description && description.trim() !== "") {
       tooltip.textContent = description;
       tooltip.style.display = "block";
+      tooltip.style.fontFamily = `"Times New Roman", Times, serif`;
     } else {
       tooltip.style.display = "none";
     }
