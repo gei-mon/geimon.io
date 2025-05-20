@@ -156,14 +156,28 @@ text-decoration: underline;
 }
 
 .champion {
-  background-color: pink;
   border: 6px solid black;
   font-family: 'Times New Roman', sans-serif;
 }
-
 .cryptbound {
   background-color: #293b30;
   color: #67aa71;
+}
+.frontier {
+  background-color: #8d7610;
+  color: #fff265;
+}
+.clockwork {
+  background-color: #15229a;
+  color: #9ae2ff;
+}
+.vivisect {
+  background-color: #7f3010;
+  color: #ffa97e;
+}
+.noble {
+  background-color: #410752;
+  color: #e48dff;
 }
 
 .card-name {
