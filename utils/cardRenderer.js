@@ -36,7 +36,7 @@ const formattedLines = lines.map(line => {
   const isEffect = line.startsWith("If ");
 
   // Define key phrases to format
-  const keyPhrases = ["If Sent to Tomb", "On Rally", "On Resurrection"];
+  const keyPhrases = ["If Sent to Tomb", "On Rally", "On Resurrection", "Mind Augus", "Exhaustion", "Shattered Connection", "Reflex", "Break the Seal", "Fateseal", "Rend Soul", "If Obliterated", "Soulburn"];
 
   // Process key phrases for formatting
   keyPhrases.forEach(phrase => {
@@ -72,17 +72,21 @@ const formattedLines = lines.map(line => {
     <div class="card-name">${card.name}</div>
     <div class="card-image"></div>
     <div class="card-tags">${tags}</div>
-    <div class="card-cost">Cost: ${card.cost}</div>
+    ${card.cost !== "Basic" ? `<div class="card-cost">Cost: ${card.cost}</div>` : ""}
     <div class="card-text" style="padding: 0;">${abilitiesHTML}</div>
     <div class="bottom-bar">
       <div class="damage">${card.damage}</div>
       <div class="life">${card.life}</div>
+      ${card.damageThreshold ? `<div class="damageThreshold">${card.damageThreshold}</div>` : ""}
     </div>
     `;
 
   container.appendChild(cardElement);
   adjustNameSize(cardElement);
-  adjustTextSize(cardElement);
+  cardElement.offsetHeight;
+  requestAnimationFrame(() => {
+  requestAnimationFrame(() => adjustTextSize(cardElement));
+  });
   const tooltip = document.getElementById("tooltip");
   console.log("Ability HTML before cloning:", abilitiesHTML);
 
@@ -143,7 +147,9 @@ function adjustTextSize(cardElement) {
     fontSize -= 4.5;
     textContainer.style.fontSize = `${fontSize}px`;
   }
-  
+  console.log("Text container height:", textContainer.offsetHeight);
+  console.log("Text scroll height:", textContainer.scrollHeight);
+
   // Ensure that the damage and life text are not resized
   const bottomBar = cardElement.querySelector(".bottom-bar");
   bottomBar.querySelectorAll(".damage, .life").forEach(el => {

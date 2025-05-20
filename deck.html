@@ -7,7 +7,6 @@
     <link href='https://fonts.googleapis.com/css?family=Racing Sans One' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
     <title>Deck Page</title>
-    <body style="background-color:rgb(78, 78, 78);">
     <style>
         .card-button {
             position: absolute;
@@ -17,6 +16,22 @@
             border: none;
             cursor: pointer;
             pointer-events: all;
+        }
+        .card-wrapper {
+            width: 100%;
+            max-width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0px;
+            padding: 0px;
+            transform-origin: top left;
+            margin-left: 80px;
+            margin-top: 20px;
+        }
+        .card-wrapper > div {
+            transform-origin: top left;
+            transform: scale(0.5);
+            margin: 0px -60px;
         }
         .card-wrapper button {
             background-color: transparent;
@@ -121,10 +136,9 @@
         /* Assuming renderCard puts cards as divs in the container */
         cursor: pointer;
         }
-
     </style>
 </head>
-<body>
+<body style="background-color:rgb(78, 78, 78);">
   <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
     <div>
         <p style="font-size: 200%; text-align:center; font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;"><game-title>Geimon!</game-title></p>
@@ -153,6 +167,7 @@
 
     <div class="search-panel" id="search-panel">
         <input type="search" id="search-input" placeholder="Search cards by name..." autocomplete="off" />
+        <input type="search" id="text-search-input" placeholder="Search cards by text..." style="margin-top: 10px;">
             <div class="shrink-wrapper">
             <div class="shrink">
                 <div class="row">
@@ -184,6 +199,7 @@
             let lastHoveredCard = null;
 
             const searchInput = document.getElementById("search-input");
+            const textSearchInput = document.getElementById("text-search-input");
             const searchResults = document.getElementById("search-results");
 
             const storedDeckName = localStorage.getItem("selectedDeckName") || "My Deck";
@@ -367,71 +383,69 @@
     `;
 }
 
-      // Render all cards initially in search results
+    searchInput.addEventListener("input", () => {
+        renderSearchResults();
+    });
+
+    textSearchInput.addEventListener("input", () => {
+        renderSearchResults();
+    });
+
     function renderSearchResults(cardsToRender = sortedCards) {
-        searchResults.innerHTML = "";
-        const query = searchInput.value.trim().toLowerCase();
+    searchResults.innerHTML = "";
+    const nameQuery = searchInput.value.trim().toLowerCase();
+    const textQuery = textSearchInput.value.trim().toLowerCase();
 
-        const matchingCards = cardsToRender.filter(card =>
-            card.name.toLowerCase().includes(query)
+    const filteredCards = sortedCards.filter(card => {
+    const nameMatches = !nameQuery || card.name.toLowerCase().includes(nameQuery);
+    const textMatches = !textQuery || card.abilities.some(ability => 
+        ability.text.toLowerCase().includes(textQuery)
         );
+    return nameMatches && textMatches;
+    });
 
-        matchingCards.forEach(card => {
-            const cardElement = renderCard(card, searchResults);
 
-            if (cardElement) {
-                const button = document.createElement("button");
-                button.classList.add("card-button");
+    filteredCards.forEach(card => {
+        const cardElement = renderCard(card, searchResults);
 
-                const isInDeck = cardIds.some(id => String(id) === String(card.id));
+        if (cardElement) {
+            const button = document.createElement("button");
+            button.classList.add("card-button");
 
-                if (isInDeck) {
-                    button.disabled = true;
-                    button.style.cursor = "not-allowed";
-                    button.title = "Already in deck";
-                } else {
-                    button.style.cursor = "pointer";
-                    button.title = "Add card to deck";
-                    button.addEventListener("click", () => {
-                        addCardToDeck(card.id);
-                    });
-                }
+            const isInDeck = cardIds.some(id => String(id) === String(card.id));
 
-                cardElement.appendChild(button);
-
-                cardElement.addEventListener("mouseenter", () => {
-                    scaledCardContainer.innerHTML = "";
-                    const clone = cardElement.cloneNode(true);
-                    const cloneButton = clone.querySelector(".card-button");
-                    if (cloneButton) cloneButton.remove();
-                    clone.classList.add("scaled-card");
-                    scaledCardContainer.appendChild(clone);
-                    addTooltipListeners(clone);
-                    lastHoveredCard = clone;
-                });
-
-                cardElement.addEventListener("mouseleave", () => {
-                    lastHoveredCard = null;
+            if (isInDeck) {
+                button.disabled = true;
+                button.style.cursor = "not-allowed";
+                button.title = "Already in deck";
+            } else {
+                button.style.cursor = "pointer";
+                button.title = "Add card to deck";
+                button.addEventListener("click", () => {
+                    addCardToDeck(card.id);
                 });
             }
-        });
-    }
 
+            cardElement.appendChild(button);
 
+            cardElement.addEventListener("mouseenter", () => {
+                scaledCardContainer.innerHTML = "";
+                const clone = cardElement.cloneNode(true);
+                const cloneButton = clone.querySelector(".card-button");
+                if (cloneButton) cloneButton.remove();
+                clone.classList.add("scaled-card");
+                scaledCardContainer.appendChild(clone);
+                addTooltipListeners(clone);
+                lastHoveredCard = clone;
+            });
 
-    searchInput.addEventListener("input", renderSearchResults);
-
-      renderSearchResults(sortedCards);
-
-      searchInput.addEventListener("input", () => {
-        const query = searchInput.value.trim().toLowerCase();
-        if (query === "") {
-          renderSearchResults(sortedCards);
-        } else {
-          const filtered = sortedCards.filter(card => card.name.toLowerCase().includes(query));
-          renderSearchResults(filtered);
+            cardElement.addEventListener("mouseleave", () => {
+                lastHoveredCard = null;
+            });
         }
-      });
+    });
+}
+      renderSearchResults();
     });
     </script>
 </body>
