@@ -28,6 +28,7 @@ export const cards = [
   {
     id: "2",
     name: "Fresh Undead",
+    image: `${cardArtFolder}/FreshUndead.png`,
     type: "Champion",
     condition: "",
     cost: "Basic",
@@ -51,6 +52,7 @@ export const cards = [
   {
     id: "3",
     name: "Markerion, Magus Supreme",
+    image: `${cardArtFolder}/MarkerionSupreme.png`,
     type: "Champion",
     condition: "",
     cost: "Offer 5 Life, Mill 5, and Sacrifice 1",
@@ -75,6 +77,7 @@ export const cards = [
   {
     id: "4",
     name: "Syamir, Lord of Bones",
+    image: `${cardArtFolder}/SyamirLordBones.png`,
     type: "Champion",
     condition: "",
     cost: "Offer 10 Life",
@@ -98,6 +101,7 @@ export const cards = [
   {
     id: "5",
     name: "Navariel, Lord of Oblivion",
+    image: `${cardArtFolder}/NavarielLordOblivion.png`,
     type: "Champion",
     condition: "",
     cost: "Mill 10",
@@ -123,6 +127,7 @@ export const cards = [
   {
     id: "6",
     name: "Reshamel, Guide to the Dead",
+    image: `${cardArtFolder}/ReshamelGuide.png`,
     type: "Champion",
     condition: "",
     cost: "Obliterate 2 cards you control",
@@ -148,6 +153,7 @@ export const cards = [
   {
     id: "7",
     name: "Bone Construct",
+    image: `${cardArtFolder}/BoneConstruct.png`,
     type: "Champion",
     condition: "",
     cost: "Offer 5 Life",

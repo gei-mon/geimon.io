@@ -70,7 +70,9 @@ const formattedLines = lines.map(line => {
 
   cardElement.innerHTML = `
     <div class="card-name">${card.name}</div>
-    <div class="card-image"></div>
+    <div class="card-image">
+      <img src="${card.image}" alt="${card.name}" class="card-art">
+    </div>
     <div class="card-tags">${tags}</div>
     ${card.cost !== "Basic" ? `<div class="card-cost">Cost: ${card.cost}</div>` : ""}
     <div class="card-text" style="padding: 0;">${abilitiesHTML}</div>
