@@ -86,6 +86,7 @@ io.on('connection', (socket) => {
 
     socket.join(joinedRoom);
     userMap.set(socket.id, { username, roomId: joinedRoom });
+    socket.to(joinedRoom).emit('message', { username: 'System', text: `${username} joined the chat` });
     socket.emit('room_joined', { roomId: joinedRoom });
   });
 
@@ -110,6 +111,8 @@ io.on('connection', (socket) => {
     const updated = (openRooms.get(roomId) || []).filter(id => id !== socket.id);
     if (updated.length === 0) openRooms.delete(roomId);
     else openRooms.set(roomId, updated);
+
+    socket.to(roomId).emit('message', { username: 'System', text: `${username} left the chat` });
 
     userMap.delete(socket.id);
   });
