@@ -25,6 +25,27 @@ const PUBLIC_DIR = path.join(__dirname, 'Public');
 app.use('/Public', express.static(path.join(__dirname, 'Public')));
 const PROFILE_DIR = path.join(PUBLIC_DIR, 'Images', 'Profile Pictures');
 
+// CORS setup
+const allowedOrigins = [
+  'http://127.0.0.1:5500',
+  'http://localhost:5500',
+  'https://gei-mon.github.io',
+  'https://geimon-app-833627ba44e0.herokuapp.com',
+];
+
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+}));
+
+const herokuBaseUrl = process.env.HEROKU_BASE_URL || 'https://geimon-app-833627ba44e0.herokuapp.com';
+
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
@@ -93,27 +114,6 @@ io.on('connection', (socket) => {
     userMap.delete(socket.id);
   });
 });
-
-// CORS setup
-const allowedOrigins = [
-  'http://127.0.0.1:5500',
-  'http://localhost:5500',
-  'https://gei-mon.github.io',
-  'https://geimon-app-833627ba44e0.herokuapp.com',
-];
-
-app.use(cors({
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-}));
-
-const herokuBaseUrl = process.env.HEROKU_BASE_URL || 'https://geimon-app-833627ba44e0.herokuapp.com';
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
