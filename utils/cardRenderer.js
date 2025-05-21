@@ -58,7 +58,7 @@ const formattedLines = lines.map(line => {
   const isEffect = line.startsWith("If ");
 
   // Define key phrases to format
-  const keyPhrases = ["Library Assistant", "Powerful Core", "Helping Hand", "If Discarded", "Deadeye", "If Sent to Tomb", "On Rally", "On Resurrection", "Mind Augus", "Exhaustion", "Shattered Connection", "Reflex", "Break the Seal", "Fateseal", "Rend Soul", "If Obliterated", "Soulburn"];
+  const keyPhrases = ["Lightbulb","Wake-Up Jolt","Upgrade", "Emergency Transport", "Secret Weapon", "Wake the Beast", "Garage Baby", "Library Assistant", "Powerful Core", "Helping Hand", "If Discarded", "Deadeye", "If Sent to Tomb", "On Rally", "On Resurrection", "Mind Augus", "Exhaustion", "Shattered Connection", "Reflex", "Break the Seal", "Fateseal", "Rend Soul", "If Obliterated", "Soulburn"];
 
   // Process key phrases for formatting
   keyPhrases.forEach(phrase => {

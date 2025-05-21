@@ -211,6 +211,10 @@
             const storedDeckName = localStorage.getItem("selectedDeckName") || "My Deck";
             deckNameElement.textContent = storedDeckName;
 
+            if (deckNameElement && deckNameElement.textContent.trim() !== "") {
+                document.title = deckNameElement.textContent.trim();
+            }
+
             container.innerHTML = "";  // Clear container before rendering
 
             let storedCards = localStorage.getItem("selectedDeckCards");

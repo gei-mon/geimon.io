@@ -557,8 +557,8 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Repair-Specialist <br> On Rally: Activate 1 Equipment or Obelisk from your hand, deck, or Tomb (ignoring its cost). <br> Upgrade: Rally 1 Blocker Token to your opponent's Zone; Add 1 Equipment. <br> Emergency Transport (Reflex): If this card is currently not a Commander: Obliterate the top 8 cards of your deck; Activate 1 Obelisk from your hand, deck, or Tomb that mentions a Commander (ignoring its cost).",
-        keywords: ["Repair-Specialist"],
+        text: "Repair Specialist <br> On Rally: Activate 1 Equipment or Obelisk from your hand, deck, or Tomb (ignoring its cost). <br> Upgrade: Rally 1 Blocker Token to your opponent's Zone; Add 1 Equipment. <br> Emergency Transport (Reflex): If this card is currently not a Commander: Obliterate the top 8 cards of your deck; Activate 1 Obelisk from your hand, deck, or Tomb that mentions a Commander (ignoring its cost).",
+        keywords: ["Repair Specialist"],
         effect1: "act1EqObHDT",
         effect2: "add1Eq",
         effect3: "EmergencyTransport"
@@ -609,11 +609,35 @@ export const cards = [
     damageThreshold: 2,
     abilities: [
       {
-        text: "Repair-Specialist <br> On Rally: Place 1 Obelisk that mentions a Commander from your deck into your Reserve. That Obelisk gains the Reserve Reflex Effect: Discard 1, activate this card (ignoring its cost). <br> Garage Baby: If you have at least 1 Obelisk that mentions a Commander in your Reserve: Attach 1 appropriate Equipment from your hand, deck, or Tomb to 1 Obelisk that mentions a Commander in your Reserve (ignoring its cost). <br> Secret Weapon (Reflex, Exhaustion): Destroy 1 Obelisk you control; Destroy up to 2 cards on the Zone.",
-        keywords: ["Repair-Specialist"],
+        text: "Repair Specialist <br> On Rally: Place 1 Obelisk that mentions a Commander from your deck into your Reserve. That Obelisk gains the Reserve Reflex Effect: Discard 1, activate this card (ignoring its cost). <br> Garage Baby: Attach 1 appropriate Equipment from your hand, deck, or Tomb to an Obelisk in your Reserve (ignoring its cost). <br> Secret Weapon (Reflex, Exhaustion): Destroy 1 Obelisk you control; Destroy up to 2 cards on the Zone.",
+        keywords: ["Repair Specialist"],
         effect1: "obIntoResAcSelf",
         effect2: "equipResOb",
         effect3: "SecretWeapon"
+      }
+    ]
+  },
+  {
+    id: "124",
+    name: "Angel, Motor Whisperer",
+    image: `${cardArtFolder}/Champions/AngelMotorWhisperer.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tag1: "Clockwork",
+    tag2: "Mechanic",
+    tag3: "Specialist",
+    tag4: "",
+    tag5: "",
+    tag6: "",
+    damage: 2,
+    life: 3,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Wake the Beast (Exhaustion): Discard 1; Activate 1 Obelisk from your Reserve (ignoring its cost).",
+        keywords: ["blank"],
+        effect1: "actObRes"
       }
     ]
   }
