@@ -36,6 +36,9 @@
         const socket = io('https://geimon-app-833627ba44e0.herokuapp.com', {
             withCredentials: true
         });
+        socket.on('connect', () => {
+            console.log('Connected to socket:', socket.id);
+        });
         const inputEl = document.getElementById('input');
         const messagesEl = document.getElementById('messages');
         const roomIdEl = document.getElementById('roomId');
@@ -50,9 +53,9 @@
         socket.emit('init', { username, roomId });
 
         socket.on('room_joined', (data) => {
-        roomId = data.roomId;
-        localStorage.setItem('roomId', roomId);
-        roomIdEl.innerText = `Room ID: ${roomId}`;
+            roomId = data.roomId;
+            localStorage.setItem('roomId', roomId);
+            roomIdEl.innerText = `Room ID: ${roomId}`;
         });
 
         socket.on('message', ({ username: from, text }) => {
