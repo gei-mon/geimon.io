@@ -83,7 +83,7 @@
                 roomId = data.roomId;
                 localStorage.setItem('roomId', roomId);
                 roomIdEl.innerText = `Room ID: ${roomId}`;
-                chatWithEl.innerText = `Chatting with: ${data.otherUser || 'Waiting for opponent...'}`;
+                chatWithEl.innerText = `Chatting with: ${data.otherUser?.username || 'Waiting for opponent...'}`;
             });
 
             socket.on('user_joined', (otherUser) => {
