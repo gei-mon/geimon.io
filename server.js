@@ -124,13 +124,11 @@ io.on('connection', (socket) => {
 
     socket.to(roomId).emit('message', { username: '', text: `${username} left the chat.` });
 
-    const roomSockets = openRooms.get(joinedRoom);
-    if (roomSockets.length === 2) {
-      const [socketId1, socketId2] = roomSockets;
-      const user1 = userMap.get(socketId1);
-      const user2 = userMap.get(socketId2);
-      io.to(socketId1).emit('user_left', { otherUser: user2.username });
-      io.to(socketId2).emit('user_left', { otherUser: user1.username });
+    const roomSockets = openRooms.get(roomId);
+    if (roomSockets && roomSockets.length === 1) {
+      const remainingSocketId = roomSockets[0];
+      const remainingUser = userMap.get(remainingSocketId);
+      io.to(remainingSocketId).emit('user_left', { otherUser: username });
     }
 
     userMap.delete(socket.id);
