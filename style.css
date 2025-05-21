@@ -222,6 +222,11 @@ text-decoration: underline;
   padding-top: 4px;
   text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;
 }
+.card-condition {
+  font-size: 0.8em;      /* Base font size */
+  padding-top: 4px;
+  text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;
+}
 
 .card-image {
   width: 100%;
@@ -446,7 +451,12 @@ clip-path: polygon(5% 0, 100% 0, 100% 100%, 0% 100%);
     cursor: pointer;
     transition: background-color 0.3s;
     flex-grow: 1;
-    margin: 0 8px; /* spacing between buttons */
+    margin: -8px 8px; /* spacing between buttons */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: clamp(0.7rem, 2vw, 4rem);
+    max-width: 100%;
 }
 
 .menu-item:hover {

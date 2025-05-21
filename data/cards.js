@@ -640,5 +640,54 @@ export const cards = [
         effect1: "actObRes"
       }
     ]
+  },
+  {
+    id: "125",
+    name: "Harlan, Ride or Die",
+    image: `${cardArtFolder}/Champions/HarlanRideorDie.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Mill 2",
+    tag1: "Clockwork",
+    tag2: "Outlaw",
+    tag3: "",
+    tag4: "",
+    tag5: "",
+    tag6: "",
+    damage: 3,
+    life: 7,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: "Bloodrage, Priority <br> Ride: Target 1 Equipment or Obelisk in your Tomb; Retrieve target. <br> Or Die (Mandatory): If it is your end phase and this Champion is not designated as a Commander: Destroy this card.",
+        keywords: ["Bloodrage","Priority"],
+        effect1: "tarRet1EquipOb",
+        effect2: "orDie"
+      }
+    ]
+  },
+  {
+    id: "126",
+    name: "Jimmy, King of Junk",
+    image: `${cardArtFolder}/Champions/JimmyJunkKing.png`,
+    type: "Champion",
+    condition: "You have 5 or more cards in your Tomb.",
+    cost: "Basic",
+    tag1: "Clockwork",
+    tag2: "Citizen",
+    tag3: "",
+    tag4: "",
+    tag5: "",
+    tag6: "",
+    damage: 1,
+    life: 2,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: "Might of the Small <br> Garbage Lord: Bury 1. <br> Trash Picker: Retrieve 1, but Obliterate the rest of the cards in your Tomb. <br> On Resurrection: Target 1 Champion in your Tomb; Resurrect target, but its Life is reduced to 1.",
+        keywords: ["Might of the Small"],
+        effect1: ""
+      }
+    ]
   }
 ];
