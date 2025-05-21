@@ -122,7 +122,16 @@ io.on('connection', (socket) => {
     if (updated.length === 0) openRooms.delete(roomId);
     else openRooms.set(roomId, updated);
 
-    socket.to(roomId).emit('message', { username: 'System', text: `${username} left the chat` });
+    socket.to(roomId).emit('message', { username: '', text: `${username} left the chat.` });
+
+    const roomSockets = openRooms.get(joinedRoom);
+    if (roomSockets.length === 2) {
+      const [socketId1, socketId2] = roomSockets;
+      const user1 = userMap.get(socketId1);
+      const user2 = userMap.get(socketId2);
+      io.to(socketId1).emit('user_left', { otherUser: user2.username });
+      io.to(socketId2).emit('user_left', { otherUser: user1.username });
+    }
 
     userMap.delete(socket.id);
   });
