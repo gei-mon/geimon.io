@@ -11,21 +11,20 @@
         body { font-family: sans-serif; }
         #roomId { margin-bottom: 1em; font-weight: bold; }
         #chatWith { margin-bottom: 1em; color: white; font-weight: bold; }
-        #messages { border: 4px solid #000000; padding: 1em; height: 400px; width: 300px; overflow-y: auto; background-color: lightgray; }
+        #messages { border: 4px solid #000000; padding: 4px; height: 400px; width: 300px; overflow-y: auto; background-color: lightgray; }
         #input { width: 45%; }
         #send { width: 10%; }
-        #typing { font-style: italic; color: lime; height: 1.5em; }
+        #typing { font-style: italic; color: lime; height: 1.5em; margin-top: 8px; }
         .system-message { color: blue; font-style: italic; }
     </style>
 </head>
 <body style="background-color:rgb(78, 78, 78);">
   <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
         <div class="container">
-            <p style="font-size: 200%; font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;"><game-title>Geimon!</game-title></p>
+            <p style="font-size: 200%; font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: -8px;"><game-title>Geimon!</game-title></p>
             <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: -28px;">Single-Game Placeholder, Temp Chat Space</h2>
         </div>
-        <button class="button buttonEvenSmaller" onclick="window.close()">Close</button>
-    <br><br>
+        <!-- <button class="button buttonEvenSmaller" onclick="window.close()">Close</button>-->
     <div style="max-width: 600px;">
     <div id="roomId">Connecting…</div>
     <div id="chatWith">Chatting with: …</div>

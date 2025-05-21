@@ -122,8 +122,6 @@ io.on('connection', (socket) => {
     if (updated.length === 0) openRooms.delete(roomId);
     else openRooms.set(roomId, updated);
 
-    socket.to(roomId).emit('message', { username: '', text: `${username} left the chat.` });
-
     const roomSockets = openRooms.get(roomId);
     if (roomSockets && roomSockets.length === 1) {
       const remainingSocketId = roomSockets[0];
