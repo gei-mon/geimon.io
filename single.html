@@ -10,10 +10,12 @@
     <style>
         body { font-family: sans-serif; }
         #roomId { margin-bottom: 1em; font-weight: bold; }
+        #chatWith { margin-bottom: 1em; color: white; font-weight: bold; }
         #messages { border: 1px solid #ccc; padding: 1em; height: 300px; overflow-y: auto; }
         #input { width: 80%; }
         #send { width: 18%; }
         #typing { font-style: italic; color: gray; height: 1.5em; }
+        .system-message { color: gray; font-style: italic; }
     </style>
 </head>
 <body style="background-color:rgb(78, 78, 78);">
@@ -26,6 +28,7 @@
     <br><br>
     <div style="max-width: 600px;">
     <div id="roomId">Connecting…</div>
+    <div id="chatWith">Chatting with: …</div>
     <div id="messages"></div>
     <div id="typing"></div>
     <input id="input" autocomplete="off" placeholder="Type your message…" />
@@ -37,6 +40,7 @@
         const messagesEl = document.getElementById('messages');
         const roomIdEl = document.getElementById('roomId');
         const typingEl = document.getElementById('typing');
+        const chatWithEl = document.getElementById('chatWith');
 
         (async () => {
             const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
@@ -61,6 +65,14 @@
                 withCredentials: true
             });
 
+            function appendSystemMessage(text) {
+                const msg = document.createElement('div');
+                msg.className = 'system-message';
+                msg.innerText = text;
+                messagesEl.appendChild(msg);
+                messagesEl.scrollTop = messagesEl.scrollHeight;
+            }
+
             socket.on('connect', () => {
                 console.log('Connected to socket:', socket.id);
                 socket.emit('init', { username });
@@ -71,6 +83,12 @@
                 roomId = data.roomId;
                 localStorage.setItem('roomId', roomId);
                 roomIdEl.innerText = `Room ID: ${roomId}`;
+                chatWithEl.innerText = `Chatting with: ${data.otherUser || 'Waiting for opponent...'}`;
+            });
+
+            socket.on('user_joined', (otherUser) => {
+                chatWithEl.innerText = `Chatting with: ${otherUser}`;
+                appendSystemMessage(`${otherUser} has joined the room.`);
             });
 
             socket.on('message', ({ username: from, text }) => {
