@@ -42,13 +42,12 @@
             const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
                 credentials: 'include',
             });
-
             if (!res.ok) {
                 console.error('Failed to fetch /me endpoint');
                 return;
             }
-
             const data = await res.json();
+
             if (!data.loggedIn) {
                 console.log('Not logged in, redirecting...');
                 window.location.href = 'login.html';
@@ -56,7 +55,7 @@
             }
 
             const username = data.username;
-            console.log('Logged in as:', username);
+            console.log(username);
 
             const socket = io('https://geimon-app-833627ba44e0.herokuapp.com', {
                 withCredentials: true
@@ -68,7 +67,6 @@
             });
 
             let roomId = localStorage.getItem('roomId');
-
             socket.on('room_joined', (data) => {
                 roomId = data.roomId;
                 localStorage.setItem('roomId', roomId);
@@ -94,7 +92,6 @@
             }
 
             document.getElementById('send').onclick = sendMsg;
-
             inputEl.addEventListener('keypress', e => {
                 if (e.key === 'Enter') sendMsg();
                 socket.emit('typing', true);
