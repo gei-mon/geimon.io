@@ -107,7 +107,7 @@ io.on('connection', (socket) => {
     const user = userMap.get(socket.id);
     if (!user) return;
 
-    const { roomId } = user;
+    const { roomId, username } = user;
     const updated = (openRooms.get(roomId) || []).filter(id => id !== socket.id);
     if (updated.length === 0) openRooms.delete(roomId);
     else openRooms.set(roomId, updated);
