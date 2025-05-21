@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang=""en">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv=""X-UA-Compatible" content="IE=edge">
@@ -42,67 +42,76 @@
             const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
                 credentials: 'include',
             });
-            if (!res.ok) throw new Error('Response error');
+
+            if (!res.ok) {
+                console.error('Failed to fetch /me endpoint');
+                return;
+            }
+
             const data = await res.json();
             if (!data.loggedIn) {
                 console.log('Not logged in, redirecting...');
                 window.location.href = 'login.html';
                 return;
             }
-        });
-        const username = data.username;
 
-        const socket = io('https://geimon-app-833627ba44e0.herokuapp.com', {
-            withCredentials: true
-        });
-        socket.on('connect', () => {
-            console.log('Connected to socket:', socket.id);
-            socket.emit('init', { username });
-        });
+            const username = data.username;
+            console.log('Logged in as:', username);
 
-        let roomId = localStorage.getItem('roomId');
+            const socket = io('https://geimon-app-833627ba44e0.herokuapp.com', {
+                withCredentials: true
+            });
 
-        socket.on('room_joined', (data) => {
-            roomId = data.roomId;
-            localStorage.setItem('roomId', roomId);
-            roomIdEl.innerText = `Room ID: ${roomId}`;
-        });
+            socket.on('connect', () => {
+                console.log('Connected to socket:', socket.id);
+                socket.emit('init', { username });
+            });
 
-        socket.on('message', ({ username: from, text }) => {
-        const msg = document.createElement('div');
-        msg.innerText = `${from}: ${text}`;
-        messagesEl.appendChild(msg);
-        messagesEl.scrollTop = messagesEl.scrollHeight;
-        });
+            let roomId = localStorage.getItem('roomId');
 
-        socket.on('typing', ({ username: from, isTyping }) => {
-        typingEl.innerText = isTyping ? `${from} is typing...` : '';
-        });
+            socket.on('room_joined', (data) => {
+                roomId = data.roomId;
+                localStorage.setItem('roomId', roomId);
+                roomIdEl.innerText = `Room ID: ${roomId}`;
+            });
 
-        function sendMsg() {
-        const text = inputEl.value.trim();
-        if (!text) return;
-        socket.emit('message', text);
-        inputEl.value = '';
-        }
+            socket.on('message', ({ username: from, text }) => {
+                const msg = document.createElement('div');
+                msg.innerText = `${from}: ${text}`;
+                messagesEl.appendChild(msg);
+                messagesEl.scrollTop = messagesEl.scrollHeight;
+            });
 
-        document.getElementById('send').onclick = sendMsg;
-        inputEl.addEventListener('keypress', e => {
-        if (e.key === 'Enter') sendMsg();
-        socket.emit('typing', true);
-        });
+            socket.on('typing', ({ username: from, isTyping }) => {
+                typingEl.innerText = isTyping ? `${from} is typing...` : '';
+            });
 
-        inputEl.addEventListener('input', () => {
-        if (inputEl.value === '') socket.emit('typing', false);
-        });
+            function sendMsg() {
+                const text = inputEl.value.trim();
+                if (!text) return;
+                socket.emit('message', text);
+                inputEl.value = '';
+            }
 
-        let typingTimeout;
-        inputEl.addEventListener('keyup', () => {
-        clearTimeout(typingTimeout);
-        typingTimeout = setTimeout(() => {
-            socket.emit('typing', false);
-        }, 1000);
-        });
+            document.getElementById('send').onclick = sendMsg;
+
+            inputEl.addEventListener('keypress', e => {
+                if (e.key === 'Enter') sendMsg();
+                socket.emit('typing', true);
+            });
+
+            inputEl.addEventListener('input', () => {
+                if (inputEl.value === '') socket.emit('typing', false);
+            });
+
+            let typingTimeout;
+            inputEl.addEventListener('keyup', () => {
+                clearTimeout(typingTimeout);
+                typingTimeout = setTimeout(() => {
+                    socket.emit('typing', false);
+                }, 1000);
+            });
+        })();
     </script>
   </div>
 </body>
