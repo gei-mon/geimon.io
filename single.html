@@ -6,16 +6,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://fonts.googleapis.com/css?family=Racing Sans One' rel='stylesheet'>
     <link rel="stylesheet" href="style.css">
-    <title>ABOUT PAGE</title>
-    <body style="background-color:rgb(0, 0, 0);">
+    <title>SINGLE GAME PAGE</title>
+    <style>
+        body { font-family: sans-serif; max-width: 600px; margin: 2em auto; }
+        #roomId { margin-bottom: 1em; font-weight: bold; }
+        #messages { border: 1px solid #ccc; padding: 1em; height: 300px; overflow-y: auto; }
+        #input { width: 80%; }
+        #send { width: 18%; }
+    </style>
 </head>
-<body>
-    <body>
+<body style="background-color:rgb(78, 78, 78);">
+  <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
         <div class="container">
-            <p style="font-size: 200%""><game-title>Geimon!</game-title></p>
-            <h2>Single-Game Placeholder</h2>
+            <p style="font-size: 200%; font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;"><game-title>Geimon!</game-title></p>
+            <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: -28px;">Single-Game Placeholder, Temp Chat Space</h2>
         </div>
-        <button class="button button" onclick="location.href='index.html'">Home</button>
-    </body>
+        <button class="button buttonEvenSmaller" onclick="location.href='index.html'">Home</button>
+    <div id="roomId">Connecting…</div>
+  <div id="messages"></div>
+  <input id="input" autocomplete="off" placeholder="Type your message…" />
+  <button id="send">Send</button>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    // display room ID once joined
+    socket.on('room_joined', (roomId) => {
+      document.getElementById('roomId').innerText = `Room ID: ${roomId}`;
+    });
+
+    // incoming messages
+    socket.on('message', (msg) => {
+      const m = document.createElement('div');
+      m.innerText = msg;
+      document.getElementById('messages').appendChild(m);
+      // auto-scroll
+      document.getElementById('messages').scrollTop = 
+        document.getElementById('messages').scrollHeight;
+    });
+
+    // send on button click or Enter key
+    const inputEl = document.getElementById('input');
+    document.getElementById('send').addEventListener('click', sendMsg);
+    inputEl.addEventListener('keypress', e => {
+      if (e.key === 'Enter') sendMsg();
+    });
+
+    function sendMsg() {
+      const text = inputEl.value.trim();
+      if (!text) return;
+      socket.emit('message', text);
+      // echo locally
+      const self = document.createElement('div');
+      self.innerText = `You: ${text}`;
+      self.style.fontStyle = 'italic';
+      document.getElementById('messages').appendChild(self);
+      document.getElementById('messages').scrollTop = 
+        document.getElementById('messages').scrollHeight;
+      inputEl.value = '';
+    }
+  </script>
 </body>
 </html>

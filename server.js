@@ -9,6 +9,8 @@ const db = require('./db');
 const { createClient } = require('@supabase/supabase-js');
 const bodyParser = require('body-parser');
 require('dotenv').config();
+const http = require('http');
+const { Server } = require('socket.io');
 
 // In-memory storage
 let sessions = {};
@@ -22,6 +24,54 @@ const app = express();
 const PUBLIC_DIR = path.join(__dirname, 'Public');
 app.use('/Public', express.static(path.join(__dirname, 'Public')));
 const PROFILE_DIR = path.join(PUBLIC_DIR, 'Images', 'Profile Pictures');
+
+const server = http.createServer(app);
+const io = new Server(server);
+
+const openRooms = new Map(); // roomId -> [socketIds]
+
+function generateRoomId() {
+  return Math.random().toString(36).substring(2, 8);
+}
+
+io.on('connection', (socket) => {
+  let joinedRoom;
+
+  // find a room with exactly 1 occupant
+  for (const [roomId, sockets] of openRooms.entries()) {
+    if (sockets.length === 1) {
+      sockets.push(socket.id);
+      joinedRoom = roomId;
+      socket.join(roomId);
+      break;
+    }
+  }
+
+  // if none available, create a new one
+  if (!joinedRoom) {
+    joinedRoom = generateRoomId();
+    openRooms.set(joinedRoom, [socket.id]);
+    socket.join(joinedRoom);
+  }
+
+  // notify this client which room they're in
+  socket.emit('room_joined', joinedRoom);
+
+  // relay messages only within this room
+  socket.on('message', (msg) => {
+    socket.to(joinedRoom).emit('message', msg);
+  });
+
+  socket.on('disconnect', () => {
+    const sockets = openRooms.get(joinedRoom) || [];
+    const updated = sockets.filter(id => id !== socket.id);
+    if (updated.length === 0) {
+      openRooms.delete(joinedRoom);
+    } else {
+      openRooms.set(joinedRoom, updated);
+    }
+  });
+});
 
 // CORS setup
 const allowedOrigins = [
