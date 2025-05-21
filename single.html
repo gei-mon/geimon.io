@@ -33,7 +33,7 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-        const socket = io();
+        const socket = io('https://geimon-app-833627ba44e0.herokuapp.com');
         const inputEl = document.getElementById('input');
         const messagesEl = document.getElementById('messages');
         const roomIdEl = document.getElementById('roomId');
@@ -46,7 +46,6 @@
         }
 
         let roomId = localStorage.getItem('roomId');
-
         socket.emit('init', { username, roomId });
 
         socket.on('room_joined', (data) => {

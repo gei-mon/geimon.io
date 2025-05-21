@@ -26,7 +26,12 @@ app.use('/Public', express.static(path.join(__dirname, 'Public')));
 const PROFILE_DIR = path.join(PUBLIC_DIR, 'Images', 'Profile Pictures');
 
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: allowedOrigins,
+    credentials: true
+  }
+});
 
 const openRooms = new Map(); // roomId -> [socketIds]
 const userMap = new Map();
