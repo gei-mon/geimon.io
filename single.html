@@ -82,8 +82,8 @@
             socket.on('room_joined', (data) => {
                 roomId = data.roomId;
                 localStorage.setItem('roomId', roomId);
-                    if (roomId && roomId !== 'Connecting…') {
-                        roomIdEl.innerText = `Room ID: ${roomId}`;
+                    if (roomId === 'Connecting…') {
+                        roomIdEl.innerText = `${roomId}`;
                     } else {
                         roomIdEl.style.display = 'none';
                     }
