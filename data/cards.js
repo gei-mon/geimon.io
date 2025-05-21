@@ -322,6 +322,151 @@ export const cards = [
     ]
   },
   {
+    id: "14",
+    name: "Soul Absorption",
+    image: `${cardArtFolder}/Reflex/SoulAbsorption.png`,
+    type: "Action",
+    condition: "",
+    cost: "",
+    tag1: "Action",
+    tag2: "",
+    tag3: "",
+    tag4: "",
+    tag5: "",
+    tag6: "",
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Sacrifice any number of Champions you control; Gain Life equal to those Champions’ remaining Life. <br> If this card is in your Tomb (Reflex): Obliterate this card and Sacrifice 1 Champion you control; Gain double that Champion's remaining Life.",
+        keywords: ["blank"],
+        effect1: "gainCurrentLife",
+        effect2: "gainDoubleLife"
+      }
+    ]
+  },
+  {
+    id: "15",
+    name: "Forbidden Rebirth",
+    image: `${cardArtFolder}/Reflex/ForbiddenRebirth.png`,
+    type: "Action",
+    condition: "",
+    cost: "",
+    tag1: "Action",
+    tag2: "",
+    tag3: "",
+    tag4: "",
+    tag5: "",
+    tag6: "",
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Target 1 Champion in your opponent's Tomb and Offer 6 Life; Resurrect target Champion to your zone, it is now also considered an Undead.",
+        keywords: ["blank"],
+        effect1: "gainCurrentLife"
+      }
+    ]
+  },
+  {
+    id: "16",
+    name: "Flash Forward",
+    image: `${cardArtFolder}/Reflex/FlashForward.png`,
+    type: "Action",
+    condition: "",
+    cost: "",
+    tag1: "Action",
+    tag2: "",
+    tag3: "",
+    tag4: "",
+    tag5: "",
+    tag6: "",
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "All players draw 1 and reveal them; If the revealed card is a Champion, that player can immediately Rally it (ignoring its cost).",
+        keywords: ["blank"],
+        effect1: "rallyDrawnChampion"
+      }
+    ]
+  },
+  {
+    id: "17",
+    name: "March of the Dead",
+    image: `${cardArtFolder}/Reflex/MarchoftheDead.png`,
+    type: "Action",
+    condition: "",
+    cost: "",
+    tag1: "Action",
+    tag2: "",
+    tag3: "",
+    tag4: "",
+    tag5: "",
+    tag6: "",
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Your opponent can Retrieve up to 2; Mill cards equal to the number of cards in your opponent's Tomb.",
+        keywords: ["blank"],
+        effect1: "millTombCount"
+      }
+    ]
+  },
+  {
+    id: "18",
+    name: "Corrupted Rebirth",
+    image: `${cardArtFolder}/Reflex/CorruptedRebirth.png`,
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tag1: "Equipment",
+    tag2: "",
+    tag3: "",
+    tag4: "",
+    tag5: "",
+    tag6: "",
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Target 1 Champion in either Tomb and 3 other Champions in your Tomb; Resurrect the first target and attach this card to it, and if you do, Obliterate the other 3 targets. If this card leaves the zone, destroy the equipped Champion.",
+        keywords: ["blank"],
+        effect1: "resEit1Equip"
+      }
+    ]
+  },
+  {
+    id: "19",
+    name: "Oppressive Ward",
+    image: `${cardArtFolder}/Reflex/OppressiveWard.png`,
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tag1: "Obelisk",
+    tag2: "",
+    tag3: "",
+    tag4: "",
+    tag5: "",
+    tag6: "",
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Sacrifice 1 Champion; For every attack a player makes, they must Offer 1 Life.",
+        keywords: ["blank"],
+        effect1: "toll1"
+      }
+    ]
+  },
+  {
     id: "61",
     name: "Areza, Town Harlot",
     image: `${cardArtFolder}/Champions/ArezaHarlot.png`,
