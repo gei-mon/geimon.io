@@ -33,24 +33,34 @@
 
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script>
-        const socket = io('https://geimon-app-833627ba44e0.herokuapp.com', {
-            withCredentials: true
-        });
-        socket.on('connect', () => {
-            console.log('Connected to socket:', socket.id);
-        });
         const inputEl = document.getElementById('input');
         const messagesEl = document.getElementById('messages');
         const roomIdEl = document.getElementById('roomId');
         const typingEl = document.getElementById('typing');
 
-        let username = localStorage.getItem('username');
-        if (!username) {
-            window.location.href = "login.html";
-        }
+        (async () => {
+            const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
+                credentials: 'include',
+            });
+            if (!res.ok) throw new Error('Response error');
+            const data = await res.json();
+            if (!data.loggedIn) {
+                console.log('Not logged in, redirecting...');
+                window.location.href = 'login.html';
+                return;
+            }
+        });
+        const username = data.users.username;
+
+        const socket = io('https://geimon-app-833627ba44e0.herokuapp.com', {
+            withCredentials: true
+        });
+        socket.on('connect', () => {
+            console.log('Connected to socket:', socket.id);
+            socket.emit('init', { username });
+        });
 
         let roomId = localStorage.getItem('roomId');
-        socket.emit('init', { username, roomId });
 
         socket.on('room_joined', (data) => {
             roomId = data.roomId;

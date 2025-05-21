@@ -544,9 +544,9 @@ app.get('/me', async (req, res) => {
     if (user) {
       const profilePic = user.profile_pic || 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/Sharpshooter-Square.png';
       return res.json({ loggedIn: true, username: user.username, profilePic });
+    } else {
+      res.status(401).json({ loggedIn: false });
     }
-
-  res.status(401).json({ loggedIn: false });
   }
 });
 
