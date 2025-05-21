@@ -364,7 +364,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Target 1 Champion in your opponent's Tomb and Offer 6 Life; Resurrect target Champion to your zone, it is now also considered an Undead.",
+        text: "Target 1 Champion in your opponent's Tomb and Offer 6 Life; Resurrect target Champion to your Zone, it is now also considered an Undead.",
         keywords: ["blank"],
         effect1: "gainCurrentLife"
       }
@@ -484,8 +484,8 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Deathcurse, Lifetouch, Priority",
-        keywords: ["Deathcurse","Lifetouch","Priority"]
+        text: "Bulletproof, Deathcurse, Lifetouch, Priority",
+        keywords: ["Bulletproof","Deathcurse","Lifetouch","Priority"]
       }
     ]
   },
@@ -583,7 +583,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Lightbulb: Excavate 1; Return it to either the top or the bottom of your deck. <br> Wake-Up Jolt: Sacrifice this card and target 1 Champion or Obelisk in your Reserve; Activate target (ignoring its cost). <br> Helping Hand: If this card is in your Tomb: Obliterate this card and target 1 Clockwork or Helper in your Tomb; Resurrect target.",
+        text: "Lightbulb: Excavate 1; Return it to either the top or the bottom of your deck. <br> Wake-Up Jolt: Sacrifice this card and target 1 Champion or Obelisk in your Reserve; Activate target (ignoring its cost). <br> Helping Hand: If this card is in your Tomb: Obliterate this card and target 1 Clockwork or Helper in your Tomb; Resurrect target, it gains Deathtouch and its Life is reduced to 1.",
         keywords: ["blank"],
         effect1: "exc1RetTopBottom",
         effect2: "WakeUpJolt",
@@ -684,9 +684,11 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Might of the Small <br> Garbage Lord: Bury 1. <br> Trash Picker: Retrieve 1, but Obliterate the rest of the cards in your Tomb. <br> On Resurrection: Target 1 Champion in your Tomb; Resurrect target, but its Life is reduced to 1.",
+        text: "Might of the Small <br> Garbage Lord: Bury 1. <br> Trash Picker: Retrieve 1, and if you do, Obliterate the rest of the cards in your Tomb. <br> On Resurrection: Target 1 Champion in your Tomb; Resurrect target, but reduce its Life to 1, also it is Obliterated when it leaves the Zone.",
         keywords: ["Might of the Small"],
-        effect1: ""
+        effect1: "bury1",
+        effect2: "trashPicker",
+        effect3: "targetResTo1Life"
       }
     ]
   }

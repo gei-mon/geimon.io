@@ -74,7 +74,7 @@
         border-radius: 8px;
         display: flex;
         flex-direction: column;
-        padding: 12px;
+        padding: 0 12px;
         color: white;
         box-shadow: 0 0 10px black;
         height: 60vh;           /* fix height */
@@ -145,7 +145,7 @@
   <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
     <div>
         <p style="font-size: 200%; text-align:center; font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;"><game-title>Geimon!</game-title></p>
-        <h2 id="deck-name" style="font-size: 200%; color:white; text-align:center; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: 16px;"></h2>
+        <h2 id="deck-name" style="font-size: 200%; color:white; text-align:center; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: -20px;"></h2>
     </div>
     <div style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
         <button id="sort-deck-btn" class="button buttonEvenSmaller" style="background-color: rgb(206, 152, 15); color: white; padding: 8px 16px; font-family: 'Racing Sans One', cursive; border-radius: 6px; cursor: pointer; margin-right: 10px;">
@@ -172,6 +172,7 @@
     </div>
 
     <div class="search-panel" id="search-panel">
+        <p id="card-count" style="font-family: 'Racing Sans One', cursive; font-size: 18px; margin-bottom: 8px; margin-top: 8px;">Cards Found: 0</p>
         <input type="search" id="search-input" placeholder="Search cards by name..." autocomplete="off" />
         <input type="search" id="text-search-input" placeholder="Search cards by text...">
             <div class="shrink-wrapper">
@@ -440,6 +441,8 @@
     return nameMatches && textMatches;
     });
 
+    const cardCountElement = document.getElementById("card-count");
+    cardCountElement.textContent = `Cards Displayed: ${filteredCards.length}`;
 
     filteredCards.forEach(card => {
         const cardElement = renderCard(card, searchResults);

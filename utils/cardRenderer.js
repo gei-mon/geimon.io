@@ -52,42 +52,30 @@ export function renderCard(card, container) {
     });
 
     // Split by 'If ' for effect handling, retaining keywords
-    const lines = abilityText.split(/(?=If )/);
+// Define key phrases to format
+const keyPhrases = ["Garbage Lord", "Trash Picker", "Ride", "Or Die", "Mandatory", "Lightbulb", "Wake-Up Jolt", "Upgrade", "Emergency Transport", "Secret Weapon", "Wake the Beast", "Garage Baby", "Library Assistant", "Powerful Core", "Helping Hand", "If Discarded", "Deadeye", "If Sent to Tomb", "On Rally", "On Resurrection", "Mind Augus", "Exhaustion", "Shattered Connection", "Reflex", "Break the Seal", "Fateseal", "Rend Soul", "If Obliterated", "Soulburn"];
 
-const formattedLines = lines.map(line => {
-  const isEffect = line.startsWith("If ");
+// Format key phrases and keywords
+keyPhrases.forEach(phrase => {
+  const phraseRegex = new RegExp(`\\b${phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "gi");
+  abilityText = abilityText.replace(
+    phraseRegex,
+    `<strong>${phrase}</strong>`
+  );
+});
 
-  // Define key phrases to format
-  const keyPhrases = ["Garbage Lord","Trash Picker","Ride","Or Die","Mandatory","Lightbulb","Wake-Up Jolt","Upgrade", "Emergency Transport", "Secret Weapon", "Wake the Beast", "Garage Baby", "Library Assistant", "Powerful Core", "Helping Hand", "If Discarded", "Deadeye", "If Sent to Tomb", "On Rally", "On Resurrection", "Mind Augus", "Exhaustion", "Shattered Connection", "Reflex", "Break the Seal", "Fateseal", "Rend Soul", "If Obliterated", "Soulburn"];
+// Format keywords with tooltip spans
+ability.keywords.forEach(keyword => {
+  const keywordRegex = new RegExp(`\\b${keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "gi");
+  const keywordDescription = (keywords[keyword] || 'No description').replace(/<\/?[^>]+(>|$)/g, "");
+  abilityText = abilityText.replace(
+    keywordRegex,
+    `<strong><span class='keyword' data-description='${keywordDescription}'>${keyword}</span></strong>`
+  );
+});
 
-  // Process key phrases for formatting
-  keyPhrases.forEach(phrase => {
-    const phraseRegex = new RegExp(`\\b${phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "gi");
-    line = line.replace(
-      phraseRegex,
-      `<strong>${phrase}</strong>`
-    );
-  });
+return `<div class="keyword">${abilityText}</div>`;
 
-  // Process keywords and make them bold
-  ability.keywords.forEach(keyword => {
-    const keywordRegex = new RegExp(`\\b${keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "gi");
-    const keywordDescription = (keywords[keyword] || 'No description').replace(/<\/?[^>]+(>|$)/g, "");
-
-    line = line.replace(
-      keywordRegex,
-      `<strong><span class='keyword' data-description='${keywordDescription}'>${keyword}</span></strong>`
-    );
-  });
-
-  if (isEffect) {
-    return `<li class="effect">${line}</li>`;
-  }
-
-  return `<div class="keyword">${line}</div>`;
-}).join("");
-
-    return formattedLines;  // Return the formatted lines directly (without a wrapping <ul>)
   }).join(" ");  // Use a single space to join the final abilities HTML string
 
   cardElement.innerHTML = `

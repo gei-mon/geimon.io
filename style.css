@@ -413,7 +413,7 @@ clip-path: polygon(5% 0, 100% 0, 100% 100%, 0% 100%);
 }
 .viewing-window {
   width: 320px;
-  height: 620px;
+  height: 460px;
   background-color: #2f2f2f;
   margin-right: 16px;
   display: flex;
