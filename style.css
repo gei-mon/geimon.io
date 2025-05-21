@@ -229,7 +229,7 @@ text-decoration: underline;
   color: white;
   padding: 4px;
   text-align: center;
-  font-family: 'Racing Sans One', sans-serif;
+  font-weight: bold;
 }
 
 .card-tags span {
@@ -293,13 +293,14 @@ width: 70%;                  /* Reduced width */
 height: 32px;
 display: flex;
 position: absolute;
-bottom: 8px;                /* Moves the bar up from the very bottom of the card */
+bottom: 6px;                /* Moves the bar up from the very bottom of the card */
 left: 50%;
 transform: translateX(-50%); /* Center horizontally within the card */
-background-color: #444;
+background-color: #000000;
 color: white;
 overflow: hidden;
 border-radius: 4px;
+border: 2px solid #000000;
 }
 
 .bottom-bar .damage,
@@ -316,12 +317,12 @@ padding: 0;
 
 .bottom-bar .damage {
 background-color: #ff0000;
-clip-path: polygon(0 0, 100% 0, 90% 100%, 0 100%);
+clip-path: polygon(0 0, 100% 0, 95% 100%, 0 100%);
 }
 
 .bottom-bar .life {
 background-color: #6057ff;
-clip-path: polygon(10% 0, 100% 0, 100% 100%, 0% 100%);
+clip-path: polygon(5% 0, 100% 0, 100% 100%, 0% 100%);
 }
 
 
