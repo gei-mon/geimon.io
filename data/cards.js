@@ -324,7 +324,7 @@ export const cards = [
   {
     id: "14",
     name: "Soul Absorption",
-    image: `${cardArtFolder}/Reflex/SoulAbsorption.png`,
+    image: `${cardArtFolder}/Actions/SoulAbsorption.png`,
     type: "Action",
     condition: "",
     cost: "",
@@ -349,7 +349,7 @@ export const cards = [
   {
     id: "15",
     name: "Forbidden Rebirth",
-    image: `${cardArtFolder}/Reflex/ForbiddenRebirth.png`,
+    image: `${cardArtFolder}/Actions/ForbiddenRebirth.png`,
     type: "Action",
     condition: "",
     cost: "",
@@ -373,7 +373,7 @@ export const cards = [
   {
     id: "16",
     name: "Flash Forward",
-    image: `${cardArtFolder}/Reflex/FlashForward.png`,
+    image: `${cardArtFolder}/Actions/FlashForward.png`,
     type: "Action",
     condition: "",
     cost: "",
@@ -397,7 +397,7 @@ export const cards = [
   {
     id: "17",
     name: "March of the Dead",
-    image: `${cardArtFolder}/Reflex/MarchoftheDead.png`,
+    image: `${cardArtFolder}/Actions/MarchoftheDead.png`,
     type: "Action",
     condition: "",
     cost: "",
@@ -421,7 +421,7 @@ export const cards = [
   {
     id: "18",
     name: "Corrupted Rebirth",
-    image: `${cardArtFolder}/Reflex/CorruptedRebirth.png`,
+    image: `${cardArtFolder}/Equipments/CorruptedRebirth.png`,
     type: "Equipment",
     condition: "",
     cost: "",
@@ -445,7 +445,7 @@ export const cards = [
   {
     id: "19",
     name: "Oppressive Ward",
-    image: `${cardArtFolder}/Reflex/OppressiveWard.png`,
+    image: `${cardArtFolder}/Obelisks/OppressiveWard.png`,
     type: "Obelisk",
     condition: "",
     cost: "",
@@ -536,6 +536,58 @@ export const cards = [
         keywords: ["Priority"],
         effect1: "draw1",
         effect2: "add1EqORrush"
+      }
+    ]
+  },
+  {
+    id: "121",
+    name: "Carly, Best and Brightest",
+    image: `${cardArtFolder}/Champions/CarlyBestBrightest.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Rally 2 Scrap Tokens to your opponent's Zone.",
+    tag1: "Clockwork",
+    tag2: "Inventor",
+    tag3: "Student",
+    tag4: "",
+    tag5: "",
+    tag6: "",
+    damage: 5,
+    life: 5,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Repair-Specialist <br> On Rally: Activate 1 Equipment or Obelisk from your hand, deck, or Tomb (ignoring its cost). <br> Upgrade: Rally 1 Blocker Token to your opponent's Zone; Add 1 Equipment. <br> Emergency Transport (Reflex): If this card is currently not a Commander: Obliterate the top 8 cards of your deck; Activate 1 Obelisk from your hand, deck, or Tomb that mentions a Commander (ignoring its cost).",
+        keywords: ["Repair-Specialist"],
+        effect1: "act1EqObHDT",
+        effect2: "add1Eq",
+        effect3: "EmergencyTransport"
+      }
+    ]
+  },
+  {
+    id: "122",
+    name: "Squeaks Lightning",
+    image: `${cardArtFolder}/Champions/SqueaksLightning.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tag1: "Clockwork",
+    tag2: "Helper",
+    tag3: "",
+    tag4: "",
+    tag5: "",
+    tag6: "",
+    damage: 0,
+    life: 1,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Lightbulb: Excavate 1; Return it to either the top or the bottom of your deck. <br> Wake-Up Jolt: Sacrifice this card and target 1 Champion or Obelisk in your Reserve; Activate target (ignoring its cost). <br> Helping Hand: If this card is in your Tomb: Obliterate this card and target 1 Clockwork or Helper in your Tomb; Resurrect target.",
+        keywords: ["blank"],
+        effect1: "exc1RetTopBottom",
+        effect2: "WakeUpJolt",
+        effect3: "SqueaksHelpingHand"
       }
     ]
   }
