@@ -17,6 +17,21 @@ export function renderCard(card, container) {
     if (card.tag1 === "Vivisect") {
       cardElement.classList.add("vivisect");}
   }
+  else if (card.type === "Action") {
+    cardElement.classList.add("action");
+  }
+  else if (card.type === "Obelisk") {
+    cardElement.classList.add("obelisk");
+  }
+  else if (card.type === "Equipment") {
+    cardElement.classList.add("equipment");
+  }
+  else if (card.type === "Rush") {
+    cardElement.classList.add("rush");
+  }
+  else if (card.type === "Reflex") {
+    cardElement.classList.add("reflex");
+  }
 
   const tags = [card.tag1, card.tag2, card.tag3, card.tag4, card.tag5, card.tag6]
     .filter(tag => tag !== "")
@@ -43,7 +58,7 @@ const formattedLines = lines.map(line => {
   const isEffect = line.startsWith("If ");
 
   // Define key phrases to format
-  const keyPhrases = ["If Sent to Tomb", "On Rally", "On Resurrection", "Mind Augus", "Exhaustion", "Shattered Connection", "Reflex", "Break the Seal", "Fateseal", "Rend Soul", "If Obliterated", "Soulburn"];
+  const keyPhrases = ["If Discarded", "Deadeye", "If Sent to Tomb", "On Rally", "On Resurrection", "Mind Augus", "Exhaustion", "Shattered Connection", "Reflex", "Break the Seal", "Fateseal", "Rend Soul", "If Obliterated", "Soulburn"];
 
   // Process key phrases for formatting
   keyPhrases.forEach(phrase => {

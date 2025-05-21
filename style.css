@@ -179,6 +179,26 @@ text-decoration: underline;
   background-color: #410752;
   color: #e48dff;
 }
+.action {
+  background-color: #ff9f9f;
+  color: #000000;
+}
+.equipment {
+  background-color: #fffeca;
+  color: #000000;
+}
+.obelisk {
+  background-color: #c1cfff;
+  color: #000000;
+}
+.rush {
+  background-color: #b5ffe0;
+  color: #000000;
+}
+.reflex {
+  background-color: #c77fff;
+  color: #000000;
+}
 
 .card-name {
   width: 90%;            /* Fixed width to prevent overflow */

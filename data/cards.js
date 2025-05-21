@@ -176,6 +176,32 @@ export const cards = [
   },
   {
     id: "8",
+    name: "Necro Neko",
+    image: `${cardArtFolder}/Champions/NecroNeko.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tag1: "Cryptbound",
+    tag2: "Undead",
+    tag3: "Helper",
+    tag4: "",
+    tag5: "",
+    tag6: "",
+    damage: 0,
+    life: 1,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Library Assistant: Excavate 3; Add 1 revealed Undead or Helper. <br> Powerful Core: Sacrifice this card and target 1 other Undead in your Tomb; Resurrect target, it gains Warded. <br> Helping Hand: Obliterate this card from your Tomb and target 1 Undead or Helper in your Tomb; Resurrect target.",
+        keywords: [""],
+        effect1: "LibAss",
+        effect2: "PowerfulCore",
+        effect3: "NecroHelpingHand"
+      }
+    ]
+  },
+  {
+    id: "61",
     name: "Areza, Town Harlot",
     image: `${cardArtFolder}/Champions/ArezaHarlot.png`,
     type: "Champion",
@@ -194,6 +220,56 @@ export const cards = [
       {
         text: "Deathcurse, Lifetouch, Priority",
         keywords: ["Deathcurse","Lifetouch","Priority"]
+      }
+    ]
+  },
+  {
+    id: "62",
+    name: "Cyrus, the Dustwalker",
+    image: `${cardArtFolder}/Champions/CyrusDustwalker.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Discard 2 other cards.",
+    tag1: "Frontier",
+    tag2: "Outlaw",
+    tag3: "Marksman",
+    tag4: "",
+    tag5: "",
+    tag6: "",
+    damage: 10,
+    life: 8,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Heavy Hands <br> On Rally: Draw 2. <br> Deadeye (Reflex): Discard 1 and target 1 card on the Zone; Destroy target.",
+        keywords: ["Heavy Hands"],
+        effect1: "draw2",
+        effect2: "deadeye"
+      }
+    ]
+  },
+  {
+    id: "63",
+    name: "Jane, Perfect Shot",
+    image: `${cardArtFolder}/Champions/PerfectJane.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Reveal this card, then your opponent randomly chooses 1 card from your hand which you discard. If the discarded card was not this card, it will be Rallied.",
+    tag1: "Frontier",
+    tag2: "Marshall",
+    tag3: "Marksman",
+    tag4: "",
+    tag5: "",
+    tag6: "",
+    damage: 8,
+    life: 8,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Priority <br> On Rally: Draw 1. <br> If Discarded: Add 1 Equipment or Rush.",
+        keywords: ["Priority"],
+        effect1: "draw1",
+        effect2: "add1EqORrush"
       }
     ]
   }
