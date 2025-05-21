@@ -97,8 +97,6 @@ io.on('connection', (socket) => {
 
         io.to(socketId1).emit('user_joined', { otherUser: user2.username });
         io.to(socketId2).emit('user_joined', { otherUser: user1.username });
-
-        io.to(joinedRoom).emit('message', { username: 'System', text: `${username} joined the chat` });
       }
   });
 

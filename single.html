@@ -11,11 +11,11 @@
         body { font-family: sans-serif; }
         #roomId { margin-bottom: 1em; font-weight: bold; }
         #chatWith { margin-bottom: 1em; color: white; font-weight: bold; }
-        #messages { border: 1px solid #ccc; padding: 1em; height: 300px; overflow-y: auto; }
-        #input { width: 80%; }
-        #send { width: 18%; }
-        #typing { font-style: italic; color: gray; height: 1.5em; }
-        .system-message { color: gray; font-style: italic; }
+        #messages { border: 4px solid #000000; padding: 1em; height: 400px; width: 300px; overflow-y: auto; background-color: lightgray; }
+        #input { width: 45%; }
+        #send { width: 10%; }
+        #typing { font-style: italic; color: lime; height: 1.5em; }
+        .system-message { color: blue; font-style: italic; }
     </style>
 </head>
 <body style="background-color:rgb(78, 78, 78);">
@@ -82,11 +82,21 @@
             socket.on('room_joined', (data) => {
                 roomId = data.roomId;
                 localStorage.setItem('roomId', roomId);
-                roomIdEl.innerText = `Room ID: ${roomId}`;
+                    if (roomId && roomId !== 'Connecting…') {
+                        roomIdEl.innerText = `Room ID: ${roomId}`;
+                    } else {
+                        roomIdEl.style.display = 'none';
+                    }
                 chatWithEl.innerText = `Chatting with: ${data.otherUser?.username || 'Waiting for opponent...'}`;
             });
 
+            socket.on('user_joined', (payload) => {
+                console.log('Received user_joined payload:', payload);
+            });
+
             socket.on('user_joined', ({ otherUser }) => {
+                console.log('typeof otherUser:', typeof otherUser);
+                console.log('chatWithEl:', chatWithEl);
                 chatWithEl.innerText = `Chatting with: ${otherUser}`;
                 appendSystemMessage(`${otherUser} has joined the room.`);
             });
