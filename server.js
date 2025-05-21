@@ -86,8 +86,20 @@ io.on('connection', (socket) => {
 
     socket.join(joinedRoom);
     userMap.set(socket.id, { username, roomId: joinedRoom });
-    socket.to(joinedRoom).emit('message', { username: 'System', text: `${username} joined the chat` });
     socket.emit('room_joined', { roomId: joinedRoom });
+
+      const roomSockets = openRooms.get(joinedRoom);
+
+      if (roomSockets.length === 2) {
+        const [socketId1, socketId2] = roomSockets;
+        const user1 = userMap.get(socketId1);
+        const user2 = userMap.get(socketId2);
+
+        io.to(socketId1).emit('user_joined', { otherUser: user2.username });
+        io.to(socketId2).emit('user_joined', { otherUser: user1.username });
+
+        io.to(joinedRoom).emit('message', { username: 'System', text: `${username} joined the chat` });
+      }
   });
 
   socket.on('message', (text) => {
