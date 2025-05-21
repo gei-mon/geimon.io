@@ -86,7 +86,7 @@
                 chatWithEl.innerText = `Chatting with: ${data.otherUser?.username || 'Waiting for opponent...'}`;
             });
 
-            socket.on('user_joined', (otherUser) => {
+            socket.on('user_joined', ({ otherUser }) => {
                 chatWithEl.innerText = `Chatting with: ${otherUser}`;
                 appendSystemMessage(`${otherUser} has joined the room.`);
             });
