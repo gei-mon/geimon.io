@@ -29,47 +29,63 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 const openRooms = new Map(); // roomId -> [socketIds]
+const userMap = new Map();
 
 function generateRoomId() {
   return Math.random().toString(36).substring(2, 8);
 }
 
 io.on('connection', (socket) => {
-  let joinedRoom;
+  socket.on('init', ({ username, roomId }) => {
+    let joinedRoom = roomId;
 
-  // find a room with exactly 1 occupant
-  for (const [roomId, sockets] of openRooms.entries()) {
-    if (sockets.length === 1) {
-      sockets.push(socket.id);
-      joinedRoom = roomId;
-      socket.join(roomId);
-      break;
+    if (joinedRoom && openRooms.has(joinedRoom) && openRooms.get(joinedRoom).length < 2) {
+      openRooms.get(joinedRoom).push(socket.id);
+    } else {
+      // Find available or create new
+      joinedRoom = null;
+      for (const [rId, sockets] of openRooms.entries()) {
+        if (sockets.length === 1) {
+          sockets.push(socket.id);
+          joinedRoom = rId;
+          break;
+        }
+      }
+
+      if (!joinedRoom) {
+        joinedRoom = generateRoomId();
+        openRooms.set(joinedRoom, [socket.id]);
+      }
     }
-  }
 
-  // if none available, create a new one
-  if (!joinedRoom) {
-    joinedRoom = generateRoomId();
-    openRooms.set(joinedRoom, [socket.id]);
     socket.join(joinedRoom);
-  }
+    userMap.set(socket.id, { username, roomId: joinedRoom });
+    socket.emit('room_joined', { roomId: joinedRoom });
+  });
 
-  // notify this client which room they're in
-  socket.emit('room_joined', joinedRoom);
+  socket.on('message', (text) => {
+    const user = userMap.get(socket.id);
+    if (!user) return;
+    const { roomId, username } = user;
+    io.to(roomId).emit('message', { username, text });
+  });
 
-  // relay messages only within this room
-  socket.on('message', (msg) => {
-    socket.to(joinedRoom).emit('message', msg);
+  socket.on('typing', (isTyping) => {
+    const user = userMap.get(socket.id);
+    if (!user) return;
+    socket.to(user.roomId).emit('typing', { username: user.username, isTyping });
   });
 
   socket.on('disconnect', () => {
-    const sockets = openRooms.get(joinedRoom) || [];
-    const updated = sockets.filter(id => id !== socket.id);
-    if (updated.length === 0) {
-      openRooms.delete(joinedRoom);
-    } else {
-      openRooms.set(joinedRoom, updated);
-    }
+    const user = userMap.get(socket.id);
+    if (!user) return;
+
+    const { roomId } = user;
+    const updated = (openRooms.get(roomId) || []).filter(id => id !== socket.id);
+    if (updated.length === 0) openRooms.delete(roomId);
+    else openRooms.set(roomId, updated);
+
+    userMap.delete(socket.id);
   });
 });
 

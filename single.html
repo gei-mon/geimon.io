@@ -8,11 +8,12 @@
     <link rel="stylesheet" href="style.css">
     <title>SINGLE GAME PAGE</title>
     <style>
-        body { font-family: sans-serif; max-width: 600px; margin: 2em auto; }
+        body { font-family: sans-serif; }
         #roomId { margin-bottom: 1em; font-weight: bold; }
         #messages { border: 1px solid #ccc; padding: 1em; height: 300px; overflow-y: auto; }
         #input { width: 80%; }
         #send { width: 18%; }
+        #typing { font-style: italic; color: gray; height: 1.5em; }
     </style>
 </head>
 <body style="background-color:rgb(78, 78, 78);">
@@ -22,50 +23,74 @@
             <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: -28px;">Single-Game Placeholder, Temp Chat Space</h2>
         </div>
         <button class="button buttonEvenSmaller" onclick="location.href='index.html'">Home</button>
+    <br><br>
+    <div style="max-width: 600px;">
     <div id="roomId">Connecting…</div>
-  <div id="messages"></div>
-  <input id="input" autocomplete="off" placeholder="Type your message…" />
-  <button id="send">Send</button>
+    <div id="messages"></div>
+    <div id="typing"></div>
+    <input id="input" autocomplete="off" placeholder="Type your message…" />
+    <button id="send">Send</button>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    const socket = io();
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const inputEl = document.getElementById('input');
+        const messagesEl = document.getElementById('messages');
+        const roomIdEl = document.getElementById('roomId');
+        const typingEl = document.getElementById('typing');
 
-    // display room ID once joined
-    socket.on('room_joined', (roomId) => {
-      document.getElementById('roomId').innerText = `Room ID: ${roomId}`;
-    });
+        let username = localStorage.getItem('username');
+        if (!username) {
+        username = prompt('Enter a username:');
+        localStorage.setItem('username', username);
+        }
 
-    // incoming messages
-    socket.on('message', (msg) => {
-      const m = document.createElement('div');
-      m.innerText = msg;
-      document.getElementById('messages').appendChild(m);
-      // auto-scroll
-      document.getElementById('messages').scrollTop = 
-        document.getElementById('messages').scrollHeight;
-    });
+        let roomId = localStorage.getItem('roomId');
 
-    // send on button click or Enter key
-    const inputEl = document.getElementById('input');
-    document.getElementById('send').addEventListener('click', sendMsg);
-    inputEl.addEventListener('keypress', e => {
-      if (e.key === 'Enter') sendMsg();
-    });
+        socket.emit('init', { username, roomId });
 
-    function sendMsg() {
-      const text = inputEl.value.trim();
-      if (!text) return;
-      socket.emit('message', text);
-      // echo locally
-      const self = document.createElement('div');
-      self.innerText = `You: ${text}`;
-      self.style.fontStyle = 'italic';
-      document.getElementById('messages').appendChild(self);
-      document.getElementById('messages').scrollTop = 
-        document.getElementById('messages').scrollHeight;
-      inputEl.value = '';
-    }
-  </script>
+        socket.on('room_joined', (data) => {
+        roomId = data.roomId;
+        localStorage.setItem('roomId', roomId);
+        roomIdEl.innerText = `Room ID: ${roomId}`;
+        });
+
+        socket.on('message', ({ username: from, text }) => {
+        const msg = document.createElement('div');
+        msg.innerText = `${from}: ${text}`;
+        messagesEl.appendChild(msg);
+        messagesEl.scrollTop = messagesEl.scrollHeight;
+        });
+
+        socket.on('typing', ({ username: from, isTyping }) => {
+        typingEl.innerText = isTyping ? `${from} is typing...` : '';
+        });
+
+        function sendMsg() {
+        const text = inputEl.value.trim();
+        if (!text) return;
+        socket.emit('message', text);
+        inputEl.value = '';
+        }
+
+        document.getElementById('send').onclick = sendMsg;
+        inputEl.addEventListener('keypress', e => {
+        if (e.key === 'Enter') sendMsg();
+        socket.emit('typing', true);
+        });
+
+        inputEl.addEventListener('input', () => {
+        if (inputEl.value === '') socket.emit('typing', false);
+        });
+
+        let typingTimeout;
+        inputEl.addEventListener('keyup', () => {
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => {
+            socket.emit('typing', false);
+        }, 1000);
+        });
+    </script>
+  </div>
 </body>
 </html>
