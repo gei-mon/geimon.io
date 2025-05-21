@@ -590,5 +590,31 @@ export const cards = [
         effect3: "SqueaksHelpingHand"
       }
     ]
+  },
+  {
+    id: "123",
+    name: "Genevieve, Mechanic Extraordinaire",
+    image: `${cardArtFolder}/Champions/GenevieveMechanicExtraordinaire.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Rally 1 Scrap Token to your opponent's Zone.",
+    tag1: "Clockwork",
+    tag2: "Mechanic",
+    tag3: "Specialist",
+    tag4: "",
+    tag5: "",
+    tag6: "",
+    damage: 6,
+    life: 4,
+    damageThreshold: 2,
+    abilities: [
+      {
+        text: "Repair-Specialist <br> On Rally: Place 1 Obelisk that mentions a Commander from your deck into your Reserve. That Obelisk gains the Reserve Reflex Effect: Discard 1, activate this card (ignoring its cost). <br> Garage Baby: If you have at least 1 Obelisk that mentions a Commander in your Reserve: Attach 1 appropriate Equipment from your hand, deck, or Tomb to 1 Obelisk that mentions a Commander in your Reserve (ignoring its cost). <br> Secret Weapon (Reflex, Exhaustion): Destroy 1 Obelisk you control; Destroy up to 2 cards on the Zone.",
+        keywords: ["Repair-Specialist"],
+        effect1: "obIntoResAcSelf",
+        effect2: "equipResOb",
+        effect3: "SecretWeapon"
+      }
+    ]
   }
 ];
