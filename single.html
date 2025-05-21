@@ -41,8 +41,7 @@
 
         let username = localStorage.getItem('username');
         if (!username) {
-        username = prompt('Enter a username:');
-        localStorage.setItem('username', username);
+            window.location.href = "login.html";
         }
 
         let roomId = localStorage.getItem('roomId');
