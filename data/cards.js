@@ -192,11 +192,132 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Library Assistant: Excavate 3; Add 1 revealed Undead or Helper. <br> Powerful Core: Sacrifice this card and target 1 other Undead in your Tomb; Resurrect target, it gains Warded. <br> Helping Hand: Obliterate this card from your Tomb and target 1 Undead or Helper in your Tomb; Resurrect target.",
-        keywords: [""],
+        text: "Library Assistant: Excavate 3; Add 1 revealed Undead or Helper, or a card that mentions an Undead or Helper. <br> Powerful Core: Sacrifice this card and target 1 other Undead in your Tomb; Resurrect target. The resurrected Champion gains Warded. <br> Helping Hand: If card is in your Tomb: Obliterate this card and target 1 Undead or Helper in your Tomb; Resurrect target.",
+        keywords: ["blank"],
         effect1: "LibAss",
         effect2: "PowerfulCore",
         effect3: "NecroHelpingHand"
+      }
+    ]
+  },
+  {
+    id: "9",
+    name: "Rise Again!",
+    image: `${cardArtFolder}/Actions/RiseAgain.png`,
+    type: "Action",
+    condition: "",
+    cost: "",
+    tag1: "Action",
+    tag2: "",
+    tag3: "",
+    tag4: "",
+    tag5: "",
+    tag6: "",
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Offer half your Life; Resurrect or Unleash up to a total of 3 Undead.",
+        keywords: ["blank"],
+        effect1: "resUnl3Undead"
+      }
+    ]
+  },
+  {
+    id: "10",
+    name: "From Death, Life",
+    image: `${cardArtFolder}/Equipments/FromDeathLife.png`,
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tag1: "Equipment",
+    tag2: "",
+    tag3: "",
+    tag4: "",
+    tag5: "",
+    tag6: "",
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Target 1 Undead in either Tomb and Offer 3 Life; Resurrect target Champion and attach this card to it. If this card leaves the zone, destroy the equipped Champion.",
+        keywords: ["blank"],
+        effect1: "resEit1UndEquip"
+      }
+    ]
+  },
+  {
+    id: "11",
+    name: "Necromancer’s Tome",
+    image: `${cardArtFolder}/Obelisks/NecromancerTome.png`,
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tag1: "Obelisk",
+    tag2: "",
+    tag3: "",
+    tag4: "",
+    tag5: "",
+    tag6: "",
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Offer 3 Life; Excavate 3, add 1 revealed. <br> If this card is in your Tomb: Obliterate this card; Resurrect 1 Undead from either Tomb.",
+        keywords: ["blank"],
+        effect1: "ex3add1",
+        effect2: "resEit1Und"
+      }
+    ]
+  },
+  {
+    id: "12",
+    name: "Boom!",
+    image: `${cardArtFolder}/Rush/Boom.png`,
+    type: "Rush",
+    condition: "",
+    cost: "",
+    tag1: "Rush",
+    tag2: "",
+    tag3: "",
+    tag4: "",
+    tag5: "",
+    tag6: "",
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "When an Undead you control battles another Champion: Destroy your Undead; Destroy the other Champion.",
+        keywords: ["blank"],
+        effect1: "undPopBattlers"
+      }
+    ]
+  },
+  {
+    id: "13",
+    name: "Plaguetouch",
+    image: `${cardArtFolder}/Reflex/Plaguetouch.png`,
+    type: "Reflex",
+    condition: "",
+    cost: "",
+    tag1: "Reflex",
+    tag2: "",
+    tag3: "",
+    tag4: "",
+    tag5: "",
+    tag6: "",
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "When an opponent’s Champion declares an attack: Mill 4 and target the attacking Champion; Negate the Attack, and if you do, deal Damage to your opponent equal to that Champion’s Damage.",
+        keywords: ["blank"],
+        effect1: "magCyl"
       }
     ]
   },

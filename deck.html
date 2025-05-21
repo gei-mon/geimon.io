@@ -33,6 +33,9 @@
             transform: scale(0.5);
             margin: 0px -60px;
         }
+        .card-wrapper > div:nth-child(n+9) {
+            margin-top: -320px; /* Adjust this value to tighten vertical spacing */
+        }
         .card-wrapper button {
             background-color: transparent;
             border: none;
@@ -218,12 +221,21 @@
             const sortDeckBtn = document.getElementById("sort-deck-btn");
 
             sortDeckBtn.addEventListener("click", () => {
+                const typeOrder = {
+                    Champion: 0,
+                    Action: 1,
+                    Equipment: 2,
+                    Obelisk: 3,
+                    Rush: 4,
+                    Reflex: 5
+                };
+
                 const deckCards = cardIds
                     .map(id => cards.find(card => String(card.id) === String(id)))
                     .filter(Boolean);
 
                 const sorted = [...deckCards].sort((a, b) => {
-                    const typeCompare = a.type.localeCompare(b.type);
+                    const typeCompare = (typeOrder[a.type] ?? 999) - (typeOrder[b.type] ?? 999);
                     if (typeCompare !== 0) return typeCompare;
                     return a.name.localeCompare(b.name);
                 });

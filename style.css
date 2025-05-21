@@ -180,11 +180,12 @@ text-decoration: underline;
   color: #e48dff;
 }
 .action {
-  background-color: #ff9f9f;
+  background-color: #ffac64;
   color: #000000;
+  text-shadow: none;
 }
 .equipment {
-  background-color: #fffeca;
+  background-color: #ffff89;
   color: #000000;
 }
 .obelisk {
@@ -272,6 +273,37 @@ text-align: left;
 box-sizing: border-box;
 flex-grow: 1; /* Allow the text content to take up space without affecting the bottom bar */
 text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;
+}
+
+.action .card-text {
+  text-shadow: none;
+}
+.action .card-name {
+  text-shadow: none;
+}
+.equipment .card-text {
+  text-shadow: none;
+}
+.equipment .card-name {
+  text-shadow: none;
+}
+.obelisk .card-text {
+  text-shadow: none;
+}
+.obelisk .card-name {
+  text-shadow: none;
+}
+.rush .card-text {
+  text-shadow: none;
+}
+.rush .card-name {
+  text-shadow: none;
+}
+.reflex .card-text {
+  text-shadow: none;
+}
+.reflex .card-name {
+  text-shadow: none;
 }
 
 .card-text .effect {

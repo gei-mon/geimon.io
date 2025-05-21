@@ -58,7 +58,7 @@ const formattedLines = lines.map(line => {
   const isEffect = line.startsWith("If ");
 
   // Define key phrases to format
-  const keyPhrases = ["If Discarded", "Deadeye", "If Sent to Tomb", "On Rally", "On Resurrection", "Mind Augus", "Exhaustion", "Shattered Connection", "Reflex", "Break the Seal", "Fateseal", "Rend Soul", "If Obliterated", "Soulburn"];
+  const keyPhrases = ["Library Assistant", "Powerful Core", "Helping Hand", "If Discarded", "Deadeye", "If Sent to Tomb", "On Rally", "On Resurrection", "Mind Augus", "Exhaustion", "Shattered Connection", "Reflex", "Break the Seal", "Fateseal", "Rend Soul", "If Obliterated", "Soulburn"];
 
   // Process key phrases for formatting
   keyPhrases.forEach(phrase => {
@@ -96,14 +96,16 @@ const formattedLines = lines.map(line => {
       <img src="${card.image}" alt="${card.name}" class="card-art">
     </div>
     <div class="card-tags">${tags}</div>
-    ${card.cost !== "Basic" ? `<div class="card-cost">Cost: ${card.cost}</div>` : ""}
+    ${card.cost && card.cost !== "Basic" ? `<div class="card-cost">Cost: ${card.cost}</div>` : ""}
     <div class="card-text" style="padding: 0;">${abilitiesHTML}</div>
+    ${card.type === "Champion" ? `
     <div class="bottom-bar">
       <div class="damage">${card.damage}</div>
       <div class="life">${card.life}</div>
       ${card.damageThreshold ? `<div class="damageThreshold">${card.damageThreshold}</div>` : ""}
     </div>
-    `;
+  ` : ""}
+`;
 
   container.appendChild(cardElement);
   adjustNameSize(cardElement);
