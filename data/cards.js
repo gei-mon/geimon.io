@@ -1850,7 +1850,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Mount <br> Mounted (Reflex): Give control of 1 face-up Champion to your Opponent; take control of 1 face-up Champion from your Opponent. Return control of the affected Champions during the end phase. <br> If this card is in your Reserve while you control at least 1 Champion: Activate this card.",
+        text: "Mount <br> Mounted (Reflex): Give control of 1 face-up Champion to your Opponent; take control of 1 face-up Champion from your Opponent. Return control of the affected Champions during the end phase. <br><br> If this card is in your Reserve while you control at least 1 Champion: You can activate this card.",
         keywords: ["Mount"],
         effect1name: "",
         effect1type: "Mount",
