@@ -143,10 +143,51 @@
                         }
                     };
 
-                    // Append all three to deckRow
+                    const copyBtn = document.createElement("button");
+                    copyBtn.className = "copy-btn";
+                    copyBtn.textContent = "C"; // Or any icon/text you want
+                    copyBtn.title = "Copy";
+                    copyBtn.onclick = async () => {
+                        const newDeckName = prompt("Enter name for the copied deck:");
+                        if (!newDeckName) return;
+
+                        try {
+                            // Fetch original deck cards
+                            const res = await fetch(`https://geimon-app-833627ba44e0.herokuapp.com/getDeckCards`, {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                credentials: 'include',
+                                body: JSON.stringify({ deck_name: deckName })
+                            });
+                            const data = await res.json();
+
+                            if (!data.success) {
+                                alert("Failed to retrieve cards from original deck.");
+                                return;
+                            }
+
+                            // Create new deck with copied cards
+                            const copyRes = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/createDeck", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                credentials: 'include',
+                                body: JSON.stringify({ deck_name: newDeckName, card_ids: data.card_ids })
+                            });
+
+                            const copyResult = await copyRes.json();
+                            alert(copyResult.message || "Deck copied.");
+                            window.location.reload();
+                        } catch (err) {
+                            console.error("Error copying deck:", err);
+                        }
+                    };
+
+                    // Append all four buttons to deckRow in order: copy, rename, main, delete
+                    deckRow.appendChild(copyBtn);
                     deckRow.appendChild(leftBtn);
                     deckRow.appendChild(button);
                     deckRow.appendChild(rightBtn);
+
 
                     deckList.appendChild(deckRow);
                 });

@@ -264,6 +264,8 @@ app.post('/createDeck', async (req, res) => {
     const sessionId = req.cookies.session;
     const username = sessions[sessionId];
     const deckName = req.body.deck_name;
+    const cardIds = req.body.card_ids || []; // 👈 NEW: Accept optional card_ids
+
     if (!deckName) return res.status(400).json({ success: false, error: "Deck name required" });
 
     if (!username) {
@@ -285,10 +287,16 @@ app.post('/createDeck', async (req, res) => {
 
         const deckId = uuidv4();
 
-        // Insert the new deck into the database
+        // 👇 NEW: Insert the new deck, with card_ids (empty array or copied cards)
         const { error: insertError } = await supabase
             .from('decks')
-            .insert([{ deck_id: deckId, user_name: username, deck_name: deckName, card_ids: [], legal: false }]);
+            .insert([{ 
+                deck_id: deckId, 
+                user_name: username, 
+                deck_name: deckName, 
+                card_ids: cardIds,     // 👈 NEW: Use incoming card_ids if provided
+                legal: false 
+            }]);
 
         if (insertError) throw insertError;
 

@@ -546,7 +546,7 @@ width: 30%;
 margin-bottom: 10px;
 }
 
-.left-btn, .right-btn {
+.left-btn, .right-btn, .copy-btn {
 width: 50px;
 height: 50px;
 border: 8px solid #000;
@@ -566,7 +566,6 @@ transition: background-color 0.3s;
 .left-btn {
 background-color: #0055ff;
 }
-
 .left-btn:hover {
 background-color: #003bb5;
 }
@@ -574,9 +573,16 @@ background-color: #003bb5;
 .right-btn {
 background-color: #ff0000;
 }
-
 .right-btn:hover {
 background-color: #cc0000;
+}
+
+.copy-btn {
+background-color: #60fff4;
+margin-right: 5px;
+}
+.copy-btn:hover {
+background-color: #29c7bd;
 }
 
 .bg-image {
