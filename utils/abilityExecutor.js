@@ -8,8 +8,7 @@ function declareAbility(card) {
   const abilities = card.abilities;
 
   abilities.forEach((ability) => {
-    if (ability.effect === 'retrieve_1_undead') {
-      retrieve1Undead(card);
+    if (ability.effect === '') {
     }
   });
 }

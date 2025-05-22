@@ -6,15 +6,16 @@ export function renderCard(card, container) {
 
   if (card.type === "Champion") {
     cardElement.classList.add("champion");
-    if (card.tag1 === "Cryptbound") {
+    const firstTag = card.tags?.[0] || "";
+    if (firstTag === "Cryptbound") {
       cardElement.classList.add("cryptbound");}
-    if (card.tag1 === "Frontier") {
+    if (firstTag === "Frontier") {
       cardElement.classList.add("frontier");}
-    if (card.tag1 === "Clockwork") {
+    if (firstTag === "Clockwork") {
       cardElement.classList.add("clockwork");}
-    if (card.tag1 === "Noble") {
+    if (firstTag === "Noble") {
       cardElement.classList.add("noble");}
-    if (card.tag1 === "Vivisect") {
+    if (firstTag === "Vivisect") {
       cardElement.classList.add("vivisect");}
   }
   else if (card.type === "Action") {
@@ -33,9 +34,7 @@ export function renderCard(card, container) {
     cardElement.classList.add("reflex");
   }
 
-  const tags = [card.tag1, card.tag2, card.tag3, card.tag4, card.tag5, card.tag6]
-    .filter(tag => tag !== "")
-    .join(" ");
+  const tags = (card.tags || []).filter(tag => tag !== "").join(" ");
 
   const abilitiesHTML = card.abilities.map(ability => {
     let abilityText = ability.text;
@@ -51,7 +50,6 @@ export function renderCard(card, container) {
         );
     });
 
-    // Split by 'If ' for effect handling, retaining keywords
 // Define key phrases to format
 const keyPhrases = ["Garbage Lord", "Trash Picker", "Ride", "Or Die", "Mandatory", "Lightbulb", "Wake-Up Jolt", "Upgrade", "Emergency Transport", "Secret Weapon", "Wake the Beast", "Garage Baby", "Library Assistant", "Powerful Core", "Helping Hand", "If Discarded", "Deadeye", "If Sent to Tomb", "On Rally", "On Resurrection", "Mind Augus", "Exhaustion", "Shattered Connection", "Reflex", "Break the Seal", "Fateseal", "Rend Soul", "If Obliterated", "Soulburn"];
 
