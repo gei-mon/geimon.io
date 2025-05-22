@@ -1334,6 +1334,78 @@ export const cards = [
     ]
   },
   {
+    id: "133",
+    name: "Wheeliegeddon",
+    image: `${cardArtFolder}/Obelisks/Wheeliegeddon.png`,
+    type: "Obelisk",
+    condition: "",
+    cost: "Rally 1 Macho Token to your opponent's Zone.",
+    tags: ["Obelisk"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Mount <br> Mounted: Destroy this card and Target 1 Champion you control; Target Champion cannot be blocked this turn.",
+        keywords: ["Mount"],
+        effect1name: "",
+        effect1type: "Mount",
+        effect1condition: "",
+        effect1cost: "",
+        effect1text: "",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: ["Standard","Mounted"],
+        effect2condition: "",
+        effect2cost: "Target1ChampYouControlPlusDestroySelf",
+        effect2text: "TargetCannotBeBlocked",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: [""],
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
+    id: "134",
+    name: "Creepy Crawlie",
+    image: `${cardArtFolder}/Obelisks/CreepyCrawlie.png`,
+    type: "Obelisk",
+    condition: "",
+    cost: "Rally 1 Fear Token to your opponent's Zone.",
+    tags: ["Obelisk"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Mount <br> Mounted (Reflex): Give control of 1 face-up Champion to your opponent; take control of 1 face-up Champion from your opponent. Return control of the affected Champions during the end phase. <br> If this card is in your Reserve while you control at least 1 Champion: Activate this card.",
+        keywords: ["Mount"],
+        effect1name: "",
+        effect1type: "Mount",
+        effect1condition: "",
+        effect1cost: "",
+        effect1text: "",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: ["Reflex","Mounted"],
+        effect2condition: "",
+        effect2cost: "GiveOpp1Champ",
+        effect2text: "Take1OppChamp",
+        effect2linger: "ReturnSwapAtEnd",
+        effect3name: "",
+        effect3type: ["Standard","Reserve"],
+        effect3condition: "Control1PlusChamps",
+        effect3cost: "",
+        effect3text: "ActivateSelf",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
     id: "181",
     name: "Aldred, Oathbound",
     image: `${cardArtFolder}/Champions/AldredOathbound.png`,
