@@ -1130,7 +1130,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Mill 4; Place 1 Obelisk that mentions a Commander from your Deck into your Reserve (ignoring its cost), and attach to it 1 appropriate Equipment from your Deck (ignoring its cost).",
+        text: "Mill 4; Place 1 Obelisk that mentions a Commander from your Deck into your Reserve, and attach to it 1 appropriate Equipment from your Deck (ignoring its cost).",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "",
@@ -1401,6 +1401,42 @@ export const cards = [
         effect3condition: "Control1PlusChamps",
         effect3cost: "",
         effect3text: "ActivateSelf",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
+    id: "135",
+    name: "Zippy",
+    image: `${cardArtFolder}/Obelisks/Zippy.png`,
+    type: "Obelisk",
+    condition: "",
+    cost: "Rally 1 Care Token to your opponent's Zone.",
+    tags: ["Obelisk"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Mount <br> Mounted: Target 1 card in your opponent's Arsenal; Your opponent then chooses: send the Targeted card to the Tomb, or to send 2 other cards of their choice from their Arsenal to the Tomb.",
+        keywords: ["Mount"],
+        effect1name: "",
+        effect1type: "Mount",
+        effect1condition: "",
+        effect1cost: "",
+        effect1text: "",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: ["Standard","Mounted"],
+        effect2condition: "",
+        effect2cost: "Target1OppArsenal",
+        effect2text: "OppChoosesSendTargetOrSend2Others",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: [""],
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
         effect3linger: ""
       }
     ]
