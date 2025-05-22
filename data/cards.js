@@ -86,7 +86,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Deathward, Warded <br> On Rally: Excavate 3; Add 1 revealed, Obliterate the other 2. <br> Mind Augus (Exhaustion): Excavate 5 from your opponent&apos;s deck; Obliterate 1, return the rest in the same order. <br> Shattered Connection (Reflex): If this card would be destroyed: Send 1 other card from your hand or Zone to the Tomb; it is not destroyed.",
+        text: "Deathward, Warded <br> On Rally: Excavate 3; Add 1 revealed, Obliterate the other 2. <br> Mind Augus (Exhaustion): Excavate 5 from your opponent&apos;s Deck; Obliterate 1, return the rest in the same order. <br> Shattered Connection (Reflex): If this card would be destroyed: Send 1 other card from your Hand or Zone to the Tomb; it is not destroyed.",
         keywords: ["Deathward", "Warded"],
         effect1name: "",
         effect1type: "OnRally",
@@ -158,7 +158,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Deathpower, Deathtouch <br> On Rally: Obliterate all cards in both players' Tombs. <br> Break the Seal: Resurrect or Unleash 1 Undead, but Destroy all Champions rallied this way if this card leaves the Zone. <br> Fateseal (Reflex, Exhaustion): Obliterate the top 10 cards of your deck; Reduce the Life of all other Champions to 1.",
+        text: "Deathpower, Deathtouch <br> On Rally: Obliterate all cards in both players' Tombs. <br> Break the Seal: Resurrect or Unleash 1 Undead. Destroy all Champions Resurrected this way if this card leaves the Zone. <br> Fateseal (Reflex, Exhaustion): Obliterate the top 10 cards of your Deck; Reduce the Life of all other Champions to 1.",
         keywords: ["Deathpower", "Deathtouch"],
         effect1name: "",
         effect1type: "OnRally",
@@ -266,7 +266,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Library Assistant: Excavate 3; Add 1 revealed Undead or Helper, or a card that mentions an Undead or Helper. <br> Powerful Core: Sacrifice this card and target 1 other Undead in your Tomb; Resurrect target. The resurrected Champion gains Warded. <br> Helping Hand: If card is in your Tomb: Obliterate this card and target 1 Undead or Helper in your Tomb; Resurrect target.",
+        text: "Library Assistant: Excavate 3; Add 1 revealed Undead or Helper, or a card that mentions an Undead or Helper. <br> Powerful Core: Sacrifice this card and Target 1 other Undead in your Tomb; Resurrect Target. The resurrected Champion gains Warded. <br> Helping Hand: If card is in your Tomb: Obliterate this card and Target 1 Undead or Helper in your Tomb; Resurrect Target.",
         keywords: ["blank"],
         effect1name: "Library Assistant",
         effect1type: "Standard",
@@ -338,7 +338,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Target 1 Undead in either Tomb and Offer 3 Life; Resurrect target Champion and attach this card to it. If this card leaves the zone, destroy the attached Champion.",
+        text: "Target 1 Undead in either Tomb and Offer 3 Life; Resurrect Target Champion and attach this card to it. If this card leaves the zone, destroy the attached Champion.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "Standard",
@@ -446,7 +446,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "When an opponent’s Champion declares an attack: Mill 4 and target the attacking Champion; Negate the Attack, and if you do, deal Damage to your opponent equal to that Champion’s Damage.",
+        text: "When an opponent’s Champion declares an attack: Mill 4 and Target the attacking Champion; Negate the Attack, and if you do, deal Damage to your opponent equal to that Champion’s Damage.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "Reflex",
@@ -518,7 +518,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Target 1 Champion in your opponent's Tomb and Offer 6 Life; Resurrect target Champion to your Zone, it is now also considered an Undead.",
+        text: "Target 1 Champion in your opponent's Tomb and Offer 6 Life; Resurrect Target Champion to your Zone, it is now also considered an Undead.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "Standard",
@@ -626,7 +626,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Target 1 Champion in either Tomb and 3 other Champions in your Tomb; Resurrect the first target and attach this card to it, and if you do, Obliterate the other 3 targets. If this card leaves the zone, destroy the attached Champion.",
+        text: "Target 1 Champion in either Tomb and 3 other Champions in your Tomb; Resurrect the first Target and attach this card to it, and if you do, Obliterate the other 3 Targets. If this card leaves the zone, destroy the attached Champion.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "Standard",
@@ -734,7 +734,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Heavy Hands <br> On Rally: Draw 2. <br> Deadeye (Reflex): Discard 1 and target 1 card on the Zone; Destroy target.",
+        text: "Heavy Hands <br> On Rally: Draw 2. <br> Deadeye (Reflex): Discard 1 and Target 1 card on the Zone; Destroy Target.",
         keywords: ["Heavy Hands"],
         effect1name: "",
         effect1type: "OnRally",
@@ -763,7 +763,7 @@ export const cards = [
     image: `${cardArtFolder}/Champions/PerfectJane.png`,
     type: "Champion",
     condition: "",
-    cost: "Reveal this card, then your opponent randomly chooses 1 card from your hand which you discard. If the discarded card was not this card, it will be Rallied.",
+    cost: "Reveal this card, then your opponent randomly chooses 1 card from your Hand which you discard. If the discarded card was not this card, it will be Rallied.",
     tags: ["Frontier", "Marshall", "Marksman"],
     damage: 8,
     life: 8,
@@ -794,6 +794,114 @@ export const cards = [
     ]
   },
   {
+    id: "64",
+    name: "Lady Jane's Ladykiller",
+    image: `${cardArtFolder}/Champions/LadyJaneLadykiller.png`,
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Attach only to a Marksman. <br> The turn this card is activated: Only the attached Champion can attack (this effect remains even if this card leaves the zone). <br> The attached Champion's attacks cannot be blocked. <br> If this card is in your Tomb: Obliterate this card and Target 1 Marksman in your Tomb; Resurrect Target.",
+        keywords: ["blank"],
+        effect1name: "",
+        effect1type: "OnActivation",
+        effect1condition: "AttachOnlyToMarksman",
+        effect1cost: "",
+        effect1text: "LockAttacksToAttached",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: ["Tomb","Standard"],
+        effect2condition: "",
+        effect2cost: "ObliterateSelfPlusTarget1TombMarksman",
+        effect2text: "ResurrectTarget",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
+    id: "65",
+    name: "Ol' Reliable",
+    image: `${cardArtFolder}/Champions/OlReliable.png`,
+    type: "Equipment",
+    condition: "",
+    cost: "Reveal 1 other random card from your Hand.",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Attach only to a Marksman. <br> Increase the attached Champion's Damage by 6. Reduce this Damage bonus by 1 after each time the attached Champion battles. <br> If this card's Damage bonus has been reduced to 0 by its own effect (Reflex): Destroy this card; Deal 6 Damage to 1 Champion or player.",
+        keywords: ["blank"],
+        effect1name: "",
+        effect1type: "OnActivation",
+        effect1condition: "AttachOnlyToMarksman",
+        effect1cost: "Reveal1OtherRandomFromHand",
+        effect1text: "IncreaseAttachedDamageBy6",
+        effect1linger: "DecreaseIncreaseBy1PerBattle",
+        effect2name: "",
+        effect2type: ["Reflex"],
+        effect2condition: "IfDamageBonusEqualsZero",
+        effect2cost: "DestroySelf",
+        effect2text: "Deal6DamageToChampOrPlayer",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
+    id: "66",
+    name: "Lucky Shot",
+    image: `${cardArtFolder}/Champions/LuckyShot.png`,
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Attach only to a Marksman. <br> Call the type of card on top of your Deck: Excavate 1, and if its card type matches what you called you can Destroy 1 Champion on the Zone. Otherwise, Destroy the attached Champion.",
+        keywords: ["blank"],
+        effect1name: "",
+        effect1type: "",
+        effect1condition: "AttachOnlyToMarksman",
+        effect1cost: "",
+        effect1text: "",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: ["Standard"],
+        effect2condition: "",
+        effect2cost: "DeclareTopCardType",
+        effect2text: "Excavate1PlusCheckTypePlusDestroy1Champ",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
     id: "121",
     name: "Carly, Best and Brightest",
     image: `${cardArtFolder}/Champions/CarlyBestBrightest.png`,
@@ -806,7 +914,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Repair Specialist <br> On Rally: Activate 1 Equipment or Obelisk from your hand, deck, or Tomb (ignoring its cost). <br> Upgrade: Rally 1 Blocker Token to your opponent's Zone; Add 1 Equipment. <br> Emergency Transport (Reflex): If this card is currently not a Commander: Obliterate the top 8 cards of your deck; Activate 1 Obelisk from your hand, deck, or Tomb that mentions a Commander (ignoring its cost).",
+        text: "Repair Specialist <br> On Rally: Activate 1 Equipment or Obelisk from your Hand, Deck, or Tomb (ignoring its cost). <br> Upgrade: Rally 1 Blocker Token to your opponent's Zone; Add 1 Equipment. <br> Emergency Transport (Reflex): If this card is currently not a Commander: Obliterate the top 8 cards of your Deck; Activate 1 Obelisk from your Hand, Deck, or Tomb that mentions a Commander (ignoring its cost).",
         keywords: ["Repair Specialist"],
         effect1name: "",
         effect1type: "OnRally",
@@ -842,7 +950,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Lightbulb: Excavate 1; Return it to either the top or the bottom of your deck. <br> Wake-Up Jolt: Sacrifice this card and target 1 Champion or Obelisk in your Reserve; Activate target (ignoring its cost). <br> Helping Hand: If this card is in your Tomb: Obliterate this card and target 1 Clockwork or Helper in your Tomb; Resurrect target, it gains Deathtouch and its Life is reduced to 1.",
+        text: "Lightbulb: Excavate 1; Return it to either the top or the bottom of your Deck. <br> Wake-Up Jolt: Sacrifice this card and Target 1 Champion or Obelisk in your Reserve; Activate Target (ignoring its cost). <br> Helping Hand: If this card is in your Tomb: Obliterate this card and Target 1 Clockwork or Helper in your Tomb; Resurrect Target, it gains Deathtouch and its Life is reduced to 1.",
         keywords: ["blank"],
         effect1name: "Lightbulb",
         effect1type: "Standard",
@@ -878,7 +986,7 @@ export const cards = [
     damageThreshold: 2,
     abilities: [
       {
-        text: "Repair Specialist <br> On Rally: Place 1 Obelisk that mentions a Commander from your deck into your Reserve. That Obelisk gains the Reserve Reflex Effect: Discard 1, activate this card (ignoring its cost). <br> Garage Baby: Attach 1 appropriate Equipment from your hand, deck, or Tomb to an Obelisk in your Reserve (ignoring its cost). <br> Secret Weapon (Reflex, Exhaustion): Destroy 1 Obelisk you control; Destroy up to 2 cards on the Zone.",
+        text: "Repair Specialist <br> On Rally: Place 1 Obelisk that mentions a Commander from your Deck into your Reserve. That Obelisk gains the Reserve Reflex Effect: Discard 1, activate this card (ignoring its cost). <br> Garage Baby: Attach 1 appropriate Equipment from your Hand, Deck, or Tomb to an Obelisk in your Reserve (ignoring its cost). <br> Secret Weapon (Reflex, Exhaustion): Destroy 1 Obelisk you control; Destroy up to 2 cards on the Zone.",
         keywords: ["Repair Specialist"],
         effect1name: "",
         effect1type: "OnRally",
@@ -950,7 +1058,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Bloodrage, Priority <br> Ride: Target 1 Equipment or Obelisk in your Tomb; Retrieve target. <br> Or Die (Mandatory): If it is your end phase and this Champion is not designated as a Commander: Destroy this card.",
+        text: "Bloodrage, Priority <br> Ride: Target 1 Equipment or Obelisk in your Tomb; Retrieve Target. <br> Or Die (Mandatory): If it is your end phase and this Champion is not designated as a Commander: Destroy this card.",
         keywords: ["Bloodrage","Priority"],
         effect1name: "Ride",
         effect1type: "Standard",
@@ -986,7 +1094,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Might of the Small <br> Garbage Lord: Bury 1. <br> Trash Picker: Retrieve 1, and if you do, Obliterate the rest of the cards in your Tomb. <br> On Resurrection: Target 1 Champion in your Tomb; Resurrect target, but reduce its Life to 1, also it is Obliterated when it leaves the Zone.",
+        text: "Might of the Small <br> Garbage Lord: Bury 1. <br> Trash Picker: Retrieve 1, and if you do, Obliterate the rest of the cards in your Tomb. <br> On Resurrection: Target 1 Champion in your Tomb; Resurrect Target, but reduce its Life to 1, also it is Obliterated when it leaves the Zone.",
         keywords: ["Might of the Small"],
         effect1name: "Garbage Lord",
         effect1type: "Standard",
@@ -1005,6 +1113,474 @@ export const cards = [
         effect3condition: "",
         effect3cost: "Target1ChampionInTomb",
         effect3text: "ResurrectTargetReduceTo1Life",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
+    id: "127",
+    name: "Start Your Engines",
+    image: `${cardArtFolder}/Actions/StartYourEngines.png`,
+    type: "Action",
+    condition: "",
+    cost: "",
+    tags: ["Action"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Mill 4; Place 1 Obelisk that mentions a Commander from your Deck into your Reserve (ignoring its cost), and attach to it 1 appropriate Equipment from your Deck (ignoring its cost).",
+        keywords: ["blank"],
+        effect1name: "",
+        effect1type: "",
+        effect1condition: "",
+        effect1cost: "Mill4",
+        effect1text: "Place1ObeliskFromDeckToReservePlusEquipToThat1Equip",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: "",
+        effect2condition: "",
+        effect2cost: "",
+        effect2text: "",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
+    id: "128",
+    name: "Engine Boosters",
+    image: `${cardArtFolder}/Equipments/EngineBoosters.png`,
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Attach only to an Obelisk that mentions a Commander. <br> The attached Obelisk gains the effect: \"This card's designated Commander can make an additional attack during each of your battle phases.\"",
+        keywords: ["blank"],
+        effect1name: "",
+        effect1type: "",
+        effect1condition: "AttachOnlyToCommanderObelisk",
+        effect1cost: "",
+        effect1text: "GrantExtraAttackToCommander",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: "",
+        effect2condition: "",
+        effect2cost: "",
+        effect2text: "",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
+    id: "129",
+    name: "Armor Plating",
+    image: `${cardArtFolder}/Equipments/ArmorPlating.png`,
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Attach only to an Obelisk that mentions a Commander. <br> The attached Obelisk gains the effect: \"This card's designated Commander's Damage Threshold increases by 2.\"",
+        keywords: ["blank"],
+        effect1name: "",
+        effect1type: "",
+        effect1condition: "AttachOnlyToCommanderObelisk",
+        effect1cost: "",
+        effect1text: "GrantPlus2DTtoCommander",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: "",
+        effect2condition: "",
+        effect2cost: "",
+        effect2text: "",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
+    id: "130",
+    name: "Test Drive",
+    image: `${cardArtFolder}/Rush/TestDrive.png`,
+    type: "Rush",
+    condition: "",
+    cost: "",
+    tags: ["Rush"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Target 1 Champion you control; Increase Target's Damage by 5. Destroy Target during the end phase.",
+        keywords: ["blank"],
+        effect1name: "",
+        effect1type: "",
+        effect1condition: "",
+        effect1cost: "Target1ChampYouControl",
+        effect1text: "IncreaseChampDamageBy5",
+        effect1linger: "DestroyChampAtEndPhase",
+        effect2name: "",
+        effect2type: "",
+        effect2condition: "",
+        effect2cost: "",
+        effect2text: "",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
+    id: "131",
+    name: "Hunter Rider",
+    image: `${cardArtFolder}/Obelisks/HunterRider.png`,
+    type: "Obelisk",
+    condition: "",
+    cost: "Rally 1 Jumper Token to your opponent's Zone.",
+    tags: ["Obelisk"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Shielded <br> Mount <br> Mounted: Destroy 1 card in your Arsenal; Destroy up to 2 cards in either Arsenal. <br> Mounted (Reflex): Increase this card's Commander's Damage by 5 until the end phase.",
+        keywords: ["Shielded","Mount"],
+        effect1name: "",
+        effect1type: "Mount",
+        effect1condition: "",
+        effect1cost: "",
+        effect1text: "",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: ["Standard","Mounted"],
+        effect2condition: "",
+        effect2cost: "Destroy1InYourArsenal",
+        effect2text: "Destroy2InEitherArsenal",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: ["Reflex","Mounted"],
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "IncreaseChampDamageBy5",
+        effect3linger: "ReturnAtEndPhase"
+      }
+    ]
+  },
+  {
+    id: "132",
+    name: "Monkey Barrel Blaster",
+    image: `${cardArtFolder}/Obelisks/MonkeyBarrelBlaster.png`,
+    type: "Obelisk",
+    condition: "",
+    cost: "Rally 1 Hunky Token to your opponent's Zone.",
+    tags: ["Obelisk"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Mount <br> Mounted: Rally 1 Greed, Rage, or Sloth Token to your opponent's Zone, but Destroy it during their next end phase. <br> Mounted: If your opponent controls 5 or more Tokens: Sacrifice 1 of your opponent's Champions; Destroy 1 card on the Zone.",
+        keywords: ["Mount"],
+        effect1name: "",
+        effect1type: "Mount",
+        effect1condition: "",
+        effect1cost: "",
+        effect1text: "",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: ["Standard","Mounted"],
+        effect2condition: "",
+        effect2cost: "",
+        effect2text: "Rally1GreedSlothRageTokenToOpp",
+        effect2linger: "DestroyThatTokenDuringOppEndPhase",
+        effect3name: "",
+        effect3type: ["Standard","Mounted"],
+        effect3condition: "IfOppHas5PlusTokens",
+        effect3cost: "Sacrifice1OppsChamps",
+        effect3text: "Destroy1OnZone",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
+    id: "181",
+    name: "Aldred, Oathbound",
+    image: `${cardArtFolder}/Champions/AldredOathbound.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Your opponent draws 3.",
+    tags: ["Noble", "Protector","Knight"],
+    damage: 5,
+    life: 5,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: "Priority, Veilbind <br> On Rally: Attach up to 3 Equipments to this Champion (ignoring costs), but only one each from your Hand, Deck, and Tomb. <br> Sacrificial Blade: Bury 1 Equipment; Destroy 1 card on the Zone. <br> Reforged: If this Champion has no attached Equipments: Attach 1 Equipment to this Champion from your Hand, Deck, Tomb, or Void (ignoring its cost).",
+        keywords: ["Priority","Veilbind"],
+        effect1name: "",
+        effect1type: "OnRally",
+        effect1condition: "",
+        effect1cost: "",
+        effect1text: "Attach3EquipmentsToSelfFromHandDeckTomb",
+        effect1linger: "",
+        effect2name: "Sacrificial Blade",
+        effect2type: "Standard",
+        effect2condition: "",
+        effect2cost: "Bury1Equipment",
+        effect2text: "Destroy1OnZone",
+        effect2linger: "",
+        effect3name: "Reforged",
+        effect3type: "Standard",
+        effect3condition: "NoEquips",
+        effect3cost: "",
+        effect3text: "Attach1EquipmentToSelfFromHandDeckTombVoid",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
+    id: "182",
+    name: "Sir Pecks a Lot",
+    image: `${cardArtFolder}/Champions/PecksALot.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Noble", "Protector","Helper"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Arm Thy Knight: If you control a Knight: Activate 1 Equipment from your Hand, Deck, or Tomb (ignoring its cost), attaching the card to a Knight you control. <br> Awaken Allies: If this is the only Champion you control: Sacrifice this card; Recruit 2 Nobles. <br> Helping Hand: If this card is in your Tomb: Obliterate this card and Target 1 Noble or Helper in your Tomb; Resurrect Target.",
+        keywords: ["blank"],
+        effect1name: "",
+        effect1type: "Standard",
+        effect1condition: "Control1Knight",
+        effect1cost: "",
+        effect1text: "AttachEquipmentToKnightFromHandDeckTomb",
+        effect1linger: "",
+        effect2name: "Awaken Allies",
+        effect2type: "Standard",
+        effect2condition: "SoleChampion",
+        effect2cost: "SacrificeSelf",
+        effect2text: "Recruit2Nobles",
+        effect2linger: "",
+        effect3name: "Helping Hand",
+        effect3type: ["Standard","Tomb"],
+        effect3condition: "",
+        effect3cost: "ObliterateSelfTarget1NobleOrHelperInTomb",
+        effect3text: "ResurrectTarget",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
+    id: "183",
+    name: "Gerald, the Turncoat",
+    image: `${cardArtFolder}/Champions/TurncoatGerald.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Noble", "Knight"],
+    damage: 6,
+    life: 2,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: "Conscript, Deathward <br> On Resurrection: Your opponent draws 1.",
+        keywords: ["Conscript","Deathward"],
+        effect1name: "",
+        effect1type: "IfResurrected",
+        effect1condition: "",
+        effect1cost: "",
+        effect1text: "OppDraw1",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: "",
+        effect2condition: "",
+        effect2cost: "",
+        effect2text: "",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
+    id: "184",
+    name: "Indebted Undertaker",
+    image: `${cardArtFolder}/Champions/IndebtedUndertaker.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Noble", "Citizen"],
+    damage: 2,
+    life: 2,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: "Undertaker",
+        keywords: ["Undertaker"],
+        effect1name: "",
+        effect1type: "",
+        effect1condition: "",
+        effect1cost: "",
+        effect1text: "",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: "",
+        effect2condition: "",
+        effect2cost: "",
+        effect2text: "",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
+    id: "185",
+    name: "Belligerent Noble",
+    image: `${cardArtFolder}/Champions/BelligerentNoble.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Noble", "Royal", "Citizen"],
+    damage: 1,
+    life: 3,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Greedy, Reach",
+        keywords: ["Greedy","Reach"],
+        effect1name: "",
+        effect1type: "",
+        effect1condition: "",
+        effect1cost: "",
+        effect1text: "",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: "",
+        effect2condition: "",
+        effect2cost: "",
+        effect2text: "",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
+    id: "186",
+    name: "Eager Young Guardsman",
+    image: `${cardArtFolder}/Champions/EagerYoungGuardsman.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Noble", "Knight"],
+    damage: 3,
+    life: 9,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Defender, Naive <br> While Equipped: This Champion is unaffected by its Passives. <br> Hail Mary: Destroy 1 Equipment attached to this card; Deal 3 Damage to 1 Champion on the Zone.",
+        keywords: ["Defender","Naive"],
+        effect1name: "",
+        effect1type: "WhileEquipped",
+        effect1condition: "",
+        effect1cost: "",
+        effect1text: "UnaffectedBySelfPassives",
+        effect1linger: "",
+        effect2name: "Hail Mary",
+        effect2type: "Standard",
+        effect2condition: "",
+        effect2cost: "Destroy1AttachedEquip",
+        effect2text: "Deal3DamageToChamp",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
+    id: "241",
+    name: "Dr Jeremiah Grayborn, Morte Soprattutto",
+    image: `${cardArtFolder}/Champions/DrJeremiah.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Your opponent gains 30 Life.",
+    tags: ["Vivisect", "Lifebinder","Professor"],
+    damage: 0,
+    life: 10,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Lifebalance <br> Healing Hands (Exhaustion): Your opponent gains 5 Life; Obliterate the top 8 cards of their Deck. <br> Bestow Life (Exhaustion): Target 1 Construct or Helper in your Tomb; Resurrect Target Champion, but Destroy all Champions Resurrected this way if this card leaves the Zone. <br><br>&nbsp;",
+        keywords: ["Lifebalance"],
+        effect1name: "Healing Hands",
+        effect1type: ["Standard","Exhaustion"],
+        effect1condition: "",
+        effect1cost: "OpponentGains5Life",
+        effect1text: "ObliterateOpponentTop8",
+        effect1linger: "",
+        effect2name: "Bestow Life",
+        effect2type: ["Standard","Exhaustion"],
+        effect2condition: "",
+        effect2cost: "Target1ConstructInTomb",
+        effect2text: "ResurrectTarget",
+        effect2linger: "DestroyAllWhenLeave",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
         effect3linger: ""
       }
     ]

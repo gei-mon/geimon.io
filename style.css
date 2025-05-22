@@ -228,7 +228,7 @@ text-decoration: underline;
 }
 
 .card-name {
-  width: 90%;            /* Fixed width to prevent overflow */
+  width: 95%;            /* Fixed width to prevent overflow */
   max-height: 5%;       /* Reduce the max height to make it shorter */
   overflow: hidden;      /* Prevents overflow */
   display: flex;
@@ -240,7 +240,7 @@ text-decoration: underline;
   box-sizing: border-box;
   white-space: nowrap;
   text-overflow: ellipsis; /* Show ... if text overflows */
-  text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;
+  text-shadow: 1px 1px 2px black, -1px -1px 2px black, 1px -1px 2px black, -1px 1px 2px black;
 }
 
 .card-cost {
@@ -296,8 +296,9 @@ list-style-type: none;
 width: 100%;            /* Match the width of the card name */
 max-height: 16em;       /* Limit the height of the text box (adjustable) */
 overflow: auto;      /* Prevents overflow */
-padding: 0;        /* Reduce padding for the text box */
+padding: 0px;        /* Reduce padding for the text box */
 margin-top: 2px;       /* Reduced top margin to bring text closer to the name */
+margin-bottom: 0px;
 display: flex;
 flex-direction: column;
 text-align: left;
@@ -312,10 +313,16 @@ text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2p
 .action .card-name {
   text-shadow: none;
 }
+.action .card-cost {
+  text-shadow: none;
+}
 .equipment .card-text {
   text-shadow: none;
 }
 .equipment .card-name {
+  text-shadow: none;
+}
+.equipment .card-cost {
   text-shadow: none;
 }
 .obelisk .card-text {
@@ -324,16 +331,25 @@ text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2p
 .obelisk .card-name {
   text-shadow: none;
 }
+.obelisk .card-cost {
+  text-shadow: none;
+}
 .rush .card-text {
   text-shadow: none;
 }
 .rush .card-name {
   text-shadow: none;
 }
+.rush .card-cost {
+  text-shadow: none;
+}
 .reflex .card-text {
   text-shadow: none;
 }
 .reflex .card-name {
+  text-shadow: none;
+}
+.reflex .card-cost {
   text-shadow: none;
 }
 
@@ -429,6 +445,8 @@ clip-path: polygon(1.5% 0, 100% 0, 100% 100%, 0% 100%);
   pointer-events: none;
   z-index: 1000;
   display: none;
+  max-width: 350px; /* Set the maximum width */
+  word-wrap: break-word; /* Wrap long words */
 }
 
 .empty-deck-message {

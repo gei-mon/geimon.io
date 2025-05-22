@@ -51,7 +51,7 @@ export function renderCard(card, container) {
     });
 
 // Define key phrases to format
-const keyPhrases = ["Garbage Lord", "Trash Picker", "Ride", "Or Die", "Mandatory", "Lightbulb", "Wake-Up Jolt", "Upgrade", "Emergency Transport", "Secret Weapon", "Wake the Beast", "Garage Baby", "Library Assistant", "Powerful Core", "Helping Hand", "If Discarded", "Deadeye", "If Sent to Tomb", "On Rally", "On Resurrection", "Mind Augus", "Exhaustion", "Shattered Connection", "Reflex", "Break the Seal", "Fateseal", "Rend Soul", "If Obliterated", "Soulburn"];
+const keyPhrases = ["Mounted","While Equipped","Hail Mary","Arm Thy Knight","Awaken Allies","Healing Hands","Bestow Life","Sacrificial Blade","Reforged","Garbage Lord", "Trash Picker", "Ride", "Or Die", "Mandatory", "Lightbulb", "Wake-Up Jolt", "Upgrade", "Emergency Transport", "Secret Weapon", "Wake the Beast", "Garage Baby", "Library Assistant", "Powerful Core", "Helping Hand", "If Discarded", "Deadeye", "If Sent to Tomb", "On Rally", "On Resurrection", "Mind Augus", "Exhaustion", "Shattered Connection", "Reflex", "Break the Seal", "Fateseal", "Rend Soul", "If Obliterated", "Soulburn"];
 
 // Format key phrases and keywords
 keyPhrases.forEach(phrase => {
@@ -166,9 +166,13 @@ function adjustTextSize(cardElement) {
 
   // Ensure that the damage and life text are not resized
   const bottomBar = cardElement.querySelector(".bottom-bar");
-  bottomBar.querySelectorAll(".damage, .life").forEach(el => {
-    el.style.fontSize = "1.6em";  // Keep damage and life text font size fixed
-  });
+  if (bottomBar) {
+    bottomBar.querySelectorAll(".damage, .life").forEach(el => {
+      el.style.fontSize = "1.6em";
+    });
+  } else {
+    console.warn("No .bottom-bar found in cardElement:", cardElement);
+  }
 }
 
 export function addTooltipListeners(container) {

@@ -342,6 +342,7 @@
                 container.innerHTML = "";
                 if (cardIds.length === 0) {
                     emptyMessage.style.display = "block";
+                    updateDeckInfo([]);
                 } else {
                     emptyMessage.style.display = "none";
 
@@ -389,6 +390,8 @@
     const sortedCards = [...cards].sort((a, b) => a.name.localeCompare(b.name));
 
     async function updateDeckInfo(deckCards) {
+        const deckInfoDiv = document.getElementById('deck-info');
+        deckInfoDiv.textContent = "Loading deck info...";
     // Count card types
     const counts = {
         Champions: 0,
@@ -411,10 +414,6 @@
     });
 
     const total = deckCards.length;
-    const deckInfoDiv = document.getElementById('deck-info');
-
-    // Show loading text while fetching legality
-    deckInfoDiv.textContent = "Loading deck info...";
 
     async function checkLegality(deckName) {
     try {
@@ -430,19 +429,33 @@
     }
     }
 
-    const storedDeckName = localStorage.getItem("selectedDeckName") || "My Deck";
-    const isLegal = await checkLegality(storedDeckName);
-    const deckSizeColor = isLegal ? "#4CAF50" : "#ff4d4d";
+    try {
+        const storedDeckName = localStorage.getItem("selectedDeckName") || "My Deck";
+        const isLegal = await checkLegality(storedDeckName);
+        const deckSizeColor = isLegal ? "#4CAF50" : "#ff4d4d";
 
-    deckInfoDiv.innerHTML = `
-        <span style="color: ${deckSizeColor};">Deck Size: ${total}</span>
-        <span>Champions: ${counts.Champions}</span>
-        <span>Actions: ${counts.Actions}</span>
-        <span>Equipments: ${counts.Equipments}</span>
-        <span>Obelisks: ${counts.Obelisks}</span>
-        <span>Rush: ${counts.Rush}</span>
-        <span>Reflex: ${counts.Reflex}</span>
-    `;
+        deckInfoDiv.innerHTML = `
+            <span style="color: ${deckSizeColor};">Deck Size: ${total}</span>
+            <span>Champions: ${counts.Champions}</span>
+            <span>Actions: ${counts.Actions}</span>
+            <span>Equipments: ${counts.Equipments}</span>
+            <span>Obelisks: ${counts.Obelisks}</span>
+            <span>Rush: ${counts.Rush}</span>
+            <span>Reflex: ${counts.Reflex}</span>
+        `;
+    } catch (e) {
+        // In case something fails unexpectedly, still update the info with 0s
+        console.error("Failed to update deck info:", e);
+        deckInfoDiv.innerHTML = `
+            <span style="color: #ff4d4d;">Deck Size: 0</span>
+            <span>Champions: 0</span>
+            <span>Actions: 0</span>
+            <span>Equipments: 0</span>
+            <span>Obelisks: 0</span>
+            <span>Rush: 0</span>
+            <span>Reflex: 0</span>
+        `;
+    }
 }
 
     searchInput.addEventListener("input", () => {
