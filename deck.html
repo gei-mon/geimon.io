@@ -33,8 +33,8 @@
             transform: scale(0.5);
             margin: 20px -60px;
         }
-        .card-wrapper > div:nth-child(n+9) {
-            margin-top: -200px; /* Adjust this value to tighten vertical spacing */
+        .card-wrapper > div.stacked {
+            margin-top: -200px; /* or whatever value you want */
         }
         .card-wrapper button {
             background-color: transparent;
@@ -56,7 +56,7 @@
         display: flex;
         height: 80vh; /* adjust as needed */
         gap: 10px;
-        padding: 0 10px 10px 10px;
+        padding: 0px 10px 10px 10px;
         overflow: hidden; /* Prevent horizontal overflow */
         }
         /* Left side: existing container */
@@ -65,6 +65,7 @@
         display: flex;
         gap: 10px;
         overflow-y: auto;
+        padding-left: 320px;
         }
         /* Right side: search panel */
         .search-panel {
@@ -173,11 +174,12 @@
         Loading deck info...
     </div>
 
-    <div class="main-container">
-    <div class="container">
       <div class="viewing-window" id="viewing-window">
         <div class="scaled-card" id="scaled-card"></div>
       </div>
+
+    <div class="main-container">
+    <div class="container">
         <div class="card-wrapper" id="card-wrapper"></div>
     </div>
 
@@ -204,12 +206,18 @@
 
     <div id="tooltip" class="tooltip"></div>
 
+    <div id="token-tooltip" style="display: none; position: absolute;">
+        <div class="token-tooltip-text" style="font-family: 'Times New Roman', serif; font-size: 14px;"></div>
+    </div>
+
     <p class="empty-deck-message" id="empty-message" style="display: none;">This deck is currently empty.</p>
 
     <script type="module">
         import { cards } from "./data/cards.js";
+        import { tokens } from "./data/tokens.js";
         import { renderCard } from "./utils/cardRenderer.js";
         import { addTooltipListeners } from './utils/cardRenderer.js';
+        import { addTokenTooltipListeners } from './utils/cardRenderer.js';
 
         document.addEventListener("DOMContentLoaded", () => {
             //const sortedCards = cards.sort((a, b) => a.name.localeCompare(b.name));
@@ -374,6 +382,7 @@
                                 clone.classList.add("scaled-card");
                                 scaledCardContainer.appendChild(clone);
                                 addTooltipListeners(clone);
+                                addTokenTooltipListeners(clone);
                                 lastHoveredCard = clone;
                             });
                         }
@@ -518,6 +527,7 @@
                 clone.classList.add("scaled-card");
                 scaledCardContainer.appendChild(clone);
                 addTooltipListeners(clone);
+                addTokenTooltipListeners(clone);
                 lastHoveredCard = clone;
             });
 
@@ -529,6 +539,31 @@
 }
       renderSearchResults();
     });
+
+    function adjustCardSpacing() {
+        const wrapper = document.getElementById('card-wrapper');
+        const cards = wrapper.children;
+        if (!cards.length) return;
+
+        // Reset all cards first
+        Array.from(cards).forEach(card => card.classList.remove('stacked'));
+
+        const cardStyle = getComputedStyle(cards[0]);
+        const cardWidth = cards[0].offsetWidth +
+            parseFloat(cardStyle.marginLeft) +
+            parseFloat(cardStyle.marginRight);
+
+        const cardsPerRow = Math.floor(wrapper.offsetWidth / cardWidth);
+
+        // Apply the class to cards in row 2 and beyond
+        for (let i = cardsPerRow; i < cards.length; i++) {
+            cards[i].classList.add('stacked');
+        }
+    }
+
+    // Run on load and on resize
+    window.addEventListener('DOMContentLoaded', adjustCardSpacing);
+    window.addEventListener('resize', adjustCardSpacing);
     </script>
 </body>
 </html>

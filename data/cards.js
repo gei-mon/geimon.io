@@ -1375,7 +1375,7 @@ export const cards = [
     image: `${cardArtFolder}/Champions/CarlyBestBrightest.png`,
     type: "Champion",
     condition: "",
-    cost: "Rally 2 Scrap Tokens to your Opponent's Zone.",
+    cost: "Rally 2 Scrap Token to your Opponent's Zone.",
     tags: ["Clockwork", "Inventor", "Student"],
     damage: 5,
     life: 5,
@@ -1778,7 +1778,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Mount <br> Mounted: Rally 1 Greed, Rage, or Sloth Token to your Opponent's Zone, but Destroy it during their next end phase. <br> Mounted: If your Opponent controls 5 or more Tokens: Sacrifice 1 of your Opponent's Champions; Destroy 1 card on the Zone.",
+        text: "Mount <br> Mounted: Rally 1 Greed Token, Rage Token, or Sloth Token to your Opponent's Zone, but Destroy it during their next end phase. <br> Mounted: If your Opponent controls 5 or more Tokens: Sacrifice 1 of your Opponent's Champions; Destroy 1 card on the Zone.",
         keywords: ["Mount"],
         effect1name: "",
         effect1type: "Mount",

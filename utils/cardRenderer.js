@@ -1,4 +1,5 @@
 import { keywords } from "../data/keywords.js";
+import { tokens } from "../data/tokens.js";
 
 export function renderCard(card, container) {
   const cardElement = document.createElement("div");
@@ -17,6 +18,8 @@ export function renderCard(card, container) {
       cardElement.classList.add("noble");}
     if (firstTag === "Vivisect") {
       cardElement.classList.add("vivisect");}
+    if (firstTag === "Token") {
+      cardElement.classList.add("token");}
   }
   else if (card.type === "Action") {
     cardElement.classList.add("action");
@@ -43,7 +46,6 @@ export function renderCard(card, container) {
     ability.keywords.forEach(keyword => {
       const keywordRegex = new RegExp(`\\b${keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "gi");
       const keywordDescription = (keywords[keyword] || 'No description').replace(/<\/?[^>]+(>|$)/g, "");
-      console.log(`Keyword: ${keyword}, Description: ${keywords[keyword]}`);
       // Replace keyword with span, store only the description text in the tooltip (no HTML)
       abilityText = abilityText.replace( keywordRegex, 
         `<span class='keyword' data-description='${keywordDescription.replace(/<\/?[^>]+(>|$)/g, "")}'>${keyword}</span>`
@@ -51,28 +53,37 @@ export function renderCard(card, container) {
     });
 
 // Define key phrases to format
-const keyPhrases = ["Decisive Plan","Foretell my Fate","Bottoms Up","Roam Around","If Destroyed","Good Morning","Goodnight","I Found It","Flip","Surrender Now","Gotcha","Sniffer Sense","Take the Bullet","Mounted","While Equipped","Hail Mary","Arm Thy Knight","Awaken Allies","Healing Hands","Bestow Life","Sacrificial Blade","Reforged","Garbage Lord", "Trash Picker", "Ride", "Or Die", "Mandatory", "Lightbulb", "Wake-Up Jolt", "Upgrade", "Emergency Transport", "Secret Weapon", "Wake the Beast", "Garage Baby", "Library Assistant", "Powerful Core", "Helping Hand", "If Discarded", "Deadeye", "If Sent to Tomb", "On Rally", "On Resurrection", "Mind Augus", "Exhaustion", "Shattered Connection", "Reflex", "Break the Seal", "Fateseal", "Rend Soul", "If Obliterated", "Soulburn"];
+    const keyPhrases = ["Decisive Plan","Foretell my Fate","Bottoms Up","Roam Around","If Destroyed","Good Morning","Goodnight","I Found It","Surrender Now","Gotcha","Sniffer Sense","Take the Bullet","Mounted","While Equipped","Hail Mary","Arm Thy Knight","Awaken Allies","Healing Hands","Bestow Life","Sacrificial Blade","Reforged","Garbage Lord", "Trash Picker", "Ride", "Or Die", "Mandatory", "Lightbulb", "Wake-Up Jolt", "Upgrade", "Emergency Transport", "Secret Weapon", "Wake the Beast", "Garage Baby", "Library Assistant", "Powerful Core", "Helping Hand", "If Discarded", "Deadeye", "If Sent to Tomb", "On Rally", "On Resurrection", "Mind Augus", "Shattered Connection", "Break the Seal", "Fateseal", "Rend Soul", "If Obliterated", "Soulburn"];
 
-// Format key phrases and keywords
-keyPhrases.forEach(phrase => {
-  const phraseRegex = new RegExp(`\\b${phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "gi");
-  abilityText = abilityText.replace(
-    phraseRegex,
-    `<strong>${phrase}</strong>`
-  );
-});
+    // Format key phrases and keywords
+    keyPhrases.forEach(phrase => {
+      const phraseRegex = new RegExp(`\\b${phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "gi");
+      abilityText = abilityText.replace(
+        phraseRegex,
+        `<strong>${phrase}</strong>`
+      );
+    });
 
-// Format keywords with tooltip spans
-ability.keywords.forEach(keyword => {
-  const keywordRegex = new RegExp(`\\b${keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "gi");
-  const keywordDescription = (keywords[keyword] || 'No description').replace(/<\/?[^>]+(>|$)/g, "");
-  abilityText = abilityText.replace(
-    keywordRegex,
-    `<strong><span class='keyword' data-description='${keywordDescription}'>${keyword}</span></strong>`
-  );
-});
+    // Format keywords with tooltip spans
+    ability.keywords.forEach(keyword => {
+      const keywordRegex = new RegExp(`\\b${keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "gi");
+      const keywordDescription = (keywords[keyword] || 'No description').replace(/<\/?[^>]+(>|$)/g, "");
+      abilityText = abilityText.replace(
+        keywordRegex,
+        `<strong><span class='keyword' data-description='${keywordDescription}'>${keyword}</span></strong>`
+      );
+    });
 
-return `<div class="keyword">${abilityText}</div>`;
+    const tokenNames = tokens.map(t => t.name);
+    tokenNames.forEach(tokenName => {
+      const tokenRegex = new RegExp(`\\b${tokenName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "gi");
+      abilityText = abilityText.replace(
+        tokenRegex,
+        `<span class='token-name' data-token='${tokenName}'>${tokenName}</span>`
+      );
+    });
+
+    return `<div class="keyword">${abilityText}</div>`;
 
   }).join(" ");  // Use a single space to join the final abilities HTML string
 
@@ -83,7 +94,8 @@ return `<div class="keyword">${abilityText}</div>`;
     </div>
     <div class="card-tags">${tags}</div>
     ${card.condition ? `<div class="card-condition">Condition: ${card.condition}</div>` : ""}
-    ${card.cost && card.cost !== "Basic" ? `<div class="card-cost">Cost: ${card.cost}</div>` : ""}
+    ${card.cost && card.cost !== "Basic" ? 
+    `<div class="card-cost">Cost: ${renderTextWithTokens(card.cost)}</div>` : ""}
     <div class="card-text" style="padding: 0;">${abilitiesHTML}</div>
     ${card.type === "Champion" ? `
     <div class="bottom-bar">
@@ -98,10 +110,11 @@ return `<div class="keyword">${abilityText}</div>`;
   adjustNameSize(cardElement);
   cardElement.offsetHeight;
   requestAnimationFrame(() => {
-  requestAnimationFrame(() => adjustTextSize(cardElement));
+    requestAnimationFrame(() => adjustTextSize(cardElement));
   });
   const tooltip = document.getElementById("tooltip");
-  console.log("Ability HTML before cloning:", abilitiesHTML);
+  addTooltipListeners(cardElement);
+  addTokenTooltipListeners(cardElement);
 
 cardElement.querySelectorAll(".keyword").forEach(keyword => {
     keyword.addEventListener("mouseenter", (e) => {
@@ -126,10 +139,6 @@ cardElement.querySelectorAll(".keyword").forEach(keyword => {
       tooltip.style.top = `${e.pageY - 40}px`;
     }
   });
-});
-console.log("Card Keywords for:", card.name);
-cardElement.querySelectorAll(".keyword").forEach((kw, index) => {
-    console.log(`Keyword ${index + 1}:`, kw.textContent, "Description:", kw.dataset.description);
 });
 return cardElement;
 }
@@ -161,8 +170,6 @@ function adjustTextSize(cardElement) {
     fontSize -= 4.5;
     textContainer.style.fontSize = `${fontSize}px`;
   }
-  console.log("Text container height:", textContainer.offsetHeight);
-  console.log("Text scroll height:", textContainer.scrollHeight);
 
   // Ensure that the damage and life text are not resized
   const bottomBar = cardElement.querySelector(".bottom-bar");
@@ -170,15 +177,15 @@ function adjustTextSize(cardElement) {
     bottomBar.querySelectorAll(".damage, .life").forEach(el => {
       el.style.fontSize = "1.6em";
     });
-  } else {
-    console.warn("No .bottom-bar found in cardElement:", cardElement);
   }
+}
+
+function getTokenByName(name) {
+  return tokens.find(token => token.name.toLowerCase() === name.toLowerCase());
 }
 
 export function addTooltipListeners(container) {
     const keywords = container.querySelectorAll(".keyword");
-
-    console.log("Total keywords found for tooltips:", keywords.length);
 
     const tooltip = document.getElementById("tooltip");
 
@@ -186,7 +193,6 @@ export function addTooltipListeners(container) {
         const description = keyword.dataset.description;
 
         if (description && description.trim() !== "") {
-            console.log(`Assigning tooltip to keyword: ${keyword.textContent}, Description: ${description}`);
 
             keyword.addEventListener("mouseenter", (e) => {
                 tooltip.textContent = description;
@@ -205,4 +211,49 @@ export function addTooltipListeners(container) {
             });
         }
     });
+  }
+export function addTokenTooltipListeners(container) {
+  const tokenElements = container.querySelectorAll(".token-name");
+  const tooltip = document.getElementById("token-tooltip");
+
+  tokenElements.forEach(el => {
+    const tokenName = el.dataset.token;
+    const token = getTokenByName(tokenName);
+
+    if (token) {
+      el.addEventListener("mouseenter", (e) => {
+        const tooltipText = tooltip.querySelector(".token-tooltip-text");
+        if (tooltipText) {
+          const abilityText = token.abilities?.[0]?.text?.trim() || "No effect.";
+          const stats = `<br>( ${token.damage} / ${token.life} )`;
+          tooltipText.innerHTML = `
+            <strong>${token.name} ${stats}</strong><br>${abilityText}
+          `;
+        }
+
+        tooltip.style.display = "block";
+      });
+
+      el.addEventListener("mousemove", (e) => {
+        tooltip.style.left = `${e.pageX + 10}px`;
+        tooltip.style.top = `${e.pageY - 40}px`;
+      });
+
+      el.addEventListener("mouseleave", () => {
+        tooltip.style.display = "none";
+      });
+    }
+  });
+}
+
+function renderTextWithTokens(text) {
+  const tokenNames = tokens.map(t => t.name);
+  tokenNames.forEach(tokenName => {
+    const tokenRegex = new RegExp(`\\b${tokenName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "gi");
+    text = text.replace(
+      tokenRegex,
+      `<span class='token-name' data-token='${tokenName}'>${tokenName}</span>`
+    );
+  });
+  return text;
 }
