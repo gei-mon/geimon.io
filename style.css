@@ -226,6 +226,10 @@ text-decoration: underline;
   background-color: #c77fff;
   color: #000000;
 }
+.token {
+  background-color: #eaeaea;
+  color: #000000;
+}
 
 .card-name {
   width: 95%;            /* Fixed width to prevent overflow */
