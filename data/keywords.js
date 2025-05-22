@@ -2,7 +2,7 @@ export const keywords = {
   Bloodrage: "Increase this Champion&apos;s Damage equal to the Life it has lost.",
   Bulletproof: "This Champion cannot be Damaged by battle. You take no Damage from battles involving this Champion.",
   Conscript: "Whichever Player destroys this Champion by battle has it Resurrected under their control.",
-  Deathcurse: "Champions that battle this card take double this card&apos;s Damage value during each end phase while they both remain on the Zone.",
+  Deathcurse: "Champions that battle this card take double this card&apos;s Damage value during each End Phase while they both remain on the Zone.",
   Deathpower: "Decrease this Champion&apos;s Damage by your current Life.",
   Deathtouch: "If this card battles: Destroy the other Champion, Damage calculation is not applied.",
   Deathward: "If this Champion is destroyed by battle: You take no further Damage from that battle.",
@@ -26,7 +26,7 @@ export const keywords = {
   Unstoppable: "This Champion&apos;s attacks cannot be blocked.",
   Veilbind: "This Champion&apos;s Equipment cannot be Targeted by your Opponent&apos;s card effects.",
   Warded: "This Champion cannot be Targeted by effects.",
-  Maintenance: "During your end phase (Mandatory): Mill 1.",
-  Mount: "On Activation: Designate 1 Champion you control as this card&apos;s Commander. If you control no Champions, you can use this effect to designate one during your Main phase. \n\n The Mounted effects on this card cannot be used if it has no designated Commander. If this card&apos;s Commander leaves the zone, you can use this effect during your Main phase to declare a new Commander. A Champion can only be the Commander of one Obelisk at a time.",
+  Maintenance: "During your End Phase (Mandatory): Mill 1.",
+  Mount: "On Activation: Designate 1 Champion you control as this card&apos;s Commander. If you control no Champions, you can use this effect to designate one during your Main Phase. \n\n The Mounted effects on this card cannot be used if it has no designated Commander. If this card&apos;s Commander leaves the zone, you can use this effect during your Main Phase to declare a new Commander. A Champion can only be the Commander of one Obelisk at a time.",
   Shielded: "If this card&apos;s Commander would be destroyed: Destroy this card instead."
 };

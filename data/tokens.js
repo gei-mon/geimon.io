@@ -50,7 +50,7 @@ export const tokens = [
     damageThreshold: "",
     abilities: [
       {
-        text: "While you control this token: You draw 1 additional card during each of your draw phases.",
+        text: "While you control this token: You draw 1 additional card during each of your Draw Phases.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "Passive",
@@ -158,7 +158,7 @@ export const tokens = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Offer 1 Life; transfer control of this Token to your opponent. <br> If it becomes your end phase while you control this Token (Mandatory): Destroy this Token; you take 10 Damage.",
+        text: "Offer 1 Life; transfer control of this Token to your opponent. <br> If it becomes your End Phase while you control this Token (Mandatory): Destroy this Token; you take 10 Damage.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "Standard",
@@ -266,7 +266,7 @@ export const tokens = [
     damageThreshold: "",
     abilities: [
       {
-        text: "While you control this token: This is the only Champion you can attack with during your battle phase.",
+        text: "While you control this token: This is the only Champion you can attack with during your Battle Phase.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "Passive",
@@ -302,7 +302,7 @@ export const tokens = [
     damageThreshold: "",
     abilities: [
       {
-        text: "While you control this token: You skip your main phase 1 and immediately enter your battle phase.",
+        text: "While you control this token: You skip your Main Phase 1 and immediately enter your Battle Phase.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "Passive",

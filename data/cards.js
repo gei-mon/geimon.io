@@ -194,7 +194,7 @@ export const cards = [
     damageThreshold: 4,
     abilities: [
       {
-        text: "Deathtouch, Deathward <br> On Rally: Bury 1. <br> Rend Soul (Exhaustion): Obliterate 1 card you control; Obliterate 1 card on the Zone. <br> If Obliterated: During the next Intermission phase, Unleash 1 Undead.",
+        text: "Deathtouch, Deathward <br> On Rally: Bury 1. <br> Rend Soul (Exhaustion): Obliterate 1 card you control; Obliterate 1 card on the Zone. <br> If Obliterated: During the next Intermission Phase, Unleash 1 Undead.",
         keywords: ["Deathtouch","Deathward"],
         effect1name: "",
         effect1type: "OnRally",
@@ -1274,7 +1274,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Target 1 Champion you control and Excavate 3, send all revealed Champions to the Tomb; Target Champion can make an additional number of attacks this battle phase equal to the number of revealed non-Champions.",
+        text: "Target 1 Champion you control and Excavate 3, send all revealed Champions to the Tomb; Target Champion can make an additional number of attacks this Battle Phase equal to the number of revealed non-Champions.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "Standard",
@@ -1346,7 +1346,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "You cannot declare attacks the turn you activate this card. <br> Rally 1 Tumbleweed Token to your Zone. During each End phase, switch control of the Tumbleweed Token",
+        text: "You cannot declare attacks the turn you activate this card. <br> Rally 1 Tumbleweed Token to your Zone. During each End Phase, switch control of the Tumbleweed Token",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "Standard",
@@ -1526,7 +1526,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Bloodrage, Priority <br> Ride: Target 1 Equipment or Obelisk in your Tomb; Retrieve Target. <br> Or Die (Mandatory): If it is your end phase and this Champion is not designated as a Commander: Destroy this card.",
+        text: "Bloodrage, Priority <br> Ride: Target 1 Equipment or Obelisk in your Tomb; Retrieve Target. <br> Or Die (Mandatory): If it is your End Phase and this Champion is not designated as a Commander: Destroy this card.",
         keywords: ["Bloodrage","Priority"],
         effect1name: "Ride",
         effect1type: "Standard",
@@ -1634,7 +1634,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Attach only to a Commander Obelisk. <br> The attached Obelisk gains the effect: \"This card's Commander can make an additional attack during each of your battle phases.\"",
+        text: "Attach only to a Commander Obelisk. <br> The attached Obelisk gains the effect: \"This card's Commander can make an additional attack during each of your Battle Phases.\"",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "",
@@ -1706,7 +1706,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Target 1 Champion you control; Increase Target's Damage by 5. Destroy Target during the end phase.",
+        text: "Target 1 Champion you control; Increase Target's Damage by 5. Destroy Target during the End Phase.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "",
@@ -1742,7 +1742,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Shielded <br> Mount <br> Mounted: Destroy 1 card in your Arsenal; Destroy up to 2 cards in either Arsenal. <br> Mounted (Reflex): Increase this card's Commander's Damage by 5 until the end phase.",
+        text: "Shielded <br> Mount <br> Mounted: Destroy 1 card in your Arsenal; Destroy up to 2 cards in either Arsenal. <br> Mounted (Reflex): Increase this card's Commander's Damage by 5 until the End Phase.",
         keywords: ["Shielded","Mount"],
         effect1name: "",
         effect1type: "Mount",
@@ -1778,7 +1778,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Mount <br> Mounted: Rally 1 Greed Token, Rage Token, or Sloth Token to your Opponent's Zone, but Destroy it during their next end phase. <br> Mounted: If your Opponent controls 5 or more Tokens: Sacrifice 1 of your Opponent's Champions; Destroy 1 card on the Zone.",
+        text: "Mount <br> Mounted: Rally 1 Greed Token, Rage Token, or Sloth Token to your Opponent's Zone, but Destroy it during their next End Phase. <br> Mounted: If your Opponent controls 5 or more Tokens: Sacrifice 1 of your Opponent's Champions; Destroy 1 card on the Zone.",
         keywords: ["Mount"],
         effect1name: "",
         effect1type: "Mount",
@@ -1850,7 +1850,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Mount <br> Mounted (Reflex): Give control of 1 face-up Champion to your Opponent; take control of 1 face-up Champion from your Opponent. Return control of the affected Champions during the end phase. <br><br> If this card is in your Reserve while you control at least 1 Champion: You can activate this card.",
+        text: "Mount <br> Mounted (Reflex): Give control of 1 face-up Champion to your Opponent; take control of 1 face-up Champion from your Opponent. Return control of the affected Champions during the End Phase. <br><br> If this card is in your Reserve while you control at least 1 Champion: You can activate this card.",
         keywords: ["Mount"],
         effect1name: "",
         effect1type: "Mount",
