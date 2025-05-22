@@ -796,7 +796,7 @@ export const cards = [
   {
     id: "64",
     name: "Lady Jane's Ladykiller",
-    image: `${cardArtFolder}/Champions/LadyJaneLadykiller.png`,
+    image: `${cardArtFolder}/Equipments/LadyJaneLadykiller.png`,
     type: "Equipment",
     condition: "",
     cost: "",
@@ -832,7 +832,7 @@ export const cards = [
   {
     id: "65",
     name: "Ol' Reliable",
-    image: `${cardArtFolder}/Champions/OlReliable.png`,
+    image: `${cardArtFolder}/Equipments/OlReliable.png`,
     type: "Equipment",
     condition: "",
     cost: "Reveal 1 other random card from your Hand.",
@@ -868,7 +868,7 @@ export const cards = [
   {
     id: "66",
     name: "Lucky Shot",
-    image: `${cardArtFolder}/Champions/LuckyShot.png`,
+    image: `${cardArtFolder}/Equipments/LuckyShot.png`,
     type: "Equipment",
     condition: "",
     cost: "",
@@ -1166,7 +1166,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Attach only to an Obelisk that mentions a Commander. <br> The attached Obelisk gains the effect: \"This card's designated Commander can make an additional attack during each of your battle phases.\"",
+        text: "Attach only to an Obelisk that mentions a Commander. <br> The attached Obelisk gains the effect: \"This card's Commander can make an additional attack during each of your battle phases.\"",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "",
@@ -1202,7 +1202,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Attach only to an Obelisk that mentions a Commander. <br> The attached Obelisk gains the effect: \"This card's designated Commander's Damage Threshold increases by 2.\"",
+        text: "Attach only to an Obelisk that mentions a Commander. <br> The attached Obelisk gains the effect: \"This card's Commander's Damage Threshold increases by 2.\"",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "",
@@ -1327,7 +1327,7 @@ export const cards = [
         effect3name: "",
         effect3type: ["Standard","Mounted"],
         effect3condition: "IfOppHas5PlusTokens",
-        effect3cost: "Sacrifice1OppsChamps",
+        effect3cost: "Sacrifice1OppChamp",
         effect3text: "Destroy1OnZone",
         effect3linger: ""
       }
