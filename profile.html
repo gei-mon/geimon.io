@@ -68,24 +68,22 @@
     .tab-content.active {
       display: block;
     }
-
-    .crop-info {
-      text-align: center;
-      color: white;
-      margin-top: 10px;
-      text-shadow: 2px 2px 4px black;
-    }
   </style>
 </head>
 <body>
   <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
-  <img id="zoneOverlay" class="zone-overlay" style="display:none;" />
-  <img id="sleeveOverlay" class="sleeve-overlay" style="display:none;" />
 
   <div>
     <h1 style="text-align:center; font-size: 200%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">User Profile</h1>
     <p id="username" style="color:white; text-align:center; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Loading...</p>
-    <img id="profilePic" alt="Profile Picture" class="thumbnail" style="display:block; margin: 0 auto;" />
+    <div class="profile-wrapper">
+      <img id="zoneOverlay" class="zone-overlay" style="display:none;" />
+      <div class="profile-center">
+        <img id="profilePic" alt="Profile Picture" class="thumbnail"
+            style="box-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;" />
+      </div>
+      <img id="sleeveOverlay" class="sleeve-overlay" style="display:none;" />
+    </div>
   </div>
 
   <div class="tabs">
@@ -225,7 +223,10 @@
             credentials: 'include',
             body: `selectedSleeve=${encodeURIComponent(selectedSleeve)}`
           });
-          if (res.ok) alert('Sleeve updated!');
+          if (res.ok) {
+            alert('Sleeve updated!');
+            window.location.reload();
+          }
           else alert('Error updating sleeve.');
         } catch (err) {
           console.error(err);
@@ -253,7 +254,10 @@
             credentials: 'include',
             body: `selectedZone=${encodeURIComponent(selectedZone)}`
           });
-          if (res.ok) alert('Zone updated!');
+          if (res.ok) {
+            alert('Zone updated!');
+            window.location.reload();
+          }
           else alert('Error updating zone.');
         } catch (err) {
           console.error(err);
