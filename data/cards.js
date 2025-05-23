@@ -2558,6 +2558,42 @@ export const cards = [
     ]
   },
   {
+    id: "187",
+    name: "Darkest Knightmare",
+    image: `${cardArtFolder}/Champions/DarkestKnightmare.png`,
+    type: "Champion",
+    condition: "You have at least 1 Knight in your Tomb.",
+    cost: "Basic",
+    tags: ["Noble", "Undead","Knight"],
+    damage: 6,
+    life: 6,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: "Bulletproof <br> On Rally: Attach up to 2 Equipments from your Tomb to this card. <br> Rotting Flesh (Mandatory): During your End Phase: This card takes 3 Damage. <br> If Destroyed: Obliterate this card and Target 1 Knight in your Tomb; Resurrect Target, and if you do, you can attach to it 1 Equipment from your Hand, Deck, or Tomb (ignoring its cost).",
+        keywords: ["Bulletproof"],
+        effect1name: "",
+        effect1type: "OnRally",
+        effect1condition: "",
+        effect1cost: "",
+        effect1text: "Attach2EquipmentsToSelfFromTomb",
+        effect1linger: "",
+        effect2name: "Rotting Flesh",
+        effect2type: ["Passive","Mandatory"],
+        effect2condition: "EndPhase",
+        effect2cost: "",
+        effect2text: "Take3Damage",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "IfDestroyed",
+        effect3condition: "",
+        effect3cost: "ObliterateSelfPlusTarget1KnightInTomb",
+        effect3text: "ResurrectTargetPlusAttach1EquipFromHandDeckTomb",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
     id: "241",
     name: "Dr Jeremiah Grayborn, Morte Soprattutto",
     image: `${cardArtFolder}/Champions/DrJeremiah.png`,
