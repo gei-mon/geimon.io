@@ -2167,7 +2167,7 @@ export const cards = [
     image: `${cardArtFolder}/Champions/DrJeremiah.png`,
     type: "Champion",
     condition: "",
-    cost: "Your Opponent gains 30 Life.",
+    cost: "Your Opponent gains 20 Life.",
     tags: ["Vivisect", "Lifebinder","Professor"],
     damage: 0,
     life: 10,
