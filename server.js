@@ -259,6 +259,59 @@ app.post('/select-profile-image', async (req, res) => {
   }
 });
 
+function listImages(dirPath) {
+  const fullPath = path.join(__dirname, 'Public', 'Images', dirPath);
+  return fs.readdirSync(fullPath).filter(file =>
+    /\.(jpg|jpeg|png|gif)$/i.test(file)
+  );
+}
+
+// API route: return list of sleeve images
+app.get('/sleeve-images', (req, res) => {
+  try {
+    const sleeves = listImages('Sleeves');
+    res.json(sleeves);
+  } catch (err) {
+    console.error('Error reading sleeve images:', err);
+    res.status(500).json({ error: 'Failed to load sleeve images' });
+  }
+});
+
+// API route: return list of zone images
+app.get('/zone-images', (req, res) => {
+  try {
+    const zones = listImages('Zones');
+    res.json(zones);
+  } catch (err) {
+    console.error('Error reading zone images:', err);
+    res.status(500).json({ error: 'Failed to load zone images' });
+  }
+});
+
+app.post('/select-sleeve-image', ensureLoggedIn, async (req, res) => {
+  const { selectedSleeve } = req.body;
+  const userId = req.session.user.id;
+  try {
+    await db.query('UPDATE users SET deck_sleeve = $1 WHERE id = $2', [selectedSleeve, userId]);
+    res.sendStatus(200);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
+
+app.post('/select-zone-image', ensureLoggedIn, async (req, res) => {
+  const { selectedZone } = req.body;
+  const userId = req.session.user.id;
+  try {
+    await db.query('UPDATE users SET zone_art = $1 WHERE id = $2', [selectedZone, userId]);
+    res.sendStatus(200);
+  } catch (err) {
+    console.error(err);
+    res.sendStatus(500);
+  }
+});
+
 const { v4: uuidv4 } = require('uuid');
 app.post('/createDeck', async (req, res) => {
     const sessionId = req.cookies.session;

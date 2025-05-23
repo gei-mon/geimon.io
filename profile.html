@@ -104,11 +104,15 @@
   <div id="sleeves" class="tab-content">
     <p class="crop-info">Select Your Sleeves:</p>
     <div id="imageGridSleeves" style="display:flex; flex-wrap:wrap; justify-content:center;"></div>
+      <br>
+      <button class="button buttonEvenSmaller" type="submit" style="margin: 0 auto; display: flex; justify-content: center;">Confirm</button>
   </div>
 
   <div id="zone" class="tab-content">
     <p class="crop-info">Select Your Zone:</p>
     <div id="imageGridZone" style="display:flex; flex-wrap:wrap; justify-content:center;"></div>
+      <br>
+      <button class="button buttonEvenSmaller" type="submit" style="margin: 0 auto; display: flex; justify-content: center;">Confirm</button>
   </div>
 
   <br>
@@ -196,6 +200,62 @@
         } catch (err) {
           console.error(err);
           alert('Failed to submit profile picture.');
+        }
+      });
+
+      // Sleeve selection logic
+      let selectedSleeve = '';
+      document.getElementById('imageGridSleeves').addEventListener('click', e => {
+        if (e.target.tagName === 'IMG') {
+          document.querySelectorAll('#imageGridSleeves .thumbnail').forEach(el => el.classList.remove('selected'));
+          e.target.classList.add('selected');
+          selectedSleeve = e.target.src.split('/').pop();
+        }
+      });
+
+      document.querySelector('#sleeves button[type="submit"]').addEventListener('click', async e => {
+        e.preventDefault();
+        if (!selectedSleeve) return alert('Please select a sleeve image.');
+        try {
+          const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/select-sleeve-image', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            credentials: 'include',
+            body: `selectedSleeve=${encodeURIComponent(selectedSleeve)}`
+          });
+          if (res.ok) alert('Sleeve updated!');
+          else alert('Error updating sleeve.');
+        } catch (err) {
+          console.error(err);
+          alert('Failed to submit sleeve.');
+        }
+      });
+
+      // Zone selection logic
+      let selectedZone = '';
+      document.getElementById('imageGridZone').addEventListener('click', e => {
+        if (e.target.tagName === 'IMG') {
+          document.querySelectorAll('#imageGridZone .thumbnail').forEach(el => el.classList.remove('selected'));
+          e.target.classList.add('selected');
+          selectedZone = e.target.src.split('/').pop();
+        }
+      });
+
+      document.querySelector('#zone button[type="submit"]').addEventListener('click', async e => {
+        e.preventDefault();
+        if (!selectedZone) return alert('Please select a zone image.');
+        try {
+          const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/select-zone-image', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            credentials: 'include',
+            body: `selectedZone=${encodeURIComponent(selectedZone)}`
+          });
+          if (res.ok) alert('Zone updated!');
+          else alert('Error updating zone.');
+        } catch (err) {
+          console.error(err);
+          alert('Failed to submit zone.');
         }
       });
 
