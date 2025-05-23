@@ -468,5 +468,149 @@ export const tokens = [
         effect3linger: ""
       }
     ]
+},
+{
+    id: "9014",
+    name: "Fuel Token",
+    image: `${tokenArtFolder}/Fuel.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Token"],
+    damage: 0,
+    life: 7,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "This Token can be counted for any number of Sacrifices for a single card or effect.",
+        keywords: ["blank"],
+        effect1name: "",
+        effect1type: "Passive",
+        effect1condition: "",
+        effect1cost: "",
+        effect1text: "IsInfiniteSacrifices",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: "",
+        effect2condition: "",
+        effect2cost: "",
+        effect2text: "",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
+},
+{
+    id: "9015",
+    name: "Dust Token",
+    image: `${tokenArtFolder}/Dust.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Token"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Reflex: When an Opponent declares an attack: Sacrifice this Token; Negate that attack.",
+        keywords: ["blank"],
+        effect1name: "",
+        effect1type: "Reflex",
+        effect1condition: "",
+        effect1cost: "SacrificeSelf",
+        effect1text: "NegateAttack",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: "",
+        effect2condition: "",
+        effect2cost: "",
+        effect2text: "",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
+},
+{
+    id: "9016",
+    name: "Wake Token",
+    image: `${tokenArtFolder}/Wake.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Token"],
+    damage: 0,
+    life: 4,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "While you control this token: Decrease the Damage Threshold of all Champions on the Zone by 1.",
+        keywords: ["blank"],
+        effect1name: "",
+        effect1type: "Passive",
+        effect1condition: "",
+        effect1cost: "",
+        effect1text: "DecreaseAllDTBy1",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: "",
+        effect2condition: "",
+        effect2cost: "",
+        effect2text: "",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
+},
+{
+    id: "9017",
+    name: "Echo Token",
+    image: `${tokenArtFolder}/Echo.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Token"],
+    damage: "X",
+    life: "X",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "This Token’s Damage and Life are equal to the linked Target’s at the time of its Rallying. If the linked Target leaves the Zone: Destroy this Token.",
+        keywords: ["blank"],
+        effect1name: "",
+        effect1type: "OnRally",
+        effect1condition: "",
+        effect1cost: "",
+        effect1text: "CopyTargetLifeDamage",
+        effect1linger: "DestroyIfTargetLeaves",
+        effect2name: "",
+        effect2type: "",
+        effect2condition: "",
+        effect2cost: "",
+        effect2text: "",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
 }
 ];

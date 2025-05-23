@@ -686,6 +686,42 @@ export const cards = [
     ]
   },
   {
+    id: "20",
+    name: "There's Two?!",
+    image: `${cardArtFolder}/Rush/TheresTwo.png`,
+    type: "Rush",
+    condition: "",
+    cost: "",
+    tags: ["Rush"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Target 1 Construct or Helper you control and take Damage equal to its Damage; Rally 1 Echo Token.",
+        keywords: ["blank"],
+        effect1name: "",
+        effect1type: "Rush",
+        effect1condition: "",
+        effect1cost: "Target1ConstructOrHelperYouControlPlusTakeItsDamage",
+        effect1text: "Rally1EchoToken",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: "",
+        effect2condition: "",
+        effect2cost: "",
+        effect2text: "",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
     id: "61",
     name: "Areza, Town Harlot",
     image: `${cardArtFolder}/Champions/ArezaHarlot.png`,
@@ -1346,7 +1382,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "You cannot declare attacks the turn you activate this card. <br> Rally 1 Tumbleweed Token to your Zone. During each End Phase, switch control of the Tumbleweed Token",
+        text: "You cannot declare attacks the turn you activate this card. <br><br> Rally 1 Tumbleweed Token to your Zone. <br><br> During each End Phase, switch control of the Token",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "Standard",
