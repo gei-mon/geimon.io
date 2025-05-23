@@ -6,53 +6,131 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href='https://fonts.googleapis.com/css?family=Racing Sans One' rel='stylesheet'>
   <link rel="stylesheet" href="style.css">
-  <title>LOGIN PAGE</title>
+  <title>User Customization</title>
   <style>
+    body {
+      font-family: 'Racing Sans One', sans-serif;
+      font-size: 200%;
+      background-color: rgb(79, 79, 79);
+    }
+
     .thumbnail {
-      width: 5vw;
+      width: auto;
+      height: 200px;
       object-fit: cover;
       margin: 10px;
       border: 3px solid transparent;
       cursor: pointer;
     }
+
     .thumbnail.selected {
-      border-color: rgb(0, 0, 0);
+      border-color: black;
       box-shadow: 0px 0px 5px 3px black;
     }
+
     .bg-image {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        object-fit: cover;
-        opacity: 0.3;
-        z-index: -1;
-        pointer-events: none; /* So it's not clickable */
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      opacity: 0.3;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .tab-button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      cursor: pointer;
+      background-color: #444;
+      color: white;
+      border: none;
+      border-radius: 8px;
+    }
+
+    .tab-button.active {
+      background-color: #222;
+      box-shadow: 0px 0px 5px 2px black;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .crop-info {
+      text-align: center;
+      color: white;
+      margin-top: 10px;
+      text-shadow: 2px 2px 4px black;
     }
   </style>
 </head>
-<body style="font-family: 'Racing Sans One', sans-serif; font-size:  200%; background-color:rgb(79, 79, 79);">
+<body>
   <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
+
   <div>
-    <h1 style="text-align:center; font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">User Profile</h1>
+    <h1 style="text-align:center; font-size: 200%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">User Profile</h1>
     <p id="username" style="color:white; text-align:center; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Loading...</p>
-    <img id="profilePic" alt="Profile Picture" class="thumbnail" style="display: block; margin: 0 auto; box-shadow: 0px 0px 5px 3px black;" />
-    <p style="color:white; text-align:center; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Select Your Profile Picture:</p>
+    <img id="profilePic" alt="Profile Picture" class="thumbnail" style="display:block; margin: 0 auto;" />
   </div>
 
-  <form id="picForm">
-    <div id="imageGrid" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: center; margin-top: 20px;"></div>
-    <br>
-    <button class="button buttonEvenSmaller" type="submit" style="margin: 0 auto; text-align: center; display: block; display: flex; justify-content: center;">Confirm</button>
-  </form>
+  <div class="tabs">
+    <button class="tab-button active" onclick="showTab('profile')">Profile Picture</button>
+    <button class="tab-button" onclick="showTab('sleeves')">Sleeves</button>
+    <button class="tab-button" onclick="showTab('zone')">Zone Art</button>
+  </div>
+
+  <div id="profile" class="tab-content active">
+    <p class="crop-info">Select Your Profile Picture:</p>
+    <form id="picForm">
+      <div id="imageGridProfile" style="display:flex; flex-wrap:wrap; justify-content:center;"></div>
+      <br>
+      <button class="button buttonEvenSmaller" type="submit" style="margin: 0 auto; display: flex; justify-content: center;">Confirm</button>
+    </form>
+  </div>
+
+  <div id="sleeves" class="tab-content">
+    <p class="crop-info">Select Your Sleeves:</p>
+    <div id="imageGridSleeves" style="display:flex; flex-wrap:wrap; justify-content:center;"></div>
+  </div>
+
+  <div id="zone" class="tab-content">
+    <p class="crop-info">Select Your Zone:</p>
+    <div id="imageGridZone" style="display:flex; flex-wrap:wrap; justify-content:center;"></div>
+  </div>
+
+  <br>
+  <button class="button buttonEvenSmaller" style="margin: 0 auto; display: flex; justify-content: center;" onclick="location.href='index.html'">Return to Home</button>
 
   <script>
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    function showTab(id) {
+      tabButtons.forEach(btn => btn.classList.remove('active'));
+      tabContents.forEach(tab => tab.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+      document.querySelector(`.tab-button[onclick="showTab('${id}')"]`).classList.add('active');
+    }
+
     document.addEventListener('DOMContentLoaded', () => {
-      const imageGrid = document.getElementById('imageGrid');
+      const imageGridProfile = document.getElementById('imageGridProfile');
+      const imageGridSleeves = document.getElementById('imageGridSleeves');
+      const imageGridZone = document.getElementById('imageGridZone');
       let selectedImage = '';
 
-      // Load profile images
       fetch('https://geimon-app-833627ba44e0.herokuapp.com/profile-images')
         .then(res => res.json())
         .then(images => {
@@ -60,25 +138,46 @@
             const imgEl = document.createElement('img');
             imgEl.src = `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/${img}`;
             imgEl.className = 'thumbnail';
+            imgEl.style.width = '150px';
+            imgEl.style.height = '150px';
             imgEl.onclick = () => {
-              document.querySelectorAll('.thumbnail').forEach(el => el.classList.remove('selected'));
+              document.querySelectorAll('#imageGridProfile .thumbnail').forEach(el => el.classList.remove('selected'));
               imgEl.classList.add('selected');
               selectedImage = img;
-              console.log('Selected image:', selectedImage);
             };
-            imageGrid.appendChild(imgEl);
+            imageGridProfile.appendChild(imgEl);
           });
         });
 
-      // Handle form submission
-      const form = document.getElementById('picForm');
-      form.addEventListener('submit', async e => {
-        e.preventDefault(); // Prevent form from reloading the page
+      fetch('https://geimon-app-833627ba44e0.herokuapp.com/sleeve-images')
+        .then(res => res.json())
+        .then(images => {
+          images.forEach(img => {
+            const imgEl = document.createElement('img');
+            imgEl.src = `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Sleeves/${img}`;
+            imgEl.className = 'thumbnail';
+            imgEl.style.width = '240px';
+            imgEl.style.height = '420px';
+            imageGridSleeves.appendChild(imgEl);
+          });
+        });
 
-        if (!selectedImage) {
-          alert('Please select an image.');
-          return;
-        }
+      fetch('https://geimon-app-833627ba44e0.herokuapp.com/zone-images')
+        .then(res => res.json())
+        .then(images => {
+          images.forEach(img => {
+            const imgEl = document.createElement('img');
+            imgEl.src = `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Zones/${img}`;
+            imgEl.className = 'thumbnail';
+            imgEl.style.width = '400px';
+            imgEl.style.height = '200px';
+            imageGridZone.appendChild(imgEl);
+          });
+        });
+
+      document.getElementById('picForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        if (!selectedImage) return alert('Please select a profile image.');
 
         try {
           const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/select-profile-image', {
@@ -95,26 +194,19 @@
             alert('Error updating profile picture.');
           }
         } catch (err) {
-          console.error('Submission failed:', err);
+          console.error(err);
           alert('Failed to submit profile picture.');
         }
       });
 
-      // Load user info
       (async function loadUser() {
         try {
           const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
             credentials: 'include',
           });
-
           if (!res.ok) throw new Error('Response error');
-
           const data = await res.json();
-          if (!data.loggedIn) {
-            console.log('Not logged in, redirecting...');
-            window.location.href = 'login.html';
-            return;
-          }
+          if (!data.loggedIn) return window.location.href = 'login.html';
 
           document.getElementById('username').textContent = `Welcome, ${data.username}!`;
           const profilePic = data.profilePic || 'Sharpshooter-Square.png';
@@ -126,8 +218,5 @@
       })();
     });
   </script>
-
-  <br>
-  <button class="button buttonEvenSmaller" style="margin: 0 auto; text-align: center; display: block; display: flex; justify-content: center;" onclick="location.href='index.html'">Return to Home</button>
 </body>
 </html>
