@@ -627,7 +627,7 @@ app.get('/me', async (req, res) => {
   if (username) {
     const { data: user } = await supabase
       .from('users')
-      .select('username, profile_pic')
+      .select('username, profile_pic, deck_sleeve, zone_art')
       .eq('username', username)
       .single();
 
@@ -636,7 +636,9 @@ app.get('/me', async (req, res) => {
 
     if (user) {
       const profilePic = user.profile_pic || 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/Sharpshooter-Square.png';
-      return res.json({ loggedIn: true, username: user.username, profilePic });
+      const deckSleeve = user.deck_sleeve || 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Sleeves/Rusty.png';
+      const zoneArt = user.zone_art || 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Zones/CyrusDustwalker.png';
+      return res.json({ loggedIn: true, username: user.username, profilePic, deckSleeve, zoneArt });
     } else {
       res.status(401).json({ loggedIn: false });
     }
