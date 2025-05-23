@@ -181,7 +181,7 @@ app.post('/users', async (req, res) => {
   }
 
   const { error: insertError } = await supabase.from('users').insert([
-    { username, password, profile_pic: '' }
+    { username, password, profile_pic: 'Sharpshooter-Square.png', deck_sleeve: 'Rusty.png', zone_art: 'CyrusDustwalker.png' }
   ]);
 
   if (insertError) {
