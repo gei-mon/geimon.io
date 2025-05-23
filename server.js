@@ -288,11 +288,12 @@ app.get('/zone-images', (req, res) => {
   }
 });
 
-app.post('/select-sleeve-image', ensureLoggedIn, async (req, res) => {
+app.post('/select-sleeve-image', async (req, res) => {
+  const sessionId = req.cookies.session;
+  const username = sessions[sessionId];
   const { selectedSleeve } = req.body;
-  const userId = req.session.user.id;
   try {
-    await db.query('UPDATE users SET deck_sleeve = $1 WHERE id = $2', [selectedSleeve, userId]);
+    await db.query('UPDATE users SET deck_sleeve = $1 WHERE id = $2', [selectedSleeve, username]);
     res.sendStatus(200);
   } catch (err) {
     console.error(err);
@@ -300,11 +301,12 @@ app.post('/select-sleeve-image', ensureLoggedIn, async (req, res) => {
   }
 });
 
-app.post('/select-zone-image', ensureLoggedIn, async (req, res) => {
+app.post('/select-zone-image', async (req, res) => {
+  const sessionId = req.cookies.session;
+  const username = sessions[sessionId];
   const { selectedZone } = req.body;
-  const userId = req.session.user.id;
   try {
-    await db.query('UPDATE users SET zone_art = $1 WHERE id = $2', [selectedZone, userId]);
+    await db.query('UPDATE users SET zone_art = $1 WHERE id = $2', [selectedZone, username]);
     res.sendStatus(200);
   } catch (err) {
     console.error(err);
