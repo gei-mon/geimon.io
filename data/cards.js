@@ -2628,5 +2628,41 @@ export const cards = [
         effect3linger: ""
       }
     ]
+  },
+  {
+    id: "242",
+    name: "Bitey McChomperson, MD",
+    image: `${cardArtFolder}/Champions/Bitey.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Vivisect", "Helper"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Rescind Anasthesia: Target 1 other Champion you control; Target can use its non-Exhaustion abilities an additional time this turn. <br> Defibrillate: Sacrifice this card and Target 1 other Champion in your Tomb; Resurrect Target, but reduce its Life to 1. <br> Helping Hand: If this card is in your Tomb: Obliterate this card and Target up to 2 cards in your Tomb; Retrieve Targets.",
+        keywords: ["blank"],
+        effect1name: "Rescind Anasthesia",
+        effect1type: ["Standard"],
+        effect1condition: "",
+        effect1cost: "Target1ChampYouControl",
+        effect1text: "RestoreNonExhaustionAbilities",
+        effect1linger: "",
+        effect2name: "Defibrillate",
+        effect2type: ["Standard"],
+        effect2condition: "",
+        effect2cost: "SacrificeSelfPlusTarget1OtherChampInTomb",
+        effect2text: "ResurrectTargetReduceTo1",
+        effect2linger: "",
+        effect3name: "Helping Hand",
+        effect3type: ["Standard","Tomb"],
+        effect3condition: "",
+        effect3cost: "ObliterateSelfPlusTarget2Tomb",
+        effect3text: "RetrieveTargets",
+        effect3linger: ""
+      }
+    ]
   }
 ];
