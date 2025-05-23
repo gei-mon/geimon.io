@@ -291,26 +291,38 @@ app.get('/zone-images', (req, res) => {
 app.post('/select-sleeve-image', async (req, res) => {
   const sessionId = req.cookies.session;
   const username = sessions[sessionId];
-  const { selectedSleeve } = req.body;
+  const selectedSleeve = req.body.selectedSleeve;
+
   try {
-    await db.query('UPDATE users SET deck_sleeve = $1 WHERE id = $2', [selectedSleeve, username]);
-    res.sendStatus(200);
+    const { error } = await supabase
+      .from('users')
+      .update({ deck_sleeve: selectedSleeve })
+      .eq('username', username);
+
+    if (error) throw error;
+
+    res.status(200).json({ message: 'Sleeve updated successfully' });
   } catch (err) {
-    console.error(err);
-    res.sendStatus(500);
+    res.status(500).json({ message: 'Failed to update sleeve', error: err.message });
   }
 });
 
 app.post('/select-zone-image', async (req, res) => {
   const sessionId = req.cookies.session;
   const username = sessions[sessionId];
-  const { selectedZone } = req.body;
+  const selectedZone = req.body.selectedZone;
+
   try {
-    await db.query('UPDATE users SET zone_art = $1 WHERE id = $2', [selectedZone, username]);
-    res.sendStatus(200);
+    const { error } = await supabase
+      .from('users')
+      .update({ zone_art: selectedZone })
+      .eq('username', username);
+
+    if (error) throw error;
+
+    res.status(200).json({ message: 'Zone updated successfully' });
   } catch (err) {
-    console.error(err);
-    res.sendStatus(500);
+    res.status(500).json({ message: 'Failed to update zone', error: err.message });
   }
 });
 
