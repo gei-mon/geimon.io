@@ -2308,7 +2308,7 @@ export const cards = [
   {
     id: "146",
     name: "I'm Walking Here!",
-    image: `${cardArtFolder}/Rush/WalkingHere.png`,
+    image: `${cardArtFolder}/Reflex/WalkingHere.png`,
     type: "Reflex",
     condition: "",
     cost: "",
