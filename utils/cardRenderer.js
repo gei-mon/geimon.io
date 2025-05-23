@@ -1,5 +1,6 @@
 import { keywords } from "../data/keywords.js";
 import { tokens } from "../data/tokens.js";
+import { cards } from '../data/cards.js';
 
 export function renderCard(card, container) {
   const cardElement = document.createElement("div");
@@ -52,8 +53,8 @@ export function renderCard(card, container) {
         );
     });
 
-// Define key phrases to format
-    const keyPhrases = ["Decisive Plan","Foretell my Fate","Bottoms Up","Roam Around","If Destroyed","Good Morning","Goodnight","I Found It","Surrender Now","Gotcha","Sniffer Sense","Take the Bullet","Mounted","While Equipped","Hail Mary","Arm Thy Knight","Awaken Allies","Healing Hands","Bestow Life","Sacrificial Blade","Reforged","Garbage Lord", "Trash Picker", "Ride", "Or Die", "Mandatory", "Lightbulb", "Wake-Up Jolt", "Upgrade", "Emergency Transport", "Secret Weapon", "Wake the Beast", "Garage Baby", "Library Assistant", "Powerful Core", "Helping Hand", "If Discarded", "Deadeye", "If Sent to Tomb", "On Rally", "On Resurrection", "Mind Augus", "Shattered Connection", "Break the Seal", "Fateseal", "Rend Soul", "If Obliterated", "Soulburn"];
+    // Define key phrases to format
+    const keyPhrases = cards.flatMap(card => card.abilities.flatMap(ability => [ability.effect1name, ability.effect2name, ability.effect3name].filter(name => name)));
 
     // Format key phrases and keywords
     keyPhrases.forEach(phrase => {
