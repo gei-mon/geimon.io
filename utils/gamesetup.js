@@ -1,4 +1,4 @@
-import { totems } from '../data/totems.js';
+import { totems } from '../data/Totems.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
     const playerDeckSelect = document.getElementById("playerDeck");
