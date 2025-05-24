@@ -91,10 +91,6 @@ function startGame() {
         const allTotems = Object.assign({}, ...totems);
         selectedTotemText = allTotems[selectedTotem] || "Unknown Totem";
     }
-
-    console.log("Final Selected Totem:", selectedTotem);
-    console.log("Final Selected Totem Description:", selectedTotemText);
-
     // Use the selected values
     const settings = {
         playerDeck,
@@ -104,9 +100,6 @@ function startGame() {
         totemText: selectedTotemText,
         turnOrder
     };
-
-    console.log("Selected Totem Before Redirect:", selectedTotem);
-    console.log("Selected Totem Description Before Redirect:", selectedTotemText);
     const params = new URLSearchParams(settings).toString();
     window.location.href = `game.html?${params}`;
 }
