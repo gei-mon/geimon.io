@@ -1276,7 +1276,7 @@ export const cards = [
       {
         text: "Bottoms Up!: Target 1 Champion on the Zone; Target Champion's Damage Threshold increases by 1, but their Damage is reduced by 1.",
         keywords: ["blank"],
-        effect1name: "Bottoms Up!",
+        effect1name: "Bottoms Up",
         effect1type: "Standard",
         effect1condition: "",
         effect1cost: "TargetChampOnZone",
