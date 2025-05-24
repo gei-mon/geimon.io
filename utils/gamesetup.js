@@ -62,14 +62,51 @@ function populateDropdown(dropdown, options) {
 }
 
 function startGame() {
+    const playerDeck = document.getElementById("playerDeck").value;
+    const opponentDeck = document.getElementById("opponentDeck").value;
+    const gameType = document.getElementById("gameType").value;
+    const turnOrder = document.getElementById("turnOrder").value;
+    const totemSelect = document.getElementById("totem");
+
+    let selectedTotem = totemSelect.value;
+    let selectedTotemText = "";
+
+    // Fix random selection logic
+    if (selectedTotem === "Random") {
+        // Flatten all totems into a single object for easy lookup
+        const allTotems = Object.assign({}, ...totems);
+
+        // Get all totem names (excluding "Random")
+        const totemNames = Object.keys(allTotems);
+        if (totemNames.length > 0) {
+            // Randomly pick one
+            const randomIndex = Math.floor(Math.random() * totemNames.length);
+            selectedTotem = totemNames[randomIndex];
+
+            // Get its description
+            selectedTotemText = allTotems[selectedTotem] || "Unknown Totem";
+        }
+    } else {
+        // Directly fetch totem description
+        const allTotems = Object.assign({}, ...totems);
+        selectedTotemText = allTotems[selectedTotem] || "Unknown Totem";
+    }
+
+    console.log("Final Selected Totem:", selectedTotem);
+    console.log("Final Selected Totem Description:", selectedTotemText);
+
+    // Use the selected values
     const settings = {
-        playerDeck: document.getElementById("playerDeck").value,
-        opponentDeck: document.getElementById("opponentDeck").value,
-        gameType: document.getElementById("gameType").value,
-        totem: document.getElementById("totem").value,
-        turnOrder: document.getElementById("turnOrder").value,
+        playerDeck,
+        opponentDeck,
+        gameType,
+        totem: selectedTotem,
+        totemText: selectedTotemText,
+        turnOrder
     };
 
+    console.log("Selected Totem Before Redirect:", selectedTotem);
+    console.log("Selected Totem Description Before Redirect:", selectedTotemText);
     const params = new URLSearchParams(settings).toString();
     window.location.href = `game.html?${params}`;
 }

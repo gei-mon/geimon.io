@@ -132,13 +132,21 @@
             mainContainer.style.alignItems = "center";
             mainContainer.style.gap = "10px";
             mainContainer.style.padding = "20px";
-            mainContainer.style.backgroundColor = "rgba(0, 0, 0, 1)";
+            mainContainer.style.backgroundColor = "rgba(0, 0, 0)";
             mainContainer.style.borderRadius = "20px";
             mainContainer.style.zIndex = "20";
+            mainContainer.style.opacity = "0"; // Start fully invisible
+            mainContainer.style.transition = "opacity 1s ease-in-out"; // Smooth fade effect
+            mainContainer.style.transform = "scale(0.8)  translate(100px)";
+
+            // Trigger fade-in after DOM insertion
+            setTimeout(() => {
+                mainContainer.style.opacity = "1";
+            }, 50);
 
             // Central result box
             const resultBox = document.createElement("div");
-            resultBox.style.position = "fixed";
+            resultBox.style.position = "absolute";
             resultBox.style.top = "50%";
             resultBox.style.left = "50%";
             resultBox.style.transform = "translate(-50%, -50%)";
@@ -147,14 +155,19 @@
             resultBox.style.fontSize = "2em";
             resultBox.style.borderRadius = "10px";
             resultBox.style.textAlign = "center";
-            resultBox.style.opacity = "1"; // Start fully visible
+            resultBox.style.opacity = "0"; // Start fully invisible
             resultBox.style.transition = "opacity 1s ease-in-out"; // Smooth fade effect
             resultBox.style.zIndex = "100"; // On top of everything
             resultBox.style.boxShadow = "0 0 20px black";
 
+            // Trigger fade-in after DOM insertion
+            setTimeout(() => {
+                resultBox.style.opacity = "1";
+            }, 50);
+
             // Set background color based on choice
             resultBox.style.backgroundColor = choice === "first" ? "blue" : "red";
-            resultBox.textContent = choice === "first" ? "You are going first." : "You are going second.";
+            resultBox.textContent = choice === "first" ? "Your Turn" : "Opponent's Turn";
 
             // Main board container
             const board = document.createElement("div");
@@ -166,42 +179,50 @@
             board.style.backgroundColor = "black";
             board.style.zIndex = "20";
             board.style.borderRadius = "20px";
+            board.style.opacity = "0"; // Start fully invisible
+            board.style.transition = "opacity 1s ease-in-out"; // Smooth fade effect
+
+            // Trigger fade-in after DOM insertion
+            setTimeout(() => {
+                board.style.opacity = "1";
+            }, 50);
 
             // Function to add a box
-            function addBox(x, y, w, h) {
+            function addBox(x, y, w, h, color="green") {
                 const box = document.createElement("div");
                 box.style.position = "absolute";
                 box.style.left = x;
                 box.style.top = y;
                 box.style.width = w;
                 box.style.height = h;
-                box.style.border = "4px solid green";
+                box.style.border = `4px solid ${color}`;
                 box.style.backgroundColor = "black";
+                box.style.opacity = "0.5";
                 board.appendChild(box);
             }
 
             // Reproduce visual layout from image (values are approximate %)
-            addBox("1%", "1%", "6%", "19%");     // Opponent Deck
-            addBox("9%", "1%", "68%", "19%");    // Opponent Arsenal
+            addBox("1%", "1%", "6%", "19%", "lightsalmon");     // Opponent Deck
+            addBox("9%", "1%", "68%", "19%", "lightsalmon");    // Opponent Arsenal
 
-            addBox("79%", "1%", "20%", "40%");   // Opponent Reserve
+            addBox("79%", "1%", "20%", "40%", "lightsalmon");   // Opponent Reserve
 
-            addBox("1%", "22%", "6%", "19%");    // Opponent Tomb
-            addBox("9%", "22%", "68%", "19%");   // Opponent Champions
+            addBox("1%", "22%", "6%", "19%", "lightsalmon");    // Opponent Tomb
+            addBox("9%", "22%", "68%", "19%", "lightsalmon");   // Opponent Champions
 
-            addBox("1%", "44%", "10%", "14%");    // Opponent Void
+            addBox("1%", "44%", "10%", "14%", "lightsalmon");    // Opponent Void
 
-            addBox("14%", "47%", "72%", "7%");    // Path
+            addBox("14%", "47%", "72%", "7%", "lightgreen");    // Path
 
-            addBox("89%", "44%", "10%", "14%");   // Player Void
+            addBox("89%", "44%", "10%", "14%", "lightblue");   // Player Void
 
-            addBox("1%", "60%", "20%", "40%");   // Player Reserve
+            addBox("1%", "60%", "20%", "40%", "lightblue");   // Player Reserve
 
-            addBox("23%", "60%", "68%", "19%");  // Player Champions
-            addBox("93%", "60%", "6%", "19%");  // Player Tomb
+            addBox("23%", "60%", "68%", "19%", "lightblue");  // Player Champions
+            addBox("93%", "60%", "6%", "19%", "lightblue");  // Player Tomb
 
-            addBox("23%", "81%", "68%", "19%");  // Player Arsenal
-            addBox("93%", "81%", "6%", "19%");  // Player Deck
+            addBox("23%", "81%", "68%", "19%", "lightblue");  // Player Arsenal
+            addBox("93%", "81%", "6%", "19%", "lightblue");  // Player Deck
 
             document.body.appendChild(overlay);
             document.body.appendChild(mainContainer);
@@ -212,6 +233,41 @@
             setTimeout(() => {
                 resultBox.style.opacity = "0"; // Fades out smoothly
             }, 2000);
+
+            const params = new URLSearchParams(window.location.search);
+            const selectedTotem = params.get("totem");
+            const selectedTotemText = params.get("totemText");
+        console.log("Selected Totem:", selectedTotem);
+        console.log("Totem Description:", selectedTotemText);
+
+            const totemBox = document.createElement("div");
+            totemBox.style.position = "absolute";
+            totemBox.style.top = "50%";
+            totemBox.style.left = "53%";
+            totemBox.style.transform = "translate(-50%, -50%)";
+            totemBox.style.padding = "16px 32px";
+            totemBox.style.backgroundColor = "goldenrod";
+            totemBox.style.color = "white";
+            totemBox.style.fontSize = "1.5em";
+            totemBox.style.borderRadius = "10px";
+            totemBox.style.textAlign = "center";
+            totemBox.style.opacity = "0"; // Start invisible
+            totemBox.style.transition = "opacity 1s ease-in-out";
+            totemBox.style.zIndex = "120";
+            totemBox.style.boxShadow = "0 0 20px black";
+            totemBox.textContent = `Selected Totem: ${selectedTotem} - ${selectedTotemText}`;
+
+            // Add to document
+            document.body.appendChild(totemBox);
+
+            // Trigger fade-in
+            setTimeout(() => {
+                totemBox.style.opacity = "1";
+            }, 2500); // Slight delay after result box
+
+            setTimeout(() => {
+                totemBox.style.opacity = "0";
+            }, 6500);
         }
     </script>
 </body>
