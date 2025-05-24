@@ -9,15 +9,20 @@
     <link rel="stylesheet" href="style.css">
     <title>ACTIVE GAME</title>
 </head>
+<style>
+  #coin {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    transition: transform 0.1s;
+  }
+</style>
 <body style="background-color:rgb(78, 78, 78);">
   <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
-        <div class="container">
-            <p style="font-size: 200%; font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;"><game-title>Geimon!</game-title></p>
-            <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: -28px;">Running Game Placeholder</h2>
-        </div>
         <div id="coin-flip-container" style="display: none; text-align: center; margin-top: 50px;">
             <img id="coin" src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/heads.png" alt="coin" style="width: 150px; height: 150px;">
-            <h2 id="flip-result"></h2>
+            <h2 id="flip-result" style="display: none;"></h2>
         </div>
         <script>
         window.onload = () => {
@@ -31,23 +36,64 @@
                 container.style.display = "block";
                 resultText.textContent = "";
 
-                // Paths to your images, update if needed
+                // Image paths
                 const headsImg = "https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/heads.png";
                 const tailsImg = "https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/tails.png";
 
+                let positionY = window.innerHeight / 2;
+                let velocity = -25;
+                let gravity = 1;
                 let flips = 0;
-                const interval = setInterval(() => {
-                    // Flip between heads and tails images randomly to simulate flipping
+
+                function animateFlip() {
                     coin.src = Math.random() > 0.5 ? headsImg : tailsImg;
-                    flips++;
-                    if (flips > 20) {
+
+                    positionY += velocity;
+                    velocity += gravity;
+
+                    coin.style.top = `${positionY}px`;
+
+                    if (velocity > 0 && positionY >= window.innerHeight / 2) {
                         clearInterval(interval);
-                        // Final result random
+
                         const finalResult = Math.random() > 0.5 ? "Heads" : "Tails";
                         coin.src = finalResult === "Heads" ? headsImg : tailsImg;
-                        resultText.textContent = `Result: ${finalResult}`;
+
+                        if (finalResult === "Tails") {
+                            resultText.textContent = "You are going second.";
+                            resultText.style.display = "block";
+                            resultText.style.fontSize = "2em";
+                            resultText.style.marginTop = "10%";
+                            resultText.style.textShadow ="2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black";
+                        } else {
+                            resultText.textContent = "You won the coin flip! Choose:";
+                            resultText.style.display = "block";
+                            resultText.style.fontSize = "2em";
+                            resultText.style.marginTop = "10%";
+                            resultText.style.textShadow ="2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black";
+
+                            const buttonContainer = document.createElement("div");
+                            buttonContainer.style.marginTop = "20px";
+
+                            const goFirstButton = document.createElement("button");
+                            goFirstButton.textContent = "Go First";
+                            goFirstButton.style.marginRight = "10px";
+                            goFirstButton.className = "button button";
+                            goFirstButton.onclick = () => alert("You chose to go first!");
+
+                            const goSecondButton = document.createElement("button");
+                            goSecondButton.textContent = "Go Second";
+                            goSecondButton.className = "button button";
+                            goSecondButton.onclick = () => alert("You chose to go second!");
+
+                            buttonContainer.appendChild(goFirstButton);
+                            buttonContainer.appendChild(goSecondButton);
+                            container.appendChild(buttonContainer);
+                        }
                     }
-                }, 100);
+                }
+
+                const interval = setInterval(animateFlip, 50);
             } else {
                 document.body.innerHTML = `
                     <h1>Game Configuration</h1>
@@ -59,6 +105,6 @@
                 `;
             }
         };
-        </script>
+    </script>
 </body>
 </html>
