@@ -5,8 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://fonts.googleapis.com/css?family=Racing Sans One' rel='stylesheet'>
+    <link rel="icon" href="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/favicon.png" type="image/png">
     <link rel="stylesheet" href="style.css">
-    <title>MAIN PAGE</title>
+    <title>Geimon!</title>
     <body style="background-color:rgb(79, 79, 79);">
     <style>
         .page-wrapper {
@@ -78,7 +79,7 @@
             <br>
             <button class="button button" id="dynamicButton">Loading...</button>
             <br>
-            <button class="button button" id="logoutButton" style="display: none;">Logout</button>
+            <button class="button button" onclick="window.open('rules.html', '_blank')" id="rulesButton" style="display: none;">How To Play</button>
         </div>
         <div class="column right">
             <button class="button button" onclick="window.open('solo.html', '_blank')" id="soloButton" style="display: none;">Solo Game</button>
@@ -87,6 +88,9 @@
             <br>
             <button class="button button" onclick="window.open('match.html', '_blank')" id="matchButton" style="display: none;">Match Game</button>
         </div>
+    </div>
+    <div style="text-align: center; margin-top: 0px;">
+        <button class="button button" id="logoutButton" style="display: none;">Logout</button>
     </div>
     </div>
 
@@ -100,6 +104,7 @@
         const matchBtn = document.getElementById('matchButton');
         const eventBtn = document.getElementById('eventButton');
         const profilePic = document.getElementById('profilePic');
+        const rulesBtn = document.getElementById('rulesButton');
 
         try {
             const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
@@ -117,6 +122,7 @@
                 singleBtn.style.display = 'inline-block';
                 deckBtn.style.display = 'inline-block';
                 matchBtn.style.display = 'inline-block';
+                rulesBtn.style.display = 'inline-block';
                 //eventBtn.style.display = 'block';
                 //eventBtn.style.margin = "0 auto";
 
