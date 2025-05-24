@@ -23,16 +23,8 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 const app = express();
 const PUBLIC_DIR = path.join(__dirname, 'Public');
 app.use('/Public', express.static(path.join(__dirname, 'Public')));
-app.use('/data', express.static(path.join(__dirname, 'data'), {
-  setHeaders: (res) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-  }
-}));
-app.use('/utils', express.static(path.join(__dirname, 'utils'), {
-  setHeaders: (res) => {
-    res.setHeader('Access-Control-Allow-Origin', '*');
-  }
-}));
+app.use('/data', express.static(path.join(__dirname, 'data')));
+app.use('/utils', express.static(path.join(__dirname, 'utils')));
 
 // CORS setup
 const allowedOrigins = [
