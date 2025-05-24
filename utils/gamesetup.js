@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const playerDeckSelect = document.getElementById("playerDeck");
     const opponentDeckSelect = document.getElementById("opponentDeck");
     const totemSelect = document.getElementById("totem");
+    const turnOrderSelect = document.getElementById("turnOrder");
     const startBtn = document.getElementById("startGameBtn");
     const deckWarning = document.getElementById("deckWarning");
 
@@ -31,8 +32,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Populate totems
-    const totemNames = totems.flatMap(obj => Object.keys(obj));
+    const totemNames = ["Random"].concat(totems.flatMap(obj => Object.keys(obj)));
     populateDropdown(totemSelect, totemNames);
+    turnOrderSelect.value = "coinflip";
 
     // Validation handler
     playerDeckSelect.addEventListener("change", () => {

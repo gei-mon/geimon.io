@@ -65,35 +65,35 @@
                 const data = await response.json();
 
                 if (data.success) {
-                    const sortedDecks = data.decks.sort((a, b) => a.localeCompare(b));
-                    sortedDecks.forEach(deckName => {
-                    // Create container div for row
-                    const deckRow = document.createElement("div");
-                    deckRow.className = "deck-row";
+                    const sortedDecks = data.decks.sort((a, b) => a.deck_name.localeCompare(b.deck_name));
 
-                    // Left blue button
-                    const leftBtn = document.createElement("button");
-                    leftBtn.className = "left-btn";
-                    leftBtn.textContent = "R"; // Or any icon/text you want
-                    leftBtn.title = "Rename";
-                    leftBtn.onclick = async () => {
-                        const newDeckName = prompt("Enter new deck name:");
-                        if (newDeckName) {
-                            try {
-                                const res = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/renameDeck", {
-                                    method: "POST",
-                                    headers: { "Content-Type": "application/json" },
-                                    credentials: 'include',
-                                    body: JSON.stringify({ old_deck_name: deckName, new_deck_name: newDeckName })
-                                });
-                                const result = await res.json();
-                                alert(result.message);
-                                window.location.reload();
-                            } catch (err) {
-                                console.error("Error renaming deck:", err);
+                    sortedDecks.forEach(deck => {
+                        const deckName = deck.deck_name;
+                        const deckRow = document.createElement("div");
+                        deckRow.className = "deck-row";
+
+                        const leftBtn = document.createElement("button");
+                        leftBtn.className = "left-btn";
+                        leftBtn.textContent = "R";
+                        leftBtn.title = "Rename";
+                        leftBtn.onclick = async () => {
+                            const newDeckName = prompt("Enter new deck name:");
+                            if (newDeckName) {
+                                try {
+                                    const res = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/renameDeck", {
+                                        method: "POST",
+                                        headers: { "Content-Type": "application/json" },
+                                        credentials: 'include',
+                                        body: JSON.stringify({ old_deck_name: deckName, new_deck_name: newDeckName })
+                                    });
+                                    const result = await res.json();
+                                    alert(result.message);
+                                    window.location.reload();
+                                } catch (err) {
+                                    console.error("Error renaming deck:", err);
+                                }
                             }
-                        }
-                    };
+                        };
 
                     // Main deck button (existing)
                     const button = document.createElement("button");
