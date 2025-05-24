@@ -65,6 +65,7 @@
                             resultText.style.fontSize = "2em";
                             resultText.style.marginTop = "10%";
                             resultText.style.textShadow ="2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black";
+                            setTimeout(() => transitionToNextScreen("second"), 2000);
                         } else {
                             resultText.textContent = "You won the coin flip! Choose:";
                             resultText.style.display = "block";
@@ -79,12 +80,12 @@
                             goFirstButton.textContent = "Go First";
                             goFirstButton.style.marginRight = "10px";
                             goFirstButton.className = "button button";
-                            goFirstButton.onclick = () => alert("You chose to go first!");
+                            goFirstButton.onclick = () => transitionToNextScreen("first");
 
                             const goSecondButton = document.createElement("button");
                             goSecondButton.textContent = "Go Second";
                             goSecondButton.className = "button button";
-                            goSecondButton.onclick = () => alert("You chose to go second!");
+                            goSecondButton.onclick = () => transitionToNextScreen("second");
 
                             buttonContainer.appendChild(goFirstButton);
                             buttonContainer.appendChild(goSecondButton);
@@ -92,7 +93,6 @@
                         }
                     }
                 }
-
                 const interval = setInterval(animateFlip, 50);
             } else {
                 document.body.innerHTML = `
@@ -105,6 +105,114 @@
                 `;
             }
         };
+        function transitionToNextScreen(choice) {
+            // Keep the background image visible
+            const bgImage = document.querySelector(".bg-image");
+
+            // Create a semi-transparent overlay
+            const overlay = document.createElement("div");
+            overlay.style.position = "absolute";
+            overlay.style.top = "0";
+            overlay.style.left = "0";
+            overlay.style.width = "100%";
+            overlay.style.height = "100%";
+            overlay.style.backgroundColor = "rgba(0, 0, 0, 0.4)"; // Dark transparency
+            overlay.style.zIndex = "10";
+
+            // Main container for the structured design
+            const mainContainer = document.createElement("div");
+            mainContainer.style.position = "absolute";
+            mainContainer.style.top = "2%";
+            mainContainer.style.left = "2%";
+            mainContainer.style.width = "94%";
+            mainContainer.style.height = "92%";
+            mainContainer.style.display = "flex";
+            mainContainer.style.flexDirection = "column";
+            mainContainer.style.justifyContent = "center";
+            mainContainer.style.alignItems = "center";
+            mainContainer.style.gap = "10px";
+            mainContainer.style.padding = "20px";
+            mainContainer.style.backgroundColor = "rgba(0, 0, 0, 1)";
+            mainContainer.style.borderRadius = "20px";
+            mainContainer.style.zIndex = "20";
+
+            // Central result box
+            const resultBox = document.createElement("div");
+            resultBox.style.position = "fixed";
+            resultBox.style.top = "50%";
+            resultBox.style.left = "50%";
+            resultBox.style.transform = "translate(-50%, -50%)";
+            resultBox.style.padding = "20px 40px";
+            resultBox.style.color = "white";
+            resultBox.style.fontSize = "2em";
+            resultBox.style.borderRadius = "10px";
+            resultBox.style.textAlign = "center";
+            resultBox.style.opacity = "1"; // Start fully visible
+            resultBox.style.transition = "opacity 1s ease-in-out"; // Smooth fade effect
+            resultBox.style.zIndex = "100"; // On top of everything
+            resultBox.style.boxShadow = "0 0 20px black";
+
+            // Set background color based on choice
+            resultBox.style.backgroundColor = choice === "first" ? "blue" : "red";
+            resultBox.textContent = choice === "first" ? "You are going first." : "You are going second.";
+
+            // Main board container
+            const board = document.createElement("div");
+            board.style.position = "absolute";
+            board.style.top = "2%";
+            board.style.left = "2%";
+            board.style.width = "96%";
+            board.style.height = "94%";
+            board.style.backgroundColor = "black";
+            board.style.zIndex = "20";
+            board.style.borderRadius = "20px";
+
+            // Function to add a box
+            function addBox(x, y, w, h) {
+                const box = document.createElement("div");
+                box.style.position = "absolute";
+                box.style.left = x;
+                box.style.top = y;
+                box.style.width = w;
+                box.style.height = h;
+                box.style.border = "4px solid green";
+                box.style.backgroundColor = "black";
+                board.appendChild(box);
+            }
+
+            // Reproduce visual layout from image (values are approximate %)
+            addBox("1%", "1%", "6%", "19%");     // Opponent Deck
+            addBox("9%", "1%", "68%", "19%");    // Opponent Arsenal
+
+            addBox("79%", "1%", "20%", "40%");   // Opponent Reserve
+
+            addBox("1%", "22%", "6%", "19%");    // Opponent Tomb
+            addBox("9%", "22%", "68%", "19%");   // Opponent Champions
+
+            addBox("1%", "44%", "10%", "14%");    // Opponent Void
+
+            addBox("14%", "47%", "72%", "7%");    // Path
+
+            addBox("89%", "44%", "10%", "14%");   // Player Void
+
+            addBox("1%", "60%", "20%", "40%");   // Player Reserve
+
+            addBox("23%", "60%", "68%", "19%");  // Player Champions
+            addBox("93%", "60%", "6%", "19%");  // Player Tomb
+
+            addBox("23%", "81%", "68%", "19%");  // Player Arsenal
+            addBox("93%", "81%", "6%", "19%");  // Player Deck
+
+            document.body.appendChild(overlay);
+            document.body.appendChild(mainContainer);
+            mainContainer.appendChild(board);
+            mainContainer.appendChild(resultBox);
+
+            // Fade out the result box after 3 seconds
+            setTimeout(() => {
+                resultBox.style.opacity = "0"; // Fades out smoothly
+            }, 2000);
+        }
     </script>
 </body>
 </html>
