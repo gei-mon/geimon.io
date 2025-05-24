@@ -23,7 +23,8 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 const app = express();
 const PUBLIC_DIR = path.join(__dirname, 'Public');
 app.use('/Public', express.static(path.join(__dirname, 'Public')));
-const PROFILE_DIR = path.join(PUBLIC_DIR, 'Images', 'Profile Pictures');
+app.use('/data', express.static(path.join(__dirname, 'data')));
+app.use('/utils', express.static(path.join(__dirname, 'utils')));
 
 // CORS setup
 const allowedOrigins = [
