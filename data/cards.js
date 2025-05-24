@@ -988,7 +988,7 @@ export const cards = [
       {
         text: "Deathward <br> Gotcha! (Flip): If this Champion was flipped face-up as a result of battle: Increase this Champion's Damage by half the Damage of the Champion that it is battling (rounded up). <br> If Discarded: Deal 3 Damage to 1 Champion or Player.",
         keywords: ["Deathward"],
-        effect1name: "Gotcha!",
+        effect1name: "Gotcha",
         effect1type: "BattleFlip",
         effect1condition: "",
         effect1cost: "",
