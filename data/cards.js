@@ -2203,7 +2203,7 @@ export const cards = [
     image: `${cardArtFolder}/Obelisks/BrassMonarch.png`,
     type: "Obelisk",
     condition: "",
-    cost: "Rally 1 Fuel Token to your Opponent's Zone.",
+    cost: "Rally 3 Fuel Token to your Opponent's Zone.",
     tags: ["Commander","Obelisk"],
     damage: 0,
     life: 0,
