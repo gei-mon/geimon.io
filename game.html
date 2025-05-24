@@ -15,6 +15,18 @@
             <p style="font-size: 200%; font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;"><game-title>Geimon!</game-title></p>
             <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: -28px;">Running Game Placeholder</h2>
         </div>
-        <button class="button buttonEvenSmaller" onclick="window.close()">Close</button>
+        <script>
+        window.onload = () => {
+            const params = new URLSearchParams(window.location.search);
+            document.body.innerHTML = `
+                <h1>Game Configuration</h1>
+                <p>Player Deck: ${params.get("playerDeck")}</p>
+                <p>Opponent Deck: ${params.get("opponentDeck")}</p>
+                <p>Game Type: ${params.get("gameType")}</p>
+                <p>Totem: ${params.get("totem")}</p>
+                <p>Turn Order: ${params.get("turnOrder")}</p>
+            `;
+        };
+        </script>
 </body>
 </html>

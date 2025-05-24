@@ -382,18 +382,18 @@ app.get('/getUserDecks', async (req, res) => {
     try {
         const { data, error } = await supabase
             .from('decks')
-            .select('deck_name')
+            .select('deck_name, legal')
             .eq('user_name', username);
 
         if (error) throw error;
 
-        const deckNames = data.map(deck => deck.deck_name);
-        res.json({ success: true, decks: deckNames });
+        res.json({ success: true, decks: data });
     } catch (err) {
         console.error("Error fetching decks:", err);
         res.status(500).json({ success: false, message: "Error fetching decks" });
     }
 });
+
 
 app.get("/getDeck", async (req, res) => {
     try {

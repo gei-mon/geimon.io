@@ -12,9 +12,35 @@
 <body style="background-color:rgb(78, 78, 78);">
   <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
         <div class="container">
-            <p style="font-size: 200%; font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;"><game-title>Geimon!</game-title></p>
-            <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: -28px;">Solo-Game Placeholder</h2>
+            <p style="font-size: 200%; font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-left: 20px;"><game-title>Geimon!</game-title></p>
+            <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: -28px; margin-left: 24px;">Customize Your Solo Game!</h2>
+            <div class="dropdowns" style="margin-left: 24px; color: white;">
+                <label>Choose Your Deck:</label>
+                <select id="playerDeck"></select><br><br>
+
+                <label>Choose Opponent Deck:</label>
+                <select id="opponentDeck"></select><br><br>
+
+                <label>Choose Game Type:</label>
+                <select id="gameType">
+                    <option value="single">Single</option>
+                    <option value="match">Match</option>
+                </select><br><br>
+
+                <label>Choose Totem:</label>
+                <select id="totem"></select><br><br>
+
+                <label>Who Goes First:</label>
+                <select id="turnOrder">
+                    <option value="first">You</option>
+                    <option value="second">Opponent</option>
+                    <option value="coinflip">Coin Flip</option>
+                </select><br><br>
+
+                <button onclick="startGame()">Start Game</button>
+            </div>
+            <script src="/data/totems.js"></script>
+            <script type="module" src="/utils/gameSetup.js"></script>
         </div>
-        <button class="button buttonEvenSmaller" onclick="window.close()">Close</button>
 </body>
 </html>
