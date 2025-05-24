@@ -1958,10 +1958,10 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Finger Guns: Target 1 Champion on the Zone; Target cannot declare an attack, block, or use its effects until the start of your next turn.",
+        text: "Finger Guns (Exhaustion): Target 1 Champion on the Zone; Target cannot declare an attack, block, or use its effects until the start of your next turn.",
         keywords: ["blank"],
         effect1name: "Finger Guns",
-        effect1type: ["Standard"],
+        effect1type: ["Standard","Exhaustion"],
         effect1condition: "",
         effect1cost: "Target1ChampOnZone",
         effect1text: "TargetDisableAttackBlockEffect",
