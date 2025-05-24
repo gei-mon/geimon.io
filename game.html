@@ -15,17 +15,49 @@
             <p style="font-size: 200%; font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;"><game-title>Geimon!</game-title></p>
             <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: -28px;">Running Game Placeholder</h2>
         </div>
+        <div id="coin-flip-container" style="display: none; text-align: center; margin-top: 50px;">
+            <img id="coin" src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/heads.png" alt="coin" style="width: 150px; height: 150px;">
+            <h2 id="flip-result"></h2>
+        </div>
         <script>
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
-            document.body.innerHTML = `
-                <h1>Game Configuration</h1>
-                <p>Player Deck: ${params.get("playerDeck")}</p>
-                <p>Opponent Deck: ${params.get("opponentDeck")}</p>
-                <p>Game Type: ${params.get("gameType")}</p>
-                <p>Totem: ${params.get("totem")}</p>
-                <p>Turn Order: ${params.get("turnOrder")}</p>
-            `;
+            const turnOrder = params.get("turnOrder");
+
+            if (turnOrder === "coinflip") {
+                const container = document.getElementById("coin-flip-container");
+                const coin = document.getElementById("coin");
+                const resultText = document.getElementById("flip-result");
+                container.style.display = "block";
+                resultText.textContent = "";
+
+                // Paths to your images, update if needed
+                const headsImg = "https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/heads.png";
+                const tailsImg = "https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/tails.png";
+
+                let flips = 0;
+                const interval = setInterval(() => {
+                    // Flip between heads and tails images randomly to simulate flipping
+                    coin.src = Math.random() > 0.5 ? headsImg : tailsImg;
+                    flips++;
+                    if (flips > 20) {
+                        clearInterval(interval);
+                        // Final result random
+                        const finalResult = Math.random() > 0.5 ? "Heads" : "Tails";
+                        coin.src = finalResult === "Heads" ? headsImg : tailsImg;
+                        resultText.textContent = `Result: ${finalResult}`;
+                    }
+                }, 100);
+            } else {
+                document.body.innerHTML = `
+                    <h1>Game Configuration</h1>
+                    <p>Player Deck: ${params.get("playerDeck")}</p>
+                    <p>Opponent Deck: ${params.get("opponentDeck")}</p>
+                    <p>Game Type: ${params.get("gameType")}</p>
+                    <p>Totem: ${params.get("totem")}</p>
+                    <p>Turn Order: ${turnOrder}</p>
+                `;
+            }
         };
         </script>
 </body>
