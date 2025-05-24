@@ -1,20 +1,227 @@
 <!DOCTYPE html>
-<html lang=""en">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv=""X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://fonts.googleapis.com/css?family=Racing Sans One' rel='stylesheet'>
     <link rel="icon" href="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/favicon.png" type="image/png">
     <link rel="stylesheet" href="style.css">
     <title>RULES PAGE</title>
+    <style>
+        .tab {
+            display: none;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .tab-buttons {
+            margin-top: 30px;
+            display: flex;
+            gap: 10px;
+        }
+        .tab-button {
+            border: 5px solid rgb(0, 0, 0);
+            background-color: rgb(205, 199, 243);
+            color: black;
+            padding: 10px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-family: 'Arial';
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+            table-layout: fixed;
+            border-collapse: collapse;
+            width: 20%;
+        }
+        .tab-button.active {
+            background-color: rgb(159, 145, 253);
+        }
+    </style>
 </head>
 <body style="background-color:rgb(78, 78, 78);">
-  <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
-        <div class="container">
-            <p style="font-size: 200%; font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;"><game-title>Geimon!</game-title></p>
-            <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: -28px;">Rules Placeholder</h2>
+    <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
+    <div class="container">
+        <p style="font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: 16px; margin-left: 10px;">
+            <game-title>Geimon!</game-title>
+        </p>
+        <button class="button buttonEvenSmaller" style="margin-top: -40px; margin-bottom: 60px; margin-left: 14px;" onclick="window.close()">Close Rules</button>
+        <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: -28px;">
+            <game-title>Geimon!</game-title> (Pronounced: Game On!) is an Online-Only, Two-Player Competitive Card Game.
+            <br><br>
+            From a worldspace teeming with life, cowboys, wizards, scientists, and knights all meet and clash within Geimon! Science is on the rise, but kings and castles, cowboys and outlaws, all still roam the wilds; and deep below, hidden in the histories lies a dark, ancient magic threatening to make a return.
+            <br><br>
+            Best of 1, and best of 3 games are offered.
+            <br><br>
+            How You Win:
+            <br>
+            • Reduce your opponent’s life to 0. (Starting Life is 40)
+            <br>
+            • Your opponent would draw a card(s), but their Deck is empty.
+
+        </h2>
+
+        <div class="tab-buttons">
+            <button class="tab-button active" onclick="openTab(event, 'howToPlay')">How To Play</button>
+            <button class="tab-button" onclick="openTab(event, 'whatsInATurn')">What's In A Turn?</button>
+            <button class="tab-button" onclick="openTab(event, 'boardAndCards')">Card Types and The Board</button>
+            <button class="tab-button" onclick="openTab(event, 'keywordDictionary')">Card Keywords</button>
         </div>
-        <button class="button buttonEvenSmaller" onclick="window.close()">Close</button>
+
+        <div id="howToPlay" class="tab" style="display: block;">
+            <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; font-size: 1.5em;">
+                <span style="text-decoration: underline;">Each Player designs their own Deck to play, or chooses a Starter option.</span>
+                <br><br>
+                <span style="font-style: italic;">&emsp;&emsp;Decks must be between 60 and 100 cards. There is nothing else to worry about, no side cards or extra zones. And even simpler, every single card is limited to 1 copy in a Deck, so every single card you see will be unique.</span>
+                <br><br>
+                <span style="text-decoration: underline;">At the start of every game, a Player picks up the top 5 cards of their Deck.</span>
+                <br><br>
+                <span style="font-style: italic;">&emsp;&emsp;This is your Starting Hand. If you don't like your Starting Hand, then once per game you can place it on the bottom of your Deck and pick up the next 5 cards. You must keep this new Hand.</span>
+                <br><br>
+                <span style="text-decoration: underline;">After redraws have been decided, a Totem is chosen.</span>
+                <br><br>
+                <span style="font-style: italic;">&emsp;&emsp;For the first game of a match, or the only game in a best of 1, a random Totem is rolled. Totems are a modification to the game's mechanics. The loser of the previous game in a match chooses the Totem for the next game from a shortlist of 3 randomly selected options, different to the one seen in game 1.</span>
+                <br><br><br><br><br><br>
+                &nbsp;
+            </h2>
+        </div>
+
+        <div id="whatsInATurn" class="tab">
+            <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; font-size: 1.5em;">
+                <span style="text-decoration: underline;">On a Player's turn, there are 6 ‘Phases’: Intermission, Draw, Main 1, Battle, Main 2, and End.</span>
+                <br><br>
+                <span style="font-style: italic;">&emsp;&emsp;On the first Player's turn, Battle and Main 2 are skipped.</span>
+                <br><br>
+                <span style="text-decoration: underline;">The Intermission Phase</span> is used to handle maintenance costs, as well as pre-draw interactions.
+                <br><br>
+                <span style="text-decoration: underline;">During the Draw Phase,</span> even on the first turn, the Player whose turn it is draws 1 card.
+                <br><br>
+                <span style="text-decoration: underline;">In Main 1,</span> the turn Player can activate Action, Rush, and Obelisk cards, Rally Champions, or set Rush and Reflex cards.
+                <br><br>
+                <span style="text-decoration: underline;">In the Battle Phase,</span> you declare one at a time which of your Champions are attacking this Phase. Champions can attack the turn they are Rallied, unless something stops them.
+                <br><br>
+                <span style="font-style: italic;">&emsp;&emsp;When you declare an attack, your opponent can declare a Blocker, i.e. which Champion they are placing in front of your attack. Champions blocking take the attacking Champion's Damage. If they are reduced to 0 Life, they are Destroyed, and go to the Tomb. Blocking Champions deal their Damage to their attackers.</span>
+                <br><br>
+                <span style="font-style: italic;">&emsp;&emsp;Damage Thresholds may have to be met in order to Damage certain creatures, but they do not reduce the Damage taken if they are met or exceeded. Each attack is separate and creatures cannot team up to overcome a Damage Threshold. Certain attacks or effects can ignore Damage Thresholds.</span>
+                <br><br>
+                <span style="font-style: italic;">&emsp;&emsp;Leftover Damage over Life (or over the Threshold if higher) is dealt to your opponent. Unless stated otherwise, Champions can only attack once each during a Battle Phase.</span>
+                <br><br>
+                <span style="text-decoration: underline;">In Main 2,</span> a Player can do all the same things they did in Main 1.
+                <br><br>
+                <span style="text-decoration: underline;">And in the End Phase,</span> certain effects will resolve, and like in the Intermission, Players can make skillful plays before the start of the next turn.
+                <br><br><br><br><br><br>
+                &nbsp;
+            </h2>
+        </div>
+
+        <div id="boardAndCards" class="tab">
+            <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; font-size: 1.5em;">
+                <span style="text-decoration: underline;">The Types of Cards:</span>
+                <br><br>
+                <span style="text-decoration: underline;">Unless stated otherwise, only the turn Player can activate cards, and only during their main Phases.</span>
+                <br><br>
+                <span style="font-style: italic;">&emsp;&emsp;Each Player can only use each effect of a card once per turn; if a Champion is Rallied, you use its effect, and then it is Destroyed, but you Resurrect it, you cannot use its effect again (that turn).</span>
+                <br><br>
+                <span style="font-style: italic;">• <span style="text-decoration: underline;">Champion:</span> Cards that are placed onto the Zone in the Champion Area and symbolize creatures. They are the primary actors in battle. You can only Rally 1 Champion without a Rally Cost per turn, this is referred to as a Basic Rally. Basic Champions can be Rallied face-up or face-down in the Champion Area. Starting the turn after you set a Champion face-down, you can flip them face-up during one of your main Phases. They are also flipped face-up during damage calculation if they are attacked, or used as a blocker.</span>
+                <br><br>
+                <span style="font-style: italic;">• <span style="text-decoration: underline;">Action:</span> Cards that are played on the Zone briefly within the Arsenal Area, but once their effects resolve they go to the Tomb.</span>
+                <br><br>
+                <span style="font-style: italic;">• <span style="text-decoration: underline;">Equipment:</span> Cards that must be kept on the Zone within the Arsenal Area and are attached to a Champion. If the Champion leaves the Champion Area, their Equipment goes to the Tomb.</span>
+                <br><br>
+                <span style="font-style: italic;">• <span style="text-decoration: underline;">Obelisk:</span> Cards that are played onto the Zone within the Arsenal Area and remain there until destroyed.</span>
+                <br><br>
+                <span style="font-style: italic;">• <span style="text-decoration: underline;">Rush:</span> Cards that can be played in response to others by the turn Player from within their Hand. These cards go into the Arsenal Area before going to the Tomb. The turn Player can place these cards face-down in the Arsenal Area to activate them in response to an opponent's actions on their turn. Once a card is placed face-down, it cannot be used until the Intermission between their turn and the next Player's turn.</span>
+                <br><br>
+                <span style="font-style: italic;">• <span style="text-decoration: underline;">Reflex:</span> Cards that must be placed face-down before they can be activated. They are mainly used to respond to an Opponent's actions. Once a card is placed face-down, it cannot be used until the Intermission between their turn and the next Player's turn.</span>
+                <br><br>
+                <span style="text-decoration: underline;">Before a card is activated, it goes on the path.</span>
+                <br><br>
+                <span style="font-style: italic;">&emsp;&emsp;Cards played in response to each other go on the path one after another. The Path is not a part of the Zone, but rather a line used to follow actions in order of resolution if used in response to each other. Effects that would be used also place cards on the Path. Effects go in sequence, responding to each other, before resolving in reverse backwards along the Path until reaching the card that started it.</span>
+                <br><br><br><br>
+                <span style="text-decoration: underline;">The Zone:</span>
+                <br><br>
+                <span style="text-decoration: underline;">The board is referred to as the Zone, and is split into various areas: Champion, Arsenal, Reserve, Tomb, and Void.</span>
+                <br><br>
+                <span style="font-style: italic;">&emsp;&emsp;The Path and Players’ Hands are not considered parts of the Zone.</span>
+                <br><br>
+                <span style="text-decoration: underline;">The Champion Area is where Champions go after they are Rallied. The Arsenal Area is where nearly all other cards go after they are activated.</span>
+                <br><br>
+                <span style="text-decoration: underline;">The Reserve is where cards can come into play without entering the Zone.</span>
+                <br><br>
+                <span style="font-style: italic;">&emsp;&emsp;Cards that go into the Reserve are not counted as played, and in most instances cannot be negated. But, for example, when a Champion leaves the Reserve to enter the Zone, then it is Rallied, and it can be negated.</span>
+                <br><br>
+                <span style="text-decoration: underline;">The Tomb is where cards go when they are used, or Destroyed.</span>
+                <br><br>
+                <span style="text-decoration: underline;">The Void is where cards go when they are Obliterated.</span>
+                <br><br>
+                <span style="font-style: italic;">&emsp;&emsp;Most of the time cards in the Void cannot be interacted with or Reclaimed.</span>
+                <br><br><br><br><br><br>
+                &nbsp;
+            </h2>
+        </div>
+    </div>
+
+    <div id="keywordDictionary" class="tab">
+        <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; font-size: 1.5em;">
+            • <span style="text-decoration: underline;">Add:</span> Select a card(s) from your Deck and place it into your Hand.
+                <br><br>
+            • <span style="text-decoration: underline;">Bounce:</span> Return a card on the Zone to the Hand.
+                <br><br>
+            • <span style="text-decoration: underline;">Bury:</span> Send from your Deck to the Tomb.
+                <br><br>
+            • <span style="text-decoration: underline;">Cost:</span> Listed on a card before its effect and must be paid before it goes onto the Path. Responses to cards come after their Cost is paid, and are placed after it on the Path.
+                <br><br>
+            • <span style="text-decoration: underline;">Destroy:</span> Send the designated card to the Tomb.
+                <br><br>
+            • <span style="text-decoration: underline;">Discard:</span> Send from the Hand to the Tomb. You choose the card(s) unless stated otherwise.
+                <br><br>
+            • <span style="text-decoration: underline;">Excavate:</span> Reveal cards from the top of the Deck. If not specified, returned cards are shuffled back into the Deck.
+                <br><br>
+            • <span style="text-decoration: underline;">Flip:</span> Champions that are face-down activate this effect when they are turned face-up.
+                <br><br>
+            • <span style="text-decoration: underline;">Mill:</span> Send from the top of the Deck to the Tomb. Cards that are Milled also count as if they were Buried.
+                <br><br>
+            • <span style="text-decoration: underline;">Obliterate:</span> Send the designated card to the Void.
+                <br><br>
+            • <span style="text-decoration: underline;">Offer:</span> Take an amount of Damage as listed, usually as the cost for another effect.
+                <br><br>
+            • <span style="text-decoration: underline;">Rally:</span> Place a Champion into your Champion Area. After activation, a Champion card remains active on the Zone.
+                <br><br>
+            • <span style="text-decoration: underline;">Reclaim:</span> Take from the Void into your Hand.
+                <br><br>
+            • <span style="text-decoration: underline;">Recruit:</span> Rally from your Deck (ignoring cost). You must still meet conditions.
+                <br><br>
+            • <span style="text-decoration: underline;">Resurrect:</span> Rally from your Tomb (ignoring cost). You must still meet conditions.
+                <br><br>
+            • <span style="text-decoration: underline;">Retrieve:</span> Take from the Tomb into your Hand.
+                <br><br>
+            • <span style="text-decoration: underline;">Sacrifice:</span> Send a number of your Rallied Champions to the Tomb, usually as a cost.
+                <br><br>
+            • <span style="text-decoration: underline;">Spin:</span> Shuffle card(s) into the Deck from a designated location.
+                <br><br>
+            • <span style="text-decoration: underline;">Stack:</span> Place a designated card on top of the Deck.
+                <br><br>
+            • <span style="text-decoration: underline;">Target:</span> Select a card to be the recipient of an effect.
+                <br><br>
+            • <span style="text-decoration: underline;">Unleash:</span> Rally from the Void (ignoring cost). You must still meet conditions.
+                <br><br><br><br><br><br>
+                &nbsp;
+        </h2>
+    </div>
+
+    <script>
+        function openTab(evt, tabId) {
+            const tabs = document.querySelectorAll('.tab');
+            const buttons = document.querySelectorAll('.tab-button');
+
+            tabs.forEach(tab => tab.style.display = 'none');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(tabId).style.display = 'block';
+            evt.currentTarget.classList.add('active');
+        }
+    </script>
 </body>
 </html>
