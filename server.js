@@ -236,7 +236,7 @@ app.post('/startGame', (req, res) => {
       lastBoardState: null
     }));
 
-    gameStates[gameId].turn = {
+    gameState.turn = {
       count: 1,
       currentPlayer: playerUsername, // will alternate
       currentPhase: "Intermission"
@@ -690,8 +690,6 @@ app.post('/saveDeck', async (req, res) => {
     res.status(500).json({ success: false, message: 'Error saving deck', error: err.message });
   }
 });
-
-
 
 app.post('/deleteDeck', async (req, res) => {
   const sessionId = req.cookies.session;
