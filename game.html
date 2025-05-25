@@ -535,6 +535,22 @@
                 .map(id => cards.find(card => String(card.id) === String(id)))
                 .filter(Boolean); // Remove any unmatched IDs
 
+            const typeOrder = ["Champion", "Action", "Equipment", "Obelisk", "Rush", "Reflex"];
+            drawnCardsArray.sort((idA, idB) => {
+                const cardA = cards.find(card => String(card.id) === String(idA));
+                const cardB = cards.find(card => String(card.id) === String(idB));
+                if (!cardA || !cardB) return 0; // skip invalid data
+
+                const typeIndexA = typeOrder.indexOf(cardA.type);
+                const typeIndexB = typeOrder.indexOf(cardB.type);
+
+                if (typeIndexA !== typeIndexB) {
+                    return typeIndexA - typeIndexB;
+                }
+
+                return cardA.name.localeCompare(cardB.name);
+            });
+
             drawnCardsArray.forEach(id => {
                 const card = cards.find(card => String(card.id) === String(id));
                 if (card) {
