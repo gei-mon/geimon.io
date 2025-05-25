@@ -1,7 +1,8 @@
-export function handleBoardStateChange(card, boardState) {
-  if (boardState === 'tomb') {
-    declareAbility(card);
+export function handleBoardStateChange(card, boardState, lastBoardState) {
+  if (boardState === 'tomb' && lastBoardState !== 'tomb') {
+    declareAbility(ifSentToTomb);
   }
+  card.lastBoardState = card.boardState;
 }
 
 function declareAbility(card) {
