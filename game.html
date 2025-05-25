@@ -547,11 +547,6 @@
             return new Promise(resolve => setTimeout(resolve, ms));
         }
 
-
-            function delay(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-            }
-
             async function advancePhase() {
                 const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/advancePhase', {
                     method: 'POST',
