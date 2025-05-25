@@ -478,6 +478,7 @@
         }
         gameState = await response.json();
         updateLocalFromGameState();
+        await autoAdvanceIfMyTurn();
         function updateLocalFromGameState() {
             if (!gameState || !username) {
                 console.error("Missing gameState or username");
@@ -524,6 +525,44 @@
                 document.getElementById("turn-counter").textContent = `Turn: ${turnData.count}`;
             }
         }
+
+        async function autoAdvanceIfMyTurn() {
+            const myTurn = gameState.turn.currentPlayer === username;
+            if (!myTurn) return;
+
+            const phase = gameState.turn.currentPhase;
+            if (phase === "Intermission") {
+                console.log("⏳ Intermission...");
+                await delay(500);
+                await advancePhase();
+                await delay(500);
+                await advancePhase();
+            }
+            }
+
+            function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            async function advancePhase() {
+            const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/advancePhase', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ gameId, username })
+            });
+
+            if (res.ok) {
+                const result = await res.json();
+                gameState.turn = result.turn;
+                updatePhaseDisplay(gameState.turn.currentPhase);
+                updateTurnDisplay(gameState.turn);
+            } else {
+                console.error("❌ Phase advance failed.");
+            }
+            if (gameState.turn.currentPhase === "Draw") {
+                drawCards(gameState[username].Deck, 1);
+            }
+            }
 
         document.getElementById("advance-phase").onclick = async () => {
             console.log("Sending advancePhase with:", { gameId, username });

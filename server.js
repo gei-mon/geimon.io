@@ -740,11 +740,11 @@ app.post('/endGame', (req, res) => {
     res.json({ success: true });
 });
 
-app.post('/advancePhase', async (req, res) => {
+app.post('/advancePhase', (req, res) => {
   try {
     const { gameId, username } = req.body;
-
     const game = gameStates.get ? gameStates.get(gameId) : gameStates[gameId];
+
     if (!game || !game.turn) {
       return res.status(404).json({ success: false, message: "Game or turn not found." });
     }
@@ -757,53 +757,31 @@ app.post('/advancePhase', async (req, res) => {
       return res.status(403).json({ success: false, message: "Not your turn." });
     }
 
+    // Advance phase
     let nextPhase = (currentIndex < 5) ? phases[currentIndex + 1] : "End";
 
+    // Skip Battle/Main 2 on Turn 1
     if (game.turn.count === 1 && nextPhase === "Battle") {
       nextPhase = "End";
     }
 
-    // Advance to next phase
     game.turn.currentPhase = nextPhase;
 
-    // === 🔁 Auto-progress logic ===
-    const autoPhases = ["Intermission", "Draw"];
-    const stopPhase = "Main 1";
-
-        while (autoPhases.includes(game.turn.currentPhase)) {
-      const phaseToCheck = game.turn.currentPhase;
-
-  console.log(`🌀 Advancing to phase: ${currentPhase}`); // ← 🧠 Log phase info
-
-      // ⏳ Add delay (if you want animation buffer)
-      await new Promise(resolve => setTimeout(resolve, 100));
-
-      const hasTriggers = false; // TODO: replace with actual activation check
-      if (!hasTriggers && phaseToCheck !== stopPhase) {
-        const i = phases.indexOf(game.turn.currentPhase);
-        game.turn.currentPhase = phases[i + 1];
-      } else {
-        break; // Stop auto-progress if triggers exist
-      }
-    }
-
+    // End phase => new turn
     if (nextPhase === "End") {
-      game.turn.count += 1;
+      game.turn.count++;
       game.turn.currentPlayer = (game.turn.currentPlayer === game.player1) ? game.player2 : game.player1;
       game.turn.currentPhase = "Intermission";
 
-      // Auto-end bot turn
+      // Bot turn skip
       if (game.turn.currentPlayer === "Bot") {
-        console.log("Skipping Bot's turn...");
-        game.turn.count += 1;
+        game.turn.count++;
         game.turn.currentPlayer = username;
         game.turn.currentPhase = "Intermission";
       }
-
-    } else {
-      game.turn.currentPhase = nextPhase;
     }
 
+    console.log(`🌀 New phase: ${game.turn.currentPhase}`);
     return res.json({ success: true, turn: game.turn });
 
   } catch (err) {
