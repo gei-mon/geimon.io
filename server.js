@@ -187,9 +187,18 @@ app.post('/startGame', (req, res) => {
       isSinglePlayer
     } = req.body;
 
+    console.log("📥 /startGame received:");
+    console.log("  gameId:", gameId);
+    console.log("  playerUsername:", playerUsername);
+    console.log("  opponentUsername:", opponentUsername);
+    console.log("  playerDeck:", playerDeck?.length);
+    console.log("  opponentDeck:", opponentDeck?.length);
+    console.log("  isSinglePlayer:", isSinglePlayer);
+
     console.log("Received /startGame with:", req.body);
 
     if (!playerUsername || !playerDeck) {
+      console.error("🛑 Missing or invalid input");
       return res.status(400).json({ error: "Missing player or deck" });
     }
 

@@ -589,7 +589,7 @@
                     })
                 });
 
-                console.log("Creating game for", playerUsername, "vs", opponent);
+                console.log("Creating game for", username, "vs", isSinglePlayer ? "AI_Bot" : otherPlayerName);
                 await fetchGameStateFromServer();
                 if (!gameState || !gameState[username]) {
                     console.error("Game state not found for user:", username);
