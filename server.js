@@ -740,7 +740,7 @@ app.post('/endGame', (req, res) => {
     res.json({ success: true });
 });
 
-app.post('/advancePhase', (req, res) => {
+app.post('/advancePhase', async (req, res) => {
   try {
     const { gameId, username } = req.body;
 
@@ -760,7 +760,29 @@ app.post('/advancePhase', (req, res) => {
     let nextPhase = (currentIndex < 5) ? phases[currentIndex + 1] : "End";
 
     if (game.turn.count === 1 && nextPhase === "Battle") {
-      return res.status(400).json({ success: false, message: "Cannot enter Battle on turn 1." });
+      nextPhase = "End";
+    }
+
+    // Advance to next phase
+    game.turn.currentPhase = nextPhase;
+
+    // === 🔁 Auto-progress logic ===
+    const autoPhases = ["Intermission", "Draw"];
+    const stopPhase = "Main 1";
+
+        while (autoPhases.includes(game.turn.currentPhase)) {
+      const phaseToCheck = game.turn.currentPhase;
+
+      // ⏳ Add delay (if you want animation buffer)
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      const hasTriggers = false; // TODO: replace with actual activation check
+      if (!hasTriggers && phaseToCheck !== stopPhase) {
+        const i = phases.indexOf(game.turn.currentPhase);
+        game.turn.currentPhase = phases[i + 1];
+      } else {
+        break; // Stop auto-progress if triggers exist
+      }
     }
 
     if (nextPhase === "End") {
