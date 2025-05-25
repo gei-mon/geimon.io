@@ -66,6 +66,16 @@ const io = new Server(server, {
 const openRooms = new Map(); // roomId -> [socketIds]
 const userMap = new Map();
 
+const defaultZones = () => ({
+  Deck: [],
+  Hand: [],
+  Tomb: [],
+  Void: [],
+  "Zone (Champion)": [],
+  "Zone (Arsenal)": [],
+  Reserve: []
+});
+
 function generateRoomId() {
   return Math.random().toString(36).substring(2, 8);
 }
@@ -140,6 +150,86 @@ io.on('connection', (socket) => {
 
     userMap.delete(socket.id);
   });
+});
+
+const gameStates = new Map();
+function createInitialGameState() {
+  return {
+    player: {
+      Deck: [],
+      Hand: [],
+      Tomb: [],
+      Void: [],
+      "Zone (Champion)": [],
+      "Zone (Arsenal)": [],
+      Reserve: []
+    },
+    opponent: {
+      Deck: [],
+      Hand: [],
+      Tomb: [],
+      Void: [],
+      "Zone (Champion)": [],
+      "Zone (Arsenal)": [],
+      Reserve: []
+    }
+  };
+}
+
+app.post('/startGame', (req, res) => {
+  const {
+    gameId,
+    playerUsername,
+    opponentUsername,
+    playerDeck,
+    opponentDeck,
+    isSinglePlayer
+  } = req.body;
+
+  const gameState = {};
+
+  // Set up player zones
+  gameState[playerUsername] = defaultZones();
+  gameState[playerUsername].Deck = playerDeck.map(id => ({
+    id,
+    boardState: "Deck",
+    lastBoardState: null
+  }));
+
+  // Set up opponent or bot
+  const opponent = isSinglePlayer ? "AI_Bot" : opponentUsername;
+  gameState[opponent] = defaultZones();
+  gameState[opponent].Deck = opponentDeck.map(id => ({
+    id,
+    boardState: "Deck",
+    lastBoardState: null
+  }));
+
+  // Save the game state in memory
+  gameStates.set(gameId, gameState);
+
+  res.status(200).json({ success: true });
+});
+
+app.post('/updateGameState', (req, res) => {
+  const { gameId, updatedZones, owner } = req.body;
+  const state = gameStates.get(gameId);
+  if (!state || !state[owner]) return res.status(404).json({ error: "Game or user not found" });
+
+  Object.keys(updatedZones).forEach(zone => {
+    state[owner][zone] = updatedZones[zone];
+  });
+
+  gameStates.set(gameId, state);
+  res.sendStatus(200);
+});
+
+app.get('/getGameState/:gameId', (req, res) => {
+  const gameId = req.params.gameId;
+  const state = gameStates.get(gameId);
+
+  if (!state) return res.status(404).json({ error: "Game not found" });
+  res.json(state);
 });
 
 app.get('/', (req, res) => {
