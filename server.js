@@ -743,77 +743,65 @@ app.post('/endGame', (req, res) => {
 app.post('/advancePhase', async (req, res) => {
   try {
     const { gameId, username } = req.body;
-    const game = gameStates.get ? gameStates.get(gameId) : gameStates[gameId];
 
+    const game = gameStates.get ? gameStates.get(gameId) : gameStates[gameId];
     if (!game || !game.turn) {
       return res.status(404).json({ success: false, message: "Game or turn not found." });
     }
 
     const phases = ["Intermission", "Draw", "Main 1", "Battle", "Main 2", "End"];
-    const autoAdvancePhases = ["Intermission", "Draw"];
-    const stopPhase = "Main 1";
-
+    const currentIndex = phases.indexOf(game.turn.currentPhase);
     const isPlayerTurn = game.turn.currentPlayer === username;
+
     if (!isPlayerTurn) {
       return res.status(403).json({ success: false, message: "Not your turn." });
     }
 
-    let phaseIndex = phases.indexOf(game.turn.currentPhase);
+    let nextPhase = (currentIndex < 5) ? phases[currentIndex + 1] : "End";
 
-    // If undefined phase, initialize
-    if (phaseIndex === -1) {
-      phaseIndex = 0;
-      game.turn.currentPhase = phases[phaseIndex];
+    if (game.turn.count === 1 && nextPhase === "Battle") {
+      nextPhase = "End";
     }
 
-    while (phaseIndex < phases.length) {
-      const currentPhase = phases[phaseIndex];
-      game.turn.currentPhase = currentPhase;
+    // Advance to next phase
+    game.turn.currentPhase = nextPhase;
 
-      console.log(`🌀 Advancing to phase: ${currentPhase}`);
+    // === 🔁 Auto-progress logic ===
+    const autoPhases = ["Intermission", "Draw"];
+    const stopPhase = "Main 1";
 
-      // Optional delay for frontend sync
+        while (autoPhases.includes(game.turn.currentPhase)) {
+      const phaseToCheck = game.turn.currentPhase;
+
+  console.log(`🌀 Advancing to phase: ${currentPhase}`); // ← 🧠 Log phase info
+
+      // ⏳ Add delay (if you want animation buffer)
       await new Promise(resolve => setTimeout(resolve, 100));
 
-      // === Phase-specific logic ===
-      if (currentPhase === "Draw") {
-        const player = game[username];
-        if (player.Deck.length > 0) {
-          const card = player.Deck.shift();
-          card.lastBoardState = "Deck";
-          card.boardState = "Hand";
-          player.Hand.push(card);
-          console.log(`${username} drew a card.`);
-        } else {
-          console.log(`${username} attempted to draw with empty deck.`);
-        }
+      const hasTriggers = false; // TODO: replace with actual activation check
+      if (!hasTriggers && phaseToCheck !== stopPhase) {
+        const i = phases.indexOf(game.turn.currentPhase);
+        game.turn.currentPhase = phases[i + 1];
+      } else {
+        break; // Stop auto-progress if triggers exist
       }
-
-      const hasTriggers = false; // TODO: implement actual activation check
-
-      // Break if we're at a stoppable phase
-      if (!autoAdvancePhases.includes(currentPhase) || hasTriggers || currentPhase === stopPhase) {
-        break;
-      }
-
-      phaseIndex++;
     }
 
-    // If we ended on End phase, pass turn
-    if (game.turn.currentPhase === "End") {
+    if (nextPhase === "End") {
       game.turn.count += 1;
-      game.turn.currentPlayer = (game.turn.currentPlayer === game.player1)
-        ? game.player2
-        : game.player1;
+      game.turn.currentPlayer = (game.turn.currentPlayer === game.player1) ? game.player2 : game.player1;
       game.turn.currentPhase = "Intermission";
 
       // Auto-end bot turn
       if (game.turn.currentPlayer === "Bot") {
-        console.log("Bot turn auto-skipped.");
+        console.log("Skipping Bot's turn...");
         game.turn.count += 1;
         game.turn.currentPlayer = username;
         game.turn.currentPhase = "Intermission";
       }
+
+    } else {
+      game.turn.currentPhase = nextPhase;
     }
 
     return res.json({ success: true, turn: game.turn });
