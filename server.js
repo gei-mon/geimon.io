@@ -755,23 +755,33 @@ app.post('/advancePhase', (req, res) => {
     return res.status(403).json({ success: false, message: "Not your turn." });
   }
 
-  const nextPhase = (currentIndex < 5) ? phases[currentIndex + 1] : "End";
+  let nextPhase = (currentIndex < 5) ? phases[currentIndex + 1] : "End";
 
-  // Special logic for turn 1
+  // Turn 1 restriction: can't enter Battle
   if (game.turn.count === 1 && nextPhase === "Battle") {
     return res.status(400).json({ success: false, message: "Cannot enter Battle on turn 1." });
   }
 
+  // If next phase is End, complete turn
   if (nextPhase === "End") {
-    // End turn, switch players
     game.turn.count += 1;
     game.turn.currentPlayer = game.turn.currentPlayer === game.player1 ? game.player2 : game.player1;
     game.turn.currentPhase = "Intermission";
+
+    // ✅ If Bot's turn, immediately simulate end of their turn
+    if (game.turn.currentPlayer === "Bot") {
+      console.log("Bot's turn: auto-advancing through all phases...");
+      // Just skip to next turn again
+      game.turn.count += 1;
+      game.turn.currentPlayer = username; // give it back to real player
+      game.turn.currentPhase = "Intermission";
+    }
+
+    return res.json({ success: true, turn: game.turn });
   } else {
     game.turn.currentPhase = nextPhase;
+    return res.json({ success: true, turn: game.turn });
   }
-
-  return res.json({ success: true, turn: game.turn });
 });
 
 // GET /logout
