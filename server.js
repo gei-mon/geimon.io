@@ -770,6 +770,8 @@ app.post('/advancePhase', async (req, res) => {
       const currentPhase = phases[phaseIndex];
       game.turn.currentPhase = currentPhase;
 
+      console.log(`🌀 Advancing to phase: ${currentPhase}`);
+
       // Optional delay for frontend sync
       await new Promise(resolve => setTimeout(resolve, 100));
 
