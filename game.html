@@ -529,9 +529,9 @@
             2px -2px 4px black,  
             -2px 2px 4px black,  
             2px 2px 4px black
-        `; // Creates outlined effect
+        `;
 
-        // Create the text span element separately
+    // Create the text span element separately
     const deckText = document.createElement("span");
         deckText.innerText = "Deck";
         deckText.style.position = "absolute"; // Positions independently inside the box
@@ -542,9 +542,60 @@
     playerDeckBox.appendChild(deckText);
     document.body.appendChild(playerDeckBox); // Add to the document
 
+    // Create Surrender Button Overlay
+    const surrenderButton = document.createElement("button");
+        surrenderButton.style.position = "absolute";
+        surrenderButton.style.left = "86.1%";
+        surrenderButton.style.top = "72%";
+        surrenderButton.style.width = "3.72%";
+        surrenderButton.style.height = "9%";//addBox("93%", "81%", "6%", "19%", "lightblue");  // Player Deck
+        surrenderButton.style.backgroundColor = "rgba(255, 0, 0)";
+        surrenderButton.style.opacity = "0";
+        surrenderButton.style.border = "none";
+        surrenderButton.style.zIndex = "1001";
+        surrenderButton.style.cursor = "pointer";
+        surrenderButton.title = "Surrender";
+
+    // Add event listener for click
+    surrenderButton.addEventListener("click", () => {
+        const confirmBox = document.createElement("div");
+        confirmBox.style.position = "fixed";
+        confirmBox.style.top = "50%";
+        confirmBox.style.left = "50%";
+        confirmBox.style.transform = "translate(-50%, -50%)";
+        confirmBox.style.padding = "20px";
+        confirmBox.style.backgroundColor = "#333";
+        confirmBox.style.color = "white";
+        confirmBox.style.border = "2px solid red";
+        confirmBox.style.borderRadius = "10px";
+        confirmBox.style.zIndex = "10000";
+        confirmBox.style.textAlign = "center";
+        confirmBox.style.boxShadow = "0 0 10px black";
+
+        confirmBox.innerHTML = `
+            <p style="margin-bottom: 20px;">Are you sure you'd like to surrender?</p>
+            <button id="confirm-surrender" style="margin-right: 10px;">Surrender</button>
+            <button id="cancel-surrender">Cancel</button>
+        `;
+
+        document.body.appendChild(confirmBox);
+
+        document.getElementById("confirm-surrender").onclick = () => {
+            alert("You chose to surrender.");
+            document.body.removeChild(confirmBox);
+        };
+
+        document.getElementById("cancel-surrender").onclick = () => {
+            document.body.removeChild(confirmBox);
+        };
+    });
+
+    document.body.appendChild(surrenderButton);
+
+
         setTimeout(() => {
             playerDeckBox.style.opacity = "1";
-        }, 6500); // Delays slightly after board transition
+        }, 6500);
         let deckCount = "Deck";
 
     // Ensure it exists before adding event listeners
