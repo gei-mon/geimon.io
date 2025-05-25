@@ -481,6 +481,22 @@
             }
         }
         async function fetchDeckCards(deckName) {
+        if (deckName === "Random") {
+            // Generate a random deck locally
+            const cardPool = cards.map(card => card.id); // Extract all IDs
+            const deckSize = Math.floor(Math.random() * 41) + 60; // Random between 60–100
+            const shuffled = cardPool.sort(() => 0.5 - Math.random());
+            const card_ids = shuffled.slice(0, deckSize);
+
+            deckCount = `${card_ids.length}`;
+            if (playerDeckBox) {
+                playerDeckBox.innerText = "Deck";
+            }
+
+            return { success: true, card_ids };
+        }
+
+        // Fallback to real server call for named decks
         try {
             const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/getDeckCards", {
                 method: "POST",
@@ -496,13 +512,16 @@
             if (data.success) {
                 deckCount = `${data.card_ids.length}`;
                 if (playerDeckBox) {
-                    playerDeckBox.innerText = "Deck"; // Ensures box initializes correctly
+                    playerDeckBox.innerText = "Deck";
                 }
             } else {
                 deckCount = data.message;
             }
+
+            return data;
         } catch (error) {
             console.error("Error fetching deck cards:", error);
+            return { success: false, message: 'Fetch error' };
         }
     }
 
@@ -614,12 +633,35 @@
     }
 
     // Fetch deck count dynamically
-    setTimeout(() => {
-        const playerDeckName = new URLSearchParams(window.location.search).get("playerDeck");
-        if (playerDeckName) {
-            fetchDeckCards(playerDeckName);
+    setTimeout(async () => {
+        const urlParams = new URLSearchParams(window.location.search);
+
+        async function getDeckFromParam(paramName) {
+            const paramValue = urlParams.get(paramName);
+            try {
+                const parsed = JSON.parse(paramValue);
+                if (Array.isArray(parsed)) {
+                    return parsed; // Already a full random deck
+                }
+            } catch (e) {
+                const result = await fetchDeckCards(paramValue);
+                if (result.success) return result.card_ids;
+                console.error(`Failed to load deck '${paramName}':`, result.message);
+                return [];
+            }
         }
+
+        const playerDeckCardIds = await getDeckFromParam("playerDeck");
+        const opponentDeckCardIds = await getDeckFromParam("opponentDeck");
+
+        // You can now use these arrays:
+        console.log("Player Deck:", playerDeckCardIds);
+        console.log("Opponent Deck:", opponentDeckCardIds);
+
+        // Optionally continue setup:
+        // startGameWithDecks(playerDeckCardIds, opponentDeckCardIds);
     }, 200);
+
 
         let remainingDeck = []; // Store shuffled deck globally
         let drawnCardsArray = []; // Track drawn cards separately
@@ -758,35 +800,63 @@
         }
 
         // Fetch and shuffle deck, then update count
-        async function fetchAndShuffleDeck(deckName) {
+        async function fetchAndShuffleDeck(deckParam) {
+            let cardIds = [];
+
             try {
+                // Try to parse as a JSON array
+                const parsed = JSON.parse(deckParam);
+                if (Array.isArray(parsed)) {
+                    cardIds = parsed;
+                } else {
+                    // Fallback to server fetch
+                    const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/getDeckCards", {
+                        method: "POST",
+                        credentials: "include",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ deck_name: deckParam }),
+                    });
+
+                    const data = await response.json();
+                    if (!data.success) {
+                        console.error("Error:", data.message);
+                        return;
+                    }
+
+                    cardIds = data.card_ids;
+                }
+            } catch (e) {
+                // Not valid JSON — must be a normal deck name
                 const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/getDeckCards", {
                     method: "POST",
                     credentials: "include",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ deck_name: deckName }),
+                    body: JSON.stringify({ deck_name: deckParam }),
                 });
 
                 const data = await response.json();
-
-                if (data.success) {
-                    initialDeckSize = data.card_ids.length;
-                    remainingDeck = shuffleDeck(data.card_ids); // Assign before draw
-
-                    console.log("Deck Shuffled:", remainingDeck);
-                    console.log("Total Cards in Deck:", initialDeckSize);
-
-                    drawCards(remainingDeck, 5); // Correct placement after shuffle
-                    updateDeckText();
-                    console.log("Total Cards Remaining:", remainingDeck.length);
-                } else {
+                if (!data.success) {
                     console.error("Error:", data.message);
+                    return;
                 }
-            } catch (error) {
-                console.error("Error fetching deck cards:", error);
+
+                cardIds = data.card_ids;
             }
+
+            // At this point, cardIds is valid
+            initialDeckSize = cardIds.length;
+            remainingDeck = shuffleDeck(cardIds);
+
+            console.log("Deck Shuffled:", remainingDeck);
+            console.log("Total Cards in Deck:", initialDeckSize);
+
+            drawCards(remainingDeck, 5);
+            updateDeckText();
+            console.log("Total Cards Remaining:", remainingDeck.length);
         }
 
         // Fetch deck and execute shuffle/draw process

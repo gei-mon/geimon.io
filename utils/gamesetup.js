@@ -1,4 +1,5 @@
 import { totems } from '../data/Totems.js';
+import { cards } from '../data/cards.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
     const playerDeckSelect = document.getElementById("playerDeck");
@@ -62,8 +63,8 @@ function populateDropdown(dropdown, options) {
 }
 
 function startGame() {
-    const playerDeck = document.getElementById("playerDeck").value;
-    const opponentDeck = document.getElementById("opponentDeck").value;
+    const playerDeckName = document.getElementById("playerDeck").value;
+    const opponentDeckName = document.getElementById("opponentDeck").value;
     const gameType = document.getElementById("gameType").value;
     const turnOrder = document.getElementById("turnOrder").value;
     const totemSelect = document.getElementById("totem");
@@ -71,37 +72,40 @@ function startGame() {
     let selectedTotem = totemSelect.value;
     let selectedTotemText = "";
 
-    // Fix random selection logic
+    const allTotems = Object.assign({}, ...totems);
     if (selectedTotem === "Random") {
-        // Flatten all totems into a single object for easy lookup
-        const allTotems = Object.assign({}, ...totems);
-
-        // Get all totem names (excluding "Random")
         const totemNames = Object.keys(allTotems);
         if (totemNames.length > 0) {
-            // Randomly pick one
             const randomIndex = Math.floor(Math.random() * totemNames.length);
             selectedTotem = totemNames[randomIndex];
-
-            // Get its description
-            selectedTotemText = allTotems[selectedTotem] || "Unknown Totem";
         }
-    } else {
-        // Directly fetch totem description
-        const allTotems = Object.assign({}, ...totems);
-        selectedTotemText = allTotems[selectedTotem] || "Unknown Totem";
     }
-    // Use the selected values
+    selectedTotemText = allTotems[selectedTotem] || "Unknown Totem";
+
+    const buildRandomDeck = () => {
+        const cardPool = Object.keys(cards); // e.g., cards.map(c => c.id) if cards is an array
+        const deckSize = Math.floor(Math.random() * 41) + 60;
+        const shuffled = cardPool.sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, deckSize);
+    };
+
+    const playerDeck = playerDeckName === "Random" ? JSON.stringify(buildRandomDeck()) : playerDeckName;
+    const opponentDeck = opponentDeckName === "Random" ? JSON.stringify(buildRandomDeck()) : opponentDeckName;
+
     const settings = {
-        playerDeck,
+        playerDeck,  // already a JSON string if needed
         opponentDeck,
         gameType,
         totem: selectedTotem,
         totemText: selectedTotemText,
         turnOrder
     };
+
+    console.log("playerDeck final value:", playerDeck);
+    console.log("URL params being sent:", new URLSearchParams(settings).toString());
     const params = new URLSearchParams(settings).toString();
     window.location.href = `game.html?${params}`;
 }
 
 window.startGame = startGame;
+
