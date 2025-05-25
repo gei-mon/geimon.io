@@ -1125,20 +1125,22 @@
                     cardElement.appendChild(cardButton);
                     drawnCardsContainer.appendChild(cardElement);
                     setTimeout(() => {
-                        viewingWindow.style.opacity = "1";
-                        contextWindow.style.opacity = "1";
-                        playerLifeWindow.style.opacity = "1";
-                        opponentLifeWindow.style.opacity = "1";
-                        phaseTracker.style.opacity = "1";
-                        advancePhase.style.zIndex = "100800";
-                        advancePhase.style.opacity = "1";
-                    }, 2500);
-                    setTimeout(() => {
                         cardElement.style.opacity = "1";
                         cardButton.style.opacity = "1";
                         cardButton.style.pointerEvents = "auto";
                         cardButton.style.cursor = "pointer";
                     }, 1500);
+                    setTimeout(() => {
+                        viewingWindow.style.opacity = "1";
+                        contextWindow.style.opacity = "1";
+                        playerLifeWindow.style.opacity = "1";
+                        opponentLifeWindow.style.opacity = "1";
+                        phaseTracker.style.opacity = "1";
+                    }, 2500);
+                    setTimeout(() => {
+                        advancePhase.style.zIndex = "100800";
+                        advancePhase.style.opacity = "1";
+                    }, 3500);
                 }
             });
         }
