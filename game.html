@@ -514,6 +514,13 @@
                 body: JSON.stringify({ gameId, username })
             });
 
+            if (!res.ok) {
+                const errText = await res.text(); // instead of .json()
+                console.error("Backend error:", errText);
+                alert("Phase advance failed.");
+                return;
+            }
+
             const data = await response.json();
             if (data.success) {
                 updatePhaseDisplay(data.turn.currentPhase);

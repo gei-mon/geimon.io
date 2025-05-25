@@ -225,7 +225,7 @@ app.post('/startGame', (req, res) => {
 
     const opponent = isSinglePlayer ? "Bot" : opponentUsername;
 
-    gameState[opponentUsername] = {
+    gameState[opponent] = {
       ...defaultZones(),
       life: 40
     };
@@ -241,6 +241,9 @@ app.post('/startGame', (req, res) => {
       currentPlayer: playerUsername, // will alternate
       currentPhase: "Intermission"
     };
+
+    gameState.player1 = playerUsername;
+    gameState.player2 = opponent;
 
     gameStates.set(gameId, gameState);
     res.status(200).json({ success: true });
@@ -738,47 +741,50 @@ app.post('/endGame', (req, res) => {
 });
 
 app.post('/advancePhase', (req, res) => {
-  const { gameId, username } = req.body;
-  gameStates.set(gameId, gameState);
+  try {
+    const { gameId, username } = req.body;
 
-  if (!game || !game.turn) {
-    return res.status(404).json({ success: false, message: "Game or turn not found." });
-  }
+    const game = gameStates.get ? gameStates.get(gameId) : gameStates[gameId];
+    if (!game || !game.turn) {
+      return res.status(404).json({ success: false, message: "Game or turn not found." });
+    }
 
-  const phases = ["Intermission", "Draw", "Main 1", "Battle", "Main 2", "End"];
-  const currentIndex = phases.indexOf(game.turn.currentPhase);
-  const isPlayerTurn = game.turn.currentPlayer === username;
+    const phases = ["Intermission", "Draw", "Main 1", "Battle", "Main 2", "End"];
+    const currentIndex = phases.indexOf(game.turn.currentPhase);
+    const isPlayerTurn = game.turn.currentPlayer === username;
 
-  if (!isPlayerTurn) {
-    return res.status(403).json({ success: false, message: "Not your turn." });
-  }
+    if (!isPlayerTurn) {
+      return res.status(403).json({ success: false, message: "Not your turn." });
+    }
 
-  let nextPhase = (currentIndex < 5) ? phases[currentIndex + 1] : "End";
+    let nextPhase = (currentIndex < 5) ? phases[currentIndex + 1] : "End";
 
-  // Turn 1 restriction: can't enter Battle
-  if (game.turn.count === 1 && nextPhase === "Battle") {
-    return res.status(400).json({ success: false, message: "Cannot enter Battle on turn 1." });
-  }
+    if (game.turn.count === 1 && nextPhase === "Battle") {
+      return res.status(400).json({ success: false, message: "Cannot enter Battle on turn 1." });
+    }
 
-  // If next phase is End, complete turn
-  if (nextPhase === "End") {
-    game.turn.count += 1;
-    game.turn.currentPlayer = game.turn.currentPlayer === game.player1 ? game.player2 : game.player1;
-    game.turn.currentPhase = "Intermission";
-
-    // ✅ If Bot's turn, immediately simulate end of their turn
-    if (game.turn.currentPlayer === "Bot") {
-      console.log("Bot's turn: auto-advancing through all phases...");
-      // Just skip to next turn again
+    if (nextPhase === "End") {
       game.turn.count += 1;
-      game.turn.currentPlayer = username; // give it back to real player
+      game.turn.currentPlayer = (game.turn.currentPlayer === game.player1) ? game.player2 : game.player1;
       game.turn.currentPhase = "Intermission";
+
+      // Auto-end bot turn
+      if (game.turn.currentPlayer === "Bot") {
+        console.log("Skipping Bot's turn...");
+        game.turn.count += 1;
+        game.turn.currentPlayer = username;
+        game.turn.currentPhase = "Intermission";
+      }
+
+    } else {
+      game.turn.currentPhase = nextPhase;
     }
 
     return res.json({ success: true, turn: game.turn });
-  } else {
-    game.turn.currentPhase = nextPhase;
-    return res.json({ success: true, turn: game.turn });
+
+  } catch (err) {
+    console.error("💥 Error in /advancePhase:", err);
+    res.status(500).json({ success: false, message: "Internal server error" });
   }
 });
 
