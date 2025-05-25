@@ -659,6 +659,7 @@
                     })
                 });
 
+                await fetchGameStateFromServer();
                 const opponentName = isSinglePlayer ? "AI_Bot" : otherPlayerName;
                 document.getElementById("player").textContent = `${username} — ${gameState[username].life}`;
                 document.getElementById("opponent").textContent = `${isSinglePlayer ? "AI_Bot" : otherPlayerName} — ${gameState[opponentName].life}`;
