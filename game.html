@@ -207,6 +207,10 @@
                 localStorage.setItem("gameId", gameId);
             }
             let username = null;
+            const params = new URLSearchParams(window.location.search);
+            const isSinglePlayer = params.get("gameType") === "single";
+            const otherPlayerName = params.get("opponent") || "Unknown_Opponent"; // if multiplayer later
+
             async function getUsername() {
                 const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', { credentials: 'include' });
                 const data = await res.json();
@@ -214,10 +218,15 @@
                     username = data.username;
                 }
             }
+            async function initGameClient() {
             await getUsername();
             if (!username) {
-                alert("Could not retrieve username. Please log in.");
-                return;
+                alert("Could not retrieve username.");
+                return; // ✅ This is now valid
+            }
+
+            // Continue initialization logic here...
+            await fetchDecksAndStartGame();
             }
 
         window.onload = () => {
@@ -581,7 +590,6 @@
                 if (gameState[username].Hand.length === 0) {
                     drawCards(gameState[username].Deck, 5);
                 }
-                await fetchGameStateFromServer();
 
                 if (gameState[username].Hand.length > 0) {
                     renderDrawnCards();
@@ -1103,6 +1111,7 @@
             }
         });
     });
+    initGameClient();
     </script>
 </body>
 </html>
