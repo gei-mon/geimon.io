@@ -610,20 +610,13 @@
                 console.log("Creating game for", username, "vs", isSinglePlayer ? "AI_Bot" : otherPlayerName);
                 await fetchGameStateFromServer();
                 if (!gameState || !gameState[username]) {
-                    console.error("Game state not found for user:", username);
-                    alert("Game could not be started. Please try again.");
+                    alert("Game could not be started.");
                     return;
                 }
 
                 if (gameState[username].Hand.length === 0) {
                     drawCards(gameState[username].Deck, 5);
-                }
-
-                if (gameState[username].Hand.length > 0) {
-                    renderDrawnCards();
-                    updateDeckText();
-                } else {
-                    drawCards(gameState[username].Deck, 5);
+                    await sendZoneUpdate(["Deck", "Hand"]);
                 }
 
                 updateDeckText();
