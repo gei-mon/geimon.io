@@ -224,9 +224,6 @@
                 alert("Could not retrieve username.");
                 return; // ✅ This is now valid
             }
-
-            // Continue initialization logic here...
-            await fetchDecksAndStartGame();
             }
 
         window.onload = () => {
@@ -535,8 +532,6 @@
             setTimeout(() => {
                 totemBox.style.opacity = "0";
             }, 6500);
-            
-            await fetchGameStateFromServer();
 
             // Function to fetch user data from the session
             async function fetchUserData() {
@@ -572,6 +567,14 @@
             const playerDeckResult = await fetchDeckCards(playerDeckName);
             const opponentDeckResult = await fetchDeckCards(opponentDeckName);
 
+            if (!playerDeckResult.success || !opponentDeckResult.success) {
+                console.error("Deck fetch failed");
+                return;
+            }
+
+            const playerDeck = playerDeckResult.card_ids;
+            const opponentDeck = opponentDeckResult.card_ids;
+
             if (playerDeckResult.success && opponentDeckResult.success) {
                 await fetch('https://geimon-app-833627ba44e0.herokuapp.com/startGame', {
                     method: 'POST',
@@ -586,7 +589,6 @@
                     })
                 });
 
-                await fetchGameStateFromServer();
                 if (gameState[username].Hand.length === 0) {
                     drawCards(gameState[username].Deck, 5);
                 }
