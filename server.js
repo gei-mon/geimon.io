@@ -63,6 +63,14 @@ const io = new Server(server, {
   }
 });
 
+// Middleware
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static(PUBLIC_DIR));
+
+app.set('view engine', 'ejs');
+
 const openRooms = new Map(); // roomId -> [socketIds]
 const userMap = new Map();
 
@@ -259,14 +267,6 @@ app.get('/profile', (req, res) => {
 function generateSessionId() {
   return crypto.randomBytes(16).toString('hex');
 }
-
-// Middleware
-app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(express.static(PUBLIC_DIR));
-
-app.set('view engine', 'ejs');
 
 // GET /users
 app.get('/users', async (req, res) => {
