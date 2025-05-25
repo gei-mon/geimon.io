@@ -194,7 +194,14 @@
     color: white;
     text-align: center;
     font-weight: bold;
+    font-size: 4em;
+}
+.player-name,
+.opponent-name {
+    color: white;
     font-size: 1.1em;
+    text-align: center;
+    font-weight: bold;
     overflow: hidden;          /* Hide overflowed content */
     text-overflow: ellipsis;   /* Show ... when text overflows */
     white-space: nowrap;       /* Prevent text from wrapping */
@@ -240,10 +247,14 @@
             </div>
         </div>
         <div class="player-life-window" id="player-life-window">
-            <span id="player" class="life"></span>
+            <div class="player-name" id="player-name"></div>
+            <div class="life" id="player-life"></div>
+            <div class="player-name" style="font-size: 80%;">Life</div>
         </div>
         <div class="opponent-life-window" id="opponent-life-window">
-            <span id="opponent" class="life"></span>
+            <div class="opponent-name" id="opponent-name"></div>
+            <div class="life" id="opponent-life"></div>
+            <div class="player-name" style="font-size: 80%;">Life</div>
         </div>
 
         <script type="module">
@@ -652,7 +663,7 @@
                     body: JSON.stringify({
                         gameId,
                         playerUsername: username,
-                        opponentUsername: isSinglePlayer ? "AI_Bot" : otherPlayerName,
+                        opponentUsername: isSinglePlayer ? "Bot" : otherPlayerName,
                         playerDeck,
                         opponentDeck,
                         isSinglePlayer: true
@@ -660,11 +671,14 @@
                 });
 
                 await fetchGameStateFromServer();
-                const opponentName = isSinglePlayer ? "AI_Bot" : otherPlayerName;
-                document.getElementById("player").textContent = `${username} — ${gameState[username].life}`;
-                document.getElementById("opponent").textContent = `${isSinglePlayer ? "AI_Bot" : otherPlayerName} — ${gameState[opponentName].life}`;
+                const opponentName = isSinglePlayer ? "Bot" : otherPlayerName;
+                document.getElementById("player-name").textContent = username;
+                document.getElementById("player-life").textContent = gameState[username].life;
 
-                console.log("Creating game for", username, "vs", isSinglePlayer ? "AI_Bot" : otherPlayerName);
+                document.getElementById("opponent-name").textContent = opponentName;
+                document.getElementById("opponent-life").textContent = gameState[opponentName].life;
+
+                console.log("Creating game for", username, "vs", isSinglePlayer ? "Bot" : otherPlayerName);
                 await fetchGameStateFromServer();
                 if (!gameState || !gameState[username]) {
                     alert("Game could not be started.");
@@ -1041,13 +1055,28 @@
 
             // Update display
             if (player === username) {
-                document.getElementById("player").textContent = `${username} — ${gameState[username].life} Life`;
+                document.getElementById("player-name").textContent = username;
+                document.getElementById("player-life").textContent = `${gameState[username].life}`;
             } else {
-                document.getElementById("opponent").textContent = `${opponentName} — ${gameState[opponentName].life} Life`;
+                document.getElementById("opponent-name").textContent = opponentName;
+                document.getElementById("player-life").textContent = `${gameState[username].life}`;
             }
 
-            // Send to server
-            sendZoneUpdate([], { life: gameState });
+            sendLifeUpdate();
+        }
+
+        async function sendLifeUpdate() {
+            await fetch('https://geimon-app-833627ba44e0.herokuapp.com/updateGameState', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    gameId,
+                    updatedZones: {
+                        life: gameState[username].life
+                    },
+                    owner: username
+                })
+            });
         }
 
         // Fetch and shuffle deck, then update count

@@ -223,7 +223,7 @@ app.post('/startGame', (req, res) => {
       lastBoardState: null
     }));
 
-    const opponent = isSinglePlayer ? "AI_Bot" : opponentUsername;
+    const opponent = isSinglePlayer ? "Bot" : opponentUsername;
 
     gameState[opponentUsername] = {
       ...defaultZones(),
