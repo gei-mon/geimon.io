@@ -1,0 +1,23 @@
+export const rules = {
+  Add: "Select a card(s) from your Deck and place it into your Hand.",
+  Bounce: "Return a card on the Zone to the Hand.",
+  Bury: "Send from your Deck to the Tomb.",
+  Cost: "Listed on a card before its effect and must be paid before it goes onto the Path. Responses to cards come after their Cost is paid, and are placed after it on the Path.",
+  Destroy: "Send the designated card to the Tomb.",
+  Discard: "Send from the Hand to the Tomb. You choose the card(s) unless stated otherwise.",
+  Excavate: "Reveal cards from the top of the Deck. If not specified, returned cards are shuffled back into the Deck.",
+  Flip: "Champions that are face-down activate this effect when they are turned face-up.",
+  Mill: "Send from the top of the Deck to the Tomb. Cards that are Milled also count as if they were Buried.",
+  Obliterate: "Send the designated card to the Void.",
+  Offer: "Take an amount of Damage as listed, usually as the cost for another effect.",
+  Rally: "Place a Champion into your Champion Area. After activation, a Champion card remains active on the Zone.",
+  Reclaim: "Take from the Void into your Hand.",
+  Recruit: "Rally from your Deck (ignoring cost). You must still meet conditions.",
+  Resurrect: "Rally from your Tomb (ignoring cost). You must still meet conditions.",
+  Retrieve: "Take from the Tomb into your Hand.",
+  Sacrifice: "Send a number of your Rallied Champions to the Tomb, usually as a cost.",
+  Spin: "Shuffle card(s) into the Deck from a designated location.",
+  Stack: "Place a designated card on top of the Deck.",
+  Target: "Select a card to be the recipient of an effect.",
+  Unleash: "Rally from the Void (ignoring cost). You must still meet conditions."
+}

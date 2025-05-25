@@ -53,6 +53,52 @@
     opacity: 0;
     transition: opacity 1s ease-in-out;
 }
+.context-window {
+    position: fixed;
+    left: 0.5%;
+    top: 75%;
+    transform: translateY(-50%);
+    width: 280px;
+    height: 440px;
+    display: flex;
+    flex-direction: column;
+    background-color: #1e1e1e;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    z-index: 100110;
+    pointer-events: auto !important;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+.tabs {
+    display: flex;
+    justify-content: space-around;
+    padding: 5px;
+}
+.tab-button {
+    padding: 5px;
+    cursor: pointer;
+    background: #505050;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+.tab-button.active {
+    background: #838383;
+}
+.tab-content-container {
+    flex-grow: 1;
+    padding: 10px;
+    overflow-y: auto;
+}
+.tab-content {
+    display: none;
+    color: white;
+}
+.tab-content.active {
+    display: block;
+}
 #viewing-window .scaled-card {
     pointer-events: auto !important;
     z-index: 100110; /* Ensures it's on top */
@@ -126,12 +172,35 @@
         <div class="viewing-window" id="viewing-window">
             <div class="scaled-card" id="scaled-card" style="transform: scale(0.797); transform-origin: center; pointer-events: none; margin-left: 14%;"></div>
         </div>
+        <div class="context-window" id="context-window">
+            <div class="tabs">
+                <button class="tab-button active" data-tab="chat">Chat</button>
+                <button class="tab-button" data-tab="game-log">Game Log</button>
+                <button class="tab-button" data-tab="dictionary">Dictionary</button>
+            </div>
+            <div class="tab-content-container">
+                <div class="tab-content active" id="chat">
+                    <p>This is a Solo Game, and we here at Geimon! do not believe that AI should be allowed to speak.</p>
+                </div>
+                <div class="tab-content" id="game-log">
+                    <p>Totem: <span id="totem" style="color: goldenrod;"></span></p>
+                    <p id="game-log-placeholder"></p>
+                </div>
+                <div class="tab-content" id="dictionary">
+                    <input type="text" id="dictionary-search" placeholder="Search terms..." style="width: 95%;"">
+                    <div id="dictionary-results"></div>
+                </div>
+            </div>
+        </div>
+
 
         <script type="module">
             import { cards } from "./data/cards.js";
             import { tokens } from "./data/tokens.js";
             import { renderCard } from "./utils/cardRenderer.js";
             import { addTooltipListeners, addTokenTooltipListeners } from "./utils/cardRenderer.js";
+            import { keywords } from "./data/keywords.js";
+            import { rules } from "./data/rules.js";
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
             const turnOrder = params.get("turnOrder");
@@ -359,9 +428,14 @@
             const selectedTotem = params.get("totem");
             const selectedTotemText = params.get("totemText");
 
+            document.getElementById("totem").textContent = selectedTotem;
+            const totemTextElement = document.createElement("p");
+            totemTextElement.innerHTML = `<strong>Description:</strong> ${selectedTotemText}`;
+            document.getElementById("game-log").appendChild(totemTextElement);
+
             const totemBox = document.createElement("div");
             totemBox.style.position = "absolute";
-            totemBox.style.top = "50%";
+            totemBox.style.top = "46%";
             totemBox.style.left = "53%";
             totemBox.style.transform = "translate(-50%, -50%)";
             totemBox.style.padding = "16px 32px";
@@ -521,6 +595,7 @@
             const drawnCardsContainer = document.getElementById("drawn-cards"); // Ensure this container exists
             const scaledCardContainer = document.getElementById("scaled-card");
             const viewingWindow = document.getElementById("viewing-window");
+            const contextWindow = document.getElementById("context-window");
             drawnCardsContainer.innerHTML = ""; // Clear previous renders
 
             if (drawnCardsArray.length === 0) {
@@ -598,6 +673,7 @@
                         cardButton.style.pointerEvents = "auto";
                         cardButton.style.cursor = "pointer";
                         viewingWindow.style.opacity = "1";
+                        contextWindow.style.opacity = "1";
                     }, 6500);
                 }
             });
@@ -682,6 +758,62 @@
     document.addEventListener("DOMContentLoaded", () => {
         const tooltip = document.getElementById("tooltip");
         const tokenTooltip = document.getElementById("token-tooltip");
+
+        const tabs = document.querySelectorAll(".tab-button");
+        const contents = document.querySelectorAll(".tab-content");
+
+        tabs.forEach(tab => {
+            tab.addEventListener("click", () => {
+                tabs.forEach(t => t.classList.remove("active"));
+                contents.forEach(c => c.classList.remove("active"));
+
+                tab.classList.add("active");
+                document.getElementById(tab.dataset.tab).classList.add("active");
+            });
+        });
+
+        // Game Log Data Population
+        const params = new URLSearchParams(window.location.search);
+        document.getElementById("totem").textContent = params.get("totem");
+
+        const dictionarySearch = document.getElementById("dictionary-search");
+        const dictionaryResults = document.getElementById("dictionary-results");
+
+        const loadAllTerms = () => {
+            dictionaryResults.innerHTML = "";
+            const allTerms = [...Object.entries(keywords), ...Object.entries(rules)];
+            allTerms.sort((a, b) => a[0].localeCompare(b[0]));
+            allTerms.forEach(([key, value]) => {
+                const resultItem = document.createElement("p");
+                resultItem.innerHTML = `<strong>${key}:</strong> ${value}`;
+                dictionaryResults.appendChild(resultItem);
+            });
+        };
+        loadAllTerms();
+
+        dictionarySearch.addEventListener("input", () => {
+            const query = dictionarySearch.value.toLowerCase();
+            dictionaryResults.innerHTML = "";
+
+            if (!query) {
+                loadAllTerms();
+                return;
+            }
+
+            const matchedKeywords = Object.entries(keywords).filter(([key]) =>
+                key.toLowerCase().includes(query)
+            );
+
+            const matchedRules = Object.entries(rules).filter(([key]) =>
+                key.toLowerCase().includes(query)
+            );
+
+            [...matchedKeywords, ...matchedRules].forEach(([key, value]) => {
+                const resultItem = document.createElement("p");
+                resultItem.innerHTML = `<strong>${key}:</strong> ${value}`;
+                dictionaryResults.appendChild(resultItem);
+            });
+        });
 
         document.querySelectorAll(".keyword").forEach(keyword => {
             const description = keyword.dataset.description;
