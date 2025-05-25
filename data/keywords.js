@@ -34,5 +34,6 @@ export const keywords = {
   Parasite: "If a Champion is Rallied with a higher Damage than this card (Mandatory): Draw 1.",
   Forged: "Increase this Champion&apos;s Damage by 1 for every Equipment attached to it.",
   Fortified: "Increase this Champion&apos;s Damage by 1 for every Obelisk you control.",
-  Twitchy: "Increase this Champion&apos;s Damage by 1 for every Reflex in your Tomb."
+  Twitchy: "Increase this Champion&apos;s Damage by 1 for every Reflex in your Tomb.",
+  "Non-Believer": "This Champion is unaffected by other cards and effects."
 };

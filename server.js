@@ -212,7 +212,11 @@ app.post('/startGame', (req, res) => {
 
     const gameState = {};
 
-    gameState[playerUsername] = defaultZones();
+    gameState[playerUsername] = {
+      ...defaultZones(),
+      life: 40
+    };
+
     gameState[playerUsername].Deck = playerDeck.map(id => ({
       id,
       boardState: "Deck",
@@ -220,7 +224,12 @@ app.post('/startGame', (req, res) => {
     }));
 
     const opponent = isSinglePlayer ? "AI_Bot" : opponentUsername;
-    gameState[opponent] = defaultZones();
+
+    gameState[opponentUsername] = {
+      ...defaultZones(),
+      life: 40
+    };
+
     gameState[opponent].Deck = opponentDeck.map(id => ({
       id,
       boardState: "Deck",

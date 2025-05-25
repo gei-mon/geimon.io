@@ -71,6 +71,42 @@
     opacity: 0;
     transition: opacity 1s ease-in-out;
 }
+.player-life-window {
+    position: fixed;
+    left: 93%;
+    top: 58.5%;
+    transform: translateY(-50%);
+    width: 100px;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    background-color: #2d1eff;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    z-index: 100110;
+    pointer-events: auto !important;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+.opponent-life-window {
+    position: fixed;
+    left: 93%;
+    top: 32%;
+    transform: translateY(-50%);
+    width: 100px;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    background-color: #970000;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+    z-index: 100110;
+    pointer-events: auto !important;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
 .tabs {
     display: flex;
     justify-content: space-around;
@@ -154,6 +190,17 @@
 .scaled-card .card-button {
     display: none !important;
 }
+.life {
+    color: white;
+    text-align: center;
+    font-weight: bold;
+    font-size: 1.1em;
+    overflow: hidden;          /* Hide overflowed content */
+    text-overflow: ellipsis;   /* Show ... when text overflows */
+    white-space: nowrap;       /* Prevent text from wrapping */
+    max-width: 100%;           /* Optional: control how much space the text gets */
+    display: inline-block;     /* Required for ellipsis to take effect */
+}
 </style>
 <body style="background-color:rgb(78, 78, 78);">
   <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
@@ -192,7 +239,12 @@
                 </div>
             </div>
         </div>
-
+        <div class="player-life-window" id="player-life-window">
+            <span id="player" class="life"></span>
+        </div>
+        <div class="opponent-life-window" id="opponent-life-window">
+            <span id="opponent" class="life"></span>
+        </div>
 
         <script type="module">
             import { cards } from "./data/cards.js";
@@ -607,6 +659,10 @@
                     })
                 });
 
+                const opponentName = isSinglePlayer ? "AI_Bot" : otherPlayerName;
+                document.getElementById("player").textContent = `${username} — ${gameState[username].life}`;
+                document.getElementById("opponent").textContent = `${isSinglePlayer ? "AI_Bot" : otherPlayerName} — ${gameState[opponentName].life}`;
+
                 console.log("Creating game for", username, "vs", isSinglePlayer ? "AI_Bot" : otherPlayerName);
                 await fetchGameStateFromServer();
                 if (!gameState || !gameState[username]) {
@@ -834,6 +890,8 @@
             const scaledCardContainer = document.getElementById("scaled-card");
             const viewingWindow = document.getElementById("viewing-window");
             const contextWindow = document.getElementById("context-window");
+            const playerLifeWindow = document.getElementById("player-life-window");
+            const opponentLifeWindow = document.getElementById("opponent-life-window");
             drawnCardsContainer.innerHTML = ""; // Clear previous renders
 
             if (drawnCardsArray.length === 0) {
@@ -906,13 +964,17 @@
                     cardElement.appendChild(cardButton);
                     drawnCardsContainer.appendChild(cardElement);
                     setTimeout(() => {
+                        viewingWindow.style.opacity = "1";
+                        contextWindow.style.opacity = "1";
+                        playerLifeWindow.style.opacity = "1";
+                        opponentLifeWindow.style.opacity = "1";
+                    }, 2500);
+                    setTimeout(() => {
                         cardElement.style.opacity = "1";
                         cardButton.style.opacity = "1";
                         cardButton.style.pointerEvents = "auto";
                         cardButton.style.cursor = "pointer";
-                        viewingWindow.style.opacity = "1";
-                        contextWindow.style.opacity = "1";
-                    }, 6500);
+                    }, 1500);
                 }
             });
         }
@@ -970,6 +1032,21 @@
             if (playerDeckBox) {
                 playerDeckBox.innerText = `Deck`;
             }
+        }
+
+        function changeLife(player, amount) {
+            if (!gameState[player]) return;
+            gameState[player].life += amount;
+
+            // Update display
+            if (player === username) {
+                document.getElementById("player").textContent = `${username} — ${gameState[username].life} Life`;
+            } else {
+                document.getElementById("opponent").textContent = `${opponentName} — ${gameState[opponentName].life} Life`;
+            }
+
+            // Send to server
+            sendZoneUpdate([], { life: gameState });
         }
 
         // Fetch and shuffle deck, then update count
