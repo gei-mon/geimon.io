@@ -208,6 +208,28 @@
     max-width: 100%;           /* Optional: control how much space the text gets */
     display: inline-block;     /* Required for ellipsis to take effect */
 }
+#loss-banner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0,0,0,0.8);
+    padding: 40px 80px;
+    border-radius: 16px;
+    color: white;
+    text-align: center;
+    font-family: sans-serif;
+    z-index: 9999;
+    display: none;
+}
+#loss-banner .main {
+    font-size: 3em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+#loss-banner .reason {
+    font-size: 1.5em;
+}
 </style>
 <body style="background-color:rgb(78, 78, 78);">
   <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
@@ -255,6 +277,10 @@
             <div class="opponent-name" id="opponent-name"></div>
             <div class="life" id="opponent-life"></div>
             <div class="player-name" style="font-size: 80%;">Life</div>
+        </div>
+        <div id="loss-banner">
+            <div class="main" id="loss-main-text">You Lose</div>
+            <div class="reason" id="loss-reason-text">Surrendered</div>
         </div>
 
         <script type="module">
@@ -410,6 +436,14 @@
             updateDeckText();
         }
         }
+
+        function showLossBanner(mainText, reasonText) {
+            const banner = document.getElementById("loss-banner");
+            document.getElementById("loss-main-text").textContent = mainText;
+            document.getElementById("loss-reason-text").textContent = reasonText;
+            banner.style.display = "block";
+        }
+
         async function transitionToNextScreen(choice) {
             // Keep the background image visible
             const bgImage = document.querySelector(".bg-image");
@@ -814,9 +848,24 @@
 
         document.body.appendChild(confirmBox);
 
-        document.getElementById("confirm-surrender").onclick = () => {
-            alert("You chose to surrender.");
-            document.body.removeChild(confirmBox);
+        document.getElementById("confirm-surrender").onclick = async () => {
+            try {
+                await fetch("https://geimon-app-833627ba44e0.herokuapp.com/endGame", {
+                    method: "POST",
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        gameId,
+                        loser: username,
+                        reason: "Surrendered"
+                    })
+                });
+
+                showLossBanner("You Lose", "Surrendered");
+                document.body.removeChild(confirmBox);
+            } catch (err) {
+                console.error("Error ending game:", err);
+                alert("Failed to surrender. Please try again.");
+            }
         };
 
         document.getElementById("cancel-surrender").onclick = () => {

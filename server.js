@@ -718,6 +718,21 @@ app.post('/deleteDeck', async (req, res) => {
   }
 });
 
+app.post('/endGame', (req, res) => {
+    const { gameId, loser, reason } = req.body;
+
+    if (!gameId || !gameStates[gameId]) {
+        return res.status(404).json({ success: false, message: "Game not found" });
+    }
+
+    console.log(`Game ${gameId} ended. Loser: ${loser}. Reason: ${reason}`);
+
+    // Clean up or archive the gameState
+    delete gameStates[gameId];
+
+    res.json({ success: true });
+});
+
 // GET /logout
 app.get('/logout', (req, res) => {
   const sessionId = req.cookies.session;
