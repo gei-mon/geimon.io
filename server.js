@@ -236,6 +236,12 @@ app.post('/startGame', (req, res) => {
       lastBoardState: null
     }));
 
+    gameStates[gameId].turn = {
+      count: 1,
+      currentPlayer: playerUsername, // will alternate
+      currentPhase: "Intermission"
+    };
+
     gameStates.set(gameId, gameState);
     res.status(200).json({ success: true });
   } catch (err) {
@@ -731,6 +737,41 @@ app.post('/endGame', (req, res) => {
     delete gameStates[gameId];
 
     res.json({ success: true });
+});
+
+app.post('/advancePhase', (req, res) => {
+  const { gameId, username } = req.body;
+  const game = gameStates[gameId];
+
+  if (!game || !game.turn) {
+    return res.status(404).json({ success: false, message: "Game or turn not found." });
+  }
+
+  const phases = ["Intermission", "Draw", "Main 1", "Battle", "Main 2", "End"];
+  const currentIndex = phases.indexOf(game.turn.currentPhase);
+  const isPlayerTurn = game.turn.currentPlayer === username;
+
+  if (!isPlayerTurn) {
+    return res.status(403).json({ success: false, message: "Not your turn." });
+  }
+
+  const nextPhase = (currentIndex < 5) ? phases[currentIndex + 1] : "End";
+
+  // Special logic for turn 1
+  if (game.turn.count === 1 && nextPhase === "Battle") {
+    return res.status(400).json({ success: false, message: "Cannot enter Battle on turn 1." });
+  }
+
+  if (nextPhase === "End") {
+    // End turn, switch players
+    game.turn.count += 1;
+    game.turn.currentPlayer = game.turn.currentPlayer === game.player1 ? game.player2 : game.player1;
+    game.turn.currentPhase = "Intermission";
+  } else {
+    game.turn.currentPhase = nextPhase;
+  }
+
+  return res.json({ success: true, turn: game.turn });
 });
 
 // GET /logout

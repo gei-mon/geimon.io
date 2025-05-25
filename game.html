@@ -230,6 +230,26 @@
 #loss-banner .reason {
     font-size: 1.5em;
 }
+#phase-tracker {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 10px auto;
+  padding: 10px;
+}
+.phase-box {
+  padding: 10px 14px;
+  background: dimgray;
+  color: white;
+  border-radius: 6px;
+  font-weight: bold;
+  min-width: 90px;
+  text-align: center;
+  transition: background 0.3s;
+}
+.phase-box.active {
+  background: lightgreen;
+}
 </style>
 <body style="background-color:rgb(78, 78, 78);">
   <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
@@ -282,6 +302,15 @@
             <div class="main" id="loss-main-text">You Lose</div>
             <div class="reason" id="loss-reason-text">Surrendered</div>
         </div>
+        <div id="phase-tracker">
+            <div class="phase-box" id="phase-Intermission">Intermission</div>
+            <div class="phase-box" id="phase-Draw">Draw</div>
+            <div class="phase-box" id="phase-Main 1">Main 1</div>
+            <div class="phase-box" id="phase-Battle">Battle</div>
+            <div class="phase-box" id="phase-Main 2">Main 2</div>
+            <div class="phase-box" id="phase-End">End</div>
+        </div>
+        <button id="advance-phase">Advance Phase</button>
 
         <script type="module">
             import { cards } from "./data/cards.js";
@@ -443,6 +472,44 @@
             document.getElementById("loss-reason-text").textContent = reasonText;
             banner.style.display = "block";
         }
+
+        function updatePhaseDisplay(currentPhase) {
+            document.querySelectorAll('.phase-box').forEach(box => {
+                box.classList.remove('active');
+            });
+            const activeBox = document.getElementById(`phase-${currentPhase}`);
+            if (activeBox) {
+                activeBox.classList.add('active');
+            }
+        }
+
+        function checkActivatableCards() {
+            console.log("Check for activatable cards here...");
+        }
+
+        document.getElementById("advance-phase").onclick = async () => {
+            const response = await fetch("/advancePhase", {
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ gameId, username })
+            });
+
+            const data = await response.json();
+            if (data.success) {
+                updatePhaseDisplay(data.turn.currentPhase);
+
+                if (data.turn.currentPhase === "Draw") {
+                drawCards(gameState[username].Deck, 1);
+                }
+
+                // Placeholder for activation checks
+                if (data.turn.currentPhase === "Intermission" || data.turn.currentPhase === "End") {
+                checkActivatableCards();
+                }
+            } else {
+                alert(data.message || "Failed to advance phase.");
+            }
+        };
 
         async function transitionToNextScreen(choice) {
             // Keep the background image visible
