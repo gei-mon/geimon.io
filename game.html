@@ -236,6 +236,12 @@
   gap: 10px;
   margin: 10px auto;
   padding: 10px;
+  position: fixed;
+  top: 42%;
+  left: 49%;
+  transform: translateX(-50%);
+  z-index: 100700;
+  opacity: 0;
 }
 .phase-box {
   padding: 10px 14px;
@@ -249,6 +255,20 @@
 }
 .phase-box.active {
   background: lightgreen;
+}
+#advance-phase {
+  position: fixed;
+  top: 44%;
+  left: 70%;
+  z-index: 100600;
+  background: #5e9e5e;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  opacity: 0;
 }
 </style>
 <body style="background-color:rgb(78, 78, 78);">
@@ -488,7 +508,7 @@
         }
 
         document.getElementById("advance-phase").onclick = async () => {
-            const response = await fetch("/advancePhase", {
+            const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/advancePhase", {
                 method: "POST",
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ gameId, username })
@@ -563,7 +583,7 @@
             resultBox.style.textAlign = "center";
             resultBox.style.opacity = "0"; // Start fully invisible
             resultBox.style.transition = "opacity 1s ease-in-out"; // Smooth fade effect
-            resultBox.style.zIndex = "100"; // On top of everything
+            resultBox.style.zIndex = "100700"; // On top of everything
             resultBox.style.boxShadow = "0 0 20px black";
 
             // Trigger fade-in after DOM insertion
@@ -699,7 +719,7 @@
             totemBox.style.textAlign = "center";
             totemBox.style.opacity = "0"; // Start invisible
             totemBox.style.transition = "opacity 1s ease-in-out";
-            totemBox.style.zIndex = "120";
+            totemBox.style.zIndex = "100700";
             totemBox.style.boxShadow = "0 0 20px black";
             totemBox.textContent = `Selected Totem: ${selectedTotem} - ${selectedTotemText}`;
 
@@ -1023,6 +1043,8 @@
             const contextWindow = document.getElementById("context-window");
             const playerLifeWindow = document.getElementById("player-life-window");
             const opponentLifeWindow = document.getElementById("opponent-life-window");
+            const phaseTracker = document.getElementById("phase-tracker");
+            const advancePhase = document.getElementById("advance-phase");
             drawnCardsContainer.innerHTML = ""; // Clear previous renders
 
             if (drawnCardsArray.length === 0) {
@@ -1099,6 +1121,9 @@
                         contextWindow.style.opacity = "1";
                         playerLifeWindow.style.opacity = "1";
                         opponentLifeWindow.style.opacity = "1";
+                        phaseTracker.style.opacity = "1";
+                        advancePhase.style.zIndex = "100800";
+                        advancePhase.style.opacity = "1";
                     }, 2500);
                     setTimeout(() => {
                         cardElement.style.opacity = "1";

@@ -739,7 +739,7 @@ app.post('/endGame', (req, res) => {
 
 app.post('/advancePhase', (req, res) => {
   const { gameId, username } = req.body;
-  const game = gameStates[gameId];
+  gameStates.set(gameId, gameState);
 
   if (!game || !game.turn) {
     return res.status(404).json({ success: false, message: "Game or turn not found." });
