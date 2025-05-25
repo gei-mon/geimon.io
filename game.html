@@ -898,8 +898,17 @@
         // Fetch deck and execute shuffle/draw process
         const playerDeckName = new URLSearchParams(window.location.search).get("playerDeck");
         if (playerDeckName) {
-            fetchAndShuffleDeck(playerDeckName);
+            const deckResult = await fetchDeckCards(playerDeckName);
+            if (deckResult.success) {
+                initialDeckSize = deckResult.card_ids.length;
+                remainingDeck = shuffleDeck(deckResult.card_ids);
+                drawCards(remainingDeck, 5);
+                updateDeckText();
+            } else {
+                console.error("Deck loading failed:", deckResult.message);
+            }
         }
+
 
         // Attach event listeners to update deck count dynamically
         if (playerDeckBox) {
