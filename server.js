@@ -177,38 +177,45 @@ function createInitialGameState() {
 }
 
 app.post('/startGame', (req, res) => {
-  const {
-    gameId,
-    playerUsername,
-    opponentUsername,
-    playerDeck,
-    opponentDeck,
-    isSinglePlayer
-  } = req.body;
+  try {
+    const {
+      gameId,
+      playerUsername,
+      opponentUsername,
+      playerDeck,
+      opponentDeck,
+      isSinglePlayer
+    } = req.body;
 
-  const gameState = {};
+    console.log("Received /startGame with:", req.body);
 
-  // Set up player zones
-  gameState[playerUsername] = defaultZones();
-  gameState[playerUsername].Deck = playerDeck.map(id => ({
-    id,
-    boardState: "Deck",
-    lastBoardState: null
-  }));
+    if (!playerUsername || !playerDeck) {
+      return res.status(400).json({ error: "Missing player or deck" });
+    }
 
-  // Set up opponent or bot
-  const opponent = isSinglePlayer ? "AI_Bot" : opponentUsername;
-  gameState[opponent] = defaultZones();
-  gameState[opponent].Deck = opponentDeck.map(id => ({
-    id,
-    boardState: "Deck",
-    lastBoardState: null
-  }));
+    const gameState = {};
 
-  // Save the game state in memory
-  gameStates.set(gameId, gameState);
+    gameState[playerUsername] = defaultZones();
+    gameState[playerUsername].Deck = playerDeck.map(id => ({
+      id,
+      boardState: "Deck",
+      lastBoardState: null
+    }));
 
-  res.status(200).json({ success: true });
+    const opponent = isSinglePlayer ? "AI_Bot" : opponentUsername;
+    gameState[opponent] = defaultZones();
+    gameState[opponent].Deck = opponentDeck.map(id => ({
+      id,
+      boardState: "Deck",
+      lastBoardState: null
+    }));
+
+    gameStates.set(gameId, gameState);
+    res.status(200).json({ success: true });
+  } catch (err) {
+    console.error("Error in /startGame:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
 });
 
 app.post('/updateGameState', (req, res) => {

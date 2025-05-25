@@ -589,6 +589,14 @@
                     })
                 });
 
+                console.log("Creating game for", playerUsername, "vs", opponent);
+                await fetchGameStateFromServer();
+                if (!gameState || !gameState[username]) {
+                    console.error("Game state not found for user:", username);
+                    alert("Game could not be started. Please try again.");
+                    return;
+                }
+
                 if (gameState[username].Hand.length === 0) {
                     drawCards(gameState[username].Deck, 5);
                 }
