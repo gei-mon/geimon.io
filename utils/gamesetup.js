@@ -82,15 +82,8 @@ function startGame() {
     }
     selectedTotemText = allTotems[selectedTotem] || "Unknown Totem";
 
-    const buildRandomDeck = () => {
-        const cardPool = cards.map(card => card.id);
-        const deckSize = Math.floor(Math.random() * 41) + 60;
-        const shuffled = cardPool.sort(() => 0.5 - Math.random());
-        return shuffled.slice(0, deckSize);
-    };
-
-    const playerDeck = playerDeckName === "Random" ? JSON.stringify(buildRandomDeck()) : playerDeckName;
-    const opponentDeck = opponentDeckName === "Random" ? JSON.stringify(buildRandomDeck()) : opponentDeckName;
+    const playerDeck = playerDeckName;
+    const opponentDeck = opponentDeckName;
 
     const settings = {
         playerDeck,  // already a JSON string if needed
