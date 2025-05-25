@@ -195,58 +195,50 @@ app.post('/startGame', (req, res) => {
       isSinglePlayer
     } = req.body;
 
-    console.log("📥 /startGame received:");
-    console.log("  gameId:", gameId);
-    console.log("  playerUsername:", playerUsername);
-    console.log("  opponentUsername:", opponentUsername);
-    console.log("  playerDeck:", playerDeck?.length);
-    console.log("  opponentDeck:", opponentDeck?.length);
-    console.log("  isSinglePlayer:", isSinglePlayer);
-
-    console.log("Received /startGame with:", req.body);
-
     if (!playerUsername || !playerDeck) {
-      console.error("🛑 Missing or invalid input");
       return res.status(400).json({ error: "Missing player or deck" });
     }
 
-    const gameState = {};
-
-    gameState[playerUsername] = {
-      ...defaultZones(),
-      life: 40
-    };
-
-    gameState[playerUsername].Deck = playerDeck.map(id => ({
-      id,
-      boardState: "Deck",
-      lastBoardState: null
-    }));
-
     const opponent = isSinglePlayer ? "Bot" : opponentUsername;
 
-    gameState[opponent] = {
+    const initialPlayerState = (deck) => ({
       ...defaultZones(),
-      life: 40
+      life: 40,
+      Deck: deck.map(id => ({
+        id,
+        boardState: "Deck",
+        lastBoardState: null
+      })),
+      Hand: [],
+      drawnStartingHand: false
+    });
+
+    const gameState = {
+      [playerUsername]: initialPlayerState(playerDeck),
+      [opponent]: initialPlayerState(opponentDeck),
+      turn: {
+        count: 1,
+        currentPlayer: playerUsername,
+        currentPhase: "Intermission"
+      },
+      player1: playerUsername,
+      player2: opponent
     };
 
-    gameState[opponent].Deck = opponentDeck.map(id => ({
-      id,
-      boardState: "Deck",
-      lastBoardState: null
-    }));
-
-    gameState.turn = {
-      count: 1,
-      currentPlayer: playerUsername, // will alternate
-      currentPhase: "Intermission"
-    };
-
-    gameState.player1 = playerUsername;
-    gameState.player2 = opponent;
+    // Draw 5 for each player before game starts
+    [playerUsername, opponent].forEach(user => {
+      const deck = gameState[user].Deck;
+      const drawn = deck.splice(0, 5);
+      drawn.forEach(card => {
+        card.lastBoardState = "Deck";
+        card.boardState = "Hand";
+      });
+      gameState[user].Hand.push(...drawn);
+      gameState[user].drawnStartingHand = true;
+    });
 
     gameStates.set(gameId, gameState);
-    res.status(200).json({ success: true });
+    return res.status(200).json({ success: true });
   } catch (err) {
     console.error("Error in /startGame:", err);
     res.status(500).json({ error: "Internal server error" });
@@ -774,11 +766,18 @@ app.post('/advancePhase', (req, res) => {
       game.turn.currentPhase = "Intermission";
 
       // Bot turn skip
-      if (game.turn.currentPlayer === "Bot") {
-        game.turn.count++;
-        game.turn.currentPlayer = username;
-        game.turn.currentPhase = "Intermission";
-      }
+    if (game.turn.currentPlayer === "Bot") {
+      console.log("Skipping Bot's turn...");
+      
+      // Bot finishes their turn
+      game.turn.count += 1;
+
+      // Pass turn back to player
+      game.turn.currentPlayer = game.player1; // or username if you prefer
+      game.turn.currentPhase = "Intermission";
+
+      // ✅ Ensure client syncs this update!
+    }
     }
 
     console.log(`🌀 New phase: ${game.turn.currentPhase}`);
