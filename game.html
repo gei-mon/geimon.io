@@ -50,6 +50,8 @@
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
     z-index: 100110; /* Ensures it's on top */
     pointer-events: auto !important;
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
 }
 #viewing-window .scaled-card {
     pointer-events: auto !important;
@@ -119,7 +121,7 @@
         </div>
         <div id="playerDeckBox"></div>
         <div id="drawn-cards" style="display: flex; flex-wrap: wrap; gap: 10px; padding: 10px;">
-            <p id="drawn-message" style="color: white; font-size: 1.5em;">Drawn Cards</p>
+            <p id="drawn-message" style="color: white; font-size: 1.5em;"></p>
         </div>
         <div class="viewing-window" id="viewing-window">
             <div class="scaled-card" id="scaled-card" style="transform: scale(0.797); transform-origin: center; pointer-events: none; margin-left: 14%;"></div>
@@ -518,6 +520,7 @@
         function renderDrawnCards() {
             const drawnCardsContainer = document.getElementById("drawn-cards"); // Ensure this container exists
             const scaledCardContainer = document.getElementById("scaled-card");
+            const viewingWindow = document.getElementById("viewing-window");
             drawnCardsContainer.innerHTML = ""; // Clear previous renders
 
             if (drawnCardsArray.length === 0) {
@@ -540,6 +543,7 @@
                     cardElement.style.position = "relative"; // Ensures correct alignment
                     cardElement.style.marginLeft = "-15%"; // Overlaps cards slightly
                     cardElement.style.opacity = "0";
+                    cardElement.style.transition = "opacity 1s ease-in-out"; // Smooth fade effect
 
                     const cardButton = document.createElement("button");
                     cardButton.style.position = "absolute";
@@ -555,7 +559,6 @@
                     cardButton.style.zIndex = "100100";
                     cardButton.style.background = "transparent";
                     cardButton.onclick = () => alert(`Card clicked: ${card.name}`);
-
 
                     // Hover effect to display scaled card in viewing window
                     cardElement.addEventListener("mouseenter", () => {
@@ -578,6 +581,7 @@
                         cardButton.style.opacity = "1";
                         cardButton.style.pointerEvents = "auto";
                         cardButton.style.cursor = "pointer";
+                        viewingWindow.style.opacity = "1";
                     }, 6500);
                 }
             });
