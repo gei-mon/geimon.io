@@ -81,7 +81,7 @@ export const tokens = [
     condition: "",
     cost: "Basic",
     tags: ["Token"],
-    damage: 1,
+    damage: 7,
     life: 1,
     damageThreshold: "",
     abilities: [

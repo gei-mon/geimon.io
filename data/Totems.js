@@ -3,7 +3,7 @@ export const totems = [
         "Double Double": "Turn Player draws an extra card in their Draw Phase.",
         "Single File": "Turn Player can only attack with 1 Champion during their Battle Phase.",
         "Fists Only": "Damage can only be dealt by attack.",
-        "You Cannot Punch Ghosts": "Damage can only be dealt by effect.",
+        "No Punching Ghosts": "Damage can only be dealt by effect.",
         "Tomb Raider Rejects": "Cards cannot be Retrieved.",
         "Blindfold": "Cards cannot be Added.",
         "Necromancer Died": "Cards cannot be Resurrected.",

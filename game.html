@@ -377,6 +377,42 @@
                 board.style.opacity = "1";
             }, 50);
 
+            fetchUserData().then(userData => {
+                if (userData && userData.zoneArt) {
+                    const zoneArtContainer = document.createElement("div");
+                    zoneArtContainer.style.position = "absolute";
+                    zoneArtContainer.style.left = "0";
+                    zoneArtContainer.style.bottom = "0";
+                    zoneArtContainer.style.width = "100%";
+                    zoneArtContainer.style.height = "50%";
+                    zoneArtContainer.style.overflow = "hidden";
+
+                    const zoneArtImage = document.createElement("img");
+                    zoneArtImage.src = `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Zones/${userData.zoneArt}`;
+                    zoneArtImage.style.position = "absolute";
+                    zoneArtImage.style.width = "100%";
+                    zoneArtImage.style.height = "200%"; // Double height so top half is offscreen
+                    zoneArtImage.style.top = "0%"; // Shift to crop top, show only bottom half
+                    zoneArtImage.style.left = "0";
+                    zoneArtImage.style.zIndex = "10";
+                    zoneArtImage.style.border = "6px solid black";
+                    zoneArtImage.style.objectFit = "cover";
+
+                    zoneArtContainer.appendChild(zoneArtImage);
+                    board.appendChild(zoneArtContainer);
+                }
+            });
+
+            // After all elements like playerDeckBox and deckText are added
+            fetchUserData().then(userData => {
+                if (userData && userData.deckSleeve) {
+                    playerDeckBox.style.backgroundImage = `url(https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Sleeves/${userData.deckSleeve})`;
+                    playerDeckBox.style.backgroundSize = "cover";
+                    playerDeckBox.style.backgroundPosition = "center";
+                    playerDeckBox.style.backgroundRepeat = "no-repeat";
+                }
+            });
+
             // Function to add a box
             function addBox(x, y, w, h, color="green") {
                 const box = document.createElement("div");
@@ -388,6 +424,7 @@
                 box.style.border = `4px solid ${color}`;
                 box.style.backgroundColor = "black";
                 box.style.opacity = "0.5";
+                box.style.zIndex = "30";
                 board.appendChild(box);
             }
 
@@ -533,7 +570,7 @@
         playerDeckBox.style.top = "68.9%";
         playerDeckBox.style.width = "3.72%";
         playerDeckBox.style.height = "11.8%";
-        playerDeckBox.style.backgroundColor = "lightblue";
+        //playerDeckBox.style.backgroundColor = "lightblue";
         playerDeckBox.style.outline = "4px solid white"; // Bright white outline for debugging
         playerDeckBox.style.display = "block"; // Ensure it's always visible
         playerDeckBox.style.zIndex = "1000"; // Bring it to the front layer
@@ -610,7 +647,6 @@
     });
 
     document.body.appendChild(surrenderButton);
-
 
         setTimeout(() => {
             playerDeckBox.style.opacity = "1";
