@@ -83,7 +83,7 @@ function startGame() {
     selectedTotemText = allTotems[selectedTotem] || "Unknown Totem";
 
     const buildRandomDeck = () => {
-        const cardPool = Object.keys(cards); // e.g., cards.map(c => c.id) if cards is an array
+        const cardPool = cards.map(card => card.id);
         const deckSize = Math.floor(Math.random() * 41) + 60;
         const shuffled = cardPool.sort(() => 0.5 - Math.random());
         return shuffled.slice(0, deckSize);
