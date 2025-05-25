@@ -215,6 +215,10 @@
                 }
             }
             await getUsername();
+            if (!username) {
+                alert("Could not retrieve username. Please log in.");
+                return;
+            }
 
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
@@ -544,7 +548,7 @@
             }
 
             function updateLocalFromGameState() {
-            const player = gameState.player;
+            const player = gameState[username];
             remainingDeck = player.Deck;
             drawnCardsArray = player.Hand;
             initialDeckSize = player.Deck.length + player.Hand.length + player.Tomb.length + player.Void.length;
@@ -574,16 +578,16 @@
                 });
 
                 await fetchGameStateFromServer();
-                if (gameState.player.Hand.length === 0) {
-                    drawCards(gameState.player.Deck, 5);
+                if (gameState[username].Hand.length === 0) {
+                    drawCards(gameState[username].Deck, 5);
                 }
                 await fetchGameStateFromServer();
 
-                if (gameState.player.Hand.length > 0) {
+                if (gameState[username].Hand.length > 0) {
                     renderDrawnCards();
                     updateDeckText();
                 } else {
-                    drawCards(gameState.player.Deck, 5);
+                    drawCards(gameState[username].Deck, 5);
                 }
 
                 updateDeckText();
@@ -918,7 +922,7 @@
         async function sendZoneUpdate(zones) {
             const updatedZones = {};
             zones.forEach(z => {
-                updatedZones[z] = gameState.player[z];
+                updatedZones[z] = gameState[username][z];
             });
 
             await fetch('https://geimon-app-833627ba44e0.herokuapp.com/updateGameState', {
