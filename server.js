@@ -760,41 +760,57 @@ app.post('/advancePhase', async (req, res) => {
 
     let phaseIndex = phases.indexOf(game.turn.currentPhase);
 
-    while (true) {
-      // If we're on End, wrap to next turn
-      if (phases[phaseIndex] === "End") {
-        game.turn.count += 1;
-        game.turn.currentPlayer = (game.turn.currentPlayer === game.player1) ? game.player2 : game.player1;
-        game.turn.currentPhase = "Intermission";
+    // If undefined phase, initialize
+    if (phaseIndex === -1) {
+      phaseIndex = 0;
+      game.turn.currentPhase = phases[phaseIndex];
+    }
 
-        // Handle bot turns
-        if (game.turn.currentPlayer === "Bot") {
-          console.log("Auto-ending Bot turn...");
-          game.turn.count += 1;
-          game.turn.currentPlayer = username;
-          game.turn.currentPhase = "Intermission";
+    while (phaseIndex < phases.length) {
+      const currentPhase = phases[phaseIndex];
+      game.turn.currentPhase = currentPhase;
+
+      // Optional delay for frontend sync
+      await new Promise(resolve => setTimeout(resolve, 100));
+
+      // === Phase-specific logic ===
+      if (currentPhase === "Draw") {
+        const player = game[username];
+        if (player.Deck.length > 0) {
+          const card = player.Deck.shift();
+          card.lastBoardState = "Deck";
+          card.boardState = "Hand";
+          player.Hand.push(card);
+          console.log(`${username} drew a card.`);
+        } else {
+          console.log(`${username} attempted to draw with empty deck.`);
         }
+      }
 
+      const hasTriggers = false; // TODO: implement actual activation check
+
+      // Break if we're at a stoppable phase
+      if (!autoAdvancePhases.includes(currentPhase) || hasTriggers || currentPhase === stopPhase) {
         break;
       }
 
-      // Go to next phase
       phaseIndex++;
-      const nextPhase = phases[phaseIndex];
+    }
 
-      // Turn 1 restriction
-      if (game.turn.count === 1 && nextPhase === "Battle") {
-        continue; // Skip battle on turn 1
-      }
+    // If we ended on End phase, pass turn
+    if (game.turn.currentPhase === "End") {
+      game.turn.count += 1;
+      game.turn.currentPlayer = (game.turn.currentPlayer === game.player1)
+        ? game.player2
+        : game.player1;
+      game.turn.currentPhase = "Intermission";
 
-      game.turn.currentPhase = nextPhase;
-
-      // Add optional delay
-      await new Promise(resolve => setTimeout(resolve, 100));
-
-      const hasTriggers = false; // Replace with real check later
-      if (!autoAdvancePhases.includes(nextPhase) || hasTriggers || nextPhase === stopPhase) {
-        break; // Stop auto-advancing
+      // Auto-end bot turn
+      if (game.turn.currentPlayer === "Bot") {
+        console.log("Bot turn auto-skipped.");
+        game.turn.count += 1;
+        game.turn.currentPlayer = username;
+        game.turn.currentPhase = "Intermission";
       }
     }
 
