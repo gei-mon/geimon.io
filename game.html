@@ -919,6 +919,26 @@
             const cards = gameState[owner][zoneName];
         }
 
+        function updateLocalFromGameState() {
+            if (!gameState || !username) {
+                console.error("Missing gameState or username");
+                return;
+            }
+
+            const playerState = gameState[username];
+            if (!playerState) {
+                console.error(`No game state for user ${username}`);
+                return;
+            }
+
+            remainingDeck = playerState.Deck;
+            drawnCardsArray = playerState.Hand;
+
+            renderDrawnCards();
+            updateDeckText();
+        }
+
+
         const drawnCards = getCardsFromZone(gameState[username].Deck, numCards);
         drawnCards.forEach(card => {
             card.lastBoardState = card.boardState;
