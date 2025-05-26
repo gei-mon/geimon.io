@@ -737,6 +737,40 @@ app.post('/endGame', (req, res) => {
     res.json({ success: true });
 });
 
+function performBotTurn(game) {
+  const phases = ["Intermission", "Draw", "Main 1", "Battle", "Main 2", "End"];
+  let currentIndex = phases.indexOf(game.turn.currentPhase);
+
+  while (game.turn.currentPlayer === "Bot") {
+    currentIndex = (currentIndex + 1) % phases.length;
+    const nextPhase = phases[currentIndex];
+
+    game.turn.currentPhase = nextPhase;
+
+    // Example: draw during Draw phase
+    if (nextPhase === "Draw") {
+      const botState = game["Bot"];
+      const deck = botState.Deck;
+      if (deck.length > 0) {
+        const drawn = deck.splice(0, 1);
+        drawn.forEach(card => {
+          card.lastBoardState = "Deck";
+          card.boardState = "Hand";
+        });
+        botState.Hand.push(...drawn);
+      }
+    }
+
+    // When reaching End phase, pass turn back to human
+    if (nextPhase === "End") {
+      game.turn.count++;
+      game.turn.currentPlayer = game.player1; // assuming player1 is human
+      game.turn.currentPhase = "Intermission";
+      break;
+    }
+  }
+}
+
 app.post('/advancePhase', (req, res) => {
   try {
     const { gameId, username } = req.body;
@@ -772,18 +806,10 @@ app.post('/advancePhase', (req, res) => {
 
       // Bot turn skip
     if (game.turn.currentPlayer === "Bot") {
-      console.log("Skipping Bot's turn...");
-      
-      // Bot finishes their turn
-      game.turn.count += 1;
-
-      // Pass turn back to player
-      game.turn.currentPlayer = game.player1; // or username if you prefer
-      game.turn.currentPhase = "Intermission";
-
-      // ✅ Ensure client syncs this update!
+      console.log("Auto-running Bot turn...");
+      performBotTurn(game);
     }
-    }
+  }
 
     console.log(`🌀 New phase: ${game.turn.currentPhase}`);
     return res.json({ success: true, turn: game.turn });
