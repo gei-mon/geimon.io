@@ -5,6 +5,7 @@ import { cards } from '../data/cards.js';
 export function renderCard(card, container) {
   const cardElement = document.createElement("div");
   cardElement.className = "card";
+  cardElement.dataset.cardId = card.id;
 
   if (card.type === "Champion") {
     cardElement.classList.add("champion");
@@ -107,7 +108,6 @@ export function renderCard(card, container) {
   ` : ""}
 `;
 
-  container.appendChild(cardElement);
   adjustNameSize(cardElement);
   cardElement.offsetHeight;
   requestAnimationFrame(() => {
@@ -141,6 +141,29 @@ cardElement.querySelectorAll(".keyword").forEach(keyword => {
     }
   });
 });
+// === Add discard-capable button overlay ===
+const cardButton = document.createElement("button");
+cardButton.classList.add("card-button");
+cardButton.style.position = "absolute";
+cardButton.style.top = "0";
+cardButton.style.left = "0";
+cardButton.style.width = "100%";
+cardButton.style.height = "100%";
+cardButton.style.opacity = "0";
+cardButton.style.cursor = "pointer";
+cardButton.style.zIndex = "1000";
+cardButton.style.border = "none";
+cardButton.style.background = "transparent";
+
+// Set default handler (for regular clicks)
+const defaultHandler = () => console.log(`🟢 Default card clicked: ${card.name}`);
+cardButton.onclick = defaultHandler;
+cardButton._originalHandler = defaultHandler;
+
+cardElement.appendChild(cardButton);
+if (container) {
+  container.appendChild(cardElement);
+}
 return cardElement;
 }
 function adjustNameSize(cardElement) {

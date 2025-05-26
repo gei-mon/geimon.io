@@ -219,7 +219,7 @@
     color: white;
     text-align: center;
     font-family: sans-serif;
-    z-index: 9999;
+    z-index: 120000;
     display: none;
 }
 #loss-banner .main {
@@ -298,15 +298,15 @@
         </div>
         <div class="context-window" id="context-window">
             <div class="tabs">
-                <button class="tab-button active" data-tab="chat">Chat</button>
-                <button class="tab-button" data-tab="game-log">Game Log</button>
+                <button class="tab-button" data-tab="chat">Chat</button>
+                <button class="tab-button active" data-tab="game-log">Game Log</button>
                 <button class="tab-button" data-tab="dictionary">Dictionary</button>
             </div>
             <div class="tab-content-container">
-                <div class="tab-content active" id="chat">
+                <div class="tab-content" id="chat">
                     <p>This is a Solo Game, and we here at Geimon! do not believe that AI should be allowed to speak.</p>
                 </div>
-                <div class="tab-content" id="game-log">
+                <div class="tab-content active" id="game-log">
                     <p>Totem: <span id="totem" style="color: goldenrod;"></span></p>
                     <p id="game-log-placeholder"></p>
                 </div>
@@ -617,14 +617,17 @@
                         const originalClick = button._originalHandler;
 
                         button.onclick = () => {
-                            const cardId = button.closest("[data-card-id]")?.dataset.cardId;
+                            const parentCard = button.closest(".card");
+                            const cardId = parentCard?.dataset.cardId;
+                            console.log("🟡 Card clicked during discard:", cardId);
+
+                            if (!cardId) {
+                            console.warn("❌ No cardId found from clicked button using .closest('.card')", button);
+                            return;
+                            }
                             const cardData = gameState[username].Hand.find(c => String(c.id) === cardId);
                             const fullCard = cards.find(c => String(c.id) === cardId);
                             if (!cardData || !fullCard) return;
-                            if (!cardId) {
-                                console.warn("❌ No cardId found from clicked button");
-                                return;
-                            }
 
                             // Show discard confirmation popup
                             const confirmBox = document.createElement("div");
@@ -637,7 +640,7 @@
                             confirmBox.style.color = "white";
                             confirmBox.style.border = "2px solid white";
                             confirmBox.style.borderRadius = "10px";
-                            confirmBox.style.zIndex = "10001";
+                            confirmBox.style.zIndex = "100901";
                             confirmBox.style.textAlign = "center";
                             confirmBox.style.boxShadow = "0 0 10px black";
 
@@ -736,10 +739,10 @@
 
             // Render card scaled down
             const miniCard = renderCard(card);
-            miniCard.style.transform = "scale(0.2)";
-            miniCard.style.transformOrigin = "top center";
-            miniCard.style.marginTop = "-40%";
-            miniCard.style.marginLeft = "-10%";
+            miniCard.style.transform = "scale(0.3)";
+            miniCard.style.transformOrigin = "top left";
+            miniCard.style.marginTop = "-8%";
+            miniCard.style.marginLeft = "0%";
             miniCard.style.pointerEvents = "none"; // Prevent dragging
             playerTombBox.appendChild(miniCard);
 
@@ -748,7 +751,7 @@
             tombTextOverlay.innerText = "Tomb";
             tombTextOverlay.style.position = "absolute";
             tombTextOverlay.style.left = "50%";
-            tombTextOverlay.style.top = "70%";
+            tombTextOverlay.style.top = "10%";
             tombTextOverlay.style.transform = "translate(-50%, -50%)";
             tombTextOverlay.style.fontWeight = "bold";
             tombTextOverlay.style.fontSize = "1.2em";
@@ -762,7 +765,7 @@
             playerTombBox.appendChild(tombTextOverlay);
 
             playerTombBox.addEventListener("mouseenter", () => {
-                tombTextOverlay.innerText = `Tomb (${gameState[username].Tomb.length})`;
+                tombTextOverlay.innerText = `${gameState[username].Tomb.length}`;
             });
             playerTombBox.addEventListener("mouseleave", () => {
                 tombTextOverlay.innerText = "Tomb";
@@ -957,7 +960,7 @@
             totemBox.style.textAlign = "center";
             totemBox.style.opacity = "0"; // Start invisible
             totemBox.style.transition = "opacity 1s ease-in-out";
-            totemBox.style.zIndex = "100700";
+            totemBox.style.zIndex = "100900";
             totemBox.style.boxShadow = "0 0 20px black";
             totemBox.textContent = `Selected Totem: ${selectedTotem} - ${selectedTotemText}`;
 
@@ -971,6 +974,7 @@
 
             setTimeout(() => {
                 totemBox.style.opacity = "0";
+                totemBox.style.zIndex = "100700";
             }, 6500);
 
             // Function to fetch user data from the session
@@ -1212,7 +1216,7 @@
         confirmBox.style.color = "white";
         confirmBox.style.border = "2px solid red";
         confirmBox.style.borderRadius = "10px";
-        confirmBox.style.zIndex = "10000";
+        confirmBox.style.zIndex = "100900";
         confirmBox.style.textAlign = "center";
         confirmBox.style.boxShadow = "0 0 10px black";
 
