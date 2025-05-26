@@ -752,20 +752,17 @@ async function performBotTurn(game) {
   let currentIndex = phases.indexOf(game.turn.currentPhase);
 
   while (game.turn.currentPlayer === "Bot") {
-    currentIndex = (currentIndex + 1) % phases.length;
-    const nextPhase = phases[currentIndex];
+    do {
+      currentIndex = (currentIndex + 1) % phases.length;
+      var nextPhase = phases[currentIndex];
+    } while (
+      game.turn.count === 1 &&
+      (nextPhase === "Battle" || nextPhase === "Main 2")
+    );
 
-    // ❌ Skip Battle and Main 2 on turn 1
-    if (game.turn.count === 1 && (nextPhase === "Battle" || nextPhase === "Main 2")) {
-      nextPhase = "End";
-      currentIndex = phases.indexOf("End"); // skip ahead
-    }
     game.turn.currentPhase = nextPhase;
-
-    // Send some log (optional)
-    console.log(`Bot advancing to phase: ${nextPhase}`);
-    await delay(1000); // ⏳ 1 second delay between phases
-    console.log(`Bot phase: ${nextPhase}, Turn: ${game.turn.count}`);
+    console.log(`🤖 Bot advancing to phase: ${nextPhase}, Turn: ${game.turn.count}`);
+    await delay(1000);
 
     if (nextPhase === "Draw") {
       const botState = game["Bot"];
