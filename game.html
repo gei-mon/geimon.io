@@ -355,9 +355,13 @@
             import { addTooltipListeners, addTokenTooltipListeners } from "./utils/cardRenderer.js";
             import { keywords } from "./data/keywords.js";
             import { rules } from "./data/rules.js";
-            let gameId = localStorage.getItem("gameId");
-            if (!gameId) {
-                gameId = Math.random().toString(36).substr(2, 9); // Simple ID
+            let gameId = new URLSearchParams(window.location.search).get("gameId");
+            if (gameId) {
+                // Use the gameId from URL and update localStorage
+                localStorage.setItem("gameId", gameId);
+            } else {
+                // Fallback: create a new one if not in URL or localStorage
+                gameId = localStorage.getItem("gameId") || Math.random().toString(36).substr(2, 9);
                 localStorage.setItem("gameId", gameId);
             }
             let username = null;
@@ -493,7 +497,12 @@
                     }
                 }
                 const interval = setInterval(animateFlip, 50);
-            } else {
+            }
+            else if (turnOrder === "first" || turnOrder === "second") {
+                // Directly proceed to game setup
+                transitionToNextScreen(turnOrder);
+            }
+            else {
                 document.body.innerHTML = `
                     <h1>Game Configuration</h1>
                     <p>Player Deck: ${params.get("playerDeck")}</p>

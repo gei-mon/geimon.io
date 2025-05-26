@@ -85,13 +85,17 @@ function startGame() {
     const playerDeck = playerDeckName;
     const opponentDeck = opponentDeckName;
 
+    const gameId = Math.random().toString(36).substr(2, 9);
+    localStorage.setItem("gameId", gameId); // overwrite old game ID
+
     const settings = {
-        playerDeck,  // already a JSON string if needed
+        playerDeck,
         opponentDeck,
         gameType,
         totem: selectedTotem,
         totemText: selectedTotemText,
-        turnOrder
+        turnOrder,
+        gameId // pass it to game.html via URL
     };
 
     console.log("playerDeck final value:", playerDeck);
