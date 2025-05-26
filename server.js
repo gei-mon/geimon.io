@@ -244,6 +244,7 @@ app.post('/startGame', async (req, res) => {
 
     gameStates.set(gameId, gameState);
     if (goesFirst === "Bot") {
+      await delay(7000);  // Wait for client to fade in
       await performBotTurn(gameState);
     }
     return res.status(200).json({ success: true });
@@ -747,7 +748,6 @@ function delay(ms) {
 async function performBotTurn(game) {
   const phases = ["Intermission", "Draw", "Main 1", "Battle", "Main 2", "End"];
   let currentIndex = phases.indexOf(game.turn.currentPhase);
-  await delay(7000);
 
   while (game.turn.currentPlayer === "Bot") {
     currentIndex = (currentIndex + 1) % phases.length;
@@ -757,6 +757,7 @@ async function performBotTurn(game) {
     // Send some log (optional)
     console.log(`Bot advancing to phase: ${nextPhase}`);
     await delay(1000); // ⏳ 1 second delay between phases
+    console.log(`Bot phase: ${nextPhase}, Turn: ${game.turn.count}`);
 
     if (nextPhase === "Draw") {
       const botState = game["Bot"];
