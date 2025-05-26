@@ -871,6 +871,10 @@
 
 
                 await fetchGameStateFromServer();
+                setInterval(async () => {
+                    await fetchGameStateFromServer();
+                }, 1500);
+
                 const opponentName = isSinglePlayer ? "Bot" : otherPlayerName;
                 document.getElementById("player-name").textContent = username;
                 document.getElementById("player-life").textContent = gameState[username].life;

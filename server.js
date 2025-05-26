@@ -790,9 +790,10 @@ app.post('/advancePhase', async (req, res) => {
 
     const phases = ["Intermission", "Draw", "Main 1", "Battle", "Main 2", "End"];
     const currentIndex = phases.indexOf(game.turn.currentPhase);
-    const isPlayerTurn = game.turn.currentPlayer === username;
+    const currentPlayer = game.turn.currentPlayer;
 
-    if (!isPlayerTurn) {
+    // Block invalid human attempts
+    if (currentPlayer !== "Bot" && currentPlayer !== username) {
       return res.status(403).json({ success: false, message: "Not your turn." });
     }
 
