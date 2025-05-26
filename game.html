@@ -362,6 +362,8 @@
             const otherPlayerName = params.get("opponent") || "Unknown_Opponent"; // if multiplayer later
 
         let previousHandIds = [];
+        let playerPhaseAutoAdvancing = false;
+        let lastDrawTurn = null;
 
         function handsAreEqual(currentHand) {
         return (
@@ -498,16 +500,87 @@
                 `;
             }
         };
+        async function fetchLatestTurnState() {
+            const res = await fetch(`https://geimon-app-833627ba44e0.herokuapp.com/getGameState/${gameId}`, {
+                credentials: "include",
+            });
+            if (!res.ok) return gameState;
+            return await res.json();
+            }
+
         async function fetchGameStateFromServer() {
-            const response = await fetch(`https://geimon-app-833627ba44e0.herokuapp.com/getGameState/${gameId}`);
-        if (!response.ok) {
-            console.error("Failed to fetch game state");
-            return;
+            try {
+                const response = await fetch(`https://geimon-app-833627ba44e0.herokuapp.com/getGameState/${gameId}`, {
+                    credentials: "include"
+                });
+
+                if (!response.ok) {
+                console.warn("⚠️ Failed to fetch game state:", response.status);
+                return; // Don't continue if response is bad
+                }
+
+                const newGameState = await response.json();
+                if (!newGameState || !newGameState.turn) {
+                console.warn("⚠️ Game state or turn missing from server");
+                return;
+                }
+
+                gameState = newGameState;
+                updateLocalFromGameState();
+                const currentTurn = gameState.turn;
+                const playerState = gameState[username];
+
+                // 🟩 Automatically draw 1 card if we're in our Draw phase and haven't drawn yet this turn
+                if (
+                currentTurn.currentPlayer === username &&
+                currentTurn.currentPhase === "Draw" &&
+                lastDrawTurn !== `${currentTurn.count}-${currentTurn.currentPhase}`
+                ) {
+                console.log("✅ Drawing 1 card in Draw phase");
+                drawCards(1, playerState.Deck, playerState.Hand, "Hand");
+                lastDrawTurn = `${currentTurn.count}-${currentTurn.currentPhase}`;
+                }
+
+                // Auto-advance player Intermission → Draw → Main 1
+                if (
+                    !playerPhaseAutoAdvancing &&
+                    gameState.turn.currentPlayer === username &&
+                    gameState.turn.currentPhase === "Intermission"
+                    ) {
+                    playerPhaseAutoAdvancing = true;
+
+                    setTimeout(async () => {
+                        await advancePhaseForPlayer(); // Intermission → Draw
+
+                        const latestState = await fetchLatestTurnState();
+                        if (latestState.turn.currentPlayer === username && latestState.turn.currentPhase === "Draw") {
+                        setTimeout(() => {
+                            playerPhaseAutoAdvancing = false;
+                        }, 1500);
+                        } else {
+                        playerPhaseAutoAdvancing = false;
+                        }
+                    }, 1500);
+                    }
+
+            } catch (err) {
+                console.error("💥 Error fetching game state:", err);
+            }
+            }
+        async function advancePhaseForPlayer() {
+            const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/advancePhase", {
+                method: "POST",
+                credentials: 'include',
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ gameId, username }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                updateTurnDisplay(data.turn);
+                updatePhaseDisplay(data.turn.currentPhase);
+            }
         }
-        gameState = await response.json();
-        updateLocalFromGameState();
-        await autoAdvanceIfMyTurn();
-    }
 
         function showLossBanner(mainText, reasonText) {
             const banner = document.getElementById("loss-banner");
@@ -565,6 +638,7 @@
         async function advancePhase() {
             const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/advancePhase', {
                 method: 'POST',
+                credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ gameId, username })
             });

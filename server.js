@@ -763,7 +763,8 @@ async function performBotTurn(game) {
     );
 
     game.turn.currentPhase = nextPhase;
-    console.log(`🤖 Bot advancing to phase: ${nextPhase}, Turn: ${game.turn.count}`);
+    console.log(`🤖 Bot phase: ${nextPhase}, turn: ${game.turn.count}`);
+    console.log(`Current player before loop: ${game.turn.currentPlayer}`);
     await delay(1000); // 1s delay between each bot phase
 
     if (nextPhase === "Draw") {
@@ -818,7 +819,8 @@ app.post('/advancePhase', async (req, res) => {
 
     // End phase triggers turn change
     if (nextPhase === "End") {
-      await delay(1000);
+      await delay(500);
+      console.log(`🚨 End of phase ${nextPhase}, switching from ${currentPlayer} to ${game.turn.currentPlayer}`);
 
       game.turn.count++;
       game.turn.currentPlayer = (game.turn.currentPlayer === game.player1)
