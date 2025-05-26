@@ -752,9 +752,11 @@ async function performBotTurn(game) {
   let currentIndex = phases.indexOf(game.turn.currentPhase);
 
   while (game.turn.currentPlayer === "Bot") {
+    // ⏩ Skip disallowed phases if necessary
+    let nextPhase;
     do {
       currentIndex = (currentIndex + 1) % phases.length;
-      var nextPhase = phases[currentIndex];
+      nextPhase = phases[currentIndex];
     } while (
       game.turn.count === 1 &&
       (nextPhase === "Battle" || nextPhase === "Main 2")
@@ -762,7 +764,7 @@ async function performBotTurn(game) {
 
     game.turn.currentPhase = nextPhase;
     console.log(`🤖 Bot advancing to phase: ${nextPhase}, Turn: ${game.turn.count}`);
-    await delay(1000);
+    await delay(1000); // 1s delay between each bot phase
 
     if (nextPhase === "Draw") {
       const botState = game["Bot"];
