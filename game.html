@@ -617,10 +617,14 @@
                         const originalClick = button._originalHandler;
 
                         button.onclick = () => {
-                            const cardId = button.closest(".card").dataset.cardId;
+                            const cardId = button.closest("[data-card-id]")?.dataset.cardId;
                             const cardData = gameState[username].Hand.find(c => String(c.id) === cardId);
                             const fullCard = cards.find(c => String(c.id) === cardId);
                             if (!cardData || !fullCard) return;
+                            if (!cardId) {
+                                console.warn("❌ No cardId found from clicked button");
+                                return;
+                            }
 
                             // Show discard confirmation popup
                             const confirmBox = document.createElement("div");
