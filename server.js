@@ -775,10 +775,16 @@ async function performBotTurn(game) {
 
   // ✅ Ensure the bot passes the turn if it still has control
   if (game.turn.currentPlayer === "Bot" && game.turn.count === startedTurn) {
+    // End turn
     game.turn.count++;
-    game.turn.currentPlayer = game.player1;
+    game.turn.currentPlayer = (game.turn.currentPlayer === game.player1)
+      ? game.player2
+      : game.player1;
     game.turn.currentPhase = "Intermission";
     console.log("🤖 Bot turn ended. Handing over to player.");
+  }
+  if (game.turn.currentPlayer === "Bot") {
+    setTimeout(() => performBotTurn(game), 300);
   }
 }
 
