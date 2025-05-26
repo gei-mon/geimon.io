@@ -749,15 +749,19 @@ function delay(ms) {
 
 async function performBotTurn(game) {
   const phases = ["Intermission", "Draw", "Main 1", "Battle", "Main 2", "End"];
-  let startedTurn = game.turn.count;
+  const startedTurn = game.turn.count;
 
   for (const phase of phases) {
+    // Break if bot lost its turn
     if (game.turn.currentPlayer !== "Bot") break;
+
+    // Skip Battle and Main 2 on Turn 1
     if (game.turn.count === 1 && (phase === "Battle" || phase === "Main 2")) continue;
 
     game.turn.currentPhase = phase;
     console.log(`🤖 Bot now in phase: ${phase}`);
 
+    // Draw logic
     if (phase === "Draw") {
       const bot = game["Bot"];
       if (bot.Deck.length > 0) {
@@ -766,27 +770,25 @@ async function performBotTurn(game) {
           card.lastBoardState = "Deck";
           card.boardState = "Hand";
         });
-        bot.Hand.push(...drawn); // Fixed typo here from `.push(.drawn)`
+        bot.Hand.push(...drawn);
       }
     }
 
     await delay(3000);
   }
 
-  // ✅ Ensure the bot passes the turn if it still has control
-  if (game.turn.currentPlayer === "Bot") {
+  // ✅ If bot still has the turn, end it and switch
+  if (game.turn.currentPlayer === "Bot" && game.turn.count === startedTurn) {
     game.turn.count++;
     game.turn.currentPlayer = (game.turn.currentPlayer === game.player1)
       ? game.player2
       : game.player1;
     game.turn.currentPhase = "Intermission";
-
-    console.log("🤖 Bot ended its turn. New player:", game.turn.currentPlayer);
+    console.log(`🤖 Bot ended turn. Next player: ${game.turn.currentPlayer}`);
   }
 
-  // 🔁 If the bot is still up next (e.g. in 2-player bot game), restart
+  // ✅ If bot is still up, repeat
   if (game.turn.currentPlayer === "Bot") {
-    console.log("🤖 Bot has next turn — continuing...");
     setTimeout(() => performBotTurn(game), 300);
   }
 }
