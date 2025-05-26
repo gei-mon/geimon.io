@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang=""en">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv=""X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://fonts.googleapis.com/css?family=Racing Sans One' rel='stylesheet'>
     <link rel="icon" href="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/favicon.png" type="image/png">
@@ -311,7 +311,7 @@
                     <p id="game-log-placeholder"></p>
                 </div>
                 <div class="tab-content" id="dictionary">
-                    <input type="text" id="dictionary-search" placeholder="Search terms..." style="width: 95%;"">
+                    <input type="text" id="dictionary-search" placeholder="Search terms..." style="width: 95%;">
                     <div id="dictionary-results"></div>
                 </div>
             </div>
@@ -385,6 +385,7 @@
             // ✅ Add this:
             updateTurnDisplay(gameState.turn);
             updatePhaseDisplay(gameState.turn.currentPhase);
+            renderLatestTombCard();
         }
 
             async function getUsername() {
@@ -585,19 +586,183 @@
                     return;
                 }
 
+                if (phase === "End" && gameState.turn.currentPlayer === username) {
+                const hand = gameState[username].Hand;
+                if (hand.length > 6) {
+                    const discardsNeeded = hand.length - 6;
+                    let discardsLeft = discardsNeeded;
+                    const drawnCardsContainer = document.getElementById("drawn-cards");
+
+                    // Disable phase clicks
+                    document.querySelectorAll(".phase-box").forEach(box => box.style.pointerEvents = "none");
+
+                    // Create discard instruction
+                    const discardInstruction = document.createElement("div");
+                    discardInstruction.textContent = `Select ${discardsLeft} card${discardsLeft > 1 ? "s" : ""} to discard`;
+                    discardInstruction.style.position = "fixed";
+                    discardInstruction.style.bottom = "18%";
+                    discardInstruction.style.left = "50%";
+                    discardInstruction.style.transform = "translateX(-50%)";
+                    discardInstruction.style.color = "white";
+                    discardInstruction.style.fontSize = "1.5em";
+                    discardInstruction.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+                    discardInstruction.style.padding = "12px 20px";
+                    discardInstruction.style.borderRadius = "10px";
+                    discardInstruction.style.zIndex = "10000";
+                    document.body.appendChild(discardInstruction);
+
+                    // Handle click on card buttons
+                    drawnCardsContainer.querySelectorAll(".card-button").forEach(button => {
+                    button.onclick = () => {
+                        const cardId = button.closest(".card").dataset.cardId;
+                        const cardData = gameState[username].Hand.find(c => String(c.id) === cardId);
+                        const fullCard = cards.find(c => String(c.id) === cardId);
+                        if (!cardData || !fullCard) return;
+
+                        // Confirmation popup
+                        const confirmBox = document.createElement("div");
+                        confirmBox.style.position = "fixed";
+                        confirmBox.style.top = "50%";
+                        confirmBox.style.left = "50%";
+                        confirmBox.style.transform = "translate(-50%, -50%)";
+                        confirmBox.style.padding = "20px";
+                        confirmBox.style.backgroundColor = "#333";
+                        confirmBox.style.color = "white";
+                        confirmBox.style.border = "2px solid white";
+                        confirmBox.style.borderRadius = "10px";
+                        confirmBox.style.zIndex = "10001";
+                        confirmBox.style.textAlign = "center";
+                        confirmBox.style.boxShadow = "0 0 10px black";
+
+                        confirmBox.innerHTML = `
+                        <p>Discard this card?</p>
+                        <div style="margin: 10px 0;">${fullCard.name}</div>
+                        <button id="confirm-discard">Confirm</button>
+                        <button id="cancel-discard" style="margin-left: 10px;">Cancel</button>
+                        `;
+                        document.body.appendChild(confirmBox);
+
+                        document.getElementById("confirm-discard").onclick = async () => {
+                        // Move to tomb
+                        const index = gameState[username].Hand.findIndex(c => String(c.id) === cardId);
+                        const [discardedCard] = gameState[username].Hand.splice(index, 1);
+                        discardedCard.lastBoardState = "Hand";
+                        discardedCard.boardState = "Tomb";
+                        gameState[username].Tomb.push(discardedCard);
+
+                        await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+                            method: "POST",
+                            credentials: "include",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                            gameId,
+                            owner: username,
+                            updatedZones: {
+                                Hand: gameState[username].Hand,
+                                Tomb: gameState[username].Tomb
+                            }
+                            })
+                        });
+
+                        document.body.removeChild(confirmBox);
+                        updateLocalFromGameState();
+                        renderLatestTombCard();
+
+                        discardsLeft--;
+                        discardInstruction.textContent = `Select ${discardsLeft} card${discardsLeft === 1 ? "" : "s"} to discard`;
+
+                        if (discardsLeft === 0) {
+                            document.body.removeChild(discardInstruction);
+                            drawnCardsContainer.querySelectorAll(".card-button").forEach(btn => {
+                            btn.onclick = null;
+                            });
+                            document.querySelectorAll(".phase-box").forEach(box => box.style.pointerEvents = "auto");
+
+                            // 🔁 Now send phase change request to server
+                            const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/setPhase", {
+                            method: "POST",
+                            credentials: "include",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ gameId, username, phase })
+                            });
+
+                            if (response.ok) {
+                            const updated = await response.json();
+                            updatePhaseDisplay(updated.currentPhase);
+                            }
+                        }
+                        };
+
+                        document.getElementById("cancel-discard").onclick = () => {
+                        document.body.removeChild(confirmBox);
+                        };
+                    };
+                    });
+
+                    return; // 🛑 Prevent premature turn advancement
+                }
+                }
+
+                // ✅ Normal flow if no discards needed
                 const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/setPhase", {
-                    method: "POST",
-                    credentials: "include",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ gameId, username, phase })
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ gameId, username, phase })
                 });
 
                 if (response.ok) {
-                    const updated = await response.json();
-                    updatePhaseDisplay(updated.currentPhase);
+                const updated = await response.json();
+                updatePhaseDisplay(updated.currentPhase);
                 }
             });
         });
+
+
+        function renderLatestTombCard() {
+            const tombTop = gameState?.[username]?.Tomb?.slice(-1)[0];
+            if (!tombTop) return;
+
+            const card = cards.find(c => String(c.id) === String(tombTop.id));
+            if (!card) return;
+
+            // Clear previous
+            playerTombBox.innerHTML = "";
+
+            // Render card scaled down
+            const miniCard = renderCard(card);
+            miniCard.style.transform = "scale(0.2)";
+            miniCard.style.transformOrigin = "top center";
+            miniCard.style.marginTop = "-40%";
+            miniCard.style.marginLeft = "-10%";
+            miniCard.style.pointerEvents = "none"; // Prevent dragging
+            playerTombBox.appendChild(miniCard);
+
+            // Tomb hover label (like Deck)
+            const tombTextOverlay = document.createElement("div");
+            tombTextOverlay.innerText = "Tomb";
+            tombTextOverlay.style.position = "absolute";
+            tombTextOverlay.style.left = "50%";
+            tombTextOverlay.style.top = "70%";
+            tombTextOverlay.style.transform = "translate(-50%, -50%)";
+            tombTextOverlay.style.fontWeight = "bold";
+            tombTextOverlay.style.fontSize = "1.2em";
+            tombTextOverlay.style.color = "white";
+            tombTextOverlay.style.textShadow = `
+                -2px -2px 4px black,  
+                2px -2px 4px black,  
+                -2px 2px 4px black,  
+                2px 2px 4px black
+            `;
+            playerTombBox.appendChild(tombTextOverlay);
+
+            playerTombBox.addEventListener("mouseenter", () => {
+                tombTextOverlay.innerText = `Tomb (${gameState[username].Tomb.length})`;
+            });
+            playerTombBox.addEventListener("mouseleave", () => {
+                tombTextOverlay.innerText = "Tomb";
+            });
+        }
 
         async function transitionToNextScreen(choice) {
             // Keep the background image visible
@@ -886,6 +1051,7 @@
             }
             await fetchGameStateFromServer();
         }
+
         async function fetchDeckCards(deckName) {
         if (deckName === "Random") {
             // Generate a random deck locally
@@ -940,7 +1106,7 @@
         playerDeckBox.style.width = "3.72%";
         playerDeckBox.style.height = "11.8%";
         //playerDeckBox.style.backgroundColor = "lightblue";
-        playerDeckBox.style.outline = "4px solid white"; // Bright white outline for debugging
+        playerDeckBox.style.outline = "2px solid white"; // Bright white outline for debugging
         playerDeckBox.style.display = "block"; // Ensure it's always visible
         playerDeckBox.style.zIndex = "1000"; // Bring it to the front layer
         playerDeckBox.style.opacity = "0"; // Start fully invisible
@@ -966,6 +1132,54 @@
 
     playerDeckBox.appendChild(deckText);
     document.body.appendChild(playerDeckBox); // Add to the document
+
+    const playerTombBox = document.createElement("div");
+        playerTombBox.id = "playerTombBox";
+        playerTombBox.style.position = "absolute";
+        playerTombBox.style.left = "86.1%";  // Same X as Deck
+        playerTombBox.style.top = "53.7%";   // Directly above the Deck
+        playerTombBox.style.width = "3.72%";
+        playerTombBox.style.height = "11.8%";
+        playerTombBox.style.outline = "none";//"4px solid white";
+        playerTombBox.style.zIndex = "1000";
+        playerTombBox.style.opacity = "0";
+        playerTombBox.style.transition = "opacity 1s ease-in-out";
+        playerTombBox.style.textAlign = "center";
+        playerTombBox.style.fontWeight = "bold";
+        playerTombBox.style.fontSize = "1.2em";
+        playerTombBox.style.color = "white";
+        playerTombBox.style.textShadow = `
+            -2px -2px 4px black,  
+            2px -2px 4px black,  
+            -2px 2px 4px black,  
+            2px 2px 4px black
+        `;
+
+        const tombText = document.createElement("span");
+        tombText.innerText = "Tomb";
+        tombText.style.position = "absolute";
+        tombText.style.left = "50%";
+        tombText.style.top = "5%";
+        tombText.style.transform = "translate(-50%, -50%)";
+
+        playerTombBox.appendChild(tombText);
+        document.body.appendChild(playerTombBox);
+
+        setTimeout(() => {
+        playerTombBox.style.opacity = "1";
+        }, 6500);
+
+        function updateTombText() {
+            if (gameState && gameState[username]) {
+                const count = gameState[username].Tomb.length;
+                tombText.innerText = `${count}`;
+            }
+        }
+
+        playerTombBox.addEventListener("mouseenter", updateTombText);
+        playerTombBox.addEventListener("mouseleave", () => {
+            tombText.innerText = "Tomb";
+        });
 
     // Create Surrender Button Overlay
     const surrenderButton = document.createElement("button");
