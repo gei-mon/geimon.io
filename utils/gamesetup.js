@@ -20,8 +20,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (result.success) {
             deckData = result.decks;
 
-            const playerOptions = ["Random"].concat(deckData.map(deck => deck.deck_name));
-            const opponentOptions = ["Random"].concat(deckData.map(deck => deck.deck_name));
+            const sortedDecks = deckData.map(deck => deck.deck_name).sort();
+            const playerOptions = ["Random"].concat(sortedDecks);
+            const opponentOptions = ["Random"].concat(sortedDecks);
 
             populateDropdown(playerDeckSelect, playerOptions);
             populateDropdown(opponentDeckSelect, opponentOptions);
@@ -33,7 +34,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Populate totems
-    const totemNames = ["Random"].concat(totems.flatMap(obj => Object.keys(obj)));
+    const sortedTotemNames = totems.flatMap(obj => Object.keys(obj)).sort();
+    const totemNames = ["Random"].concat(sortedTotemNames);
     populateDropdown(totemSelect, totemNames);
     turnOrderSelect.value = "coinflip";
 
