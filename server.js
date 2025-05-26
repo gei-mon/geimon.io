@@ -747,6 +747,7 @@ function delay(ms) {
 async function performBotTurn(game) {
   const phases = ["Intermission", "Draw", "Main 1", "Battle", "Main 2", "End"];
   let currentIndex = phases.indexOf(game.turn.currentPhase);
+  await delay(7000);
 
   while (game.turn.currentPlayer === "Bot") {
     currentIndex = (currentIndex + 1) % phases.length;
