@@ -808,7 +808,8 @@ app.post('/advancePhase', async (req, res) => {
     game.turn.currentPhase = nextPhase;
 
     // End phase => new turn
-    if (nextPhase === "End") {
+    if (nextPhase === "End" && currentPlayer !== "Bot") {
+      await delay(1000);
       game.turn.count++;
       game.turn.currentPlayer = (game.turn.currentPlayer === game.player1) ? game.player2 : game.player1;
       game.turn.currentPhase = "Intermission";
