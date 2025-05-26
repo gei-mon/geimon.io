@@ -218,11 +218,11 @@ app.post('/startGame', (req, res) => {
       [opponent]: initialPlayerState(opponentDeck),
       turn: {
         count: 1,
-        currentPlayer: playerUsername,
+        currentPlayer: goesFirst,
         currentPhase: "Intermission"
       },
-      player1: playerUsername,
-      player2: opponent
+      player1: goesFirst,
+      player2: goesFirst === playerUsername ? opponent : playerUsername
     };
 
     // Draw 5 for each player before game starts
