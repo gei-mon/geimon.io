@@ -266,7 +266,7 @@
 #turn-counter {
   position: fixed;
   top: 44.5%;
-  left: 76%; /* adjust this to line up visually with the button */
+  left: 75.5%; /* adjust this to line up visually with the button */
   z-index: 100600;
   color: white;
   font-weight: bold;
@@ -277,7 +277,7 @@
 #turn-indicator {
   position: fixed;
   top: 44.5%;
-  left: 66.3%;
+  left: 66.1%;
   z-index: 100600;
   color: white;
   font-weight: bold;
@@ -520,6 +520,23 @@
             if (!res.ok) return gameState;
             return await res.json();
             }
+        async function waitForGameState(retries = 10, delayMs = 500) {
+            for (let i = 0; i < retries; i++) {
+                const res = await fetch(`https://geimon-app-833627ba44e0.herokuapp.com/getGameState/${gameId}`, {
+                credentials: "include"
+                });
+
+                if (res.ok) {
+                const gameState = await res.json();
+                if (gameState && gameState.turn) return gameState;
+                }
+
+                console.warn(`Retry ${i + 1} of ${retries}... waiting for game state...`);
+                await new Promise(resolve => setTimeout(resolve, delayMs));
+            }
+
+            throw new Error("Game state failed to initialize in time.");
+        }
 
         async function fetchGameStateFromServer() {
             try {
@@ -614,17 +631,17 @@
 
                     // Create discard instruction
                     const discardInstruction = document.createElement("div");
-                    discardInstruction.textContent = `Select ${discardsLeft} card${discardsLeft > 1 ? "s" : ""} to discard`;
-                    discardInstruction.style.position = "fixed";
-                    discardInstruction.style.bottom = "18%";
-                    discardInstruction.style.left = "50%";
-                    discardInstruction.style.transform = "translateX(-50%)";
-                    discardInstruction.style.color = "white";
-                    discardInstruction.style.fontSize = "1.5em";
-                    discardInstruction.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
-                    discardInstruction.style.padding = "12px 20px";
-                    discardInstruction.style.borderRadius = "10px";
-                    discardInstruction.style.zIndex = "10000";
+                        discardInstruction.textContent = `Select ${discardsLeft} card${discardsLeft > 1 ? "s" : ""} to discard`;
+                        discardInstruction.style.position = "fixed";
+                        discardInstruction.style.bottom = "50%";
+                        discardInstruction.style.left = "55%";
+                        discardInstruction.style.transform = "translateX(-50%)";
+                        discardInstruction.style.color = "black";
+                        discardInstruction.style.fontSize = "4em";
+                        discardInstruction.style.backgroundColor = "rgba(255, 0, 0, 0.85)";
+                        discardInstruction.style.padding = "12px 20px";
+                        discardInstruction.style.borderRadius = "10px";
+                        discardInstruction.style.zIndex = "120000";
                     document.body.appendChild(discardInstruction);
 
                     // Handle click on card buttons
@@ -656,7 +673,7 @@
                             confirmBox.style.color = "white";
                             confirmBox.style.border = "2px solid white";
                             confirmBox.style.borderRadius = "10px";
-                            confirmBox.style.zIndex = "100901";
+                            confirmBox.style.zIndex = "120001";
                             confirmBox.style.textAlign = "center";
                             confirmBox.style.boxShadow = "0 0 10px black";
 
@@ -1024,7 +1041,10 @@
             }
 
             const playerDeck = playerDeckResult.card_ids;
+            shuffleDeck(playerDeck);
+
             const opponentDeck = opponentDeckResult.card_ids;
+            shuffleDeck(opponentDeck);
 
             if (playerDeckResult.success && opponentDeckResult.success) {
                 await fetch('https://geimon-app-833627ba44e0.herokuapp.com/startGame', {
@@ -1042,8 +1062,9 @@
                     })
                 });
 
+                gameState = await waitForGameState();
+                updateLocalFromGameState();
 
-                await fetchGameStateFromServer();
                 setInterval(async () => {
                     await fetchGameStateFromServer();
                 }, 1500);
@@ -1223,29 +1244,30 @@
         // Add event listener for click
         tombButton.addEventListener("click", () => {
             const popup = document.createElement("div");
-            popup.style.position = "fixed";
-            popup.style.top = "50%";
-            popup.style.left = "50%";
-            popup.style.transform = "translate(-50%, -50%)";
-            popup.style.maxWidth = "min(90%, 800px)";
-            popup.style.maxHeight = "unset";
-            popup.style.height = "auto";
-            popup.style.overflow = "visible";
-            popup.style.padding = "10px 20px";
-            popup.style.backgroundColor = "rgba(0, 0, 0, 0.85)";
-            popup.style.border = "3px solid white";
-            popup.style.borderRadius = "12px";
-            popup.style.zIndex = "100900";
-            popup.style.display = "flex";
-            popup.style.flexDirection = "column";
-            popup.style.alignItems = "center";
-            popup.style.gap = "20px";
+                popup.style.position = "fixed";
+                popup.style.top = "50%";
+                popup.style.left = "50%";
+                popup.style.transform = "translate(-50%, -50%)";
+                popup.style.maxWidth = "min(90%, 800px)";
+                popup.style.overflowY = "auto";
+                popup.style.maxHeight = "unset";
+                popup.style.height = "auto";
+                popup.style.overflow = "visible";
+                popup.style.padding = "10px 20px";
+                popup.style.backgroundColor = "rgba(0, 0, 0, 0.85)";
+                popup.style.border = "3px solid white";
+                popup.style.borderRadius = "12px";
+                popup.style.zIndex = "100900";
+                popup.style.display = "flex";
+                popup.style.flexDirection = "column";
+                popup.style.alignItems = "center";
+                popup.style.gap = "20px";
 
             const title = document.createElement("div");
-            title.textContent = "Tomb";
-            title.style.color = "white";
-            title.style.fontSize = "2em";
-            title.style.textAlign = "center";
+                title.textContent = "Tomb";
+                title.style.color = "white";
+                title.style.fontSize = "2em";
+                title.style.textAlign = "center";
             popup.appendChild(title);
 
             const tombCards = gameState?.[username]?.Tomb || [];
@@ -1259,79 +1281,73 @@
                 const cardContainer = document.createElement("div");
                     cardContainer.style.display = "flex";
                     cardContainer.style.flexWrap = "wrap";
-                    cardContainer.style.justifyContent = "start"; // avoid centering
-                    cardContainer.style.alignItems = "start";
-                    cardContainer.style.gap = "0px";
-                    cardContainer.style.padding = "0";
-                    cardContainer.style.margin = "0";
-                    cardContainer.style.width = "100%";
-                    cardContainer.style.boxSizing = "border-box";
+                    cardContainer.style.justifyContent = "center";
+                    cardContainer.style.gap = "10px";
+                    cardContainer.style.maxWidth = "100%";
+                    cardContainer.style.overflow = "visible";
+
+                const scale = 0.3;
+                const cardWidth = 240;
+                const cardHeight = 420;
 
                 tombCards.forEach(cardData => {
                     const card = cards.find(c => String(c.id) === String(cardData.id));
                     if (!card) return;
 
-                    // ✅ Render card
-                    const cardEl = renderCard(card);
-                        //cardEl.style.border = "1px solid lime";
+                    const scale = 0.3;
+                    const scaledCard = renderCard(card);
+                        scaledCard.style.transform = `scale(${scale})`;
+                        scaledCard.style.transformOrigin = "top left";
+                        scaledCard.style.margin = "5px";
+                        scaledCard.style.position = "relative";
 
-                    // ✅ Wrap in a container with scale
                     const wrapper = document.createElement("div");
-                        wrapper.style.display = "block";
-                        wrapper.style.transform = "scale(0.35)";
-                        wrapper.style.transformOrigin = "center";
-                        wrapper.style.padding = "0";
-                        wrapper.style.gap = "0";
-                        wrapper.style.margin = "0";
+                        wrapper.style.width = `${240 * scale}px`;
+                        wrapper.style.height = `${420 * scale}px`;
+                        wrapper.style.overflow = "visible";
                         wrapper.style.position = "relative";
-                        wrapper.style.overflow = "hidden";
-                        wrapper.style.boxSizing = "border-box";
-                        //wrapper.style.border = "1px solid red";
 
-                    // ✅ Add the card inside
-                    wrapper.appendChild(cardEl);
+                    // Tomb card click overlay
+                    const overlay = document.createElement("button");
+                        overlay.style.position = "absolute";
+                        overlay.style.top = "0";
+                        overlay.style.left = "0";
+                        overlay.style.width = "100%";
+                        overlay.style.height = "100%";
+                        overlay.style.opacity = "0";
+                        overlay.style.border = "none";
+                        overlay.style.background = "transparent";
+                        overlay.style.cursor = "pointer";
+                    overlay.onclick = () => alert(`Card in Tomb Clicked: ${card.name}`);
 
-                    // ✅ Click overlay
-                    const clickBtn = document.createElement("button");
-                        clickBtn.style.position = "absolute";
-                        clickBtn.style.top = "0";
-                        clickBtn.style.left = "-50%";
-                        clickBtn.style.width = "100%";
-                        clickBtn.style.height = "100%";
-                        clickBtn.style.backgroundColor = "rgba(255, 0, 0)";
-                        clickBtn.style.opacity = "0";
-                        clickBtn.style.zIndex = "101000";
-                        clickBtn.style.border = "none";
-                        clickBtn.style.cursor = "pointer";
-                    clickBtn.onclick = () => alert(`Card in Tomb Clicked: ${card.name}`);
-                    wrapper.appendChild(clickBtn);
+                    wrapper.appendChild(scaledCard);
+                    wrapper.appendChild(overlay);
 
-                    // ✅ Hover preview
+                    // Hover preview
                     wrapper.addEventListener("mouseenter", () => {
                         const scaled = document.querySelector("#viewing-window .scaled-card");
-                        scaled.innerHTML = "";
+                            scaled.innerHTML = "";
                         const preview = renderCard(card);
-                        preview.style.width = "240px";
-                        preview.style.height = "420px";
-                        preview.style.transform = "scale(1.2)";
-                        preview.style.marginLeft = "-15%";
-                        preview.style.marginTop = "7%";
+                            preview.style.width = "240px";
+                            preview.style.height = "420px";
+                            preview.style.transform = "scale(1.2)";
+                            preview.style.marginLeft = "-15%";
+                            preview.style.marginTop = "7%";
                         scaled.appendChild(preview);
                     });
 
-                    // ✅ Append to card container
                     cardContainer.appendChild(wrapper);
                 });
                 popup.appendChild(cardContainer);
             }
 
             const closeBtn = document.createElement("button");
-            closeBtn.textContent = "Close";
-            closeBtn.style.marginTop = "10px";
-            closeBtn.style.padding = "10px 20px";
-            closeBtn.style.fontSize = "1.2em";
-            closeBtn.style.cursor = "pointer";
-            closeBtn.style.zIndex = "120000";
+                closeBtn.textContent = "Close";
+                closeBtn.style.marginTop = "10px";
+                closeBtn.style.padding = "10px 20px";
+                closeBtn.style.fontSize = "1.2em";
+                closeBtn.style.cursor = "pointer";
+                closeBtn.style.zIndex = "120000";
             closeBtn.onclick = () => popup.remove();
             popup.appendChild(closeBtn);
 
