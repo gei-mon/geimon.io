@@ -192,11 +192,16 @@ app.post('/startGame', (req, res) => {
       opponentUsername,
       playerDeck,
       opponentDeck,
-      isSinglePlayer
+      isSinglePlayer,
+      goesFirst
     } = req.body;
 
     if (!playerUsername || !playerDeck) {
       return res.status(400).json({ error: "Missing player or deck" });
+    }
+
+    if (!goesFirst) {
+      return res.status(400).json({ error: "Missing 'goesFirst' in request body" });
     }
 
     const opponent = isSinglePlayer ? "Bot" : opponentUsername;
