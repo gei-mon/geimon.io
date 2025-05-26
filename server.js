@@ -814,21 +814,26 @@ app.post('/advancePhase', async (req, res) => {
 
     game.turn.currentPhase = nextPhase;
 
-    // End phase => new turn
-    if (nextPhase === "End" && currentPlayer !== "Bot") {
+    // End phase triggers turn change
+    if (nextPhase === "End") {
       await delay(1000);
+
       game.turn.count++;
-      game.turn.currentPlayer = (game.turn.currentPlayer === game.player1) ? game.player2 : game.player1;
+      game.turn.currentPlayer = (game.turn.currentPlayer === game.player1)
+        ? game.player2
+        : game.player1;
       game.turn.currentPhase = "Intermission";
 
-      // Bot turn skip
-    if (game.turn.currentPlayer === "Bot") {
-      console.log("Auto-running Bot turn...");
-      await performBotTurn(game);
+      // If bot is now up, trigger bot logic
+      if (game.turn.currentPlayer === "Bot") {
+        console.log("🤖 Auto-running Bot turn...");
+        setTimeout(() => {
+          performBotTurn(game);
+        }, 700); // slight delay to let client poll
+      }
     }
-  }
 
-    console.log(`🌀 New phase: ${game.turn.currentPhase}`);
+    console.log(`✅ Phase is now ${game.turn.currentPhase}, turn ${game.turn.count}, current player: ${game.turn.currentPlayer}`);
     return res.json({ success: true, turn: game.turn });
 
   } catch (err) {
