@@ -479,24 +479,28 @@
         gameState = await response.json();
         updateLocalFromGameState();
         await autoAdvanceIfMyTurn();
-        function updateLocalFromGameState() {
-            if (!gameState || !username) {
-                console.error("Missing gameState or username");
-                return;
-            }
+        let previousHandIds = [];
 
-            const playerState = gameState[username];
-            if (!playerState) {
-                console.error(`No game state for user ${username}`);
-                return;
-            }
-
-            remainingDeck = playerState.Deck;
-            drawnCardsArray = playerState.Hand;
-
-            renderDrawnCards();
-            updateDeckText();
+        function handsAreEqual(currentHand) {
+        return (
+            currentHand.length === previousHandIds.length &&
+            currentHand.every((card, index) => card.id === previousHandIds[index])
+        );
         }
+
+        function updateLocalFromGameState() {
+        const player = gameState[username];
+        const currentHand = player.Hand;
+
+        // Only re-render if the hand has changed
+        if (!handsAreEqual(currentHand)) {
+            drawnCardsArray = currentHand;
+            previousHandIds = currentHand.map(card => card.id);
+            renderDrawnCards();
+        }
+
+        remainingDeck = player.Deck;
+        updateDeckText();
         }
 
         function showLossBanner(mainText, reasonText) {
