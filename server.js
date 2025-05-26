@@ -184,7 +184,7 @@ function createInitialGameState() {
   };
 }
 
-app.post('/startGame', (req, res) => {
+app.post('/startGame', async (req, res) => {
   try {
     const {
       gameId,
@@ -243,6 +243,9 @@ app.post('/startGame', (req, res) => {
     });
 
     gameStates.set(gameId, gameState);
+    if (goesFirst === "Bot") {
+      await performBotTurn(gameState);
+    }
     return res.status(200).json({ success: true });
   } catch (err) {
     console.error("Error in /startGame:", err);
@@ -737,17 +740,23 @@ app.post('/endGame', (req, res) => {
     res.json({ success: true });
 });
 
-function performBotTurn(game) {
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function performBotTurn(game) {
   const phases = ["Intermission", "Draw", "Main 1", "Battle", "Main 2", "End"];
   let currentIndex = phases.indexOf(game.turn.currentPhase);
 
   while (game.turn.currentPlayer === "Bot") {
     currentIndex = (currentIndex + 1) % phases.length;
     const nextPhase = phases[currentIndex];
-
     game.turn.currentPhase = nextPhase;
 
-    // Example: draw during Draw phase
+    // Send some log (optional)
+    console.log(`Bot advancing to phase: ${nextPhase}`);
+    await delay(1000); // ⏳ 1 second delay between phases
+
     if (nextPhase === "Draw") {
       const botState = game["Bot"];
       const deck = botState.Deck;
@@ -761,17 +770,16 @@ function performBotTurn(game) {
       }
     }
 
-    // When reaching End phase, pass turn back to human
     if (nextPhase === "End") {
       game.turn.count++;
-      game.turn.currentPlayer = game.player1; // assuming player1 is human
+      game.turn.currentPlayer = game.player1;
       game.turn.currentPhase = "Intermission";
       break;
     }
   }
 }
 
-app.post('/advancePhase', (req, res) => {
+app.post('/advancePhase', async (req, res) => {
   try {
     const { gameId, username } = req.body;
     const game = gameStates.get ? gameStates.get(gameId) : gameStates[gameId];
@@ -807,7 +815,7 @@ app.post('/advancePhase', (req, res) => {
       // Bot turn skip
     if (game.turn.currentPlayer === "Bot") {
       console.log("Auto-running Bot turn...");
-      performBotTurn(game);
+      await performBotTurn(game);
     }
   }
 
