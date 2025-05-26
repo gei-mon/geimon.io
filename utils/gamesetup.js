@@ -1,4 +1,4 @@
-import { totems } from '../data/Totems.js';
+import { totems } from '../data/totems.js';
 import { cards } from '../data/cards.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
