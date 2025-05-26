@@ -835,13 +835,15 @@ app.post('/setPhase', (req, res) => {
     }
   }
 
-  // ✅ End turn logic
   if (phase === "End") {
-    game.turn.count++;
-    game.turn.currentPlayer = game.player1 === username ? game.player2 : game.player1;
-    game.turn.currentPhase = "Intermission";
+  game.turn.count++;
+  game.turn.currentPlayer = (game.turn.currentPlayer === game.player1)
+    ? game.player2
+    : game.player1;
+  game.turn.currentPhase = "Intermission";
 
-    if (game.player2 === "Bot" && game.turn.currentPlayer === "Bot") {
+    // ✅ Trigger bot turn here if it's now the bot's turn
+    if (game.turn.currentPlayer === "Bot") {
       setTimeout(() => performBotTurn(game), 300);
     }
   }
