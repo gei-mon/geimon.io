@@ -247,7 +247,7 @@ app.post('/startGame', async (req, res) => {
     // Don't block response — run bot turn in background after short delay
     setTimeout(() => {
       performBotTurn(gameState);
-    }, 700); // small delay lets client start polling before bot acts
+    }, 2400); // small delay lets client start polling before bot acts
   }
     return res.status(200).json({ success: true });
   } catch (err) {
