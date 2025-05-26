@@ -537,16 +537,6 @@
             banner.style.display = "block";
         }
 
-        function updatePhaseDisplay(currentPhase) {
-            document.querySelectorAll('.phase-box').forEach(box => {
-                box.classList.remove('active');
-            });
-            const activeBox = document.getElementById(`phase-${currentPhase}`);
-            if (activeBox) {
-                activeBox.classList.add('active');
-            }
-        }
-
         function checkActivatableCards() {
             console.log("Check for activatable cards here...");
         }
