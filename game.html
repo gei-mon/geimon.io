@@ -479,29 +479,6 @@
         gameState = await response.json();
         updateLocalFromGameState();
         await autoAdvanceIfMyTurn();
-        let previousHandIds = [];
-
-        function handsAreEqual(currentHand) {
-        return (
-            currentHand.length === previousHandIds.length &&
-            currentHand.every((card, index) => card.id === previousHandIds[index])
-        );
-        }
-
-        function updateLocalFromGameState() {
-        const player = gameState[username];
-        const currentHand = player.Hand;
-
-        // Only re-render if the hand has changed
-        if (!handsAreEqual(currentHand)) {
-            drawnCardsArray = currentHand;
-            previousHandIds = currentHand.map(card => card.id);
-            renderDrawnCards();
-        }
-
-        remainingDeck = player.Deck;
-        updateDeckText();
-        }
     }
 
         function showLossBanner(mainText, reasonText) {
@@ -834,14 +811,33 @@
                 }
             }
 
-            function updateLocalFromGameState() {
+        let previousHandIds = [];
+
+        function handsAreEqual(currentHand) {
+        return (
+            currentHand.length === previousHandIds.length &&
+            currentHand.every((card, index) => card.id === previousHandIds[index])
+        );
+        }
+
+        function updateLocalFromGameState() {
             const player = gameState[username];
-            remainingDeck = player.Deck;
-            drawnCardsArray = player.Hand;
-            initialDeckSize = player.Deck.length + player.Hand.length + player.Tomb.length + player.Void.length;
-            renderDrawnCards();
-            updateDeckText();
+            const currentHand = player.Hand;
+
+            // Only re-render if the hand has changed
+            if (!handsAreEqual(currentHand)) {
+                drawnCardsArray = currentHand;
+                previousHandIds = currentHand.map(card => card.id);
+                renderDrawnCards();
             }
+
+            remainingDeck = player.Deck;
+            updateDeckText();
+
+            // ✅ Add this:
+            updateTurnDisplay(gameState.turn);
+            updatePhaseDisplay(gameState.turn.currentPhase);
+        }
 
             // Fetch deck and start game
             const playerDeckName = new URLSearchParams(window.location.search).get("playerDeck");
