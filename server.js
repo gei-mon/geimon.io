@@ -774,7 +774,7 @@ async function performBotTurn(game) {
       }
     }
 
-    await delay(3000);
+    await delay(1500);
   }
 
   // ✅ If bot still has the turn, end it and switch

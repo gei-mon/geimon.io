@@ -138,6 +138,12 @@
 #viewing-window .scaled-card {
     pointer-events: auto !important;
     z-index: 100110; /* Ensures it's on top */
+    width: 240px;
+    height: 420px;
+    margin-top: -12%;
+}
+#viewing-window .scaled-card .card-name {
+    max-width: 100%;
 }
 #viewing-window .scaled-card .card-cost,
 #viewing-window .scaled-card .card-text,
@@ -149,7 +155,7 @@
     z-index: 100200 !important;
 }
 .tooltip {
-    z-index: 100300 !important;
+    z-index: 110000 !important;
 }
 #tooltip {
     position: absolute;
@@ -160,23 +166,23 @@
     border-radius: 5px;
     font-size: 14px;
     max-width: 250px;
-    z-index: 100300; /* Ensure it appears above other elements */
+    z-index: 110000; /* Ensure it appears above other elements */
 }
 .token-tooltip {
     pointer-events: auto !important;
-    z-index: 100300 !important;
+    z-index: 110000 !important;
 }
 #token-tooltip {
-    z-index: 100300; /* Ensure it appears above other elements */
+    z-index: 110000; /* Ensure it appears above other elements */
 }
 .keyword {
     pointer-events: auto !important;
     position: relative; /* Ensures proper hovering */
-    z-index: 100300; /* Ensures tooltip appears above other elements */
+    z-index: 110000; /* Ensures tooltip appears above other elements */
 }
 .card-cost .keyword {
     position: relative;
-    z-index: 100300 !important;
+    z-index: 110000 !important;
     pointer-events: auto !important;
 }
 .card-cost {
@@ -240,7 +246,7 @@
   top: 42%;
   left: 46.5%;
   transform: translateX(-50%);
-  z-index: 100800;
+  z-index: 100600;
   opacity: 0;
 }
 .phase-box {
@@ -255,6 +261,7 @@
 }
 .phase-box.active {
   background: lightgreen;
+  text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;
 }
 #turn-counter {
   position: fixed;
@@ -271,7 +278,7 @@
   position: fixed;
   top: 44.5%;
   left: 66.3%;
-  z-index: 100800;
+  z-index: 100600;
   color: white;
   font-weight: bold;
   font-size: 1.5em;
@@ -974,7 +981,7 @@
 
             setTimeout(() => {
                 totemBox.style.opacity = "0";
-                totemBox.style.zIndex = "100700";
+                totemBox.style.zIndex = "10";
             }, 6500);
 
             // Function to fetch user data from the session
@@ -1189,6 +1196,140 @@
         playerTombBox.addEventListener("mouseleave", () => {
             tombText.innerText = "Tomb";
         });
+
+    // Create Surrender Button Overlay
+    const tombButton = document.createElement("button");
+        tombButton.style.position = "absolute";
+        tombButton.style.left = "86.1%";
+        tombButton.style.top = "56%";
+        tombButton.style.width = "3.72%";
+        tombButton.style.height = "10%"; //addBox("93%", "60%", "6%", "19%", "lightblue");  // Player Tomb
+        tombButton.style.backgroundColor = "rgba(255, 0, 0)";
+        tombButton.style.opacity = "0";
+        tombButton.style.border = "none";
+        tombButton.style.zIndex = "100800";
+        tombButton.style.cursor = "pointer";
+        tombButton.title = "Tomb";
+
+        // Add event listener for click
+        tombButton.addEventListener("click", () => {
+            const popup = document.createElement("div");
+            popup.style.position = "fixed";
+            popup.style.top = "50%";
+            popup.style.left = "50%";
+            popup.style.transform = "translate(-50%, -50%)";
+            popup.style.maxWidth = "min(90%, 800px)";
+            popup.style.maxHeight = "unset";
+            popup.style.height = "auto";
+            popup.style.overflow = "visible";
+            popup.style.padding = "10px 20px";
+            popup.style.backgroundColor = "rgba(0, 0, 0, 0.85)";
+            popup.style.border = "3px solid white";
+            popup.style.borderRadius = "12px";
+            popup.style.zIndex = "100900";
+            popup.style.display = "flex";
+            popup.style.flexDirection = "column";
+            popup.style.alignItems = "center";
+            popup.style.gap = "20px";
+
+            const title = document.createElement("div");
+            title.textContent = "Tomb";
+            title.style.color = "white";
+            title.style.fontSize = "2em";
+            title.style.textAlign = "center";
+            popup.appendChild(title);
+
+            const tombCards = gameState?.[username]?.Tomb || [];
+
+            if (tombCards.length === 0) {
+                const none = document.createElement("div");
+                none.textContent = "Tomb is empty.";
+                none.style.color = "white";
+                popup.appendChild(none);
+            } else {
+                const cardContainer = document.createElement("div");
+                    cardContainer.style.display = "flex";
+                    cardContainer.style.flexWrap = "wrap";
+                    cardContainer.style.justifyContent = "start"; // avoid centering
+                    cardContainer.style.alignItems = "start";
+                    cardContainer.style.gap = "0px";
+                    cardContainer.style.padding = "0";
+                    cardContainer.style.margin = "0";
+                    cardContainer.style.width = "100%";
+                    cardContainer.style.boxSizing = "border-box";
+
+                tombCards.forEach(cardData => {
+                    const card = cards.find(c => String(c.id) === String(cardData.id));
+                    if (!card) return;
+
+                    // ✅ Render card
+                    const cardEl = renderCard(card);
+                        //cardEl.style.border = "1px solid lime";
+
+                    // ✅ Wrap in a container with scale
+                    const wrapper = document.createElement("div");
+                        wrapper.style.display = "block";
+                        wrapper.style.transform = "scale(0.35)";
+                        wrapper.style.transformOrigin = "center";
+                        wrapper.style.padding = "0";
+                        wrapper.style.gap = "0";
+                        wrapper.style.margin = "0";
+                        wrapper.style.position = "relative";
+                        wrapper.style.overflow = "hidden";
+                        wrapper.style.boxSizing = "border-box";
+                        //wrapper.style.border = "1px solid red";
+
+                    // ✅ Add the card inside
+                    wrapper.appendChild(cardEl);
+
+                    // ✅ Click overlay
+                    const clickBtn = document.createElement("button");
+                        clickBtn.style.position = "absolute";
+                        clickBtn.style.top = "0";
+                        clickBtn.style.left = "-50%";
+                        clickBtn.style.width = "100%";
+                        clickBtn.style.height = "100%";
+                        clickBtn.style.backgroundColor = "rgba(255, 0, 0)";
+                        clickBtn.style.opacity = "0";
+                        clickBtn.style.zIndex = "101000";
+                        clickBtn.style.border = "none";
+                        clickBtn.style.cursor = "pointer";
+                    clickBtn.onclick = () => alert(`Card in Tomb Clicked: ${card.name}`);
+                    wrapper.appendChild(clickBtn);
+
+                    // ✅ Hover preview
+                    wrapper.addEventListener("mouseenter", () => {
+                        const scaled = document.querySelector("#viewing-window .scaled-card");
+                        scaled.innerHTML = "";
+                        const preview = renderCard(card);
+                        preview.style.width = "240px";
+                        preview.style.height = "420px";
+                        preview.style.transform = "scale(1.2)";
+                        preview.style.marginLeft = "-15%";
+                        preview.style.marginTop = "7%";
+                        scaled.appendChild(preview);
+                    });
+
+                    // ✅ Append to card container
+                    cardContainer.appendChild(wrapper);
+                });
+                popup.appendChild(cardContainer);
+            }
+
+            const closeBtn = document.createElement("button");
+            closeBtn.textContent = "Close";
+            closeBtn.style.marginTop = "10px";
+            closeBtn.style.padding = "10px 20px";
+            closeBtn.style.fontSize = "1.2em";
+            closeBtn.style.cursor = "pointer";
+            closeBtn.style.zIndex = "120000";
+            closeBtn.onclick = () => popup.remove();
+            popup.appendChild(closeBtn);
+
+            document.body.appendChild(popup);
+    });
+
+    document.body.appendChild(tombButton);
 
     // Create Surrender Button Overlay
     const surrenderButton = document.createElement("button");

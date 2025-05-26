@@ -1878,7 +1878,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Shielded <br> Mount <br> Mounted: Destroy 1 card in your Arsenal; Destroy up to 2 cards in either Arsenal. <br> Mounted (Reflex): Increase this card's Commander's Damage by 5 until the End Phase.",
+        text: "Mount <br> Shielded <br> Mounted: Destroy 1 card in your Arsenal; Destroy up to 2 cards in either Arsenal. <br> Mounted (Reflex): Increase this card's Commander's Damage by 5 until the End Phase.",
         keywords: ["Shielded","Mount"],
         effect1name: "",
         effect1type: "Mount",
@@ -2334,7 +2334,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Maintenance, Mount, Shielded <br> Mounted: This card's Commander gains Bulletproof and Priority. <br> Mounted: Discard 1 and Target 1 card on the Zone; Destroy Target.",
+        text: "Maintenance <br> Mount <br> Shielded <br> Mounted: This card's Commander gains Bulletproof and Priority. <br> Mounted: Discard 1 and Target 1 card on the Zone; Destroy Target.",
         keywords: ["Mount","Maintenance","Shielded","Bulletproof","Priority"],
         effect1name: "",
         effect1type: "Mount",
