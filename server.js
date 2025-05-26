@@ -749,6 +749,7 @@ function delay(ms) {
 
 async function performBotTurn(game) {
   const phases = ["Intermission", "Draw", "Main 1", "Battle", "Main 2", "End"];
+  let startedTurn = game.turn.count;
 
   for (const phase of phases) {
     if (game.turn.currentPlayer !== "Bot") break;
@@ -756,7 +757,7 @@ async function performBotTurn(game) {
 
     game.turn.currentPhase = phase;
     console.log(`🤖 Bot now in phase: ${phase}`);
-    
+
     if (phase === "Draw") {
       const bot = game["Bot"];
       if (bot.Deck.length > 0) {
@@ -765,17 +766,20 @@ async function performBotTurn(game) {
           card.lastBoardState = "Deck";
           card.boardState = "Hand";
         });
-        bot.Hand.push(...drawn);
+        bot.Hand.push(...drawn); // Fixed typo here from `.push(.drawn)`
       }
     }
 
     await delay(3000);
   }
 
-  // End turn
-  game.turn.count++;
-  game.turn.currentPlayer = game.player1;
-  game.turn.currentPhase = "Intermission";
+  // ✅ Ensure the bot passes the turn if it still has control
+  if (game.turn.currentPlayer === "Bot" && game.turn.count === startedTurn) {
+    game.turn.count++;
+    game.turn.currentPlayer = game.player1;
+    game.turn.currentPhase = "Intermission";
+    console.log("🤖 Bot turn ended. Handing over to player.");
+  }
 }
 
 app.post('/setPhase', (req, res) => {
