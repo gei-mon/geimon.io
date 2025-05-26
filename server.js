@@ -755,7 +755,7 @@ async function performBotTurn(game) {
 
     // Send some log (optional)
     console.log(`Bot advancing to phase: ${nextPhase}`);
-    await delay(3000); // ⏳ 1 second delay between phases
+    await delay(1000); // ⏳ 1 second delay between phases
 
     if (nextPhase === "Draw") {
       const botState = game["Bot"];
