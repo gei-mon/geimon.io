@@ -785,21 +785,51 @@ app.post('/setPhase', (req, res) => {
     return res.status(403).json({ message: "Not your turn" });
   }
 
+  // Block turn 1 Battle and Main 2
   if (game.turn.count === 1 && (phase === "Battle" || phase === "Main 2")) {
     return res.status(400).json({ message: "Phase not allowed on turn 1" });
   }
 
+  // Enforce phase order
+  const currentPhase = game.turn.currentPhase;
+  const allowedTransitions = {
+    "Intermission": ["Draw"],
+    "Draw": ["Main 1"],
+    "Main 1": ["Battle", "End"],
+    "Battle": ["Main 2"],
+    "Main 2": ["End"]
+  };
+  const validNextPhases = allowedTransitions[currentPhase] || [];
+
+  if (!validNextPhases.includes(phase)) {
+    return res.status(400).json({ message: "Invalid phase transition" });
+  }
+
   game.turn.currentPhase = phase;
 
-  if (phase === "End") {
-  game.turn.count++;
-  game.turn.currentPlayer = game.player2; // or "Bot"
-  game.turn.currentPhase = "Intermission";
-
-  if (game.player2 === "Bot") {
-    setTimeout(() => performBotTurn(game), 300); // trigger bot
+  // ✅ Draw logic — handled by server when user enters Draw phase
+  if (phase === "Draw") {
+    const player = game[username];
+    if (player.Deck.length > 0) {
+      const drawn = player.Deck.splice(0, 1);
+      drawn.forEach(card => {
+        card.lastBoardState = "Deck";
+        card.boardState = "Hand";
+      });
+      player.Hand.push(...drawn);
+    }
   }
-}
+
+  // ✅ End turn logic
+  if (phase === "End") {
+    game.turn.count++;
+    game.turn.currentPlayer = game.player1 === username ? game.player2 : game.player1;
+    game.turn.currentPhase = "Intermission";
+
+    if (game.player2 === "Bot" && game.turn.currentPlayer === "Bot") {
+      setTimeout(() => performBotTurn(game), 300);
+    }
+  }
 
   return res.json({ success: true, currentPhase: phase });
 });

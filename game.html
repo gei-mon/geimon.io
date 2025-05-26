@@ -240,7 +240,7 @@
   top: 42%;
   left: 46.5%;
   transform: translateX(-50%);
-  z-index: 100700;
+  z-index: 100800;
   opacity: 0;
 }
 .phase-box {
@@ -261,6 +261,17 @@
   top: 44.5%;
   left: 76%; /* adjust this to line up visually with the button */
   z-index: 100600;
+  color: white;
+  font-weight: bold;
+  font-size: 1.5em;
+  opacity: 0;
+  text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;
+}
+#turn-indicator {
+  position: fixed;
+  top: 44.5%;
+  left: 66.3%;
+  z-index: 100800;
   color: white;
   font-weight: bold;
   font-size: 1.5em;
@@ -327,6 +338,7 @@
             <div class="phase-box" id="phase-Main 2">Main 2</div>
             <div class="phase-box" id="phase-End">End</div>
         </div>
+        <div id="turn-indicator">Your Turn</div>
         <div id="turn-counter">Turn: 1</div>
 
         <script type="module">
@@ -514,39 +526,32 @@
                 const currentTurn = gameState.turn;
                 const playerState = gameState[username];
 
-                // 🟩 Automatically draw 1 card if we're in our Draw phase and haven't drawn yet this turn
-                if (
-                currentTurn.currentPlayer === username &&
-                currentTurn.currentPhase === "Draw" &&
-                lastDrawTurn !== `${currentTurn.count}-${currentTurn.currentPhase}`
-                ) {
-                console.log("✅ Drawing 1 card in Draw phase");
-                drawCards(1, playerState.Deck, playerState.Hand, "Hand");
-                lastDrawTurn = `${currentTurn.count}-${currentTurn.currentPhase}`;
-                }
-
             } catch (err) {
                 console.error("💥 Error fetching game state:", err);
             }
-            }
-
+        }
         function showLossBanner(mainText, reasonText) {
             const banner = document.getElementById("loss-banner");
             document.getElementById("loss-main-text").textContent = mainText;
             document.getElementById("loss-reason-text").textContent = reasonText;
             banner.style.display = "block";
         }
-
         function checkActivatableCards() {
             console.log("Check for activatable cards here...");
         }
-
         function updateTurnDisplay(turnData) {
-            if (turnData && turnData.count) {
-                document.getElementById("turn-counter").textContent = `Turn: ${turnData.count}`;
-            }
-        }
+        if (turnData && turnData.count) {
+            document.getElementById("turn-counter").textContent = `Turn: ${turnData.count}`;
 
+            const indicator = document.getElementById("turn-indicator");
+            if (turnData.currentPlayer === username) {
+            indicator.textContent = "Your Turn";
+            } else {
+            indicator.textContent = "Opponent's Turn";
+            }
+            indicator.style.opacity = "1";
+        }
+        }
         function delay(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
@@ -556,11 +561,30 @@
             box.addEventListener("click", async () => {
                 const phase = box.textContent.trim();
                 const turnCount = gameState.turn.count;
+                const currentPhase = gameState.turn.currentPhase;
+                const player = gameState.turn.currentPlayer;
 
-                // Disable Battle and Main 2 during Turn 1
+                if (player !== username) return;
+
+                // Turn 1: restrict Battle and Main 2
                 if (turnCount === 1 && (phase === "Battle" || phase === "Main 2")) return;
 
-                if (gameState.turn.currentPlayer === username) {
+                // Enforce phase flow:
+                const allowedTransitions = {
+                    "Intermission": ["Draw"],
+                    "Draw": ["Main 1"],
+                    "Main 1": ["Battle", "End"],
+                    "Battle": ["Main 2"],
+                    "Main 2": ["End"]
+                };
+
+                const validNextPhases = allowedTransitions[currentPhase] || [];
+
+                if (!validNextPhases.includes(phase)) {
+                    console.warn(`Invalid transition from ${currentPhase} to ${phase}`);
+                    return;
+                }
+
                 const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/setPhase", {
                     method: "POST",
                     credentials: "include",
@@ -571,7 +595,6 @@
                 if (response.ok) {
                     const updated = await response.json();
                     updatePhaseDisplay(updated.currentPhase);
-                }
                 }
             });
         });
@@ -1182,18 +1205,42 @@
             });
         }
         function updatePhaseDisplay(currentPhase) {
-            document.querySelectorAll('.phase-box').forEach(box => {
-                box.classList.remove('active');
-                const phase = box.textContent.trim();
-                const turnCount = gameState?.turn?.count || 0;
+            const turnCount = gameState?.turn?.count || 0;
+            const currentPlayer = gameState?.turn?.currentPlayer;
+            const isPlayerTurn = currentPlayer === username;
 
-                // Add visual cue for disabled phases on turn 1
+            // Define valid transitions
+            const allowedTransitions = {
+                "Intermission": ["Draw"],
+                "Draw": ["Main 1"],
+                "Main 1": ["Battle", "End"],
+                "Battle": ["Main 2"],
+                "Main 2": ["End"]
+            };
+
+            document.querySelectorAll('.phase-box').forEach(box => {
+                const phase = box.textContent.trim();
+                box.classList.remove('active');
+
                 if (turnCount === 1 && (phase === "Battle" || phase === "Main 2")) {
                 box.style.backgroundColor = "darkred";
                 box.style.cursor = "not-allowed";
-                } else {
+                return;
+                }
+
+                if (!isPlayerTurn) {
+                box.style.cursor = "not-allowed";
                 box.style.backgroundColor = "dimgray";
+                return;
+                }
+
+                const validNextPhases = allowedTransitions[currentPhase] || [];
+                if (validNextPhases.includes(phase)) {
                 box.style.cursor = "pointer";
+                box.style.backgroundColor = "lightgray";
+                } else {
+                box.style.cursor = "not-allowed";
+                box.style.backgroundColor = "dimgray";
                 }
             });
 
