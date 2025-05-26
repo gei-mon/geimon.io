@@ -620,13 +620,13 @@
                 const delayTime = turnCount === 1 ? 7500 : 1500;
                 console.log(`⏳ Intermission delay: ${delayTime}ms`);
                 await delay(delayTime);
-                await advancePhase(); // Move to Draw
+                //await advancePhase(); // Move to Draw
                 return;
             }
 
             if (phase === "Draw") {
                 await delay(1500);
-                await advancePhase(); // moves to Main 1
+                //await advancePhase(); // moves to Main 1
                 return;
             }
         }
