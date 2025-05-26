@@ -550,7 +550,7 @@
                     playerPhaseAutoAdvancing = true;
 
                     setTimeout(async () => {
-                        await advancePhaseForPlayer(); // Intermission → Draw
+                        //await advancePhaseForPlayer(); // Intermission → Draw
 
                         const latestState = await fetchLatestTurnState();
                         if (latestState.turn.currentPlayer === username && latestState.turn.currentPhase === "Draw") {
