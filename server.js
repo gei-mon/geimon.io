@@ -247,7 +247,7 @@ app.post('/startGame', async (req, res) => {
     // Don't block response — run bot turn in background after short delay
     setTimeout(() => {
       performBotTurn(gameState);
-    }, 2400); // small delay lets client start polling before bot acts
+    }, 3500); // small delay lets client start polling before bot acts
   }
     return res.status(200).json({ success: true });
   } catch (err) {
@@ -754,6 +754,12 @@ async function performBotTurn(game) {
   while (game.turn.currentPlayer === "Bot") {
     currentIndex = (currentIndex + 1) % phases.length;
     const nextPhase = phases[currentIndex];
+
+    // ❌ Skip Battle and Main 2 on turn 1
+    if (game.turn.count === 1 && (nextPhase === "Battle" || nextPhase === "Main 2")) {
+      nextPhase = "End";
+      currentIndex = phases.indexOf("End"); // skip ahead
+    }
     game.turn.currentPhase = nextPhase;
 
     // Send some log (optional)
