@@ -256,20 +256,6 @@
 .phase-box.active {
   background: lightgreen;
 }
-#advance-phase {
-  position: fixed;
-  top: 44%;
-  left: 67%;
-  z-index: 100600;
-  background: #5e9e5e;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  font-weight: bold;
-  border-radius: 8px;
-  cursor: pointer;
-  opacity: 0;
-}
 #turn-counter {
   position: fixed;
   top: 44.5%;
@@ -341,7 +327,6 @@
             <div class="phase-box" id="phase-Main 2">Main 2</div>
             <div class="phase-box" id="phase-End">End</div>
         </div>
-        <button id="advance-phase">Advance Phase</button>
         <div id="turn-counter">Turn: 1</div>
 
         <script type="module">
@@ -362,7 +347,6 @@
             const otherPlayerName = params.get("opponent") || "Unknown_Opponent"; // if multiplayer later
 
         let previousHandIds = [];
-        let playerPhaseAutoAdvancing = false;
         let lastDrawTurn = null;
 
         function handsAreEqual(currentHand) {
@@ -541,46 +525,10 @@
                 lastDrawTurn = `${currentTurn.count}-${currentTurn.currentPhase}`;
                 }
 
-                // Auto-advance player Intermission → Draw → Main 1
-                if (
-                    !playerPhaseAutoAdvancing &&
-                    gameState.turn.currentPlayer === username &&
-                    gameState.turn.currentPhase === "Intermission"
-                    ) {
-                    playerPhaseAutoAdvancing = true;
-
-                    setTimeout(async () => {
-                        //await advancePhaseForPlayer(); // Intermission → Draw
-
-                        const latestState = await fetchLatestTurnState();
-                        if (latestState.turn.currentPlayer === username && latestState.turn.currentPhase === "Draw") {
-                        setTimeout(() => {
-                            playerPhaseAutoAdvancing = false;
-                        }, 1500);
-                        } else {
-                        playerPhaseAutoAdvancing = false;
-                        }
-                    }, 1500);
-                    }
-
             } catch (err) {
                 console.error("💥 Error fetching game state:", err);
             }
             }
-        async function advancePhaseForPlayer() {
-            const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/advancePhase", {
-                method: "POST",
-                credentials: 'include',
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ gameId, username }),
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                updateTurnDisplay(data.turn);
-                updatePhaseDisplay(data.turn.currentPhase);
-            }
-        }
 
         function showLossBanner(mainText, reasonText) {
             const banner = document.getElementById("loss-banner");
@@ -609,87 +557,34 @@
             }
         }
 
-        async function autoAdvanceIfMyTurn() {
-            if (!gameState || !gameState.turn || gameState.turn.currentPlayer !== username) return;
-            const myTurn = gameState.turn.currentPlayer === username;
-            const phase = gameState.turn.currentPhase;
-            const turnCount = gameState.turn.count;
-
-            if (phase === "Intermission") {
-                // ⏳ If it's the very first turn, add a longer delay
-                const delayTime = turnCount === 1 ? 7500 : 1500;
-                console.log(`⏳ Intermission delay: ${delayTime}ms`);
-                await delay(delayTime);
-                //await advancePhase(); // Move to Draw
-                return;
-            }
-
-            if (phase === "Draw") {
-                await delay(1500);
-                //await advancePhase(); // moves to Main 1
-                return;
-            }
-        }
-
         function delay(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
         }
 
-        async function advancePhase() {
-            const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/advancePhase', {
-                method: 'POST',
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ gameId, username })
+        document.querySelectorAll(".phase-box").forEach(box => {
+            box.style.cursor = "pointer";
+            box.addEventListener("click", async () => {
+                const phase = box.textContent.trim();
+                const turnCount = gameState.turn.count;
+
+                // Disable Battle and Main 2 during Turn 1
+                if (turnCount === 1 && (phase === "Battle" || phase === "Main 2")) return;
+
+                if (gameState.turn.currentPlayer === username) {
+                const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/setPhase", {
+                    method: "POST",
+                    credentials: "include",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ gameId, username, phase })
+                });
+
+                if (response.ok) {
+                    const updated = await response.json();
+                    updatePhaseDisplay(updated.currentPhase);
+                }
+                }
             });
-
-            const data = await res.json();
-            if (data.success) {
-                gameState.turn = data.turn;
-                updatePhaseDisplay(data.turn.currentPhase);
-                updateTurnDisplay(data.turn);
-
-                if (data.turn.currentPhase === "Draw") {
-                    drawCards(gameState[username].Deck, 1); // Draw only 1 during Draw phase
-                }
-            }
-        }
-
-
-        document.getElementById("advance-phase").onclick = async () => {
-            console.log("Sending advancePhase with:", { gameId, username });
-            const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/advancePhase", {
-                method: "POST",
-                credentials: 'include',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ gameId, username })
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                console.error("Backend error:", errorData);
-                alert(errorData.message || "Phase advance failed.");
-                return;
-            }
-
-            const data = await response.json();
-
-            if (data.success) {
-                updatePhaseDisplay(data.turn.currentPhase);
-                updateTurnDisplay(data.turn);
-
-                if (data.turn.currentPhase === "Draw") {
-                drawCards(gameState[username].Deck, 1);
-                }
-
-                // Placeholder for activation checks
-                if (data.turn.currentPhase === "Intermission" || data.turn.currentPhase === "End") {
-                checkActivatableCards();
-                }
-            } else {
-                alert(data.message || "Failed to advance phase.");
-            }
-        };
+        });
 
         async function transitionToNextScreen(choice) {
             // Keep the background image visible
@@ -977,7 +872,6 @@
                 console.error("Deck loading failed:", playerDeckResult.message);
             }
             await fetchGameStateFromServer();
-            await autoAdvanceIfMyTurn();
         }
         async function fetchDeckCards(deckName) {
         if (deckName === "Random") {
@@ -1208,7 +1102,6 @@
             const playerLifeWindow = document.getElementById("player-life-window");
             const opponentLifeWindow = document.getElementById("opponent-life-window");
             const phaseTracker = document.getElementById("phase-tracker");
-            const advancePhase = document.getElementById("advance-phase");
             const turnCounter = document.getElementById("turn-counter");
             drawnCardsContainer.innerHTML = ""; // Clear previous renders
 
@@ -1295,12 +1188,30 @@
                         phaseTracker.style.opacity = "1";
                         turnCounter.style.opacity = "1";
                     }, 2500);
-                    setTimeout(() => {
-                        advancePhase.style.zIndex = "100800";
-                        advancePhase.style.opacity = "1";
-                    }, 3500);
                 }
             });
+        }
+        function updatePhaseDisplay(currentPhase) {
+            document.querySelectorAll('.phase-box').forEach(box => {
+                box.classList.remove('active');
+                const phase = box.textContent.trim();
+                const turnCount = gameState?.turn?.count || 0;
+
+                // Add visual cue for disabled phases on turn 1
+                if (turnCount === 1 && (phase === "Battle" || phase === "Main 2")) {
+                box.style.backgroundColor = "darkred";
+                box.style.cursor = "not-allowed";
+                } else {
+                box.style.backgroundColor = "dimgray";
+                box.style.cursor = "pointer";
+                }
+            });
+
+            const activeBox = document.getElementById(`phase-${currentPhase}`);
+            if (activeBox) {
+                activeBox.classList.add('active');
+                activeBox.style.backgroundColor = "lightgreen";
+            }
         }
         async function drawCards(deck, numCards = 5) {
         if (deck.length < numCards) {

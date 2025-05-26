@@ -749,97 +749,59 @@ function delay(ms) {
 
 async function performBotTurn(game) {
   const phases = ["Intermission", "Draw", "Main 1", "Battle", "Main 2", "End"];
-  let currentIndex = phases.indexOf(game.turn.currentPhase);
 
-  while (game.turn.currentPlayer === "Bot") {
-    // ⏩ Skip disallowed phases if necessary
-    let nextPhase;
-    do {
-      currentIndex = (currentIndex + 1) % phases.length;
-      nextPhase = phases[currentIndex];
-    } while (
-      game.turn.count === 1 &&
-      (nextPhase === "Battle" || nextPhase === "Main 2")
-    );
+  for (const phase of phases) {
+    if (game.turn.currentPlayer !== "Bot") break;
+    if (game.turn.count === 1 && (phase === "Battle" || phase === "Main 2")) continue;
 
-    game.turn.currentPhase = nextPhase;
-    console.log(`🤖 Bot phase: ${nextPhase}, turn: ${game.turn.count}`);
-    console.log(`Current player before loop: ${game.turn.currentPlayer}`);
-    await delay(1000); // 1s delay between each bot phase
-
-    if (nextPhase === "Draw") {
-      const botState = game["Bot"];
-      const deck = botState.Deck;
-      if (deck.length > 0) {
-        const drawn = deck.splice(0, 1);
+    game.turn.currentPhase = phase;
+    console.log(`🤖 Bot now in phase: ${phase}`);
+    
+    if (phase === "Draw") {
+      const bot = game["Bot"];
+      if (bot.Deck.length > 0) {
+        const drawn = bot.Deck.splice(0, 1);
         drawn.forEach(card => {
           card.lastBoardState = "Deck";
           card.boardState = "Hand";
         });
-        botState.Hand.push(...drawn);
+        bot.Hand.push(...drawn);
       }
     }
 
-    if (nextPhase === "End") {
-      game.turn.count++;
-      game.turn.currentPlayer = game.player1;
-      game.turn.currentPhase = "Intermission";
-      break;
-    }
+    await delay(3000);
+  }
+
+  // End turn
+  game.turn.count++;
+  game.turn.currentPlayer = game.player1;
+  game.turn.currentPhase = "Intermission";
+}
+
+app.post('/setPhase', (req, res) => {
+  const { gameId, username, phase } = req.body;
+  const game = gameStates.get(gameId);
+  if (!game || game.turn.currentPlayer !== username) {
+    return res.status(403).json({ message: "Not your turn" });
+  }
+
+  if (game.turn.count === 1 && (phase === "Battle" || phase === "Main 2")) {
+    return res.status(400).json({ message: "Phase not allowed on turn 1" });
+  }
+
+  game.turn.currentPhase = phase;
+
+  if (phase === "End") {
+  game.turn.count++;
+  game.turn.currentPlayer = game.player2; // or "Bot"
+  game.turn.currentPhase = "Intermission";
+
+  if (game.player2 === "Bot") {
+    setTimeout(() => performBotTurn(game), 300); // trigger bot
   }
 }
 
-app.post('/advancePhase', async (req, res) => {
-  try {
-    const { gameId, username } = req.body;
-    const game = gameStates.get ? gameStates.get(gameId) : gameStates[gameId];
-
-    if (!game || !game.turn) {
-      return res.status(404).json({ success: false, message: "Game or turn not found." });
-    }
-
-    const phases = ["Intermission", "Draw", "Main 1", "Battle", "Main 2", "End"];
-    const currentIndex = phases.indexOf(game.turn.currentPhase);
-    const currentPlayer = game.turn.currentPlayer;
-
-    // Block invalid human attempts
-    if (currentPlayer !== "Bot" && currentPlayer !== username) {
-      return res.status(403).json({ success: false, message: "Not your turn." });
-    }
-
-    // Advance phase
-    let nextPhase = (currentIndex < 5) ? phases[currentIndex + 1] : "End";
-
-    // Skip Battle/Main 2 on Turn 1
-    if (game.turn.count === 1 && nextPhase === "Battle") {
-      nextPhase = "End";
-    }
-
-    game.turn.currentPhase = nextPhase;
-
-    // End phase triggers turn change
-    if (nextPhase === "End") {
-      await delay(750);
-      game.turn.count++;
-      game.turn.currentPlayer = (game.turn.currentPlayer === game.player1) ? game.player2 : game.player1;
-      game.turn.currentPhase = "Intermission";
-    }
-
-      // If bot is now up, trigger bot logic
-      if (game.turn.currentPlayer === "Bot") {
-        console.log("🤖 Auto-running Bot turn...");
-        setTimeout(() => {
-          performBotTurn(game);
-        }, 700); // slight delay to let client poll
-      }
-
-    console.log(`✅ Phase is now ${game.turn.currentPhase}, turn ${game.turn.count}, current player: ${game.turn.currentPlayer}`);
-    return res.json({ success: true, turn: game.turn });
-
-  } catch (err) {
-    console.error("💥 Error in /advancePhase:", err);
-    res.status(500).json({ success: false, message: "Internal server error" });
-  }
+  return res.json({ success: true, currentPhase: phase });
 });
 
 // GET /logout
