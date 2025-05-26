@@ -244,9 +244,11 @@ app.post('/startGame', async (req, res) => {
 
     gameStates.set(gameId, gameState);
     if (goesFirst === "Bot") {
-      await delay(7000);  // Wait for client to fade in
-      await performBotTurn(gameState);
-    }
+    // Don't block response — run bot turn in background after short delay
+    setTimeout(() => {
+      performBotTurn(gameState);
+    }, 700); // small delay lets client start polling before bot acts
+  }
     return res.status(200).json({ success: true });
   } catch (err) {
     console.error("Error in /startGame:", err);
