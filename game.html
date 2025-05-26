@@ -397,6 +397,7 @@
             updateTurnDisplay(gameState.turn);
             updatePhaseDisplay(gameState.turn.currentPhase);
             renderLatestTombCard();
+            renderLatestVoidCard();
         }
 
             async function getUsername() {
@@ -805,6 +806,51 @@
             });
         }
 
+        function renderLatestVoidCard() {
+            const voidTop = gameState?.[username]?.Void?.slice(-1)[0];
+            if (!voidTop) return;
+
+            const card = cards.find(c => String(c.id) === String(voidTop.id));
+            if (!card) return;
+
+            // Clear previous
+            playerVoidBox.innerHTML = "";
+
+            // Render card scaled down
+            const miniCard = renderCard(card);
+            miniCard.style.transform = "scale(0.3)";
+            miniCard.style.transformOrigin = "top left";
+            miniCard.style.marginTop = "-8%";
+            miniCard.style.marginLeft = "0%";
+            miniCard.style.pointerEvents = "none"; // Prevent dragging
+            playerVoidBox.appendChild(miniCard);
+
+            // Void hover label (like Deck)
+            const voidTextOverlay = document.createElement("div");
+            voidTextOverlay.innerText = "Void";
+            voidTextOverlay.style.position = "absolute";
+            voidTextOverlay.style.left = "50%";
+            voidTextOverlay.style.top = "10%";
+            voidTextOverlay.style.transform = "translate(-50%, -50%)";
+            voidTextOverlay.style.fontWeight = "bold";
+            voidTextOverlay.style.fontSize = "1.2em";
+            voidTextOverlay.style.color = "white";
+            voidTextOverlay.style.textShadow = `
+                -2px -2px 4px black,  
+                2px -2px 4px black,  
+                -2px 2px 4px black,  
+                2px 2px 4px black
+            `;
+            playerVoidBox.appendChild(voidTextOverlay);
+
+            playerVoidBox.addEventListener("mouseenter", () => {
+                voidTextOverlay.innerText = `${gameState[username].Void.length}`;
+            });
+            playerVoidBox.addEventListener("mouseleave", () => {
+                voidTextOverlay.innerText = "Void";
+            });
+        }
+
         async function transitionToNextScreen(choice) {
             // Keep the background image visible
             const bgImage = document.querySelector(".bg-image");
@@ -1179,6 +1225,7 @@
     playerDeckBox.appendChild(deckText);
     document.body.appendChild(playerDeckBox); // Add to the document
 
+    //Start of Tomb Box Stuff
     const playerTombBox = document.createElement("div");
         playerTombBox.id = "playerTombBox";
         playerTombBox.style.position = "absolute";
@@ -1227,7 +1274,7 @@
             tombText.innerText = "Tomb";
         });
 
-    // Create Surrender Button Overlay
+    // Create Tomb Button Overlay
     const tombButton = document.createElement("button");
         tombButton.style.position = "absolute";
         tombButton.style.left = "86.1%";
@@ -1355,6 +1402,186 @@
     });
 
     document.body.appendChild(tombButton);
+    //End of Tomb Creation Stuff
+
+    //Start of Void Box Stuff
+    const playerVoidBox = document.createElement("div");
+        playerVoidBox.id = "playerVoidBox";
+        playerVoidBox.style.position = "absolute";
+        playerVoidBox.style.left = "84.6%";  // Same X as Deck
+        playerVoidBox.style.top = "42%";   // Directly above the Deck
+        playerVoidBox.style.width = "3.72%";
+        playerVoidBox.style.height = "11.8%";
+        playerVoidBox.style.outline = "none";//"4px solid white";
+        playerVoidBox.style.zIndex = "1000";
+        playerVoidBox.style.opacity = "0";
+        playerVoidBox.style.transition = "opacity 1s ease-in-out";
+        playerVoidBox.style.textAlign = "center";
+        playerVoidBox.style.fontWeight = "bold";
+        playerVoidBox.style.fontSize = "1.2em";
+        playerVoidBox.style.color = "white";
+        playerVoidBox.style.textShadow = `
+            -2px -2px 4px black,  
+            2px -2px 4px black,  
+            -2px 2px 4px black,  
+            2px 2px 4px black
+        `;
+
+        const voidText = document.createElement("span");
+        voidText.innerText = "Void";
+        voidText.style.position = "absolute";
+        voidText.style.left = "50%";
+        voidText.style.top = "5%";
+        voidText.style.transform = "translate(-50%, -50%)";
+
+        playerVoidBox.appendChild(voidText);
+        document.body.appendChild(playerVoidBox);
+
+        setTimeout(() => {
+        playerVoidBox.style.opacity = "1";
+        }, 6500);
+
+        function updateVoidText() {
+            if (gameState && gameState[username]) {
+                const count = gameState[username].Void.length;
+                voidText.innerText = `${count}`;
+            }
+        }
+
+        playerVoidBox.addEventListener("mouseenter", updateVoidText);
+        playerVoidBox.addEventListener("mouseleave", () => {
+            voidText.innerText = "Void";
+        });
+
+    // Create Void Button Overlay
+    const voidButton = document.createElement("button");
+        voidButton.style.position = "absolute";
+        voidButton.style.left = "83%";
+        voidButton.style.top = "43.7%";
+        voidButton.style.width = "7%";
+        voidButton.style.height = "7.2%"; //addBox("89%", "44%", "10%", "14%", "lightblue");   // Player Void
+        voidButton.style.backgroundColor = "rgba(255, 0, 0)";
+        voidButton.style.opacity = "0";
+        voidButton.style.border = "none";
+        voidButton.style.zIndex = "100800";
+        voidButton.style.cursor = "pointer";
+        voidButton.title = "Void";
+
+        // Add event listener for click
+        voidButton.addEventListener("click", () => {
+            const popup = document.createElement("div");
+                popup.style.position = "fixed";
+                popup.style.top = "50%";
+                popup.style.left = "50%";
+                popup.style.transform = "translate(-50%, -50%)";
+                popup.style.maxWidth = "min(90%, 800px)";
+                popup.style.overflowY = "auto";
+                popup.style.maxHeight = "unset";
+                popup.style.height = "auto";
+                popup.style.overflow = "visible";
+                popup.style.padding = "10px 20px";
+                popup.style.backgroundColor = "rgba(0, 0, 0, 0.85)";
+                popup.style.border = "3px solid white";
+                popup.style.borderRadius = "12px";
+                popup.style.zIndex = "100900";
+                popup.style.display = "flex";
+                popup.style.flexDirection = "column";
+                popup.style.alignItems = "center";
+                popup.style.gap = "20px";
+
+            const title = document.createElement("div");
+                title.textContent = "Void";
+                title.style.color = "white";
+                title.style.fontSize = "2em";
+                title.style.textAlign = "center";
+            popup.appendChild(title);
+
+            const voidCards = gameState?.[username]?.Void || [];
+
+            if (voidCards.length === 0) {
+                const none = document.createElement("div");
+                none.textContent = "Void is empty.";
+                none.style.color = "white";
+                popup.appendChild(none);
+            } else {
+                const cardContainer = document.createElement("div");
+                    cardContainer.style.display = "flex";
+                    cardContainer.style.flexWrap = "wrap";
+                    cardContainer.style.justifyContent = "center";
+                    cardContainer.style.gap = "10px";
+                    cardContainer.style.maxWidth = "100%";
+                    cardContainer.style.overflow = "visible";
+
+                const scale = 0.3;
+                const cardWidth = 240;
+                const cardHeight = 420;
+
+                voidCards.forEach(cardData => {
+                    const card = cards.find(c => String(c.id) === String(cardData.id));
+                    if (!card) return;
+
+                    const scale = 0.3;
+                    const scaledCard = renderCard(card);
+                        scaledCard.style.transform = `scale(${scale})`;
+                        scaledCard.style.transformOrigin = "top left";
+                        scaledCard.style.margin = "5px";
+                        scaledCard.style.position = "relative";
+
+                    const wrapper = document.createElement("div");
+                        wrapper.style.width = `${240 * scale}px`;
+                        wrapper.style.height = `${420 * scale}px`;
+                        wrapper.style.overflow = "visible";
+                        wrapper.style.position = "relative";
+
+                    // Void card click overlay
+                    const overlay = document.createElement("button");
+                        overlay.style.position = "absolute";
+                        overlay.style.top = "0";
+                        overlay.style.left = "0";
+                        overlay.style.width = "100%";
+                        overlay.style.height = "100%";
+                        overlay.style.opacity = "0";
+                        overlay.style.border = "none";
+                        overlay.style.background = "transparent";
+                        overlay.style.cursor = "pointer";
+                    overlay.onclick = () => alert(`Card in Void Clicked: ${card.name}`);
+
+                    wrapper.appendChild(scaledCard);
+                    wrapper.appendChild(overlay);
+
+                    // Hover preview
+                    wrapper.addEventListener("mouseenter", () => {
+                        const scaled = document.querySelector("#viewing-window .scaled-card");
+                            scaled.innerHTML = "";
+                        const preview = renderCard(card);
+                            preview.style.width = "240px";
+                            preview.style.height = "420px";
+                            preview.style.transform = "scale(1.2)";
+                            preview.style.marginLeft = "-15%";
+                            preview.style.marginTop = "7%";
+                        scaled.appendChild(preview);
+                    });
+
+                    cardContainer.appendChild(wrapper);
+                });
+                popup.appendChild(cardContainer);
+            }
+
+            const closeBtn = document.createElement("button");
+                closeBtn.textContent = "Close";
+                closeBtn.style.marginTop = "10px";
+                closeBtn.style.padding = "10px 20px";
+                closeBtn.style.fontSize = "1.2em";
+                closeBtn.style.cursor = "pointer";
+                closeBtn.style.zIndex = "120000";
+            closeBtn.onclick = () => popup.remove();
+            popup.appendChild(closeBtn);
+
+            document.body.appendChild(popup);
+    });
+
+    document.body.appendChild(voidButton);
+    //End of Void Stack Creation
 
     // Create Surrender Button Overlay
     const surrenderButton = document.createElement("button");

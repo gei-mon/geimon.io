@@ -773,7 +773,6 @@ async function performBotTurn(game) {
         bot.Hand.push(...drawn);
       }
     }
-
     await delay(1500);
   }
 
