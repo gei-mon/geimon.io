@@ -778,14 +778,14 @@ async function performBotTurn(game) {
   }
 
   // ✅ If bot still has the turn, end it and switch
-  if (game.turn.currentPlayer === "Bot" && game.turn.count === startedTurn) {
-    game.turn.count++;
-    game.turn.currentPlayer = (game.turn.currentPlayer === game.player1)
-      ? game.player2
-      : game.player1;
-    game.turn.currentPhase = "Intermission";
-    console.log(`🤖 Bot ended turn. Next player: ${game.turn.currentPlayer}`);
-  }
+if (game.turn.currentPlayer === "Bot") {
+  game.turn.count++;
+  game.turn.currentPlayer = (game.turn.currentPlayer === game.player1)
+    ? game.player2
+    : game.player1;
+  game.turn.currentPhase = "Intermission";
+  console.log(`🤖 Bot ended turn. Next player: ${game.turn.currentPlayer}`);
+}
 
   // ✅ If bot is still up, repeat
   if (game.turn.currentPlayer === "Bot") {
