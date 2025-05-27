@@ -173,7 +173,7 @@ function adjustNameSize(cardElement) {
 
   // Reduce font size if text overflows the width, but ensure it stays within the fixed height of the name box
   while (nameContainer.scrollWidth > nameContainer.offsetWidth && fontSize > 12) {
-    fontSize -= 1;
+    fontSize -= 1.2;
     nameContainer.style.fontSize = `${fontSize}px`;
   }
 
@@ -191,7 +191,7 @@ function adjustTextSize(cardElement) {
 
   // Ensure the text fits vertically within the container
   while (textContainer.scrollHeight > maxHeight && fontSize > 6) {
-    fontSize -= 4.5;
+    fontSize -= 5;
     textContainer.style.fontSize = `${fontSize}px`;
   }
 

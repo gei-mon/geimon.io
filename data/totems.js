@@ -17,6 +17,7 @@ export const totems = [
         "Countdown Clocktower": "At the end of the 12th turn, the Player with the highest Life wins.",
         "Fake Doctor": "All Grant Life and Healing effects Damage the Player an equal amount instead, and all Damage and Offer effects now Grant/Heal that amount of Life.",
         "Bluff-Fest": "All cards that can be played face-down must be before they can be activated.",
-        "Cards On Table": "Both Players play with the top card of their Deck revealed."
+        "Cards On Table": "Both Players play with the top card of their Deck revealed.",
+        "Shared Interest": "Neither Player can deal damage to any other until the start of Turn 7."
     }
 ]

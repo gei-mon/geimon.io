@@ -612,5 +612,77 @@ export const tokens = [
         effect3linger: ""
       }
     ]
+},
+{
+    id: "9018",
+    name: "Burrow Token",
+    image: `${tokenArtFolder}/Burrow.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Token"],
+    damage: "0",
+    life: "1",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Deathward",
+        keywords: ["Deathward"],
+        effect1name: "",
+        effect1type: "",
+        effect1condition: "",
+        effect1cost: "",
+        effect1text: "",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: "",
+        effect2condition: "",
+        effect2cost: "",
+        effect2text: "",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
+},
+{
+    id: "9019",
+    name: "Mulch Token",
+    image: `${tokenArtFolder}/Mulch.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Token"],
+    damage: "X",
+    life: "X",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "This Token’s Damage and Life are equal to the current Damage and Life of the Champion it is replacing.",
+        keywords: ["blank"],
+        effect1name: "",
+        effect1type: "OnRally",
+        effect1condition: "",
+        effect1cost: "",
+        effect1text: "CopyDestroyedChampDamageLife",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: "",
+        effect2condition: "",
+        effect2cost: "",
+        effect2text: "",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
 }
 ];

@@ -265,7 +265,7 @@
 }
 #turn-counter {
   position: fixed;
-  top: 44.5%;
+  top: 44.6%;
   left: 75.5%; /* adjust this to line up visually with the button */
   z-index: 100600;
   color: white;
@@ -276,7 +276,7 @@
 }
 #turn-indicator {
   position: fixed;
-  top: 44.5%;
+  top: 44.6%;
   left: 66.1%;
   z-index: 100600;
   color: white;
@@ -284,6 +284,16 @@
   font-size: 1.5em;
   opacity: 0;
   text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;
+}
+.card-zone {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  position: relative;
 }
 </style>
 <body style="background-color:rgb(78, 78, 78);">
@@ -347,6 +357,9 @@
         </div>
         <div id="turn-indicator">Your Turn</div>
         <div id="turn-counter">Turn: 1</div>
+        <div id="playerArsenalBox" class="card-zone"></div>
+        <div id="playerChampionBox" class="card-zone"></div>
+        <div id="playerReserveBox" class="card-zone"></div>
 
         <script type="module">
             import { cards } from "./data/cards.js";
@@ -398,6 +411,10 @@
             updatePhaseDisplay(gameState.turn.currentPhase);
             renderLatestTombCard();
             renderLatestVoidCard();
+
+            ["Arsenal", "Champions", "Reserve"].forEach(zone => {
+                renderCardZone(gameState[username][zone], `player${zone}Box`);
+            });
         }
 
             async function getUsername() {
@@ -585,6 +602,15 @@
             indicator.textContent = "Opponent's Turn";
             }
             indicator.style.opacity = "1";
+
+            const colorBox = document.getElementById("turn-color-box");
+            if (colorBox) {
+                if (turnData.currentPlayer === username) {
+                    colorBox.style.backgroundColor = "blue";
+                } else {
+                    colorBox.style.backgroundColor = "red";
+                }
+            }
         }
         }
         function delay(ms) {
@@ -760,7 +786,6 @@
             });
         });
 
-
         function renderLatestTombCard() {
             const tombTop = gameState?.[username]?.Tomb?.slice(-1)[0];
             if (!tombTop) return;
@@ -782,20 +807,20 @@
 
             // Tomb hover label (like Deck)
             const tombTextOverlay = document.createElement("div");
-            tombTextOverlay.innerText = "Tomb";
-            tombTextOverlay.style.position = "absolute";
-            tombTextOverlay.style.left = "50%";
-            tombTextOverlay.style.top = "10%";
-            tombTextOverlay.style.transform = "translate(-50%, -50%)";
-            tombTextOverlay.style.fontWeight = "bold";
-            tombTextOverlay.style.fontSize = "1.2em";
-            tombTextOverlay.style.color = "white";
-            tombTextOverlay.style.textShadow = `
-                -2px -2px 4px black,  
-                2px -2px 4px black,  
-                -2px 2px 4px black,  
-                2px 2px 4px black
-            `;
+                tombTextOverlay.innerText = "Tomb";
+                tombTextOverlay.style.position = "absolute";
+                tombTextOverlay.style.left = "50%";
+                tombTextOverlay.style.top = "10%";
+                tombTextOverlay.style.transform = "translate(-50%, -50%)";
+                tombTextOverlay.style.fontWeight = "bold";
+                tombTextOverlay.style.fontSize = "1.2em";
+                tombTextOverlay.style.color = "white";
+                tombTextOverlay.style.textShadow = `
+                    -2px -2px 4px black,  
+                    2px -2px 4px black,  
+                    -2px 2px 4px black,  
+                    2px 2px 4px black
+                `;
             playerTombBox.appendChild(tombTextOverlay);
 
             playerTombBox.addEventListener("mouseenter", () => {
@@ -867,23 +892,23 @@
 
             // Main container for the structured design
             const mainContainer = document.createElement("div");
-            mainContainer.style.position = "absolute";
-            mainContainer.style.top = "2%";
-            mainContainer.style.left = "2%";
-            mainContainer.style.width = "94%";
-            mainContainer.style.height = "92%";
-            mainContainer.style.display = "flex";
-            mainContainer.style.flexDirection = "column";
-            mainContainer.style.justifyContent = "center";
-            mainContainer.style.alignItems = "center";
-            mainContainer.style.gap = "10px";
-            mainContainer.style.padding = "20px";
-            mainContainer.style.backgroundColor = "rgba(0, 0, 0)";
-            mainContainer.style.borderRadius = "20px";
-            mainContainer.style.zIndex = "20";
-            mainContainer.style.opacity = "0"; // Start fully invisible
-            mainContainer.style.transition = "opacity 1s ease-in-out"; // Smooth fade effect
-            mainContainer.style.transform = "scale(0.8)  translate(100px,-50px)";
+                mainContainer.style.position = "absolute";
+                mainContainer.style.top = "2%";
+                mainContainer.style.left = "2%";
+                mainContainer.style.width = "94%";
+                mainContainer.style.height = "92%";
+                mainContainer.style.display = "flex";
+                mainContainer.style.flexDirection = "column";
+                mainContainer.style.justifyContent = "center";
+                mainContainer.style.alignItems = "center";
+                mainContainer.style.gap = "10px";
+                mainContainer.style.padding = "20px";
+                mainContainer.style.backgroundColor = "rgba(0, 0, 0)";
+                mainContainer.style.borderRadius = "20px";
+                mainContainer.style.zIndex = "20";
+                mainContainer.style.opacity = "0"; // Start fully invisible
+                mainContainer.style.transition = "opacity 1s ease-in-out"; // Smooth fade effect
+                mainContainer.style.transform = "scale(0.8)  translate(100px,-50px)";
 
             // Trigger fade-in after DOM insertion
             setTimeout(() => {
@@ -892,19 +917,19 @@
 
             // Central result box
             const resultBox = document.createElement("div");
-            resultBox.style.position = "absolute";
-            resultBox.style.top = "50%";
-            resultBox.style.left = "50%";
-            resultBox.style.transform = "translate(-50%, -50%)";
-            resultBox.style.padding = "20px 40px";
-            resultBox.style.color = "white";
-            resultBox.style.fontSize = "2em";
-            resultBox.style.borderRadius = "10px";
-            resultBox.style.textAlign = "center";
-            resultBox.style.opacity = "0"; // Start fully invisible
-            resultBox.style.transition = "opacity 1s ease-in-out"; // Smooth fade effect
-            resultBox.style.zIndex = "100700"; // On top of everything
-            resultBox.style.boxShadow = "0 0 20px black";
+                resultBox.style.position = "absolute";
+                resultBox.style.top = "50%";
+                resultBox.style.left = "50%";
+                resultBox.style.transform = "translate(-50%, -50%)";
+                resultBox.style.padding = "20px 40px";
+                resultBox.style.color = "white";
+                resultBox.style.fontSize = "2em";
+                resultBox.style.borderRadius = "10px";
+                resultBox.style.textAlign = "center";
+                resultBox.style.opacity = "0"; // Start fully invisible
+                resultBox.style.transition = "opacity 1s ease-in-out"; // Smooth fade effect
+                resultBox.style.zIndex = "100700"; // On top of everything
+                resultBox.style.boxShadow = "0 0 20px black";
 
             // Trigger fade-in after DOM insertion
             setTimeout(() => {
@@ -917,43 +942,99 @@
 
             // Main board container
             const board = document.createElement("div");
-            board.style.position = "absolute";
-            board.style.top = "2%";
-            board.style.left = "2%";
-            board.style.width = "96%";
-            board.style.height = "94%";
-            board.style.backgroundColor = "black";
-            board.style.zIndex = "20";
-            board.style.borderRadius = "20px";
-            board.style.opacity = "0"; // Start fully invisible
-            board.style.transition = "opacity 1s ease-in-out"; // Smooth fade effect
+                board.style.position = "absolute";
+                board.style.top = "2%";
+                board.style.left = "2%";
+                board.style.width = "96%";
+                board.style.height = "94%";
+                board.style.backgroundColor = "black";
+                board.style.zIndex = "20";
+                board.style.borderRadius = "20px";
+                board.style.opacity = "0"; // Start fully invisible
+                board.style.transition = "opacity 1s ease-in-out"; // Smooth fade effect
 
             // Trigger fade-in after DOM insertion
             setTimeout(() => {
                 board.style.opacity = "1";
             }, 50);
 
+            const turnBox = document.createElement("div");
+                turnBox.id = "turn-color-box";
+                turnBox.style.position = "absolute";
+                turnBox.style.left = "65.6%";
+                turnBox.style.top = "43.9%";
+                turnBox.style.width = "14.8%";
+                turnBox.style.height = "4.2%";
+                turnBox.style.zIndex = "30";
+                turnBox.style.border = "0px solid white";
+                turnBox.style.borderRadius = "4px";
+                turnBox.style.transition = "background-color 1s ease";
+                turnBox.style.opacity = "0";
+            document.body.appendChild(turnBox);
+
+            setTimeout(() => {
+                turnBox.style.opacity = "1"; // Fades out smoothly
+            }, 2700);
+
+            const arsenalBox = document.createElement("div");
+                arsenalBox.id = "playerArsenalBox";
+                arsenalBox.className = "card-zone";
+                arsenalBox.style.position = "absolute";
+                arsenalBox.style.left = "34.2%";
+                arsenalBox.style.top = "68.1%";
+                arsenalBox.style.width = "49.9%";
+                arsenalBox.style.height = "13.4%";
+                arsenalBox.style.zIndex = "1000";
+                arsenalBox.style.pointerEvents = "none";
+            arsenalBox.style.backgroundColor = "rgba(255, 0, 0, 0)";
+            document.body.appendChild(arsenalBox);
+
+            const championBox = document.createElement("div");
+                championBox.id = "playerChampionBox";
+                championBox.className = "card-zone";
+                championBox.style.position = "absolute";
+                championBox.style.left = "34.2%";
+                championBox.style.top = "52.9%";
+                championBox.style.width = "49.9%";
+                championBox.style.height = "13.4%";
+                championBox.style.zIndex = "1000";
+                championBox.style.pointerEvents = "none";
+            championBox.style.backgroundColor = "rgba(255, 0, 0, 0)";
+            document.body.appendChild(championBox);
+
+            const reserveBox = document.createElement("div");
+                reserveBox.id = "playerReserveBox";
+                reserveBox.className = "card-zone";
+                reserveBox.style.position = "absolute";
+                reserveBox.style.left = "18%";
+                reserveBox.style.top = "52.9%";
+                reserveBox.style.width = "14.6%";
+                reserveBox.style.height = "28.7%";
+                reserveBox.style.zIndex = "1000";
+                reserveBox.style.pointerEvents = "none";
+            reserveBox.style.backgroundColor = "rgba(255, 0, 0, 0)";
+            document.body.appendChild(reserveBox);
+
             fetchUserData().then(userData => {
                 if (userData && userData.zoneArt) {
                     const zoneArtContainer = document.createElement("div");
-                    zoneArtContainer.style.position = "absolute";
-                    zoneArtContainer.style.left = "0";
-                    zoneArtContainer.style.bottom = "0";
-                    zoneArtContainer.style.width = "100%";
-                    zoneArtContainer.style.height = "50%";
-                    zoneArtContainer.style.overflow = "hidden";
+                        zoneArtContainer.style.position = "absolute";
+                        zoneArtContainer.style.left = "0";
+                        zoneArtContainer.style.bottom = "0";
+                        zoneArtContainer.style.width = "100%";
+                        zoneArtContainer.style.height = "50%";
+                        zoneArtContainer.style.overflow = "hidden";
 
                     const zoneArtImage = document.createElement("img");
-                    zoneArtImage.src = `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Zones/${userData.zoneArt}`;
-                    zoneArtImage.style.position = "absolute";
-                    zoneArtImage.style.width = "100%";
-                    zoneArtImage.style.height = "200%"; // Double height so top half is offscreen
-                    zoneArtImage.style.top = "0%"; // Shift to crop top, show only bottom half
-                    zoneArtImage.style.left = "0";
-                    zoneArtImage.style.zIndex = "10";
-                    zoneArtImage.style.border = "6px solid black";
-                    zoneArtImage.style.objectFit = "cover";
-
+                        zoneArtImage.src = `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Zones/${userData.zoneArt}`;
+                        zoneArtImage.style.position = "absolute";
+                        zoneArtImage.style.width = "100%";
+                        zoneArtImage.style.height = "200%"; // Double height so top half is offscreen
+                        zoneArtImage.style.top = "0%"; // Shift to crop top, show only bottom half
+                        zoneArtImage.style.left = "0";
+                        zoneArtImage.style.zIndex = "10";
+                        zoneArtImage.style.border = "6px solid black";
+                        zoneArtImage.style.objectFit = "cover";
                     zoneArtContainer.appendChild(zoneArtImage);
                     board.appendChild(zoneArtContainer);
                 }
@@ -970,17 +1051,17 @@
             });
 
             // Function to add a box
-            function addBox(x, y, w, h, color="green") {
+            function addBox(x, y, w, h, color="green", backColor="black", opa="0.5") {
                 const box = document.createElement("div");
-                box.style.position = "absolute";
-                box.style.left = x;
-                box.style.top = y;
-                box.style.width = w;
-                box.style.height = h;
-                box.style.border = `4px solid ${color}`;
-                box.style.backgroundColor = "black";
-                box.style.opacity = "0.5";
-                box.style.zIndex = "30";
+                    box.style.position = "absolute";
+                    box.style.left = x;
+                    box.style.top = y;
+                    box.style.width = w;
+                    box.style.height = h;
+                    box.style.border = `4px solid ${color}`;
+                    box.style.backgroundColor = `${backColor}`;
+                    box.style.opacity = `${opa}`;
+                    box.style.zIndex = "30";
                 board.appendChild(box);
             }
 
@@ -996,6 +1077,7 @@
             addBox("1%", "44%", "10%", "14%", "lightsalmon");    // Opponent Void
 
             addBox("14%", "47%", "72%", "7%", "lightgreen");    // Path
+            //addBox("65.8%", "48%", "19.75%", "5%", "white","","1"); // Back of turn count, player turn
 
             addBox("89%", "44%", "10%", "14%", "lightblue");   // Player Void
 
@@ -1023,25 +1105,25 @@
 
             document.getElementById("totem").textContent = selectedTotem;
             const totemTextElement = document.createElement("p");
-            totemTextElement.innerHTML = `<strong>Description:</strong> ${selectedTotemText}`;
+                totemTextElement.innerHTML = `<strong>Description:</strong> ${selectedTotemText}`;
             document.getElementById("game-log").appendChild(totemTextElement);
 
             const totemBox = document.createElement("div");
-            totemBox.style.position = "absolute";
-            totemBox.style.top = "46%";
-            totemBox.style.left = "53%";
-            totemBox.style.transform = "translate(-50%, -50%)";
-            totemBox.style.padding = "16px 32px";
-            totemBox.style.backgroundColor = "goldenrod";
-            totemBox.style.color = "white";
-            totemBox.style.fontSize = "1.5em";
-            totemBox.style.borderRadius = "10px";
-            totemBox.style.textAlign = "center";
-            totemBox.style.opacity = "0"; // Start invisible
-            totemBox.style.transition = "opacity 1s ease-in-out";
-            totemBox.style.zIndex = "100900";
-            totemBox.style.boxShadow = "0 0 20px black";
-            totemBox.textContent = `Selected Totem: ${selectedTotem} - ${selectedTotemText}`;
+                totemBox.style.position = "absolute";
+                totemBox.style.top = "46%";
+                totemBox.style.left = "53%";
+                totemBox.style.transform = "translate(-50%, -50%)";
+                totemBox.style.padding = "16px 32px";
+                totemBox.style.backgroundColor = "goldenrod";
+                totemBox.style.color = "white";
+                totemBox.style.fontSize = "1.5em";
+                totemBox.style.borderRadius = "10px";
+                totemBox.style.textAlign = "center";
+                totemBox.style.opacity = "0"; // Start invisible
+                totemBox.style.transition = "opacity 1s ease-in-out";
+                totemBox.style.zIndex = "100900";
+                totemBox.style.boxShadow = "0 0 20px black";
+                totemBox.textContent = `Selected Totem: ${selectedTotem} - ${selectedTotemText}`;
 
             // Add to document
             document.body.appendChild(totemBox);
@@ -1221,7 +1303,6 @@
         deckText.style.left = "50%"; // Centers horizontally
         deckText.style.top = "70%"; // Moves text downward
         deckText.style.transform = "translate(-50%, -50%)"; // Ensures precise centering
-
     playerDeckBox.appendChild(deckText);
     document.body.appendChild(playerDeckBox); // Add to the document
 
@@ -1249,12 +1330,11 @@
         `;
 
         const tombText = document.createElement("span");
-        tombText.innerText = "Tomb";
-        tombText.style.position = "absolute";
-        tombText.style.left = "50%";
-        tombText.style.top = "5%";
-        tombText.style.transform = "translate(-50%, -50%)";
-
+            tombText.innerText = "Tomb";
+            tombText.style.position = "absolute";
+            tombText.style.left = "50%";
+            tombText.style.top = "5%";
+            tombText.style.transform = "translate(-50%, -50%)";
         playerTombBox.appendChild(tombText);
         document.body.appendChild(playerTombBox);
 
@@ -1732,6 +1812,8 @@
             const opponentLifeWindow = document.getElementById("opponent-life-window");
             const phaseTracker = document.getElementById("phase-tracker");
             const turnCounter = document.getElementById("turn-counter");
+            const turnIndicator = document.getElementById("turn-indicator");
+                turnIndicator.style.opacity = "0";
             drawnCardsContainer.innerHTML = ""; // Clear previous renders
 
             if (drawnCardsArray.length === 0) {
@@ -1821,6 +1903,9 @@
                         phaseTracker.style.opacity = "1";
                         turnCounter.style.opacity = "1";
                     }, 2500);
+                    setTimeout(() => {
+                        turnIndicator.style.opacity = "1";
+                    }, 6500);
                 }
             });
         }
@@ -1925,6 +2010,36 @@
                 playerDeckBox.innerText = `Deck`;
             }
         }
+
+        function renderCardZone(cardsArray, containerId) {
+                const container = document.getElementById(containerId);
+                if (!container) return;
+
+                container.innerHTML = ""; // Clear previous
+
+                if (!cardsArray || cardsArray.length === 0) return;
+
+                // Optional: sort or center-spread logic
+                const half = Math.floor(cardsArray.length / 2);
+                const ordered = [];
+
+                for (let i = 0; i < cardsArray.length; i++) {
+                    const offset = i % 2 === 0 ? i / 2 : -(Math.ceil(i / 2));
+                    ordered.push(cardsArray[half + offset] || cardsArray[half - offset]);
+                }
+
+                ordered.forEach(cardData => {
+                    const card = cards.find(c => String(c.id) === String(cardData.id));
+                    if (!card) return;
+
+                    const element = renderCard(card);
+                    element.style.transform = "scale(0.4)";
+                    element.style.transformOrigin = "top center";
+                    element.style.position = "relative";
+                    element.style.pointerEvents = "none";
+                    container.appendChild(element);
+                });
+            }
 
         function changeLife(player, amount) {
             if (!gameState[player]) return;

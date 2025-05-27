@@ -53,6 +53,10 @@
         pointer-events: auto !important;
         user-select: text !important;  /* so you can try selecting text, verifying interaction */
         }
+        #scaled-card .card-button {
+        display: none !important;
+        pointer-events: none !important;
+        }
         .main-container {
         display: flex;
         height: 80vh; /* adjust as needed */
@@ -523,10 +527,12 @@
             cardElement.addEventListener("mouseenter", () => {
                 scaledCardContainer.innerHTML = "";
                 const clone = cardElement.cloneNode(true);
-                const cloneButton = clone.querySelector(".card-button");
-                if (cloneButton) cloneButton.remove();
+                clone.querySelectorAll(".card-button").forEach(btn => btn.remove());
                 clone.classList.add("scaled-card");
                 scaledCardContainer.appendChild(clone);
+                setTimeout(() => {
+                    scaledCardContainer.querySelectorAll(".card-button").forEach(btn => btn.remove());
+                }, 0);
                 addTooltipListeners(clone);
                 addTokenTooltipListeners(clone);
                 lastHoveredCard = clone;
