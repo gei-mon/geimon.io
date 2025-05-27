@@ -1,3 +1,5 @@
+import { renderCard } from './cardRenderer.js';
+
 export function handleBoardStateChange(card, boardState, lastBoardState, gameState, username) {
   if (boardState === 'Tomb' && lastBoardState !== 'Tomb') {
     declareAbility(card, 'IfTomb', gameState, username);
