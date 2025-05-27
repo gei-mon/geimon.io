@@ -368,6 +368,7 @@
             import { addTooltipListeners, addTokenTooltipListeners } from "./utils/cardRenderer.js";
             import { keywords } from "./data/keywords.js";
             import { rules } from "./data/rules.js";
+            import * as AbilityExecutor from './utils/abilityExecutor.js';
 
             let gameId = new URLSearchParams(window.location.search).get("gameId");
             if (gameId) {
@@ -761,6 +762,7 @@
                             discardedCard.lastBoardState = "Hand";
                             discardedCard.boardState = "Tomb";
                             gameState[username].Tomb.push(discardedCard);
+                            AbilityExecutor.handleBoardStateChange(discardedCard, discardedCard.boardState, discardedCard.lastBoardState, gameState, username);
                             addGameLogEntry(`${username} discarded ${fullCard.name} for hand size limit`);
 
                             await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
@@ -829,6 +831,15 @@
                 }
             });
         });
+
+        function sendToTomb(card) {
+            card.lastBoardState = card.boardState;
+            card.boardState = "Tomb";
+
+            gameState[username].Tomb.push(card);
+
+            AbilityExecutor.handleBoardStateChange(card, card.boardState, card.lastBoardState, gameState, username); // ✅ trigger abilities
+        }
 
         function renderLatestTombCard() {
             const tombTop = gameState?.[username]?.Tomb?.slice(-1)[0];

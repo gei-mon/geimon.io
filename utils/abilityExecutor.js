@@ -1,40 +1,174 @@
-export function handleBoardStateChange(card, boardState, lastBoardState) {
+export function handleBoardStateChange(card, boardState, lastBoardState, gameState, username) {
   if (boardState === 'Tomb' && lastBoardState !== 'Tomb') {
-    declareAbility(ifSentToTomb);
+    declareAbility(card, 'IfTomb', gameState, username);
   }
-  if (boardState === 'Hand' && lastBoardState !== 'Deck') {
-    declareAbility(drawnFromDeck);
+  if (boardState === 'Hand' && lastBoardState === 'Deck') {
+    declareAbility(card, 'IfDrawnAdded', gameState, username);
+  }
+  if (boardState === 'Tomb' && lastBoardState === 'Deck') {
+    declareAbility(card, 'IfBuried', gameState, username);
+  }
+  if (boardState === 'Tomb' && lastBoardState === 'Hand') {
+    declareAbility(card, 'IfDiscarded', gameState, username);
+  }
+  if (boardState === 'Tomb' && lastBoardState === 'Zone') {
+    declareAbility(card, 'IfDestroyed', gameState, username);
+  }
+  if (boardState === 'Void' && lastBoardState !== 'Zone') {
+    declareAbility(card, 'IfObliterated', gameState, username);
+  }
+  if (boardState === 'Zone' && lastBoardState !== 'Zone') {
+    declareAbility(card, 'OnRally', gameState, username);
+    declareAbility(card, 'OnActivation', gameState, username);
+  }
+  if (boardState === 'FaceUpZone' && lastBoardState !== 'FaceUpZone') {
+    declareAbility(card, 'Flip', gameState, username);
   }
 }
 
-function declareAbility(card) {
-  const abilities = card.abilities;
+export function declareAbility(card, triggerType, gameState, username) {
+  const abilities = card.abilities || [];
 
   abilities.forEach((ability) => {
-    if (ability.effect === '') {
-    }
+    [1, 2, 3].forEach(num => {
+        const type = ability[`effect${num}type`];
+        const text = ability[`effect${num}text`];
+
+        if (type === triggerType && text === 'RetrieveDifferentUndead') {
+        RetrieveDifferentUndead(card, gameState, username);
+        }
+    // Add more conditionals as needed for other effects
+    });
   });
 }
 
-function retrieve1Undead(card) {
+export function RetrieveDifferentUndead(card, gameState, username) {
   console.log(`${card.name} activated Retrieve 1 Undead.`);
 
-  // Assuming there's a global tomb array for the player's tomb
-  const tomb = window.playerTomb || [];
+  const tomb = gameState[username]?.Tomb || [];
 
   const validTargets = tomb.filter(
     (targetCard) => targetCard.tag2 === 'Undead' && targetCard.name !== card.name
   );
 
-  if (validTargets.length > 0) {
-    console.log('Valid targets to retrieve:', validTargets.map(c => c.name));
-    // For now, we'll just log the options. Implementation of player choice can be added.
-  } else {
+  if (validTargets.length === 0) {
     console.log('No valid Undead targets to retrieve.');
+    return;
   }
+
+  // Overlay container
+  const overlay = document.createElement("div");
+  overlay.style.position = "fixed";
+  overlay.style.top = 0;
+  overlay.style.left = 0;
+  overlay.style.width = "100vw";
+  overlay.style.height = "100vh";
+  overlay.style.backgroundColor = "rgba(0, 0, 0, 0.8)";
+  overlay.style.zIndex = "150000";
+  overlay.style.display = "flex";
+  overlay.style.justifyContent = "center";
+  overlay.style.alignItems = "center";
+  overlay.style.flexWrap = "wrap";
+  document.body.appendChild(overlay);
+
+  const instruction = document.createElement("div");
+  instruction.innerText = "Select 1 Undead to retrieve";
+  instruction.style.color = "white";
+  instruction.style.fontSize = "2em";
+  instruction.style.width = "100%";
+  instruction.style.textAlign = "center";
+  instruction.style.marginBottom = "20px";
+  overlay.appendChild(instruction);
+
+  validTargets.forEach((targetCard) => {
+    const cardEl = renderCard(targetCard);
+    cardEl.style.transform = "scale(0.8)";
+    cardEl.style.margin = "10px";
+    cardEl.style.cursor = "pointer";
+    cardEl.style.pointerEvents = "auto";
+    cardEl.addEventListener("click", async () => {
+      const confirmBox = document.createElement("div");
+      confirmBox.style.position = "fixed";
+      confirmBox.style.top = "50%";
+      confirmBox.style.left = "50%";
+      confirmBox.style.transform = "translate(-50%, -50%)";
+      confirmBox.style.backgroundColor = "#333";
+      confirmBox.style.color = "white";
+      confirmBox.style.padding = "20px";
+      confirmBox.style.border = "2px solid white";
+      confirmBox.style.borderRadius = "10px";
+      confirmBox.style.zIndex = "160000";
+      confirmBox.innerHTML = `
+        <p>Retrieve <strong>${targetCard.name}</strong>?</p>
+        <button id="confirmRetrieve">Yes</button>
+        <button id="cancelRetrieve" style="margin-left: 10px;">No</button>
+      `;
+      document.body.appendChild(confirmBox);
+
+      document.getElementById("confirmRetrieve").onclick = async () => {
+        // Move the selected card from Tomb to Hand
+        const index = gameState[username].Tomb.findIndex(c => c.id === targetCard.id);
+        const [retrievedCard] = gameState[username].Tomb.splice(index, 1);
+        retrievedCard.lastBoardState = "Tomb";
+        retrievedCard.boardState = "Hand";
+        gameState[username].Hand.push(retrievedCard);
+
+        await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            gameId,
+            owner: username,
+            updatedZones: {
+              Hand: gameState[username].Hand,
+              Tomb: gameState[username].Tomb
+            }
+          })
+        });
+
+        addGameLogEntry(`${username} retrieved ${retrievedCard.name} from the Tomb`);
+
+        overlay.remove();
+        confirmBox.remove();
+        updateLocalFromGameState();
+      };
+
+      document.getElementById("cancelRetrieve").onclick = () => {
+        confirmBox.remove();
+      };
+    });
+    overlay.appendChild(cardEl);
+  });
 }
 
+
 /*
+type
+[
+Standard
+Passive
+Mandatory
+
+Rush
+Reflex
+
+Exhaustion
+
+OnRally
+OnActivation
+
+Tomb
+IfTomb
+
+IfDestroyed
+IfDiscarded
+IfObliterated
+
+Flip
+BattleFlip
+]
+
 cardCostFunction
 [
   "UseBasic",
