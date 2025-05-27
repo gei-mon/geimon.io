@@ -1,39 +1,47 @@
 import { renderCard } from './cardRenderer.js';
 
-export function handleBoardStateChange(card, boardState, lastBoardState, gameState, username) {
+export function handleBoardStateChange(card, boardState, lastBoardState, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
   console.log(`State change: ${card.name} from ${lastBoardState} to ${boardState}`);
   if (boardState === 'Tomb' && lastBoardState !== 'Tomb') {
-    declareAbility(card, 'IfTomb', gameState, username);
+    declareAbility(card, 'IfTomb', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
   }
   if (boardState === 'Hand' && lastBoardState === 'Deck') {
-    declareAbility(card, 'IfDrawnAdded', gameState, username);
+    declareAbility(card, 'IfDrawnAdded', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
   }
   if (boardState === 'Tomb' && lastBoardState === 'Deck') {
-    declareAbility(card, 'IfBuried', gameState, username);
+    declareAbility(card, 'IfBuried', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
   }
   if (boardState === 'Tomb' && lastBoardState === 'Hand') {
-    declareAbility(card, 'IfDiscarded', gameState, username);
+    declareAbility(card, 'IfDiscarded', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
   }
   if (boardState === 'Tomb' && lastBoardState === 'Zone') {
-    declareAbility(card, 'IfDestroyed', gameState, username);
+    declareAbility(card, 'IfDestroyed', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
   }
   if (boardState === 'Void' && lastBoardState !== 'Zone') {
-    declareAbility(card, 'IfObliterated', gameState, username);
+    declareAbility(card, 'IfObliterated', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
   }
   if (boardState === 'Zone' && lastBoardState !== 'Zone') {
-    declareAbility(card, 'OnRally', gameState, username);
-    declareAbility(card, 'OnActivation', gameState, username);
+    declareAbility(card, 'OnRally', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+    declareAbility(card, 'OnActivation', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
   }
   if (boardState === 'FaceUpZone' && lastBoardState !== 'FaceUpZone') {
-    declareAbility(card, 'Flip', gameState, username);
+    declareAbility(card, 'Flip', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
   }
 }
 
-export function declareAbility(card, triggerType, gameState, username) {
+export function declareAbility(card, triggerType, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
   console.log(`Checking abilities on ${card.name} for trigger: ${triggerType}`);
+  if (!card || !card.name || !card.abilities) {
+    console.warn("🛑 Invalid or incomplete card object passed:", card);
+    return;
+  }
 
   const abilities = card.abilities || [];
   console.log("Abilities attached to card:", card.abilities);
+  if (!card.abilities) {
+    console.warn(`Card ${card.name} has no abilities defined!`);
+    return;
+  }
 
   abilities.forEach((ability) => {
     [1, 2, 3].forEach(num => {
@@ -41,14 +49,14 @@ export function declareAbility(card, triggerType, gameState, username) {
         const text = ability[`effect${num}text`];
 
         if (type === triggerType && text === 'RetrieveDifferentUndead') {
-        RetrieveDifferentUndead(card, gameState, username);
+          RetrieveDifferentUndead(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
         }
     // Add more conditionals as needed for other effects
     });
   });
 }
 
-export function RetrieveDifferentUndead(card, gameState, username) {
+export function RetrieveDifferentUndead(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
   console.log(`${card.name} activated Retrieve 1 Undead.`);
 
   const tomb = gameState[username]?.Tomb || [];

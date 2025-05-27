@@ -730,7 +730,15 @@
                             }
                             const cardData = gameState[username].Hand.find(c => String(c.id) === cardId);
                             const fullCard = cards.find(c => String(c.id) === cardId);
-                            if (!cardData || !fullCard) return;
+
+                            if (!cardData || !fullCard) {
+                                console.warn("❌ Could not find cardData or fullCard for ID:", cardId);
+                                return;
+                            }
+
+                            const enrichedCard = { ...cardData, ...fullCard };
+                                enrichedCard.lastBoardState = "Hand";
+                                enrichedCard.boardState = "Tomb";
 
                             // Show discard confirmation popup
                             const confirmBox = document.createElement("div");
@@ -757,27 +765,35 @@
                             document.body.appendChild(confirmBox);
 
                             document.getElementById("confirm-discard").onclick = async () => {
-                            const index = gameState[username].Hand.findIndex(c => String(c.id) === cardId);
-                            const [discardedCard] = gameState[username].Hand.splice(index, 1);
-                            discardedCard.lastBoardState = "Hand";
-                            discardedCard.boardState = "Tomb";
-                            gameState[username].Tomb.push(discardedCard);
-                            AbilityExecutor.handleBoardStateChange(discardedCard, discardedCard.boardState, discardedCard.lastBoardState, gameState, username);
-                            addGameLogEntry(`${username} discarded ${fullCard.name} for hand size limit`);
+                                const index = gameState[username].Hand.findIndex(c => String(c.id) === cardId);
+                                gameState[username].Hand.splice(index, 1);
+                                gameState[username].Tomb.push(enrichedCard);
 
-                            await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
-                                method: "POST",
-                                credentials: "include",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({
-                                gameId,
-                                owner: username,
-                                updatedZones: {
-                                    Hand: gameState[username].Hand,
-                                    Tomb: gameState[username].Tomb
-                                }
-                                })
-                            });
+                                AbilityExecutor.handleBoardStateChange(
+                                    enrichedCard,
+                                    enrichedCard.boardState,
+                                    enrichedCard.lastBoardState,
+                                    gameState,
+                                    username,
+                                    gameId,
+                                    updateLocalFromGameState,
+                                    addGameLogEntry
+                                );
+                                addGameLogEntry(`${username} discarded ${fullCard.name} for hand size limit`);
+
+                                await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+                                    method: "POST",
+                                    credentials: "include",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({
+                                    gameId,
+                                    owner: username,
+                                    updatedZones: {
+                                        Hand: gameState[username].Hand,
+                                        Tomb: gameState[username].Tomb
+                                    }
+                                    })
+                                });
 
                             document.body.removeChild(confirmBox);
                             updateLocalFromGameState();
@@ -833,13 +849,22 @@
         });
 
         function sendToTomb(card) {
-            card.lastBoardState = card.boardState;
-            card.boardState = "Tomb";
+            console.log("Incoming card to sendToTomb:", card);
+            console.log("Card ID:", card?.id);
+            const fullCard = cards.find(c => String(c.id) === String(card.id)) || card;
+            console.log("Resolved full card:", fullCard);
 
-            gameState[username].Tomb.push(card);
+            if (!fullCard) {
+                console.error(`Full card data not found for ID ${card.id}`);
+                return;
+            }
 
-            const fullCard = cards.find(c => c.id === card.id);
-            AbilityExecutor.handleBoardStateChange(fullCard, card.boardState, card.lastBoardState, gameState, username);
+            fullCard.lastBoardState = card.boardState;
+            fullCard.boardState = "Tomb";
+
+            gameState[username].Tomb.push(fullCard);
+
+            AbilityExecutor.handleBoardStateChange(fullCard, fullCard.boardState, fullCard.lastBoardState, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
         }
 
         function renderLatestTombCard() {
