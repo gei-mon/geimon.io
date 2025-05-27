@@ -838,7 +838,8 @@
 
             gameState[username].Tomb.push(card);
 
-            AbilityExecutor.handleBoardStateChange(card, card.boardState, card.lastBoardState, gameState, username); // ✅ trigger abilities
+            const fullCard = cards.find(c => c.id === card.id);
+            AbilityExecutor.handleBoardStateChange(fullCard, card.boardState, card.lastBoardState, gameState, username);
         }
 
         function renderLatestTombCard() {

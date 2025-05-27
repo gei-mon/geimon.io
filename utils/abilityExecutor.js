@@ -1,6 +1,7 @@
 import { renderCard } from './cardRenderer.js';
 
 export function handleBoardStateChange(card, boardState, lastBoardState, gameState, username) {
+  console.log(`State change: ${card.name} from ${lastBoardState} to ${boardState}`);
   if (boardState === 'Tomb' && lastBoardState !== 'Tomb') {
     declareAbility(card, 'IfTomb', gameState, username);
   }
@@ -29,7 +30,10 @@ export function handleBoardStateChange(card, boardState, lastBoardState, gameSta
 }
 
 export function declareAbility(card, triggerType, gameState, username) {
+  console.log(`Checking abilities on ${card.name} for trigger: ${triggerType}`);
+
   const abilities = card.abilities || [];
+  console.log("Abilities attached to card:", card.abilities);
 
   abilities.forEach((ability) => {
     [1, 2, 3].forEach(num => {
