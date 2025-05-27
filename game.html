@@ -325,7 +325,7 @@
                 </div>
                 <div class="tab-content active" id="game-log">
                     <p>Totem: <span id="totem" style="color: goldenrod;"></span></p>
-                    <p id="game-log-placeholder"></p>
+                    <div id="game-log-placeholder"></div>
                 </div>
                 <div class="tab-content" id="dictionary">
                     <input type="text" id="dictionary-search" placeholder="Search terms..." style="width: 95%;">
@@ -368,6 +368,7 @@
             import { addTooltipListeners, addTokenTooltipListeners } from "./utils/cardRenderer.js";
             import { keywords } from "./data/keywords.js";
             import { rules } from "./data/rules.js";
+
             let gameId = new URLSearchParams(window.location.search).get("gameId");
             if (gameId) {
                 // Use the gameId from URL and update localStorage
@@ -377,13 +378,34 @@
                 gameId = localStorage.getItem("gameId") || Math.random().toString(36).substr(2, 9);
                 localStorage.setItem("gameId", gameId);
             }
+
             let username = null;
+            let hasDrawnInitialHand = false;
+            let lastLoggedIntermissionTurn = null;
+
             const params = new URLSearchParams(window.location.search);
             const isSinglePlayer = params.get("gameType") === "single";
             const otherPlayerName = params.get("opponent") || "Unknown_Opponent"; // if multiplayer later
 
-        let previousHandIds = [];
-        let lastDrawTurn = null;
+            let previousHandIds = [];
+            let lastDrawTurn = null;
+
+            function addGameLogEntry(message) {
+                if (!username) {
+                    console.warn("❌ addGameLogEntry called before username was set.");
+                    return;
+                }
+                const gameLog = document.getElementById("game-log-placeholder");
+                if (!gameLog) {
+                    console.warn("No game log container found.");
+                    return;
+                }
+                const time = new Date().toLocaleTimeString();
+                const entry = document.createElement("div");
+                entry.textContent = `[${time}] ${message}`;
+                gameLog.appendChild(entry);
+                gameLog.scrollTop = gameLog.scrollHeight;
+            }
 
         function handsAreEqual(currentHand) {
         return (
@@ -396,11 +418,23 @@
             const player = gameState[username];
             const currentHand = player.Hand;
 
-            // Only re-render if the hand has changed
+            const prevLength = previousHandIds.length;
+            const newLength = currentHand.length;
+
             if (!handsAreEqual(currentHand)) {
                 drawnCardsArray = currentHand;
                 previousHandIds = currentHand.map(card => card.id);
                 renderDrawnCards();
+
+                if (!hasDrawnInitialHand && newLength >= 5) {
+                    hasDrawnInitialHand = true;
+                    return;
+                }
+
+                if (hasDrawnInitialHand && newLength > prevLength) {
+                    const numDrawn = newLength - prevLength;
+                    addGameLogEntry(`${username} drew ${numDrawn} card${numDrawn > 1 ? 's' : ''}`);
+                }
             }
 
             remainingDeck = player.Deck;
@@ -425,14 +459,21 @@
                 }
             }
             async function initGameClient() {
-            await getUsername();
-            if (!username) {
-                alert("Could not retrieve username.");
-                return; // ✅ This is now valid
-            }
+                await getUsername();
+                if (!username) {
+                    alert("Could not retrieve username.");
+                    return; // ✅ This is now valid
+                }
             }
 
         window.onload = () => {
+            (async () => {
+                await initGameClient();
+                    if (!username) {
+                        console.warn("Username not set after init.");
+                        return;
+                }
+
             const params = new URLSearchParams(window.location.search);
             const turnOrder = params.get("turnOrder");
 
@@ -530,7 +571,8 @@
                     <p>Turn Order: ${turnOrder}</p>
                 `;
             }
-        };
+        })();
+    };
         async function fetchLatestTurnState() {
             const res = await fetch(`https://geimon-app-833627ba44e0.herokuapp.com/getGameState/${gameId}`, {
                 credentials: "include",
@@ -719,6 +761,7 @@
                             discardedCard.lastBoardState = "Hand";
                             discardedCard.boardState = "Tomb";
                             gameState[username].Tomb.push(discardedCard);
+                            addGameLogEntry(`${username} discarded ${fullCard.name} for hand size limit`);
 
                             await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
                                 method: "POST",
@@ -756,8 +799,8 @@
                                 });
 
                                 if (response.ok) {
-                                const updated = await response.json();
-                                updatePhaseDisplay(updated.currentPhase);
+                                    const updated = await response.json();
+                                    updatePhaseDisplay(updated.currentPhase);
                                 }
                             }
                             };
@@ -780,8 +823,9 @@
                 });
 
                 if (response.ok) {
-                const updated = await response.json();
-                updatePhaseDisplay(updated.currentPhase);
+                    const updated = await response.json();
+                    updatePhaseDisplay(updated.currentPhase);
+                    addGameLogEntry(`${username} changed phase to ${updated.currentPhase}`);
                 }
             });
         });
@@ -1106,7 +1150,7 @@
             document.getElementById("totem").textContent = selectedTotem;
             const totemTextElement = document.createElement("p");
                 totemTextElement.innerHTML = `<strong>Description:</strong> ${selectedTotemText}`;
-            document.getElementById("game-log").appendChild(totemTextElement);
+            document.getElementById("game-log-placeholder").appendChild(totemTextElement);
 
             const totemBox = document.createElement("div");
                 totemBox.style.position = "absolute";
@@ -1926,26 +1970,23 @@
             document.querySelectorAll('.phase-box').forEach(box => {
                 const phase = box.textContent.trim();
                 box.classList.remove('active');
-
                 if (turnCount === 1 && (phase === "Battle" || phase === "Main 2")) {
-                box.style.backgroundColor = "darkred";
-                box.style.cursor = "not-allowed";
-                return;
+                    box.style.backgroundColor = "darkred";
+                    box.style.cursor = "not-allowed";
+                    return;
                 }
-
                 if (!isPlayerTurn) {
-                box.style.cursor = "not-allowed";
-                box.style.backgroundColor = "dimgray";
-                return;
+                    box.style.cursor = "not-allowed";
+                    box.style.backgroundColor = "dimgray";
+                    return;
                 }
-
                 const validNextPhases = allowedTransitions[currentPhase] || [];
                 if (validNextPhases.includes(phase)) {
-                box.style.cursor = "pointer";
-                box.style.backgroundColor = "lightgray";
+                    box.style.cursor = "pointer";
+                    box.style.backgroundColor = "lightgray";
                 } else {
-                box.style.cursor = "not-allowed";
-                box.style.backgroundColor = "dimgray";
+                    box.style.cursor = "not-allowed";
+                    box.style.backgroundColor = "dimgray";
                 }
             });
 
@@ -1953,6 +1994,18 @@
             if (activeBox) {
                 activeBox.classList.add('active');
                 activeBox.style.backgroundColor = "lightgreen";
+            }
+
+            const turnNum = gameState.turn?.count;
+
+            if (
+                currentPhase === "Intermission" &&
+                isPlayerTurn &&
+                turnNum !== lastLoggedIntermissionTurn
+            ) {
+                addGameLogEntry(`${username}'s turn. Turn #${turnNum}`);
+                addGameLogEntry(`${username} changed phase to Intermission`);
+                lastLoggedIntermissionTurn = turnNum; // ✅ Prevent duplicate logs
             }
         }
         async function drawCards(deck, numCards = 5) {
