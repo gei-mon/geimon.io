@@ -50,7 +50,10 @@ export function RetrieveDifferentUndead(card, gameState, username) {
   const tomb = gameState[username]?.Tomb || [];
 
   const validTargets = tomb.filter(
-    (targetCard) => targetCard.tag2 === 'Undead' && targetCard.name !== card.name
+    (targetCard) =>
+      Array.isArray(targetCard.tags) &&
+      targetCard.tags.includes("Undead") &&
+      targetCard.name !== card.name
   );
 
   if (validTargets.length === 0) {
