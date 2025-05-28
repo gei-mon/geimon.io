@@ -2079,8 +2079,23 @@
                     const parentCard = cardButton.closest(".card");
                     const cardId = parentCard?.dataset.cardId;
 
+                    if (!cardId) {
+                        console.warn("❌ No cardId found on clicked card");
+                        return;
+                    }
+
                     if (discardMode) {
                         return handleCardDiscard(gameState, username, cards, gameId, currentPhase, updateLocalFromGameState, addGameLogEntry, updatePhaseDisplay);
+                    }
+
+                    const fullCard = cards.find(c => String(c.id) === String(cardId));
+                    if (!fullCard) {
+                        console.warn("❌ Card not found in cards array:", cardId);
+                        return;
+                    }
+
+                    if (isBasicRallyAvailable(fullCard, currentPhase, gameState, username)) {
+                        handleBasicRally(fullCard); // ✅ Trigger rally!
                     }
 
                     updateAllRallyHighlights(currentPhase, gameState, username);
