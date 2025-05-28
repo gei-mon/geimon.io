@@ -254,6 +254,7 @@ effectXcost
   "ObliterateSelfTargetUndeadOrHelperInTomb",
   "Offer1",
   "Discard1PlusTarget1OnZone",
+  "OppRecruit1CommanderObelisk",
   "Destroy1ObeliskYouControl",
   "GiveOpp1Blocker"
 ]
@@ -267,6 +268,7 @@ effectXtext
   "Obliterate1Revealed",
   "DestroyImmuneOnce",
   "DestroyCardsEqualToLife",
+  "Draw2PerOppCommanderObelisk",
   "ResurrectUnleash1Undead",
   "DropAllTo1",
   "Obliterate1OnZone",

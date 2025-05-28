@@ -505,22 +505,23 @@
         const cardElement = renderCard(card, searchResults);
 
         if (cardElement) {
-            const button = document.createElement("button");
-            button.classList.add("card-button");
+            const button = cardElement.querySelector(".card-button"); // ✅ override existing one
 
-            const isInDeck = cardIds.some(id => String(id) === String(card.id));
+if (button) {
+    const isInDeck = cardIds.some(id => String(id) === String(card.id));
 
-            if (isInDeck) {
-                button.disabled = true;
-                button.style.cursor = "not-allowed";
-                button.title = "Already in deck";
-            } else {
-                button.style.cursor = "pointer";
-                button.title = "Add card to deck";
-                button.addEventListener("click", () => {
-                    addCardToDeck(card.id);
-                });
-            }
+    if (isInDeck) {
+        button.disabled = true;
+        button.style.cursor = "not-allowed";
+        button.title = "Already in deck";
+    } else {
+        button.disabled = false;
+        button.style.cursor = "pointer";
+        button.title = "Add card to deck";
+        button.onclick = () => addCardToDeck(card.id); // ✅ override default handler
+        button._originalHandler = button.onclick;      // optional, but preserves pattern
+    }
+}
 
             cardElement.appendChild(button);
 
