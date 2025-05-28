@@ -429,6 +429,12 @@ overflow: hidden;
   }
 }
 
+.basic-rally-highlight {
+  outline: 5px solid cyan !important;
+  box-shadow: 0 0 25px cyan !important;
+  border: 3px dashed cyan !important;
+}
+
 .bottom-bar {
 width: 70%;                  /* Reduced width */
 height: 32px;

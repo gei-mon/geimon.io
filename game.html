@@ -287,12 +287,12 @@
 }
 .card-zone {
   display: flex;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 12px;
-  height: 100%;
   overflow: visible;
-  pointer-events: none;
+  z-index: 100300;
   position: relative;
 }
 </style>
@@ -358,7 +358,7 @@
         <div id="turn-indicator">Your Turn</div>
         <div id="turn-counter">Turn: 1</div>
         <div id="playerArsenalBox" class="card-zone"></div>
-        <div id="playerChampionBox" class="card-zone"></div>
+        <div id="playerChampionsBox" class="card-zone"></div>
         <div id="playerReserveBox" class="card-zone"></div>
 
         <script type="module">
@@ -447,8 +447,14 @@
             renderLatestTombCard();
             renderLatestVoidCard();
 
-            ["Arsenal", "Champions", "Reserve"].forEach(zone => {
-                renderCardZone(gameState[username][zone], `player${zone}Box`);
+            const zoneMappings = {
+                "Zone (Champion)": "Champions",
+                "Zone (Arsenal)": "Arsenal",
+                "Reserve": "Reserve"
+            };
+
+            Object.entries(zoneMappings).forEach(([zoneKey, domSuffix]) => {
+                renderCardZone(gameState[username][zoneKey], `player${domSuffix}Box`);
             });
         }
 
@@ -1070,18 +1076,15 @@
             arsenalBox.style.backgroundColor = "rgba(255, 0, 0, 0)";
             document.body.appendChild(arsenalBox);
 
-            const championBox = document.createElement("div");
-                championBox.id = "playerChampionBox";
-                championBox.className = "card-zone";
-                championBox.style.position = "absolute";
+            const championBox = document.getElementById("playerChampionsBox");
+                championBox.style.position = "fixed";
                 championBox.style.left = "34.2%";
                 championBox.style.top = "52.9%";
                 championBox.style.width = "49.9%";
                 championBox.style.height = "13.4%";
-                championBox.style.zIndex = "1000";
+                championBox.style.zIndex = "100300"; // ensure it's above the board
                 championBox.style.pointerEvents = "none";
-            championBox.style.backgroundColor = "rgba(255, 0, 0, 0)";
-            document.body.appendChild(championBox);
+                championBox.style.backgroundColor = "rgba(255, 0, 0, 0)"; // debug transparent background
 
             const reserveBox = document.createElement("div");
                 reserveBox.id = "playerReserveBox";
@@ -1569,12 +1572,13 @@
     const playerVoidBox = document.createElement("div");
         playerVoidBox.id = "playerVoidBox";
         playerVoidBox.style.position = "absolute";
-        playerVoidBox.style.left = "84.6%";  // Same X as Deck
+        playerVoidBox.style.left = "83%";  // Same X as Deck
         playerVoidBox.style.top = "42%";   // Directly above the Deck
-        playerVoidBox.style.width = "3.72%";
-        playerVoidBox.style.height = "11.8%";
+        playerVoidBox.style.width = "7%";
+        playerVoidBox.style.height = "9%";
         playerVoidBox.style.outline = "none";//"4px solid white";
         playerVoidBox.style.zIndex = "1000";
+        //playerVoidBox.style.backgroundColor = "rgba(255, 0, 0)";
         playerVoidBox.style.opacity = "0";
         playerVoidBox.style.transition = "opacity 1s ease-in-out";
         playerVoidBox.style.textAlign = "center";
@@ -1883,6 +1887,70 @@
             return deck;
         }
 
+        const CHAMPION_ZONE = "Zone (Champion)";
+        async function handleBasicRally(card) {
+            console.log("🔵 handleBasicRally invoked for:", card);
+
+            if (!isBasicRallyAvailable(card, gameState.turn.currentPhase, gameState, username)) {
+                console.warn("⛔ Rally not available for:", card.name);
+                return;
+            }
+
+            const ralliedCard = gameState[username].Hand.find(c => String(c.id) === String(card.id));
+            if (!ralliedCard) {
+                console.warn("❌ Card not found in Hand for rally:", card.id);
+                return;
+            }
+            Object.assign(ralliedCard, card);
+
+            console.log("✅ Card found in Hand. Proceeding with rally...");
+
+            ralliedCard.lastBoardState = "Hand";
+            ralliedCard.boardState = "Zone";
+
+            // Remove from hand
+            gameState[username].Hand = gameState[username].Hand.filter(c => c.id !== ralliedCard.id);
+
+            // Add to champion zone
+            gameState[username][CHAMPION_ZONE].push(ralliedCard);
+
+            // ✅ 1. Trigger ability hooks (important for rally effects like OnRally)
+            AbilityExecutor.handleBoardStateChange(
+                ralliedCard,
+                ralliedCard.boardState,
+                ralliedCard.lastBoardState,
+                gameState,
+                username,
+                gameId,
+                updateLocalFromGameState,
+                addGameLogEntry
+            );
+
+        try {
+            // Post update
+            const res = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                gameId,
+                owner: username,
+                updatedZones: {
+                Hand: gameState[username].Hand,
+                [CHAMPION_ZONE]: gameState[username][CHAMPION_ZONE]
+                }
+            })
+        });
+            const responseText = await res.text();
+            console.log("Server response:", res.status, responseText);
+
+            addGameLogEntry(`${username} performed a Basic Rally with ${card.name}`);
+            updateLocalFromGameState();
+        } catch (err) {
+                console.error("💥 Error sending rally update:", err);
+            }
+    }
+
         // Function to render drawn cards
         function renderDrawnCards() {
             const drawnCardsContainer = document.getElementById("drawn-cards"); // Ensure this container exists
@@ -1894,8 +1962,8 @@
             const phaseTracker = document.getElementById("phase-tracker");
             const turnCounter = document.getElementById("turn-counter");
             const turnIndicator = document.getElementById("turn-indicator");
-                turnIndicator.style.opacity = "0";
             drawnCardsContainer.innerHTML = ""; // Clear previous renders
+            const currentPhase = gameState?.turn?.currentPhase;
 
             if (drawnCardsArray.length === 0) {
                 console.log("No cards have been drawn yet.");
@@ -1924,72 +1992,90 @@
             });
 
             drawnCardsArray.forEach(cardObj => {
-                const card = cards.find(card => String(card.id) === String(cardObj.id));
-                if (card) {
-                    const cardElement = renderCard(card, drawnCardsContainer);
-                        cardElement.dataset.boardState = cardObj.boardState;
-                        cardElement.dataset.lastBoardState = cardObj.lastBoardState;
-                        cardElement.style.transform = "scale(0.5)";
-                        cardElement.style.position = "relative"; // Ensures correct alignment
-                        cardElement.style.marginLeft = "-15%"; // Overlaps cards slightly
-                        cardElement.style.opacity = "1";
-                        cardElement.style.transition = "opacity 1s ease-in-out"; // Smooth fade effect
+                const card = cards.find(c => String(c.id) === String(cardObj.id));
+                if (!card) return;
 
-                    const cardButton = document.createElement("button");
-                        cardButton.classList.add("card-button");
-                            cardButton.style.position = "absolute";
-                            cardButton.style.top = "0";
-                            cardButton.style.right = "0";
-                            cardButton.style.width = "100%"; /* Covers entire card */
-                            cardButton.style.height = "100%"; /* Covers entire card */
-                            cardButton.style.opacity = "0";
-                            cardButton.style.backgroundColor = "rgba(0, 0, 0, 0.5)";
-                            cardButton.style.border = "none";
-                            cardButton.style.pointerEvents = "none";
-                            cardButton.style.padding = "5px";
-                            cardButton.style.zIndex = "100100";
-                            cardButton.style.background = "transparent";
-                        const defaultHandler = () => alert(`Card clicked: ${card.name}`);
-                            cardButton.onclick = defaultHandler;
-                            cardButton.dataset.originalClick = "true"; // optional flag if needed
-                            cardButton._originalHandler = defaultHandler; // ✅ Attach backup here
+                const cardElement = renderCard(card);
+                cardElement.dataset.boardState = cardObj.boardState;
+                cardElement.dataset.lastBoardState = cardObj.lastBoardState;
+                cardElement.style.transform = "scale(0.5)";
+                cardElement.style.position = "relative";
+                cardElement.style.marginLeft = "-15%";
+                cardElement.style.opacity = "1";
+                cardElement.style.transition = "opacity 1s ease-in-out";
 
-                    // Hover effect to display scaled card in viewing window
-                    cardElement.addEventListener("mouseenter", () => {
-                        scaledCardContainer.innerHTML = ""; // Clear previous preview
-                        const clone = cardElement.cloneNode(true);
-                        const cloneButton = clone.querySelector(".card-button");
-                        if (cloneButton) cloneButton.remove(); // Remove interactions
-                        clone.style.transform = "scale(1.2)"; // Slight enlargement
-                        clone.style.width = "100%"; // Full width inside the viewing window
-                        clone.style.position = "relative";
-                        scaledCardContainer.appendChild(clone);
-                        addTooltipListeners(clone);
-                        addTokenTooltipListeners(clone);
-                    });
+                // ✅ Invisible button to capture clicks
+                const cardButton = document.createElement("button");
+                cardButton.classList.add("card-button");
+                cardButton.style.position = "absolute";
+                cardButton.style.top = "0";
+                cardButton.style.right = "0";
+                cardButton.style.width = "100%";
+                cardButton.style.height = "100%";
+                cardButton.style.opacity = "0";
+                cardButton.style.background = "transparent";
+                cardButton.style.border = "none";
+                cardButton.style.pointerEvents = "auto";
+                cardButton.style.padding = "5px";
+                cardButton.style.zIndex = "100100";
 
-                    cardElement.appendChild(cardButton);
-                    drawnCardsContainer.appendChild(cardElement);
-                    setTimeout(() => {
-                        cardElement.style.opacity = "1";
-                        cardButton.style.opacity = "1";
-                        cardButton.style.pointerEvents = "auto";
-                        cardButton.style.cursor = "pointer";
-                    }, 1500);
-                    setTimeout(() => {
-                        viewingWindow.style.opacity = "1";
-                        contextWindow.style.opacity = "1";
-                        playerLifeWindow.style.opacity = "1";
-                        opponentLifeWindow.style.opacity = "1";
-                        phaseTracker.style.opacity = "1";
-                        turnCounter.style.opacity = "1";
-                    }, 2500);
-                    setTimeout(() => {
-                        turnIndicator.style.opacity = "1";
-                    }, 6500);
+                // ✅ Click logic
+                cardButton.onclick = () => {
+                    if (isBasicRallyAvailable(card, currentPhase, gameState, username)) {
+                        handleBasicRally(card);
+                    } else {
+                        console.log(`🃏 Card clicked: ${card.name}`);
+                    }
+                };
+
+                if (isBasicRallyAvailable(card, currentPhase, gameState, username)) {
+                    console.log("🔵 Adding glow to", card.name);
+                    cardElement.classList.add("basic-rally-highlight");
                 }
+
+                // 🖼️ Hover effect for preview
+                cardElement.addEventListener("mouseenter", () => {
+                    scaledCardContainer.innerHTML = "";
+                    const clone = cardElement.cloneNode(true);
+                    const cloneButton = clone.querySelector(".card-button");
+                    if (cloneButton) cloneButton.remove();
+                    clone.style.transform = "scale(1.2)";
+                    clone.style.width = "100%";
+                    clone.style.position = "relative";
+                    scaledCardContainer.appendChild(clone);
+                    addTooltipListeners(clone);
+                    addTokenTooltipListeners(clone);
+                });
+
+                cardElement.appendChild(cardButton);
+                drawnCardsContainer.appendChild(cardElement);
+
+                // Fade in after render
+                setTimeout(() => {
+                    cardElement.style.opacity = "1";
+                    cardButton.style.opacity = "1";
+                    cardButton.style.cursor = "pointer";
+                }, 1500);
             });
+
+            // Fade in UI overlays
+            setTimeout(() => {
+                viewingWindow.style.opacity = "1";
+                contextWindow.style.opacity = "1";
+                playerLifeWindow.style.opacity = "1";
+                opponentLifeWindow.style.opacity = "1";
+                phaseTracker.style.opacity = "1";
+                turnCounter.style.opacity = "1";
+            }, 2500);
         }
+
+        function isBasicRallyAvailable(card, currentPhase, gameState, username) {
+            const isMainPhase = currentPhase?.toLowerCase().includes("main");
+            const cost = String(card.cost || "").toLowerCase();
+            const hasRallied = gameState[username]?.hasBasicRallied === true;
+            return isMainPhase && cost === "basic" && !hasRallied;
+        }
+
         function updatePhaseDisplay(currentPhase) {
             const turnCount = gameState?.turn?.count || 0;
             const currentPlayer = gameState?.turn?.currentPlayer;
@@ -2043,6 +2129,13 @@
                 addGameLogEntry(`${username}'s turn. Turn #${turnNum}`);
                 addGameLogEntry(`${username} changed phase to Intermission`);
                 lastLoggedIntermissionTurn = turnNum; // ✅ Prevent duplicate logs
+                if (gameState[username]) {
+                    gameState[username].hasBasicRallied = false;
+                    console.log("🔄 Reset hasBasicRallied for", username);
+                }
+            }
+            if (currentPhase === "Main 1" || currentPhase === "Main 2") {
+                renderDrawnCards();
             }
         }
         async function drawCards(deck, numCards = 5) {

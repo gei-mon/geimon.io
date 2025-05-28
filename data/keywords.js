@@ -29,7 +29,7 @@ export const keywords = {
   Maintenance: "During your End Phase (Mandatory): Mill 1.",
   Mount: "On Activation: Designate 1 Champion you control as this card&apos;s Commander. If you control no Champions, you can use this effect to designate one during your Main Phase. \n\n The Mounted effects on this card cannot be used if it has no designated Commander. If this card&apos;s Commander leaves the zone, you can use this effect during your Main Phase to declare a new Commander. A Champion can only be the Commander of one Obelisk at a time.",
   Shielded: "If this card&apos;s Commander would be destroyed: Destroy this card instead.",
-  Lifesteal: "Gain Life equal to the battle Damage dealt by this Champion.",
+  Lifesteal: "You gain Life equal to the battle Damage dealt by this Champion.",
   Menace: "When this Champion declares an attack, it cannot be blocked. Your Opponent can: When this card declares an attack: Sacrifice 1; Negate the attack.",
   Parasite: "If a Champion is Rallied with a higher Damage than this card (Mandatory): Draw 1.",
   Forged: "Increase this Champion&apos;s Damage by 1 for every Equipment attached to it.",

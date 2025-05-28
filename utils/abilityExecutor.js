@@ -269,6 +269,7 @@ effectXtext
   "DestroyImmuneOnce",
   "DestroyCardsEqualToLife",
   "Draw2PerOppCommanderObelisk",
+  "Reveal5DeckCardsOpponentChoose1ToAddObliterateRemaining",
   "ResurrectUnleash1Undead",
   "DropAllTo1",
   "Obliterate1OnZone",

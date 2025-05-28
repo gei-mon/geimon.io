@@ -662,7 +662,7 @@ export const tokens = [
     damageThreshold: "",
     abilities: [
       {
-        text: "This Token’s Damage and Life are equal to the current Damage and Life of the Champion it is replacing.",
+        text: "This Token’s Damage and Life are equal to the last remaining Damage and Life of the Champion it is replacing.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "OnRally",
