@@ -290,7 +290,7 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 12px;
+  gap: 0px;
   overflow: visible;
   z-index: 100300;
   position: relative;
@@ -384,6 +384,8 @@
             let hasDrawnInitialHand = false;
             let lastLoggedIntermissionTurn = null;
 
+            let discardMode = false;
+
             const params = new URLSearchParams(window.location.search);
             const isSinglePlayer = params.get("gameType") === "single";
             const otherPlayerName = params.get("opponent") || "Unknown_Opponent"; // if multiplayer later
@@ -446,6 +448,10 @@
             updatePhaseDisplay(gameState.turn.currentPhase);
             renderLatestTombCard();
             renderLatestVoidCard();
+
+            if (gameState[username] && gameState[username].hasBasicRallied === undefined) {
+                gameState[username].hasBasicRallied = false;
+            }
 
             const zoneMappings = {
                 "Zone (Champion)": "Champions",
@@ -631,15 +637,156 @@
                 console.error("💥 Error fetching game state:", err);
             }
         }
+
         function showLossBanner(mainText, reasonText) {
             const banner = document.getElementById("loss-banner");
             document.getElementById("loss-main-text").textContent = mainText;
             document.getElementById("loss-reason-text").textContent = reasonText;
             banner.style.display = "block";
         }
+
         function checkActivatableCards() {
             console.log("Check for activatable cards here...");
         }
+
+        async function handleCardDiscard(gameState, username, cards, gameId, phase, updateLocalFromGameState, addGameLogEntry, updatePhaseDisplay) {
+            discardMode = true;
+            const hand = gameState[username].Hand;
+            if (hand.length <= 6) return;
+
+            const drawnCardsContainer = document.getElementById("drawn-cards");
+            if (!drawnCardsContainer) return;
+
+            const discardsNeeded = hand.length - 6;
+            let discardsLeft = discardsNeeded;
+
+            // Disable phase clicks
+            document.querySelectorAll(".phase-box").forEach(box => box.style.pointerEvents = "none");
+
+            // Create discard instruction
+            const discardInstruction = document.createElement("div");
+            discardInstruction.textContent = `Select ${discardsLeft} card${discardsLeft > 1 ? "s" : ""} to discard`;
+            Object.assign(discardInstruction.style, {
+                position: "fixed",
+                bottom: "50%",
+                left: "55%",
+                transform: "translateX(-50%)",
+                color: "black",
+                fontSize: "4em",
+                backgroundColor: "rgba(255, 0, 0, 0.85)",
+                padding: "12px 20px",
+                borderRadius: "10px",
+                zIndex: "120000"
+            });
+            document.body.appendChild(discardInstruction);
+
+            drawnCardsContainer.querySelectorAll(".card-button").forEach(button => {
+                const originalClick = button.onclick;
+                button._originalHandler = originalClick;
+
+                button.onclick = () => {
+                    const parentCard = button.closest(".card");
+                    const cardId = parentCard?.dataset.cardId;
+                    if (!cardId) return console.warn("❌ No cardId found on clicked button");
+
+                    const cardData = gameState[username].Hand.find(c => String(c.id) === cardId);
+                    const fullCard = cards.find(c => String(c.id) === cardId);
+                    if (!cardData || !fullCard) return console.warn("❌ Could not find card data");
+
+                    const enrichedCard = { ...cardData, ...fullCard, lastBoardState: "Hand", boardState: "Tomb" };
+
+                    const confirmBox = document.createElement("div");
+                    Object.assign(confirmBox.style, {
+                        position: "fixed",
+                        top: "50%",
+                        left: "50%",
+                        transform: "translate(-50%, -50%)",
+                        padding: "20px",
+                        backgroundColor: "#333",
+                        color: "white",
+                        border: "2px solid white",
+                        borderRadius: "10px",
+                        zIndex: "120001",
+                        textAlign: "center",
+                        boxShadow: "0 0 10px black"
+                    });
+                    confirmBox.innerHTML = `
+                        <p>Discard this card?</p>
+                        <div style="margin: 10px 0;">${fullCard.name}</div>
+                        <button id="confirm-discard">Confirm</button>
+                        <button id="cancel-discard" style="margin-left: 10px;">Cancel</button>
+                    `;
+                    document.body.appendChild(confirmBox);
+
+                    document.getElementById("confirm-discard").onclick = async () => {
+                        const index = gameState[username].Hand.findIndex(c => String(c.id) === cardId);
+                        gameState[username].Hand.splice(index, 1);
+                        gameState[username].Tomb.push(enrichedCard);
+
+                        AbilityExecutor.handleBoardStateChange(
+                            enrichedCard,
+                            "Tomb",
+                            "Hand",
+                            gameState,
+                            username,
+                            gameId,
+                            updateLocalFromGameState,
+                            addGameLogEntry
+                        );
+
+                        addGameLogEntry(`${username} discarded ${fullCard.name} for hand size limit`);
+
+                        await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+                            method: "POST",
+                            credentials: "include",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                gameId,
+                                owner: username,
+                                updatedZones: {
+                                    Hand: gameState[username].Hand,
+                                    Tomb: gameState[username].Tomb
+                                }
+                            })
+                        });
+
+                        document.body.removeChild(confirmBox);
+                        updateLocalFromGameState();
+                        renderLatestTombCard();
+
+                        discardsLeft--;
+                        discardInstruction.textContent = `Select ${discardsLeft} card${discardsLeft === 1 ? "" : "s"} to discard`;
+
+                        if (discardsLeft === 0) {
+                            discardMode = false;
+                            document.body.removeChild(discardInstruction);
+                            drawnCardsContainer.querySelectorAll(".card-button").forEach(btn => {
+                                btn.onclick = btn._originalHandler || null;
+                            });
+                            document.querySelectorAll(".phase-box").forEach(box => box.style.pointerEvents = "auto");
+
+                            const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/setPhase", {
+                                method: "POST",
+                                credentials: "include",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ gameId, username, phase })
+                            });
+
+                            if (response.ok) {
+                                const updated = await response.json();
+                                updatePhaseDisplay(updated.currentPhase);
+                            }
+                        }
+                    };
+
+                    document.getElementById("cancel-discard").onclick = () => {
+                        document.body.removeChild(confirmBox);
+                    };
+                };
+            });
+        }
+
+
         function updateTurnDisplay(turnData) {
         if (turnData && turnData.count) {
             document.getElementById("turn-counter").textContent = `Turn: ${turnData.count}`;
@@ -696,163 +843,36 @@
                 }
 
                 if (phase === "End" && gameState.turn.currentPlayer === username) {
-                const hand = gameState[username].Hand;
-                if (hand.length > 6) {
-                    const discardsNeeded = hand.length - 6;
-                    let discardsLeft = discardsNeeded;
-                    const drawnCardsContainer = document.getElementById("drawn-cards");
-
-                    // Disable phase clicks
-                    document.querySelectorAll(".phase-box").forEach(box => box.style.pointerEvents = "none");
-
-                    // Create discard instruction
-                    const discardInstruction = document.createElement("div");
-                        discardInstruction.textContent = `Select ${discardsLeft} card${discardsLeft > 1 ? "s" : ""} to discard`;
-                        discardInstruction.style.position = "fixed";
-                        discardInstruction.style.bottom = "50%";
-                        discardInstruction.style.left = "55%";
-                        discardInstruction.style.transform = "translateX(-50%)";
-                        discardInstruction.style.color = "black";
-                        discardInstruction.style.fontSize = "4em";
-                        discardInstruction.style.backgroundColor = "rgba(255, 0, 0, 0.85)";
-                        discardInstruction.style.padding = "12px 20px";
-                        discardInstruction.style.borderRadius = "10px";
-                        discardInstruction.style.zIndex = "120000";
-                    document.body.appendChild(discardInstruction);
-
-                    // Handle click on card buttons
-                    drawnCardsContainer.querySelectorAll(".card-button").forEach(button => {
-                        // Backup original click handler
-                        const originalClick = button._originalHandler;
-
-                        button.onclick = () => {
-                            const parentCard = button.closest(".card");
-                            const cardId = parentCard?.dataset.cardId;
-                            console.log("🟡 Card clicked during discard:", cardId);
-
-                            if (!cardId) {
-                            console.warn("❌ No cardId found from clicked button using .closest('.card')", button);
-                            return;
-                            }
-                            const cardData = gameState[username].Hand.find(c => String(c.id) === cardId);
-                            const fullCard = cards.find(c => String(c.id) === cardId);
-
-                            if (!cardData || !fullCard) {
-                                console.warn("❌ Could not find cardData or fullCard for ID:", cardId);
-                                return;
-                            }
-
-                            const enrichedCard = { ...cardData, ...fullCard };
-                                enrichedCard.lastBoardState = "Hand";
-                                enrichedCard.boardState = "Tomb";
-
-                            // Show discard confirmation popup
-                            const confirmBox = document.createElement("div");
-                            confirmBox.style.position = "fixed";
-                            confirmBox.style.top = "50%";
-                            confirmBox.style.left = "50%";
-                            confirmBox.style.transform = "translate(-50%, -50%)";
-                            confirmBox.style.padding = "20px";
-                            confirmBox.style.backgroundColor = "#333";
-                            confirmBox.style.color = "white";
-                            confirmBox.style.border = "2px solid white";
-                            confirmBox.style.borderRadius = "10px";
-                            confirmBox.style.zIndex = "120001";
-                            confirmBox.style.textAlign = "center";
-                            confirmBox.style.boxShadow = "0 0 10px black";
-
-                            confirmBox.innerHTML = `
-                            <p>Discard this card?</p>
-                            <div style="margin: 10px 0;">${fullCard.name}</div>
-                            <button id="confirm-discard">Confirm</button>
-                            <button id="cancel-discard" style="margin-left: 10px;">Cancel</button>
-                            `;
-
-                            document.body.appendChild(confirmBox);
-
-                            document.getElementById("confirm-discard").onclick = async () => {
-                                const index = gameState[username].Hand.findIndex(c => String(c.id) === cardId);
-                                gameState[username].Hand.splice(index, 1);
-                                gameState[username].Tomb.push(enrichedCard);
-
-                                AbilityExecutor.handleBoardStateChange(
-                                    enrichedCard,
-                                    enrichedCard.boardState,
-                                    enrichedCard.lastBoardState,
-                                    gameState,
-                                    username,
-                                    gameId,
-                                    updateLocalFromGameState,
-                                    addGameLogEntry
-                                );
-                                addGameLogEntry(`${username} discarded ${fullCard.name} for hand size limit`);
-
-                                await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
-                                    method: "POST",
-                                    credentials: "include",
-                                    headers: { "Content-Type": "application/json" },
-                                    body: JSON.stringify({
-                                    gameId,
-                                    owner: username,
-                                    updatedZones: {
-                                        Hand: gameState[username].Hand,
-                                        Tomb: gameState[username].Tomb
-                                    }
-                                    })
-                                });
-
-                            document.body.removeChild(confirmBox);
-                            updateLocalFromGameState();
-                            renderLatestTombCard();
-
-                            discardsLeft--;
-                            discardInstruction.textContent = `Select ${discardsLeft} card${discardsLeft === 1 ? "" : "s"} to discard`;
-
-                            if (discardsLeft === 0) {
-                                document.body.removeChild(discardInstruction);
-                                drawnCardsContainer.querySelectorAll(".card-button").forEach(btn => {
-                                btn.onclick = originalClick; // Restore default click logic
-                                });
-                                document.querySelectorAll(".phase-box").forEach(box => box.style.pointerEvents = "auto");
-
-                                const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/setPhase", {
-                                method: "POST",
-                                credentials: "include",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({ gameId, username, phase })
-                                });
-
-                                if (response.ok) {
-                                    const updated = await response.json();
-                                    updatePhaseDisplay(updated.currentPhase);
-                                }
-                            }
-                            };
-
-                            document.getElementById("cancel-discard").onclick = () => {
-                            document.body.removeChild(confirmBox);
-                            };
-                        };
-                        });
+                    if (gameState[username].Hand.length > 6) {
+                        await handleCardDiscard(
+                            gameState,
+                            username,
+                            cards,
+                            gameId,
+                            phase,
+                            updateLocalFromGameState,
+                            addGameLogEntry,
+                            updatePhaseDisplay
+                        );
                     return; // 🛑 Prevent premature turn advancement
                 }
-                }
+            }
 
-                // ✅ Normal flow if no discards needed
-                const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/setPhase", {
-                method: "POST",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ gameId, username, phase })
-                });
-
-                if (response.ok) {
-                    const updated = await response.json();
-                    updatePhaseDisplay(updated.currentPhase);
-                    addGameLogEntry(`${username} changed phase to ${updated.currentPhase}`);
-                }
+            // ✅ Normal flow if no discards needed
+            const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/setPhase", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ gameId, username, phase })
             });
+
+            if (response.ok) {
+                const updated = await response.json();
+                updatePhaseDisplay(updated.currentPhase);
+                addGameLogEntry(`${username} changed phase to ${updated.currentPhase}`);
+            }
         });
+    });
 
         function sendToTomb(card) {
             console.log("Incoming card to sendToTomb:", card);
@@ -1078,8 +1098,8 @@
 
             const championBox = document.getElementById("playerChampionsBox");
                 championBox.style.position = "fixed";
-                championBox.style.left = "34.2%";
-                championBox.style.top = "52.9%";
+                championBox.style.left = "38%";
+                championBox.style.top = "68%";
                 championBox.style.width = "49.9%";
                 championBox.style.height = "13.4%";
                 championBox.style.zIndex = "100300"; // ensure it's above the board
@@ -1913,6 +1933,7 @@
 
             // Add to champion zone
             gameState[username][CHAMPION_ZONE].push(ralliedCard);
+            gameState[username].hasBasicRallied = true;
 
             // ✅ 1. Trigger ability hooks (important for rally effects like OnRally)
             AbilityExecutor.handleBoardStateChange(
@@ -1937,23 +1958,35 @@
                 owner: username,
                 updatedZones: {
                 Hand: gameState[username].Hand,
-                [CHAMPION_ZONE]: gameState[username][CHAMPION_ZONE]
+                [CHAMPION_ZONE]: gameState[username][CHAMPION_ZONE],
+                hasBasicRallied: true
                 }
             })
         });
-            const responseText = await res.text();
-            console.log("Server response:", res.status, responseText);
+            // ✅ Read and apply server response
+            const responseJson = await res.json();
+
+            // Optional: log entire response
+            console.log("📥 Server responded with:", responseJson);
+
+            // ✅ Expect the backend to return updated player zone data
+            if (responseJson?.updatedPlayerZone) {
+                gameState[username] = responseJson.updatedPlayerZone;
+                updateLocalFromGameState();
+            } else {
+                console.warn("⚠️ Server did not return updatedPlayerZone. Falling back to manual update.");
+                updateLocalFromGameState();
+            }
 
             addGameLogEntry(`${username} performed a Basic Rally with ${card.name}`);
-            updateLocalFromGameState();
         } catch (err) {
-                console.error("💥 Error sending rally update:", err);
-            }
+            console.error("💥 Error sending rally update:", err);
+        }
+        updateAllRallyHighlights();
     }
 
-        // Function to render drawn cards
         function renderDrawnCards() {
-            const drawnCardsContainer = document.getElementById("drawn-cards"); // Ensure this container exists
+            const drawnCardsContainer = document.getElementById("drawn-cards");
             const scaledCardContainer = document.getElementById("scaled-card");
             const viewingWindow = document.getElementById("viewing-window");
             const contextWindow = document.getElementById("context-window");
@@ -1961,23 +1994,16 @@
             const opponentLifeWindow = document.getElementById("opponent-life-window");
             const phaseTracker = document.getElementById("phase-tracker");
             const turnCounter = document.getElementById("turn-counter");
-            const turnIndicator = document.getElementById("turn-indicator");
-            drawnCardsContainer.innerHTML = ""; // Clear previous renders
             const currentPhase = gameState?.turn?.currentPhase;
+
+            drawnCardsContainer.innerHTML = ""; // Clear previous renders
 
             if (drawnCardsArray.length === 0) {
                 console.log("No cards have been drawn yet.");
                 return;
             }
 
-            console.log("Rendering Drawn Cards:", drawnCardsArray);
-
-            // Find full card details from `cards` dataset
-            const drawnCardObjects = drawnCardsArray
-                .map(obj => cards.find(card => String(card.id) === String(obj.id)))
-                .filter(Boolean);
-
-            const typeOrder = ["Champion", "Action", "Equipment", "Obelisk", "Rush", "Reflex"];
+            // Sort drawn cards (optional, as you had)
             drawnCardsArray.sort((a, b) => {
                 const cardA = cards.find(c => String(c.id) === String(a.id));
                 const cardB = cards.find(c => String(c.id) === String(b.id));
@@ -1991,6 +2017,34 @@
                 return cardA.name.localeCompare(cardB.name);
             });
 
+        // --- Helper functions (moved outside the loop) ---
+
+        function updateBasicRallyHighlight(cardElement, cardData, currentPhase, gameState, username) {
+            if (isBasicRallyAvailable(cardData, currentPhase, gameState, username)) {
+                console.log("🔵 Adding glow to", cardData.name);
+                cardElement.classList.add("basic-rally-highlight");
+            } else {
+                console.log("⚪ Removing glow from", cardData.name);
+                cardElement.classList.remove("basic-rally-highlight");
+            }
+        }
+
+        function updateAllRallyHighlights(currentPhase, gameState, username) {
+            const cardElements = document.querySelectorAll(".card");
+            cardElements.forEach(cardEl => {
+                const cardId = cardEl.dataset.cardId;
+                // Look up the full card by ID from full cards array
+                const fullCard = cards.find(c => String(c.id) === String(cardId));
+                if (!fullCard) {
+                    console.warn("Card data not found for rally highlight ID:", cardId);
+                    return;
+                }
+                updateBasicRallyHighlight(cardEl, fullCard, currentPhase, gameState, username);
+            });
+        }
+
+            // --- Now render each drawn card ---
+
             drawnCardsArray.forEach(cardObj => {
                 const card = cards.find(c => String(c.id) === String(cardObj.id));
                 if (!card) return;
@@ -1998,13 +2052,14 @@
                 const cardElement = renderCard(card);
                 cardElement.dataset.boardState = cardObj.boardState;
                 cardElement.dataset.lastBoardState = cardObj.lastBoardState;
+                cardElement.dataset.cardId = String(card.id); // Ensure this is set for lookup!
                 cardElement.style.transform = "scale(0.5)";
                 cardElement.style.position = "relative";
                 cardElement.style.marginLeft = "-15%";
                 cardElement.style.opacity = "1";
                 cardElement.style.transition = "opacity 1s ease-in-out";
 
-                // ✅ Invisible button to capture clicks
+                // Invisible button to capture clicks
                 const cardButton = document.createElement("button");
                 cardButton.classList.add("card-button");
                 cardButton.style.position = "absolute";
@@ -2019,21 +2074,24 @@
                 cardButton.style.padding = "5px";
                 cardButton.style.zIndex = "100100";
 
-                // ✅ Click logic
                 cardButton.onclick = () => {
-                    if (isBasicRallyAvailable(card, currentPhase, gameState, username)) {
-                        handleBasicRally(card);
-                    } else {
-                        console.log(`🃏 Card clicked: ${card.name}`);
+                    console.log("Card button clicked");
+                    const parentCard = cardButton.closest(".card");
+                    const cardId = parentCard?.dataset.cardId;
+
+                    if (discardMode) {
+                        return handleCardDiscard(gameState, username, cards, gameId, currentPhase, updateLocalFromGameState, addGameLogEntry, updatePhaseDisplay);
                     }
+
+                    updateAllRallyHighlights(currentPhase, gameState, username);
                 };
 
-                if (isBasicRallyAvailable(card, currentPhase, gameState, username)) {
-                    console.log("🔵 Adding glow to", card.name);
-                    cardElement.classList.add("basic-rally-highlight");
-                }
+                cardButton._originalHandler = cardButton.onclick;
 
-                // 🖼️ Hover effect for preview
+                // Initial highlight check for this card
+                updateBasicRallyHighlight(cardElement, card, currentPhase, gameState, username);
+
+                // Hover effect for preview
                 cardElement.addEventListener("mouseenter", () => {
                     scaledCardContainer.innerHTML = "";
                     const clone = cardElement.cloneNode(true);
@@ -2070,13 +2128,19 @@
         }
 
         function isBasicRallyAvailable(card, currentPhase, gameState, username) {
-            const isMainPhase = currentPhase?.toLowerCase().includes("main");
+            console.log("=== Checking Basic Rally ===");
+            console.log("currentPhase:", currentPhase);
+            console.log("gameState.turn:", gameState.turn, "username:", username);
+            console.log("card.cost:", card.cost);
+            console.log("hasBasicRallied:", gameState[username]?.hasBasicRallied);
+            console.log("User zone data:", gameState[username]);
+            const isMainPhase = currentPhase.toLowerCase().startsWith("main") && gameState?.turn?.currentPlayer === username;
             const cost = String(card.cost || "").toLowerCase();
             const hasRallied = gameState[username]?.hasBasicRallied === true;
             return isMainPhase && cost === "basic" && !hasRallied;
         }
 
-        function updatePhaseDisplay(currentPhase) {
+        async function updatePhaseDisplay(currentPhase) {
             const turnCount = gameState?.turn?.count || 0;
             const currentPlayer = gameState?.turn?.currentPlayer;
             const isPlayerTurn = currentPlayer === username;
@@ -2131,6 +2195,18 @@
                 lastLoggedIntermissionTurn = turnNum; // ✅ Prevent duplicate logs
                 if (gameState[username]) {
                     gameState[username].hasBasicRallied = false;
+                    await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+                        method: "POST",
+                        credentials: "include",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            gameId,
+                            owner: username,
+                            updatedZones: {
+                                hasBasicRallied: false
+                            }
+                        })
+                    });
                     console.log("🔄 Reset hasBasicRallied for", username);
                 }
             }
@@ -2180,9 +2256,9 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                gameId,
-                updatedZones,
-                owner: username
+                    gameId,
+                    updatedZones,
+                    owner: username
                 })
             });
         }
@@ -2216,11 +2292,26 @@
                     if (!card) return;
 
                     const element = renderCard(card);
-                    element.style.transform = "scale(0.4)";
-                    element.style.transformOrigin = "top center";
-                    element.style.position = "relative";
-                    element.style.pointerEvents = "none";
+                        element.style.transform = "scale(0.3)";
+                        element.style.marginLeft = "-19%";
+                        element.style.transformOrigin = "top center";
+                        element.style.position = "relative";
+                        element.style.pointerEvents = "auto";
                     container.appendChild(element);
+
+                    element.addEventListener("mouseenter", () => {
+                        const scaled = document.querySelector("#viewing-window .scaled-card");
+                        scaled.innerHTML = "";
+
+                        const preview = renderCard(card);
+                        preview.style.width = "240px";
+                        preview.style.height = "420px";
+                        preview.style.transform = "scale(1.2)";
+                        preview.style.marginLeft = "-15%";
+                        preview.style.marginTop = "7%";
+
+                        scaled.appendChild(preview);
+                    });
                 });
             }
 

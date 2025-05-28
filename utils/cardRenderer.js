@@ -191,7 +191,7 @@ function adjustTextSize(cardElement) {
 
   // Ensure the text fits vertically within the container
   while (textContainer.scrollHeight > maxHeight && fontSize > 6) {
-    fontSize -= 5;
+    fontSize -= 4.8;
     textContainer.style.fontSize = `${fontSize}px`;
   }
 

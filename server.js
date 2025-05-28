@@ -259,14 +259,22 @@ app.post('/startGame', async (req, res) => {
 app.post('/updateGameState', (req, res) => {
   const { gameId, updatedZones, owner } = req.body;
   const state = gameStates.get(gameId);
-  if (!state || !state[owner]) return res.status(404).json({ error: "Game or user not found" });
+  
+  if (!state || !state[owner]) {
+    return res.status(404).json({ error: "Game or user not found" });
+  }
 
   Object.keys(updatedZones).forEach(zone => {
     state[owner][zone] = updatedZones[zone];
   });
 
   gameStates.set(gameId, state);
-  res.sendStatus(200);
+
+  // ✅ Send back the updated zones for the requesting player
+  res.status(200).json({
+    success: true,
+    updatedPlayerZone: state[owner]
+  });
 });
 
 app.get('/getGameState/:gameId', (req, res) => {
