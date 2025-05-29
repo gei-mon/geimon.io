@@ -386,6 +386,7 @@
             let lastLoggedIntermissionTurn = null;
 
             let discardMode = false;
+            let discardOngoing = false;
             let userSleeveURL = null;
 
             const params = new URLSearchParams(window.location.search);
@@ -419,7 +420,8 @@
         );
         }
 
-        function updateLocalFromGameState() {
+        async function updateLocalFromGameState() {
+            if (discardMode) return;
             const player = gameState[username];
             const currentHand = player.Hand;
 
@@ -441,6 +443,9 @@
                     addGameLogEntry(`${username} drew ${numDrawn} card${numDrawn > 1 ? 's' : ''}`);
                 }
             }
+
+            await renderCardZone(player["Zone (Champion)"], "playerChampionsBox");
+            console.log("Rendering Champions:", gameState[username]["Zone (Champion)"]);
 
             remainingDeck = player.Deck;
             updateDeckText();
@@ -819,6 +824,10 @@
         document.querySelectorAll(".phase-box").forEach(box => {
             box.style.cursor = "pointer";
             box.addEventListener("click", async () => {
+                if (discardMode) {
+                    console.warn("🛑 Discard in progress, wait until it finishes.");
+                    return;
+                }
                 const phase = box.textContent.trim();
                 const turnCount = gameState.turn.count;
                 const currentPhase = gameState.turn.currentPhase;
@@ -1101,7 +1110,7 @@
 
             const championBox = document.getElementById("playerChampionsBox");
                 championBox.style.position = "fixed";
-                championBox.style.left = "34%";
+                championBox.style.left = "29%";
                 championBox.style.top = "68%";
                 championBox.style.width = "49.9%";
                 championBox.style.height = "13.4%";
@@ -1315,7 +1324,9 @@
                 updateLocalFromGameState();
 
                 setInterval(async () => {
-                    await fetchGameStateFromServer();
+                    if (!discardMode) {
+                        await fetchGameStateFromServer();
+                    }
                 }, 1500);
 
                 const opponentName = isSinglePlayer ? "Bot" : otherPlayerName;
@@ -2505,25 +2516,27 @@
                     container.appendChild(wrapperDiv);
                 } else {
                     element = renderCard(card);
-                    element.style.transform = "scale(0.3)";
-                    element.style.marginLeft = "-19%";
-                    element.style.transformOrigin = "top center";
-                    element.style.position = "relative";
-                    element.style.pointerEvents = "auto";
+                    console.log("Trying to render:", card);
+                        element.style.transform = "scale(0.3)";
+                        element.style.marginLeft = "-19%";
+                        element.style.transformOrigin = "top center";
+                        element.style.position = "relative";
+                        element.style.pointerEvents = "auto";
 
                     element.addEventListener("mouseenter", () => {
                         const scaled = document.querySelector("#viewing-window .scaled-card");
                         scaled.innerHTML = "";
 
                         const preview = renderCard(card);
-                        preview.style.width = "240px";
-                        preview.style.height = "420px";
-                        preview.style.transform = "scale(1.2)";
-                        preview.style.marginLeft = "-15%";
-                        preview.style.marginTop = "7%";
+                            preview.style.width = "240px";
+                            preview.style.height = "420px";
+                            preview.style.transform = "scale(1.2)";
+                            preview.style.marginLeft = "-15%";
+                            preview.style.marginTop = "7%";
 
                         scaled.appendChild(preview);
                     });
+                    container.appendChild(element);
                 }
             });
         }
