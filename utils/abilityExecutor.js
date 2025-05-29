@@ -24,7 +24,7 @@ export function handleBoardStateChange(card, boardState, lastBoardState, gameSta
     declareAbility(card, 'OnRally', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
     declareAbility(card, 'OnActivation', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
   }
-  if (boardState === 'FaceUpZone' && lastBoardState !== 'FaceUpZone') {
+  if (boardState === 'Zone (Champion)' && lastBoardState === 'FaceDownZone') {
     declareAbility(card, 'Flip', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
   }
 }
