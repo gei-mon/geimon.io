@@ -14,18 +14,21 @@ export function handleBoardStateChange(card, boardState, lastBoardState, gameSta
   if (boardState === 'Tomb' && lastBoardState === 'Hand') {
     declareAbility(card, 'IfDiscarded', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
   }
-  if (boardState === 'Tomb' && lastBoardState === 'Zone') {
+  if (boardState === 'Tomb' && lastBoardState === 'Zone (Champion)' || boardState === 'Tomb' && lastBoardState === 'Zone (Arsenal)') {
     declareAbility(card, 'IfDestroyed', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+    declareAbility(card, 'IfTombFromField', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
   }
-  if (boardState === 'Void' && lastBoardState !== 'Zone') {
+  if (boardState === 'Void' && lastBoardState !== 'Void') {
     declareAbility(card, 'IfObliterated', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
   }
-  if (boardState === 'Zone' && lastBoardState !== 'Zone') {
+  if (boardState === 'Zone (Champion)' && lastBoardState !== 'Zone (Champion)') {
     declareAbility(card, 'OnRally', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
-    declareAbility(card, 'OnActivation', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
   }
   if (boardState === 'Zone (Champion)' && lastBoardState === 'FaceDownZone') {
     declareAbility(card, 'Flip', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+  }
+  if (boardState === 'Zone (Arsenal)' && lastBoardState !== 'Zone (Arsenal)') {
+    declareAbility(card, 'OnActivation', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
   }
 }
 
