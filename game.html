@@ -359,6 +359,7 @@
         <div id="turn-counter">Turn: 1</div>
         <div id="playerArsenalBox" class="card-zone"></div>
         <div id="playerChampionsBox" class="card-zone"></div>
+        <div id="playerFaceDownBox" class="card-zone"></div>
         <div id="playerReserveBox" class="card-zone"></div>
 
         <script type="module">
@@ -385,6 +386,7 @@
             let lastLoggedIntermissionTurn = null;
 
             let discardMode = false;
+            let userSleeveURL = null;
 
             const params = new URLSearchParams(window.location.search);
             const isSinglePlayer = params.get("gameType") === "single";
@@ -456,7 +458,8 @@
             const zoneMappings = {
                 "Zone (Champion)": "Champions",
                 "Zone (Arsenal)": "Arsenal",
-                "Reserve": "Reserve"
+                "Reserve": "Reserve",
+                "FaceDownZone": "FaceDown"
             };
 
             Object.entries(zoneMappings).forEach(([zoneKey, domSuffix]) => {
@@ -1098,13 +1101,23 @@
 
             const championBox = document.getElementById("playerChampionsBox");
                 championBox.style.position = "fixed";
-                championBox.style.left = "38%";
+                championBox.style.left = "34%";
                 championBox.style.top = "68%";
                 championBox.style.width = "49.9%";
                 championBox.style.height = "13.4%";
                 championBox.style.zIndex = "100300"; // ensure it's above the board
                 championBox.style.pointerEvents = "none";
                 championBox.style.backgroundColor = "rgba(255, 0, 0, 0)"; // debug transparent background
+            
+            const facedownBox = document.getElementById("playerFaceDownBox");
+                facedownBox.style.position = "fixed";
+                facedownBox.style.left = "50%";
+                facedownBox.style.top = "68%";
+                facedownBox.style.width = "49.9%";
+                facedownBox.style.height = "13.4%";
+                facedownBox.style.zIndex = "100300";
+                facedownBox.style.pointerEvents = "none";
+                facedownBox.style.backgroundColor = "rgba(255, 0, 0, 0)";
 
             const reserveBox = document.createElement("div");
                 reserveBox.id = "playerReserveBox";
@@ -1252,6 +1265,10 @@
 
                     const data = await res.json();
                     if (!data.loggedIn) return null;
+
+                    if (data && data.deckSleeve) {
+                        userSleeveURL = `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Sleeves/${data.deckSleeve}`;
+                    }
 
                     return data;
                 } catch (err) {
@@ -1842,7 +1859,7 @@
     // Ensure it exists before adding event listeners
     if (playerDeckBox) {
         playerDeckBox.style.display = "block";
-        playerDeckBox.style.outline = "4px solid white";
+        playerDeckBox.style.outline = "2px solid white";
 
         playerDeckBox.addEventListener("mouseenter", () => {
             playerDeckBox.innerText = deckCount;
@@ -1908,6 +1925,8 @@
         }
 
         const CHAMPION_ZONE = "Zone (Champion)";
+        const FACEDOWN_ZONE = "FaceDownZone";
+
         async function handleBasicRally(card) {
             console.log("🔵 handleBasicRally invoked for:", card);
 
@@ -1916,74 +1935,128 @@
                 return;
             }
 
+            // ✅ Ask player how to rally
+            const choice = await new Promise(resolve => {
+                const popup = document.createElement("div");
+                Object.assign(popup.style, {
+                    position: "fixed",
+                    top: "50%", left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    backgroundColor: "#222",
+                    padding: "20px",
+                    border: "2px solid white",
+                    borderRadius: "10px",
+                    color: "white",
+                    textAlign: "center",
+                    zIndex: "120000"
+                });
+
+                popup.innerHTML = `
+                    <p>Do you want to Rally this Champion?</p>
+                    <button id="rally-faceup">Yes, Face-Up</button>
+                    <button id="rally-facedown">Yes, Face-Down</button>
+                    <button id="rally-cancel">Cancel Rally</button>
+                `;
+
+                document.body.appendChild(popup);
+
+                document.getElementById("rally-faceup").onclick = () => {
+                    document.body.removeChild(popup);
+                    resolve("faceup");
+                };
+                document.getElementById("rally-facedown").onclick = () => {
+                    document.body.removeChild(popup);
+                    resolve("facedown");
+                };
+                document.getElementById("rally-cancel").onclick = () => {
+                    document.body.removeChild(popup);
+                    resolve("cancel");
+                };
+            });
+
+            if (choice === "cancel") {
+                console.log("❌ Rally cancelled by user.");
+                return;
+            }
+
             const ralliedCard = gameState[username].Hand.find(c => String(c.id) === String(card.id));
             if (!ralliedCard) {
                 console.warn("❌ Card not found in Hand for rally:", card.id);
                 return;
             }
-            Object.assign(ralliedCard, card);
 
-            console.log("✅ Card found in Hand. Proceeding with rally...");
-
+            Object.assign(ralliedCard, card); // Enrich card
             ralliedCard.lastBoardState = "Hand";
-            ralliedCard.boardState = "Zone";
+            ralliedCard.boardState = choice === "facedown" ? FACEDOWN_ZONE : "Zone";
 
-            // Remove from hand
+            // ✅ Remove from hand
             gameState[username].Hand = gameState[username].Hand.filter(c => c.id !== ralliedCard.id);
 
-            // Add to champion zone
-            gameState[username][CHAMPION_ZONE].push(ralliedCard);
-            gameState[username].hasBasicRallied = true;
+            if (choice === "facedown") {
+                // ⚠️ Mark card for flipping restriction
+                ralliedCard.faceDown = true;
+                ralliedCard.setTurn = gameState.turn.count;
 
-            // ✅ 1. Trigger ability hooks (important for rally effects like OnRally)
-            AbilityExecutor.handleBoardStateChange(
-                ralliedCard,
-                ralliedCard.boardState,
-                ralliedCard.lastBoardState,
-                gameState,
-                username,
-                gameId,
-                updateLocalFromGameState,
-                addGameLogEntry
-            );
-
-        try {
-            // Post update
-            const res = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
-            method: "POST",
-            credentials: "include",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                gameId,
-                owner: username,
-                updatedZones: {
-                Hand: gameState[username].Hand,
-                [CHAMPION_ZONE]: gameState[username][CHAMPION_ZONE],
-                hasBasicRallied: true
+                if (!gameState[username][FACEDOWN_ZONE]) {
+                    gameState[username][FACEDOWN_ZONE] = [];
                 }
-            })
-        });
-            // ✅ Read and apply server response
-            const responseJson = await res.json();
 
-            // Optional: log entire response
-            console.log("📥 Server responded with:", responseJson);
+                gameState[username][FACEDOWN_ZONE].push(ralliedCard);
+                gameState[username].hasBasicRallied = true;
 
-            // ✅ Expect the backend to return updated player zone data
-            if (responseJson?.updatedPlayerZone) {
-                gameState[username] = responseJson.updatedPlayerZone;
-                updateLocalFromGameState();
+                addGameLogEntry(`${username} Basic Rallied a Champion face-down`);
             } else {
-                console.warn("⚠️ Server did not return updatedPlayerZone. Falling back to manual update.");
-                updateLocalFromGameState();
+                gameState[username][CHAMPION_ZONE].push(ralliedCard);
+                gameState[username].hasBasicRallied = true;
+
+                // ✅ Trigger Rally effects (Face-Up only)
+                AbilityExecutor.handleBoardStateChange(
+                    ralliedCard,
+                    ralliedCard.boardState,
+                    ralliedCard.lastBoardState,
+                    gameState,
+                    username,
+                    gameId,
+                    updateLocalFromGameState,
+                    addGameLogEntry
+                );
+
+                addGameLogEntry(`${username} performed a Basic Rally with ${card.name}`);
             }
 
-            addGameLogEntry(`${username} performed a Basic Rally with ${card.name}`);
-        } catch (err) {
-            console.error("💥 Error sending rally update:", err);
+            try {
+                const updatedZones = {
+                    Hand: gameState[username].Hand,
+                    hasBasicRallied: true
+                };
+                if (choice === "facedown") {
+                    updatedZones[FACEDOWN_ZONE] = gameState[username][FACEDOWN_ZONE];
+                } else {
+                    updatedZones[CHAMPION_ZONE] = gameState[username][CHAMPION_ZONE];
+                }
+
+                const res = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+                    method: "POST",
+                    credentials: "include",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        gameId,
+                        owner: username,
+                        updatedZones
+                    })
+                });
+
+                const responseJson = await res.json();
+                if (responseJson?.updatedPlayerZone) {
+                    gameState[username] = responseJson.updatedPlayerZone;
+                }
+                updateLocalFromGameState();
+            } catch (err) {
+                console.error("💥 Error sending rally update:", err);
+            }
+
+            updateAllRallyHighlights(gameState.turn.currentPhase, gameState, username);
         }
-        updateAllRallyHighlights();
-    }
 
         function renderDrawnCards() {
             const drawnCardsContainer = document.getElementById("drawn-cards");
@@ -2017,34 +2090,7 @@
                 return cardA.name.localeCompare(cardB.name);
             });
 
-        // --- Helper functions (moved outside the loop) ---
-
-        function updateBasicRallyHighlight(cardElement, cardData, currentPhase, gameState, username) {
-            if (isBasicRallyAvailable(cardData, currentPhase, gameState, username)) {
-                console.log("🔵 Adding glow to", cardData.name);
-                cardElement.classList.add("basic-rally-highlight");
-            } else {
-                console.log("⚪ Removing glow from", cardData.name);
-                cardElement.classList.remove("basic-rally-highlight");
-            }
-        }
-
-        function updateAllRallyHighlights(currentPhase, gameState, username) {
-            const cardElements = document.querySelectorAll(".card");
-            cardElements.forEach(cardEl => {
-                const cardId = cardEl.dataset.cardId;
-                // Look up the full card by ID from full cards array
-                const fullCard = cards.find(c => String(c.id) === String(cardId));
-                if (!fullCard) {
-                    console.warn("Card data not found for rally highlight ID:", cardId);
-                    return;
-                }
-                updateBasicRallyHighlight(cardEl, fullCard, currentPhase, gameState, username);
-            });
-        }
-
             // --- Now render each drawn card ---
-
             drawnCardsArray.forEach(cardObj => {
                 const card = cards.find(c => String(c.id) === String(cardObj.id));
                 if (!card) return;
@@ -2142,18 +2188,82 @@
             }, 2500);
         }
 
+        function updateBasicRallyHighlight(cardElement, cardData, currentPhase, gameState, username) {
+            if (isBasicRallyAvailable(cardData, currentPhase, gameState, username)) {
+                console.log("🔵 Adding glow to", cardData.name);
+                cardElement.classList.add("basic-rally-highlight");
+            } else {
+                //console.log("⚪ Removing glow from", cardData.name);
+                cardElement.classList.remove("basic-rally-highlight");
+            }
+        }
+
+        async function updateAllRallyHighlights(currentPhase, gameState, username) {
+            const cardElements = document.querySelectorAll(".card");
+            cardElements.forEach(cardEl => {
+                const cardId = cardEl.dataset.cardId;
+                // Look up the full card by ID from full cards array
+                const fullCard = cards.find(c => String(c.id) === String(cardId));
+                if (!fullCard) {
+                    console.warn("Card data not found for rally highlight ID:", cardId);
+                    return;
+                }
+                updateBasicRallyHighlight(cardEl, fullCard, currentPhase, gameState, username);
+            });
+        }
+
         function isBasicRallyAvailable(card, currentPhase, gameState, username) {
-            console.log("=== Checking Basic Rally ===");
-            console.log("currentPhase:", currentPhase);
-            console.log("gameState.turn:", gameState.turn, "username:", username);
-            console.log("card.cost:", card.cost);
-            console.log("hasBasicRallied:", gameState[username]?.hasBasicRallied);
-            console.log("User zone data:", gameState[username]);
+            //console.log("=== Checking Basic Rally ===");
+            //console.log("currentPhase:", currentPhase);
+            //console.log("gameState.turn:", gameState.turn, "username:", username);
+            //console.log("card.cost:", card.cost);
+            //console.log("hasBasicRallied:", gameState[username]?.hasBasicRallied);
+            //console.log("User zone data:", gameState[username]);
             const isMainPhase = currentPhase.toLowerCase().startsWith("main") && gameState?.turn?.currentPlayer === username;
             const cost = String(card.cost || "").toLowerCase();
             const hasRallied = gameState[username]?.hasBasicRallied === true;
             return isMainPhase && cost === "basic" && !hasRallied;
         }
+
+        function showRallyPrompt(card, rallyHandler) {
+            const popup = document.createElement("div");
+            Object.assign(popup.style, {
+                position: "fixed",
+                top: "50%", left: "50%",
+                transform: "translate(-50%, -50%)",
+                padding: "20px",
+                backgroundColor: "#222",
+                border: "2px solid white",
+                color: "white",
+                borderRadius: "10px",
+                zIndex: "100000",
+                textAlign: "center"
+            });
+
+            popup.innerHTML = `
+                <p>Do you want to Rally this Champion?</p>
+                <button id="rally-faceup">Yes, Face-Up</button>
+                <button id="rally-facedown">Yes, Face-Down</button>
+                <button id="rally-cancel">Cancel Rally</button>
+            `;
+
+            document.body.appendChild(popup);
+
+            document.getElementById("rally-faceup").onclick = () => {
+                document.body.removeChild(popup);
+                rallyHandler(card, true); // true = face-up
+            };
+
+            document.getElementById("rally-facedown").onclick = () => {
+                document.body.removeChild(popup);
+                rallyHandler(card, false); // false = face-down
+            };
+
+            document.getElementById("rally-cancel").onclick = () => {
+                document.body.removeChild(popup);
+            };
+        }
+
 
         async function updatePhaseDisplay(currentPhase) {
             const turnCount = gameState?.turn?.count || 0;
@@ -2285,34 +2395,121 @@
             }
         }
 
-        function renderCardZone(cardsArray, containerId) {
-                const container = document.getElementById(containerId);
-                if (!container) return;
+        async function renderCardZone(cardsArray, containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
 
-                container.innerHTML = ""; // Clear previous
+            container.innerHTML = ""; // Clear previous
 
-                if (!cardsArray || cardsArray.length === 0) return;
+            if (!cardsArray || cardsArray.length === 0) return;
 
-                // Optional: sort or center-spread logic
-                const half = Math.floor(cardsArray.length / 2);
-                const ordered = [];
+            const half = Math.floor(cardsArray.length / 2);
+            const ordered = [];
 
-                for (let i = 0; i < cardsArray.length; i++) {
-                    const offset = i % 2 === 0 ? i / 2 : -(Math.ceil(i / 2));
-                    ordered.push(cardsArray[half + offset] || cardsArray[half - offset]);
+            for (let i = 0; i < cardsArray.length; i++) {
+                const offset = i % 2 === 0 ? i / 2 : -(Math.ceil(i / 2));
+                ordered.push(cardsArray[half + offset] || cardsArray[half - offset]);
+            }
+
+            if (!userSleeveURL) {
+                userSleeveURL = await fetchUserData();
+            }
+
+            ordered.forEach(cardData => {
+                const card = cards.find(c => String(c.id) === String(cardData.id));
+
+                const isFaceDown = !!cardData.faceDown;
+                if (!cardData.id) {
+                    console.warn("❗ Invalid cardData: missing ID", cardData);
+                    return;
                 }
 
-                ordered.forEach(cardData => {
-                    const card = cards.find(c => String(c.id) === String(cardData.id));
-                    if (!card) return;
+                if (!card && !isFaceDown) return;
 
-                    const element = renderCard(card);
-                        element.style.transform = "scale(0.3)";
-                        element.style.marginLeft = "-19%";
-                        element.style.transformOrigin = "top center";
+                let element;
+
+                if (isFaceDown) {
+                    const wrapperDiv = document.createElement("div");
+                        wrapperDiv.style.display = "inline-block";
+                        wrapperDiv.style.position = "relative";
+                        wrapperDiv.style.marginLeft = "-19%";
+                        wrapperDiv.style.transformOrigin = "top center";
+                        wrapperDiv.style.marginTop = "0px";
+                        wrapperDiv.style.pointerEvents = "auto";
+                        wrapperDiv.style.backgroundColor = "rgba(255,0,0,1)";
+                        wrapperDiv.style.width = "240px";
+                        wrapperDiv.style.height = "380px";
+                        wrapperDiv.style.transform = "translateY(11%) rotate(270deg) scale(0.33)";
+                        wrapperDiv.style.outline = "0px dashed red"; // visually show wrapperDiv box
+                        wrapperDiv.style.cursor = "pointer";
+
+                    element = document.createElement("div");
+                        element.style.width = "100%"; // fill wrapper
+                        element.style.height = "100%";
+                        element.style.backgroundImage = `url(${userSleeveURL || 'default-sleeve.png'})`;
+                        element.style.backgroundSize = "cover";
+                        element.style.backgroundPosition = "center";
+                        element.style.transform = ""; // reset transform
+                        element.style.marginTop = "0px";
                         element.style.position = "relative";
-                        element.style.pointerEvents = "auto";
-                    container.appendChild(element);
+                        element.style.zIndex = "110";
+                        element.style.border = "2px solid white";
+                        element.style.pointerEvents = "none";
+                        element.style.opacity = "1";
+                        element.style.transition = "opacity 1s ease-in-out";
+
+                    wrapperDiv.addEventListener("mouseenter", () => {
+                        console.log("mouseenter fired on face-down card", cardData.id);
+                        const realCard = cards.find(c => String(c.id) === String(cardData.id));
+                        if (!realCard) {
+                            console.error(`❌ Hover preview: No card found with ID '${cardData.id}'. Check if the card exists in 'cards' array.`);
+                            return;
+                        }
+
+                        const scaled = document.querySelector("#viewing-window .scaled-card");
+                        if (!scaled) {
+                            console.warn("⚠️ #viewing-window .scaled-card not found!");
+                            return;
+                        }
+
+                        scaled.innerHTML = "";
+
+                        const preview = renderCard(realCard);
+                        preview.style.width = "240px";
+                        preview.style.height = "420px";
+                        preview.style.transform = "scale(1.2)";
+                        preview.style.marginLeft = "-15%";
+                        preview.style.marginTop = "7%";
+
+                        scaled.appendChild(preview);
+                    });
+
+                    if (gameState.turn.currentPlayer === username && gameState.turn.count > cardData.setTurn && 
+                        (gameState.turn.currentPhase === "Main 1" || gameState.turn.currentPhase === "Main 2")) {
+                        const flipButton = document.createElement("button");
+                        flipButton.textContent = "Flip";
+                        Object.assign(flipButton.style, {
+                            position: "absolute",
+                            bottom: "10px",
+                            left: "50%",
+                            transform: "translateX(-50%)",
+                            padding: "5px 10px",
+                            fontSize: "1em",
+                            cursor: "pointer",
+                            zIndex: "120000"
+                        });
+                        flipButton.onclick = () => flipCard(cardData.id);
+                        element.appendChild(flipButton);
+                    }
+                    wrapperDiv.appendChild(element);
+                    container.appendChild(wrapperDiv);
+                } else {
+                    element = renderCard(card);
+                    element.style.transform = "scale(0.3)";
+                    element.style.marginLeft = "-19%";
+                    element.style.transformOrigin = "top center";
+                    element.style.position = "relative";
+                    element.style.pointerEvents = "auto";
 
                     element.addEventListener("mouseenter", () => {
                         const scaled = document.querySelector("#viewing-window .scaled-card");
@@ -2327,8 +2524,78 @@
 
                         scaled.appendChild(preview);
                     });
-                });
+                }
+            });
+        }
+
+        async function flipCard(cardId) {
+            const facedownZone = gameState[username].FaceDownZone;
+            const championsZone = gameState[username]["Zone (Champion)"];
+
+            const cardIndex = facedownZone.findIndex(c => String(c.id) === String(cardId));
+            if (cardIndex === -1) {
+                console.warn("❌ Card not found in FaceDownZone:", cardId);
+                return;
             }
+
+            const card = facedownZone[cardIndex];
+
+            // ❌ Only the player on their turn can flip
+            if (gameState.turn.currentPlayer !== username) {
+                alert("You can only flip cards during your turn.");
+                return;
+            }
+
+            // ❌ Only during Main 1 or Main 2
+            const phase = gameState.turn.currentPhase;
+            if (phase !== "Main 1" && phase !== "Main 2") {
+                alert("You can only flip champions face-up during your Main Phase.");
+                return;
+            }
+
+            // ❌ Cannot flip the turn it's set
+            if (gameState.turn.count <= card.setTurn) {
+                alert("You cannot flip this card the turn it was set.");
+                return;
+            }
+
+            // ✅ Move to Champion Zone
+            facedownZone.splice(cardIndex, 1);
+            delete card.faceDown;
+            delete card.setTurn;
+            card.lastBoardState = "FaceDownZone";
+            card.boardState = "Zone (Champion)";
+            championsZone.push(card);
+
+            AbilityExecutor.handleBoardStateChange(
+                card,
+                "Zone (Champion)",
+                "FaceDownZone",
+                gameState,
+                username,
+                gameId,
+                updateLocalFromGameState,
+                addGameLogEntry
+            );
+
+            addGameLogEntry(`${username} flipped a champion face-up: ${card.name}`);
+
+            await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    gameId,
+                    owner: username,
+                    updatedZones: {
+                        FaceDownZone: facedownZone,
+                        [CHAMPION_ZONE]: championsZone
+                    }
+                })
+            });
+
+            updateLocalFromGameState();
+        }
 
         function changeLife(player, amount) {
             if (!gameState[player]) return;
