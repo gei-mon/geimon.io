@@ -2495,22 +2495,58 @@
                         scaled.appendChild(preview);
                     });
 
-                    if (gameState.turn.currentPlayer === username && gameState.turn.count > cardData.setTurn && 
-                        (gameState.turn.currentPhase === "Main 1" || gameState.turn.currentPhase === "Main 2")) {
-                        const flipButton = document.createElement("button");
-                        flipButton.textContent = "Flip";
-                        Object.assign(flipButton.style, {
-                            position: "absolute",
-                            bottom: "10px",
-                            left: "50%",
-                            transform: "translateX(-50%)",
-                            padding: "5px 10px",
-                            fontSize: "1em",
-                            cursor: "pointer",
-                            zIndex: "120000"
-                        });
-                        flipButton.onclick = () => flipCard(cardData.id);
-                        element.appendChild(flipButton);
+                    const canFlip =
+                        gameState.turn.currentPlayer === username &&
+                        gameState.turn.count > cardData.setTurn &&
+                        (gameState.turn.currentPhase === "Main 1" || gameState.turn.currentPhase === "Main 2");
+
+                    if (canFlip) {
+                        wrapperDiv.style.outline = "4px solid yellow"; // ✨ glow
+                        wrapperDiv.style.boxShadow = "0 0 12px 4px yellow";
+                        wrapperDiv.style.cursor = "pointer";
+                        wrapperDiv.style.transition = "box-shadow 0.3s ease-in-out, outline 0.3s ease-in-out";
+
+                        wrapperDiv.onclick = () => {
+                            const fullCard = cards.find(c => String(c.id) === String(cardData.id));
+                            if (!fullCard) {
+                                console.error("❌ Could not find full card data for flip prompt.");
+                                return;
+                            }
+
+                            // Create popup
+                            const popup = document.createElement("div");
+                            Object.assign(popup.style, {
+                                position: "fixed",
+                                top: "50%",
+                                left: "50%",
+                                transform: "translate(-50%, -50%)",
+                                backgroundColor: "rgba(0, 0, 0, 0.9)",
+                                color: "white",
+                                padding: "20px 30px",
+                                border: "2px solid white",
+                                borderRadius: "10px",
+                                zIndex: "120000",
+                                textAlign: "center",
+                                boxShadow: "0 0 15px black",
+                            });
+
+                            popup.innerHTML = `
+                                <p style="font-size: 1.2em; margin-bottom: 10px;">Flip <strong>${fullCard.name}</strong> face-up?</p>
+                                <button id="confirm-flip" style="margin: 5px; padding: 6px 12px; font-size: 1em;">Flip</button>
+                                <button id="cancel-flip" style="margin: 5px; padding: 6px 12px; font-size: 1em;">Cancel</button>
+                            `;
+
+                            document.body.appendChild(popup);
+
+                            document.getElementById("confirm-flip").onclick = () => {
+                                popup.remove();
+                                flipCard(cardData.id);
+                            };
+
+                            document.getElementById("cancel-flip").onclick = () => {
+                                popup.remove();
+                            };
+                        };
                     }
                     wrapperDiv.appendChild(element);
                     container.appendChild(wrapperDiv);
