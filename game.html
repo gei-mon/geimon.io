@@ -383,6 +383,7 @@
 
             let username = null;
             let hasDrawnInitialHand = false;
+            let hasRedrawn = false;
             let lastLoggedIntermissionTurn = null;
 
             let discardMode = false;
@@ -434,7 +435,7 @@
                 renderDrawnCards();
 
                 if (!hasDrawnInitialHand && newLength >= 5) {
-                    hasDrawnInitialHand = true;
+                    //hasDrawnInitialHand = true;
                     return;
                 }
 
@@ -472,20 +473,84 @@
             });
         }
 
-            async function getUsername() {
-                const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', { credentials: 'include' });
-                const data = await res.json();
-                if (data.loggedIn) {
-                    username = data.username;
-                }
+        async function getUsername() {
+            const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', { credentials: 'include' });
+            const data = await res.json();
+            if (data.loggedIn) {
+                username = data.username;
             }
-            async function initGameClient() {
-                await getUsername();
-                if (!username) {
-                    alert("Could not retrieve username.");
-                    return; // ✅ This is now valid
-                }
+        }
+        async function initGameClient() {
+            await getUsername();
+            if (!username) {
+                alert("Could not retrieve username.");
+                return; // ✅ This is now valid
             }
+        }
+
+        async function showRedrawPrompt() {
+            return new Promise((resolve) => {
+                const overlay = document.createElement("div");
+                overlay.style.position = "fixed";
+                overlay.style.top = "50%";
+                overlay.style.left = "50%";
+                overlay.style.transform = "translate(-50%, -50%)";
+                overlay.style.width = "400px";
+                overlay.style.padding = "30px 20px";
+                overlay.style.backgroundColor = "rgba(0, 0, 0)";
+                overlay.style.zIndex = 200000;
+                overlay.style.display = "flex";
+                overlay.style.flexDirection = "column";
+                overlay.style.justifyContent = "center";
+                overlay.style.alignItems = "center";
+                overlay.style.borderRadius = "12px";
+                overlay.style.boxShadow = "0 0 20px black";
+                overlay.style.opacity = "0";
+                overlay.style.transition = "opacity 1s ease-in-out";
+
+                setTimeout(() => {
+                    overlay.style.opacity = "0.8";
+                }, 1000);
+
+                const prompt = document.createElement("div");
+                prompt.innerHTML = "<h2 style='color:white'>Would you like to redraw your opening hand?</h2>";
+                prompt.style.marginBottom = "20px";
+
+                const yesBtn = document.createElement("button");
+                yesBtn.textContent = "Yes";
+                yesBtn.style.marginRight = "10px";
+                yesBtn.onclick = async () => {
+                if (!hasRedrawn) {
+                    hasRedrawn = true;
+                    const player = gameState[username];
+                    const hand = player.Hand.splice(0);
+                    player.Deck.push(...hand);
+                    await drawCards(player.Deck, 5);
+                    await sendZoneUpdate(["Deck", "Hand"]);
+                    await updateLocalFromGameState();
+                }
+                document.body.removeChild(overlay);
+                resolve();
+                };
+
+                const noBtn = document.createElement("button");
+                noBtn.textContent = "No";
+                noBtn.onclick = () => {
+                document.body.removeChild(overlay);
+                resolve();
+                };
+
+                const btnContainer = document.createElement("div");
+                btnContainer.appendChild(yesBtn);
+                btnContainer.appendChild(noBtn);
+                overlay.appendChild(prompt);
+                overlay.appendChild(btnContainer);
+
+                document.body.appendChild(overlay);
+
+
+            });
+        }
 
         window.onload = () => {
             (async () => {
@@ -1226,43 +1291,6 @@
             }, 2000);
 
             const params = new URLSearchParams(window.location.search);
-            const selectedTotem = params.get("totem");
-            const selectedTotemText = params.get("totemText");
-
-            document.getElementById("totem").textContent = selectedTotem;
-            const totemTextElement = document.createElement("p");
-                totemTextElement.innerHTML = `<strong>Description:</strong> ${selectedTotemText}`;
-            document.getElementById("game-log-placeholder").appendChild(totemTextElement);
-
-            const totemBox = document.createElement("div");
-                totemBox.style.position = "absolute";
-                totemBox.style.top = "46%";
-                totemBox.style.left = "53%";
-                totemBox.style.transform = "translate(-50%, -50%)";
-                totemBox.style.padding = "16px 32px";
-                totemBox.style.backgroundColor = "goldenrod";
-                totemBox.style.color = "white";
-                totemBox.style.fontSize = "1.5em";
-                totemBox.style.borderRadius = "10px";
-                totemBox.style.textAlign = "center";
-                totemBox.style.opacity = "0"; // Start invisible
-                totemBox.style.transition = "opacity 1s ease-in-out";
-                totemBox.style.zIndex = "100900";
-                totemBox.style.boxShadow = "0 0 20px black";
-                totemBox.textContent = `Selected Totem: ${selectedTotem} - ${selectedTotemText}`;
-
-            // Add to document
-            document.body.appendChild(totemBox);
-
-            // Trigger fade-in
-            setTimeout(() => {
-                totemBox.style.opacity = "1";
-            }, 2500); // Slight delay after result box
-
-            setTimeout(() => {
-                totemBox.style.opacity = "0";
-                totemBox.style.zIndex = "10";
-            }, 6500);
 
             // Function to fetch user data from the session
             async function fetchUserData() {
@@ -1321,13 +1349,66 @@
                 });
 
                 gameState = await waitForGameState();
-                updateLocalFromGameState();
+
+                if (gameState[username].Hand.length === 0) {
+                    for (let i = 0; i < 5; i++) {
+                        await drawCards(gameState[username].Deck, 1);
+                    }
+                    await sendZoneUpdate(["Deck", "Hand"]);
+                }
+                drawnCardsArray = gameState[username].Hand; // ✅ Set the global array
+                previousHandIds = drawnCardsArray.map(card => card.id); // ✅ Track previous IDs
+                await renderDrawnCards();
+                await showRedrawPrompt(); // Pause here and show redraw
+                hasDrawnInitialHand = true;
+
+                updateDeckText();
+                await updateLocalFromGameState();
 
                 setInterval(async () => {
                     if (!discardMode) {
                         await fetchGameStateFromServer();
                     }
                 }, 1500);
+
+                
+            const selectedTotem = params.get("totem");
+            const selectedTotemText = params.get("totemText");
+
+            document.getElementById("totem").textContent = selectedTotem;
+            const totemTextElement = document.createElement("p");
+                totemTextElement.innerHTML = `<strong>Description:</strong> ${selectedTotemText}`;
+            document.getElementById("game-log-placeholder").appendChild(totemTextElement);
+
+            const totemBox = document.createElement("div");
+                totemBox.style.position = "absolute";
+                totemBox.style.top = "46%";
+                totemBox.style.left = "53%";
+                totemBox.style.transform = "translate(-50%, -50%)";
+                totemBox.style.padding = "16px 32px";
+                totemBox.style.backgroundColor = "goldenrod";
+                totemBox.style.color = "white";
+                totemBox.style.fontSize = "1.5em";
+                totemBox.style.borderRadius = "10px";
+                totemBox.style.textAlign = "center";
+                totemBox.style.opacity = "0"; // Start invisible
+                totemBox.style.transition = "opacity 1s ease-in-out";
+                totemBox.style.zIndex = "100900";
+                totemBox.style.boxShadow = "0 0 20px black";
+                totemBox.textContent = `Selected Totem: ${selectedTotem} - ${selectedTotemText}`;
+
+            // Add to document
+            document.body.appendChild(totemBox);
+
+            // Trigger fade-in
+            setTimeout(() => {
+                totemBox.style.opacity = "1";
+            }, 2500); // Slight delay after result box
+
+            setTimeout(() => {
+                totemBox.style.opacity = "0";
+                totemBox.style.zIndex = "10";
+            }, 4500);
 
                 const opponentName = isSinglePlayer ? "Bot" : otherPlayerName;
                 document.getElementById("player-name").textContent = username;
@@ -1342,16 +1423,6 @@
                     alert("Game could not be started.");
                     return;
                 }
-
-                if (gameState[username].Hand.length === 0) {
-                    for (let i = 0; i < 5; i++) {
-                        await drawCards(gameState[username].Deck, 1);
-                    }
-                    console.log("🃏 Drew 5 starting cards for", username);
-                    await sendZoneUpdate(["Deck", "Hand"]);
-                }
-
-                updateDeckText();
             } else {
                 console.error("Deck loading failed:", playerDeckResult.message);
             }
