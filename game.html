@@ -445,7 +445,7 @@
             }
 
             await renderCardZone(player["Zone (Champion)"], "playerChampionsBox");
-            console.log("Rendering Champions:", gameState[username]["Zone (Champion)"]);
+            //console.log("Rendering Champions:", gameState[username]["Zone (Champion)"]);
 
             remainingDeck = player.Deck;
             updateDeckText();
@@ -2130,6 +2130,7 @@
                 cardButton.style.pointerEvents = "auto";
                 cardButton.style.padding = "5px";
                 cardButton.style.zIndex = "100100";
+                cardButton.style.cursor = "pointer";
 
                 cardButton.onclick = () => {
                     console.log("Card button clicked");
@@ -2201,7 +2202,7 @@
 
         function updateBasicRallyHighlight(cardElement, cardData, currentPhase, gameState, username) {
             if (isBasicRallyAvailable(cardData, currentPhase, gameState, username)) {
-                console.log("🔵 Adding glow to", cardData.name);
+                //console.log("🔵 Adding glow to", cardData.name);
                 cardElement.classList.add("basic-rally-highlight");
             } else {
                 //console.log("⚪ Removing glow from", cardData.name);
@@ -2443,7 +2444,7 @@
                     const wrapperDiv = document.createElement("div");
                         wrapperDiv.style.display = "inline-block";
                         wrapperDiv.style.position = "relative";
-                        wrapperDiv.style.marginLeft = "-19%";
+                        wrapperDiv.style.marginLeft = "-37%";
                         wrapperDiv.style.transformOrigin = "top center";
                         wrapperDiv.style.marginTop = "0px";
                         wrapperDiv.style.pointerEvents = "auto";

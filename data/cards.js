@@ -693,14 +693,14 @@ export const cards = [
     condition: "",
     cardConditionFunction: "",
     cardCostFunction: "Sacrifice1",
-    cost: "",
+    cost: "Sacrifice 1 Champion",
     tags: ["Obelisk"],
     damage: "",
     life: "",
     damageThreshold: "",
     abilities: [
       {
-        text: "Sacrifice 1 Champion; For every attack a Player makes, they must Offer 1 Life.",
+        text: "Each Player must offer 1 Life to declare an attack.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: ["Standard","Mandatory"],
@@ -1029,7 +1029,7 @@ export const cards = [
   },
   {
     id: "63",
-    name: "Jane, Perfect Shot",
+    name: "Sheriff Jane, Perfect Shot",
     image: `${cardArtFolder}/Champions/PerfectJane.png`,
     type: "Champion",
     condition: "",
@@ -1308,13 +1308,13 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Raider, Reach <br> Train Sniffer (Exhaustion): Your Opponent can activate 1 Commander Obelisk from their Deck (ignoring its cost); Draw 2 for every Commander Obelisk your Opponent controls.",
+        text: "Raider, Reach <br> Train Sniffer (Exhaustion): Your Opponent can activate 1 Commander Obelisk from their Deck (ignoring its cost); Your Opponent chooses whether: You Draw 2 for every Commander Obelisk your Opponent controls, or Your Opponent discards 1 for every Commander Obelisk they control.",
         keywords: ["Raider","Reach"],
         effect1name: "Train Sniffer",
         effect1type: ["Standard","Exhaustion"],
         effect1condition: "",
         effect1cost: "OppRecruit1CommanderObelisk",
-        effect1text: "Draw2PerOppCommanderObelisk",
+        effect1text: "OppChoosesEitherDraw2PerObeliskOrTheyDiscard1PerObelisk",
         effect1linger: "",
         effect2name: "",
         effect2type: [""],
@@ -3005,7 +3005,7 @@ export const cards = [
   },
   {
     id: "181",
-    name: "Aldred, Oathbound",
+    name: "Dame Aldred, Oathbound",
     image: `${cardArtFolder}/Champions/AldredOathbound.png`,
     type: "Champion",
     condition: "",
@@ -3018,7 +3018,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Priority, Veilbind <br> On Rally: Attach up to 3 Equipments to this Champion (ignoring costs), but only one each from your Hand, Deck, and Tomb. <br> Sacrificial Blade: Destroy 1 Equipment attached to this card; Destroy 1 card on the Zone. <br> Reforged: If this Champion has no attached Equipments: Attach 1 Equipment to this Champion from your Hand, Deck, Tomb, or Void (ignoring its cost).",
+        text: "Priority, Veilbind <br> On Rally: Attach up to 3 Equipments to this Champion (ignoring costs), but only one each from your Hand, Deck, and Tomb. <br> Sacrificial Blade: Bury 1 Equipment and Target 1 card on the Zone; Destroy Target. <br> Reforged: If this Champion has no attached Equipments: Attach 1 Equipment to this Champion from your Hand, Deck, Tomb, or Void (ignoring its cost).",
         keywords: ["Priority","Veilbind"],
         effect1name: "",
         effect1type: "OnRally",
@@ -3029,8 +3029,8 @@ export const cards = [
         effect2name: "Sacrificial Blade",
         effect2type: "Standard",
         effect2condition: "",
-        effect2cost: "Destroy1AttachedEquip",
-        effect2text: "Destroy1OnZone",
+        effect2cost: "Bury1EquipPlusTarget1OnZone",
+        effect2text: "DestroyTarget",
         effect2linger: "",
         effect3name: "Reforged",
         effect3type: "Standard",
@@ -3208,7 +3208,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Defender, Naive <br> While Equipped: This Champion is unaffected by its Passives. <br> Hail Mary: Destroy 1 Equipment attached to this card; Deal 3 Damage to 1 Champion on the Zone.",
+        text: "Defender, Naive <br> While Equipped: This Champion is unaffected by its Passives. <br> Hail Mary: Destroy 1 of this Champion's attached Equipments and Target 1 Champion on the Zone; Deal 3 Damage to Target.",
         keywords: ["Defender","Naive"],
         effect1name: "",
         effect1type: "WhileEquipped",
@@ -3219,8 +3219,8 @@ export const cards = [
         effect2name: "Hail Mary",
         effect2type: "Standard",
         effect2condition: "",
-        effect2cost: "Destroy1AttachedEquip",
-        effect2text: "Deal3DamageToChamp",
+        effect2cost: "Destroy1AttachedEquipPlusTarget1Champ",
+        effect2text: "Deal3DamageToTarget",
         effect2linger: "",
         effect3name: "",
         effect3type: "",
@@ -3271,7 +3271,7 @@ export const cards = [
   },
   {
     id: "241",
-    name: "Professor Grayborn, MD",
+    name: "Professor Jeremiah Grayborn, MD",
     image: `${cardArtFolder}/Champions/DrJeremiah.png`,
     type: "Champion",
     condition: "",
