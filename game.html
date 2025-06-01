@@ -324,7 +324,7 @@
                     <p>This is a Solo Game, and we here at Geimon! do not believe that AI should be allowed to speak.</p>
                 </div>
                 <div class="tab-content active" id="game-log">
-                    <p>Totem: <span id="totem" style="color: goldenrod;"></span></p>
+                    <p><span id="totem" style="color: goldenrod;"></span></p>
                     <div id="game-log-placeholder"></div>
                 </div>
                 <div class="tab-content" id="dictionary">
@@ -1371,13 +1371,15 @@
                     }
                 }, 1500);
 
-                
             const selectedTotem = params.get("totem");
             const selectedTotemText = params.get("totemText");
 
-            document.getElementById("totem").textContent = selectedTotem;
+            const totemElement = document.createElement("p");
+                totemElement.innerHTML = `${selectedTotem}`;
+                totemElement.style.color = "goldenrod";
             const totemTextElement = document.createElement("p");
                 totemTextElement.innerHTML = `<strong>Description:</strong> ${selectedTotemText}`;
+            document.getElementById("game-log-placeholder").appendChild(totemElement);
             document.getElementById("game-log-placeholder").appendChild(totemTextElement);
 
             const totemBox = document.createElement("div");
@@ -1403,12 +1405,12 @@
             // Trigger fade-in
             setTimeout(() => {
                 totemBox.style.opacity = "1";
-            }, 2500); // Slight delay after result box
+            }, 1250); // Slight delay after result box
 
             setTimeout(() => {
                 totemBox.style.opacity = "0";
                 totemBox.style.zIndex = "10";
-            }, 4500);
+            }, 5000);
 
                 const opponentName = isSinglePlayer ? "Bot" : otherPlayerName;
                 document.getElementById("player-name").textContent = username;
@@ -2838,7 +2840,7 @@
 
         // Game Log Data Population
         const params = new URLSearchParams(window.location.search);
-        document.getElementById("totem").textContent = params.get("totem");
+        //document.getElementById("totem").textContent = params.get("totem");
 
         const dictionarySearch = document.getElementById("dictionary-search");
         const dictionaryResults = document.getElementById("dictionary-results");
