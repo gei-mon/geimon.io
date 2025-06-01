@@ -360,6 +360,7 @@
         <div id="playerArsenalBox" class="card-zone"></div>
         <div id="playerChampionsBox" class="card-zone"></div>
         <div id="playerFaceDownBox" class="card-zone"></div>
+        <div id="playerFaceDownArsenalBox" class="card-zone"></div>
         <div id="playerReserveBox" class="card-zone"></div>
 
         <script type="module">
@@ -465,7 +466,8 @@
                 "Zone (Champion)": "Champions",
                 "Zone (Arsenal)": "Arsenal",
                 "Reserve": "Reserve",
-                "FaceDownZone": "FaceDown"
+                "FaceDownZone": "FaceDown",
+                "FaceDownArsenalZone": "FaceDownArsenal"
             };
 
             Object.entries(zoneMappings).forEach(([zoneKey, domSuffix]) => {
@@ -525,6 +527,7 @@
                     const player = gameState[username];
                     const hand = player.Hand.splice(0);
                     player.Deck.push(...hand);
+                    addGameLogEntry(`${username} elected to redraw their Starting Hand.`);
                     await drawCards(player.Deck, 5);
                     await sendZoneUpdate(["Deck", "Hand"]);
                     await updateLocalFromGameState();
@@ -537,6 +540,7 @@
                 noBtn.textContent = "No";
                 noBtn.onclick = () => {
                 document.body.removeChild(overlay);
+                addGameLogEntry(`${username} elected not to redraw their Starting Hand.`);
                 resolve();
                 };
 
@@ -1160,19 +1164,6 @@
                 turnBox.style.opacity = "1"; // Fades out smoothly
             }, 2700);
 
-            const arsenalBox = document.createElement("div");
-                arsenalBox.id = "playerArsenalBox";
-                arsenalBox.className = "card-zone";
-                arsenalBox.style.position = "absolute";
-                arsenalBox.style.left = "34.2%";
-                arsenalBox.style.top = "68.1%";
-                arsenalBox.style.width = "49.9%";
-                arsenalBox.style.height = "13.4%";
-                arsenalBox.style.zIndex = "1000";
-                arsenalBox.style.pointerEvents = "none";
-            arsenalBox.style.backgroundColor = "rgba(255, 0, 0, 0)";
-            document.body.appendChild(arsenalBox);
-
             const championBox = document.getElementById("playerChampionsBox");
                 championBox.style.position = "fixed";
                 championBox.style.left = "29%";
@@ -1192,6 +1183,26 @@
                 facedownBox.style.zIndex = "100300";
                 facedownBox.style.pointerEvents = "none";
                 facedownBox.style.backgroundColor = "rgba(255, 0, 0, 0)";
+
+            const arsenalBox = document.getElementById("playerChampionsBox");
+                arsenalBox.style.position = "fixed";
+                arsenalBox.style.left = "29%";
+                arsenalBox.style.top = "80%";
+                arsenalBox.style.width = "49.9%";
+                arsenalBox.style.height = "13.4%";
+                arsenalBox.style.zIndex = "100300"; // ensure it's above the board
+                arsenalBox.style.pointerEvents = "none";
+                arsenalBox.style.backgroundColor = "rgba(255, 0, 0, 0)"; // debug transparent background
+            
+            const facedownArsenalBox = document.getElementById("playerFaceDownArsenalBox");
+                facedownArsenalBox.style.position = "fixed";
+                facedownArsenalBox.style.left = "50%";
+                facedownArsenalBox.style.top = "80%";
+                facedownArsenalBox.style.width = "49.9%";
+                facedownArsenalBox.style.height = "13.4%";
+                facedownArsenalBox.style.zIndex = "100300";
+                facedownArsenalBox.style.pointerEvents = "none";
+                facedownArsenalBox.style.backgroundColor = "rgba(255, 0, 0, 0)";
 
             const reserveBox = document.createElement("div");
                 reserveBox.id = "playerReserveBox";
@@ -2141,6 +2152,9 @@
 
             updateAllRallyHighlights(gameState.turn.currentPhase, gameState, username);
         }
+
+        const ARSENAL_ZONE = "Zone (Arsenal)";
+        const FACEDOWN_ARSENAL_ZONE = "FaceDownArsenalZone";
 
         function renderDrawnCards() {
             const drawnCardsContainer = document.getElementById("drawn-cards");
