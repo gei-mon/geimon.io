@@ -1,4 +1,15 @@
 import { renderCard } from './cardRenderer.js';
+const effectUsageTracker = new Map();
+
+export function resetEffectUsageForTurn(gameId, turnNumber) {
+  if (!effectUsageTracker.has(gameId)) return;
+  const tracker = effectUsageTracker.get(gameId);
+  for (const turn of tracker.keys()) {
+    if (turn !== turnNumber) {
+      tracker.delete(turn);
+    }
+  }
+}
 
 export async function handleBoardStateChange(card, boardState, lastBoardState, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
   console.log(`State change: ${card.name} from ${lastBoardState} to ${boardState}`);
@@ -47,6 +58,31 @@ export async function handleBoardStateChange(card, boardState, lastBoardState, g
   }
 }
 
+function hasUsedEffectThisTurn(gameId, turn, cardId, effectText) {
+  if (!effectUsageTracker.has(gameId)) {
+    effectUsageTracker.set(gameId, new Map());
+  }
+
+  const turnMap = effectUsageTracker.get(gameId);
+  if (!turnMap.has(turn)) {
+    turnMap.set(turn, new Map());
+  }
+
+  const cardMap = turnMap.get(turn);
+  if (!cardMap.has(cardId)) {
+    cardMap.set(cardId, new Set());
+  }
+
+  const usedEffects = cardMap.get(cardId);
+
+  if (usedEffects.has(effectText)) {
+    return true; // ❌ already used
+  }
+
+  usedEffects.add(effectText); // ✅ now it's used
+  return false;
+}
+
 export async function declareAbility(card, triggerType, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
   console.log(`Checking abilities on ${card.name} for trigger: ${triggerType}`);
   if (!card || !card.name || !card.abilities) {
@@ -65,10 +101,20 @@ export async function declareAbility(card, triggerType, gameState, username, gam
         const text = ability[`effect${num}text`];
 
         if (type === triggerType && text === 'RetrieveDifferentUndead') {
-          promises.push(RetrieveDifferentUndead(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry));
+          const cardId = card.id;
+          const currentTurn = gameState.turn?.count ?? 0;
+
+          if (!hasUsedEffectThisTurn(gameId, currentTurn, cardId, text)) {
+            promises.push(RetrieveDifferentUndead(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry));
+          }
         }
         if (type === triggerType && text === 'ResurrectSelf') {
-          promises.push(ResurrectSelf(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry));
+          const cardId = card.id;
+          const currentTurn = gameState.turn?.count ?? 0;
+
+          if (!hasUsedEffectThisTurn(gameId, currentTurn, cardId, text)) {
+            promises.push(ResurrectSelf(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry));
+          }
         }
     // Add more conditionals as needed for other effects
     });

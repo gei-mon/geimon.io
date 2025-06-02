@@ -371,6 +371,7 @@
             import { keywords } from "./data/keywords.js";
             import { rules } from "./data/rules.js";
             import * as AbilityExecutor from './utils/abilityExecutor.js';
+            import { resetEffectUsageForTurn } from './utils/abilityExecutor.js';
 
             let gameId = new URLSearchParams(window.location.search).get("gameId");
             if (gameId) {
@@ -798,10 +799,11 @@
                 }
 
                 gameState = newGameState;
-                updateLocalFromGameState();
-                const currentTurn = gameState.turn;
-                const playerState = gameState[username];
+                const currentTurn = gameState.turn.count;
+                resetEffectUsageForTurn(gameId, currentTurn);
 
+                updateLocalFromGameState();
+                const playerState = gameState[username];
             } catch (err) {
                 console.error("💥 Error fetching game state:", err);
             }
