@@ -71,7 +71,6 @@
         </div>
         <br>
         <h2 style="text-align:center; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Home Page</h2>
-            <button class="button button" onclick="window.open('event.html', '_blank')" id="eventButton" style="display: none;">Limited Event!</button>
 
     <div class="container">
         <div class="column left">
@@ -80,6 +79,8 @@
             <button class="button button" id="dynamicButton">Loading...</button>
             <br>
             <button class="button button" onclick="window.open('rules.html', '_blank')" id="rulesButton" style="display: none;">How To Play</button>
+            <br>
+            <button class="button button" onclick="location.href='settings.html'" id="settingsButton" style="display: none;">Settings</button>
         </div>
         <div class="column right">
             <button class="button button" onclick="window.open('solo.html', '_blank')" id="soloButton" style="display: none;">Solo Game</button>
@@ -87,6 +88,8 @@
             <button class="button button" onclick="window.open('single.html', '_blank')" id="singleButton" style="display: none;">Single Game</button>
             <br>
             <button class="button button" onclick="window.open('match.html', '_blank')" id="matchButton" style="display: none;">Match Game</button>
+            <br>
+            <button class="button button" onclick="location.href='minigame.html'" id="minigameButton" style="display: none;">Mini-Games!</button>
         </div>
     </div>
     <div style="text-align: center; margin-top: 0px;">
@@ -102,9 +105,10 @@
         const soloBtn = document.getElementById('soloButton');
         const singleBtn = document.getElementById('singleButton');
         const matchBtn = document.getElementById('matchButton');
-        const eventBtn = document.getElementById('eventButton');
+        //const minigameBtn = document.getElementById('minigameButton');
         const profilePic = document.getElementById('profilePic');
         const rulesBtn = document.getElementById('rulesButton');
+        //const settingsBtn = document.getElementById('settingsButton');
 
         try {
             const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
@@ -123,8 +127,8 @@
                 deckBtn.style.display = 'inline-block';
                 matchBtn.style.display = 'inline-block';
                 rulesBtn.style.display = 'inline-block';
-                //eventBtn.style.display = 'block';
-                //eventBtn.style.margin = "0 auto";
+                //minigameBtn.style.display = 'inline-block';
+                //settingsBtn.style.display = 'inline-block';
 
                 logoutBtn.onclick = async () => {
                     await fetch('https://geimon-app-833627ba44e0.herokuapp.com/logout', {

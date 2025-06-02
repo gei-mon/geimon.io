@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Racing Sans One' rel='stylesheet'>
+    <link rel="icon" href="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/favicon.png" type="image/png">
+    <link rel="stylesheet" href="style.css">
+    <title>MINI-GAME PAGE</title>
+</head>
+<style>
+    .page-wrapper {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 2px;
+    }
+    .container {
+        display: flex;
+        text-align: center;
+    }
+    .column {
+        padding: 1px;
+        box-sizing: border-box;
+        transform: translateX(-12%);
+    }
+    .left {
+        flex: 1;
+    }
+    .right {
+        flex: 1;
+    }
+    .gameTitle {
+        text-align: center;
+        font-family: 'Racing Sans One';
+        font-size: 5em;
+        color: white;
+        text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;
+        margin: 0 auto;
+    }
+    .buttonEvenSmaller, .buttonEvenSmaller:link, .buttonEvenSmaller:visited {
+        border: 5px solid rgb(0, 0, 0);
+        background-color: rgb(165, 159, 206);
+        color: black;
+        padding: 10px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-family: 'Arial';
+        font-size: 14px;
+        margin: 4px 2px;
+        cursor: pointer;
+        min-width: 140px;
+        width: fit-content;
+    }
+    .buttonEvenSmaller:hover {
+        background-color: rgb(177, 177, 234);
+    }
+    .buttonEvenSmaller:active {
+        background-color: rgb(153, 153, 234);
+    }
+</style>
+<body style="background-color:rgb(78, 78, 78);">
+  <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
+    <div class="page-wrapper">
+            <br><br><br>
+        <div class="container">
+            <div class="gameTitle">Geimon!</div>
+        </div>
+        <h2 style="text-align: center; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Mini-Games Page</h2>
+
+        <div class="container">
+            <div class="column left">
+                <button class="button" onclick="location.href='packShop.html'" id="packShopButton">Pack Opener</button>
+                <br>
+                <button class="button" onclick="location.href='saga.html'" id="sagaButton">Saga Ladder</button>
+            </div>
+            <div class="column right">
+                <button class="button" onclick="location.href='cube.html'" id="cubeButton">Cube Draft</button>
+                <br>
+                <button class="button buttonDisabled">Limited Event!</button>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 0px;">
+            <button class="button buttonEvenSmaller" id="logoutButton" onclick="location.href='index.html'">Return to Home</button>
+        </div>
+    </div>
+</body>
+</html>
