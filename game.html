@@ -390,6 +390,9 @@
             let discardMode = false;
             let discardOngoing = false;
             let userSleeveURL = null;
+            let discardSessionId = 0;
+            let discardLock = false;
+            let discardInstruction = null;
 
             const params = new URLSearchParams(window.location.search);
             const isSinglePlayer = params.get("gameType") === "single";
@@ -440,6 +443,15 @@
             if (turnPlayer !== username) return false; // ✅ Only current turn player can set
 
             return ["Action", "Rush", "Reflex", "Equipment", "Obelisk"].includes(fullCard.type);
+        }
+
+        function cleanupDiscardUI() {
+            document.querySelectorAll("div[style*='Select']").forEach(el => el.remove());
+            document.querySelectorAll("div[style*='Discard this card?']").forEach(el => el.remove());
+            document.querySelectorAll(".card-button").forEach(btn => {
+                btn.onclick = btn._originalHandler || null;
+            });
+            document.querySelectorAll(".phase-box").forEach(box => box.style.pointerEvents = "auto");
         }
 
         function showSetArsenalPrompt(cardData, fullCard) {
@@ -807,14 +819,36 @@
         }
 
         async function handleCardDiscard(gameState, username, cards, gameId, phase, updateLocalFromGameState, addGameLogEntry, updatePhaseDisplay) {
-            discardMode = true;
-            discardOngoing = true;
-            const hand = gameState[username].Hand;
-            if (hand.length <= 6) {
-                discardMode = false;
-                discardOngoing = false;
+            if (discardLock) {
+                console.warn("⛔ Discard in progress (locked). Skipping trigger.");
                 return;
             }
+
+            discardSessionId += 1;
+            const thisSessionId = discardSessionId;
+
+            discardMode = true;
+            discardOngoing = true;
+            discardLock = true;
+
+            if (gameState[username].Hand.length <= 6) {
+                discardMode = false;
+                discardOngoing = false;
+                discardLock = false;
+
+                if (discardInstruction && discardInstruction.parentNode) {
+                    discardInstruction.parentNode.removeChild(discardInstruction);
+                    discardInstruction = null;
+                }
+
+                return;
+            }
+
+            if (discardInstruction && discardInstruction.parentNode) {
+                discardInstruction.parentNode.removeChild(discardInstruction);
+                discardInstruction = null;
+            }
+            discardInstruction = document.createElement("div");
 
             const drawnCardsContainer = document.getElementById("drawn-cards");
             if (!drawnCardsContainer) return;
@@ -824,7 +858,6 @@
                 card.replaceWith(clone);
             });
 
-            let discardInstruction = document.createElement("div");
             Object.assign(discardInstruction.style, {
                 position: "fixed",
                 bottom: "50%",
@@ -854,6 +887,10 @@
                 button._originalHandler = originalClick;
 
                 button.onclick = () => {
+                    if (thisSessionId !== discardSessionId) {
+                        console.warn("🛑 Discard session outdated, aborting interaction.");
+                        return;
+                    }
                     const parentCard = button.closest(".card");
                     const cardId = parentCard?.dataset.cardId;
                     if (!cardId) return console.warn("❌ No cardId found on clicked button");
@@ -895,22 +932,19 @@
                     document.body.appendChild(confirmBox);
 
                     document.getElementById("confirm-discard").onclick = async () => {
+                        console.log("🧾 Hand size before discard:", gameState[username].Hand.length);
+
                         const index = gameState[username].Hand.findIndex(c => String(c.id) === cardId);
+                        if (index === -1) {
+                            console.warn("❌ Tried to discard a card that no longer exists in hand:", cardId);
+                            return;
+                        }
+
                         enrichedCard.lastBoardState = "Hand";
                         enrichedCard.boardState = "Tomb";
+
                         gameState[username].Hand.splice(index, 1);
                         gameState[username].Tomb.push(enrichedCard);
-
-                        AbilityExecutor.handleBoardStateChange(
-                            enrichedCard,
-                            "Tomb",
-                            "Hand",
-                            gameState,
-                            username,
-                            gameId,
-                            updateLocalFromGameState,
-                            addGameLogEntry
-                        );
 
                         await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
                             method: "POST",
@@ -927,21 +961,87 @@
                         });
 
                         addGameLogEntry(`${username} discarded ${fullCard.name} for hand size limit`);
-                        document.body.removeChild(confirmBox);
-                        updateLocalFromGameState();
-                        renderLatestTombCard();
 
-                        if (gameState[username].Hand.length > 6) {
+                        await AbilityExecutor.handleBoardStateChange(
+                            enrichedCard,
+                            "Tomb",
+                            "Hand",
+                            gameState,
+                            username,
+                            gameId,
+                            updateLocalFromGameState,
+                            addGameLogEntry
+                        );
+
+                        await renderLatestTombCard();
+                        await renderDrawnCards();
+                        await updateLocalFromGameState();
+
+                        // 🧠 Refetch latest state after effects and updates
+                        const updatedState = await fetchLatestTurnState();
+                        if (!updatedState || !updatedState[username]) {
+                            console.error("❌ Failed to get latest state during discard");
+                            return;
+                        }
+                        gameState = updatedState;
+
+                        await new Promise(requestAnimationFrame);
+                        const updatedHand = gameState[username].Hand;
+
+                        if (updatedHand.length > 6) {
+                            console.log("♻️ Hand size over limit again after retrieval — restarting discard flow.");
+
+                            document.body.removeChild(confirmBox);
+
+                            if (discardInstruction && discardInstruction.parentNode) {
+                                discardInstruction.parentNode.removeChild(discardInstruction);
+                                discardInstruction = null;
+                            }
+
+                            drawnCardsContainer.querySelectorAll(".card-button").forEach(btn => {
+                                btn.onclick = btn._originalHandler || null;
+                            });
+
+                            discardMode = false;
+                            discardOngoing = false;
+                            discardLock = false;
+
+                            await handleCardDiscard(
+                                gameState,
+                                username,
+                                cards,
+                                gameId,
+                                phase,
+                                updateLocalFromGameState,
+                                addGameLogEntry,
+                                updatePhaseDisplay
+                            );
+                            return;
+                        }
+
+                        document.body.removeChild(confirmBox);
+
+                        if (updatedHand.length > 6) {
+                            console.log("🔁 Still need to discard. Cards in hand:", updatedHand.length);
                             updateDiscardPrompt();
                             return;
                         }
 
+                        console.log("🎉 Hand size OK. Ending discard mode.");
                         discardMode = false;
                         discardOngoing = false;
-                        document.body.removeChild(discardInstruction);
+                        discardLock = false;
+
+                        if (discardInstruction && discardInstruction.parentNode) {
+                            console.log("🧹 Removing discard instruction popup.");
+                            discardInstruction.parentNode.removeChild(discardInstruction);
+                            discardInstruction = null;
+                        }
+
                         drawnCardsContainer.querySelectorAll(".card-button").forEach(btn => {
                             btn.onclick = btn._originalHandler || null;
                         });
+
                         document.querySelectorAll(".phase-box").forEach(box => box.style.pointerEvents = "auto");
 
                         const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/setPhase", {
@@ -955,10 +1055,10 @@
                             const updated = await response.json();
                             updatePhaseDisplay(updated.currentPhase);
                             await updateLocalFromGameState();
+                            renderLatestTombCard();
                         }
                     };
-
-                    document.getElementById("cancel-discard").onclick = () => {
+                        document.getElementById("cancel-discard").onclick = () => {
                         document.body.removeChild(confirmBox);
                     };
                 };
