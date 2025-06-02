@@ -5,7 +5,7 @@ import { cards } from '../data/cards.js';
 export function renderCard(card, container) {
   const cardElement = document.createElement("div");
   cardElement.className = "card";
-  cardElement.dataset.cardId = card.id;
+  cardElement.dataset.cardId = card.uid || card.id;
 
   if (card.type === "Champion") {
     cardElement.classList.add("champion");
@@ -156,7 +156,59 @@ cardButton.style.border = "none";
 cardButton.style.background = "transparent";
 
 // Set default handler (for regular clicks)
-const defaultHandler = () => console.log(`🟢 Default card clicked: ${card.name}`);
+const defaultHandler = (e) => {
+  const cardId = String(card.id);
+  const inSacrificeMode = window.sacrificeMode && window.validSacrificeIds?.has(cardId);
+  //console.log("🧪 Sacrifice mode active:", window.sacrificeMode, "Valid UIDs:", [...window.validSacrificeIds], "Clicked card ID:", cardId);
+
+  if (inSacrificeMode) {
+    e.stopPropagation();
+    e.preventDefault();
+    //console.log("🔥 Sacrifice button clicked for", card.name);
+
+    const confirmBox = document.createElement("div");
+    Object.assign(confirmBox.style, {
+        position: "fixed",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        padding: "20px",
+        backgroundColor: "#333",
+        color: "white",
+        border: "2px solid white",
+        borderRadius: "10px",
+        zIndex: "120001",
+        textAlign: "center",
+        boxShadow: "0 0 10px black"
+    });
+
+    confirmBox.innerHTML = `
+        <p>Sacrifice <strong>${card.name}</strong>?</p>
+        <button id="confirm-sacrifice">Confirm</button>
+        <button id="cancel-sacrifice" style="margin-left: 10px;">Cancel</button>
+    `;
+
+    document.body.appendChild(confirmBox);
+
+    document.getElementById("confirm-sacrifice").onclick = () => {
+      document.body.removeChild(confirmBox);
+
+      // ✅ Manually trigger the sacrifice logic
+      if (window.__pendingSacrificeSelection) {
+        window.__pendingSacrificeSelection(card);
+      } else {
+        console.warn("⚠️ No pending sacrifice callback.");
+      }
+    };
+
+    document.getElementById("cancel-sacrifice").onclick = () => {
+      document.body.removeChild(confirmBox);
+    };
+    return;
+  }
+
+  console.log(`🟢 Default card clicked: ${card.name}`);
+};
 cardButton.onclick = defaultHandler;
 cardButton._originalHandler = defaultHandler;
 
@@ -164,8 +216,10 @@ cardElement.appendChild(cardButton);
 if (container) {
   container.appendChild(cardElement);
 }
+//console.log("🔄 Creating DOM for:", card.id, card.name);
 return cardElement;
 }
+
 function adjustNameSize(cardElement) {
   const nameContainer = cardElement.querySelector(".card-name");
   const nameBoxHeight = nameContainer.offsetHeight;  // Get the fixed height of the name box

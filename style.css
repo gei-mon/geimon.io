@@ -459,6 +459,11 @@ overflow: hidden;
   box-shadow: 0 0 12px 4px cyan !important;
 }
 
+.cost-rally-highlight {
+  outline: 4px solid orange !important;
+  box-shadow: 0 0 12px 4px orange !important;
+}
+
 .card-select-for-arsenal {
   outline: 4px solid #b366ff !important; /* light purple */
   box-shadow: 0 0 12px 4px #b366ff !important;

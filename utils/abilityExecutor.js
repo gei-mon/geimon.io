@@ -1,4 +1,5 @@
 import { renderCard } from './cardRenderer.js';
+import { cards } from '../data/cards.js';
 const effectUsageTracker = new Map();
 
 export function resetEffectUsageForTurn(gameId, turnNumber) {
@@ -12,7 +13,7 @@ export function resetEffectUsageForTurn(gameId, turnNumber) {
 }
 
 export async function handleBoardStateChange(card, boardState, lastBoardState, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
-  console.log(`State change: ${card.name} from ${lastBoardState} to ${boardState}`);
+  //console.log(`State change: ${card.name} from ${lastBoardState} to ${boardState}`);
   if (boardState === 'Tomb' && lastBoardState !== 'Tomb') {
     await declareAbility(card, 'IfTomb', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);               //IF SENT TO TOMB
   }
@@ -83,43 +84,509 @@ function hasUsedEffectThisTurn(gameId, turn, cardId, effectText) {
   return false;
 }
 
-export async function declareAbility(card, triggerType, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
-  console.log(`Checking abilities on ${card.name} for trigger: ${triggerType}`);
+const effectMap = {
+  RetrieveDifferentUndead,
+  ResurrectSelf
+};
+
+export async function declareAbility(
+  card,
+  triggerType,
+  gameState,
+  username,
+  gameId,
+  updateLocalFromGameState,
+  addGameLogEntry,
+  batchMilledCards = null
+) {
+  //console.log(`Checking abilities on ${card.name} for trigger: ${triggerType}`);
   if (!card || !card.name || !card.abilities) {
     console.warn("🛑 Invalid or incomplete card object passed:", card);
     return;
   }
 
   const abilities = card.abilities || [];
-  console.log("Abilities attached to card:", card.abilities);
-
+  //console.log("Abilities attached to card:", card.abilities);
   const promises = [];
 
-  abilities.forEach((ability) => {
-    [1, 2, 3].forEach(num => {
-        const type = ability[`effect${num}type`];
-        const text = ability[`effect${num}text`];
+  for (const ability of abilities) {
+    for (const num of [1, 2, 3]) {
+      const type = ability[`effect${num}type`];
+      const text = ability[`effect${num}text`];
 
-        if (type === triggerType && text === 'RetrieveDifferentUndead') {
-          const cardId = card.id;
-          const currentTurn = gameState.turn?.count ?? 0;
+      if (type === triggerType && text) {
+        const cardId = card.id;
+        const currentTurn = gameState.turn?.count ?? 0;
 
-          if (!hasUsedEffectThisTurn(gameId, currentTurn, cardId, text)) {
-            promises.push(RetrieveDifferentUndead(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry));
+        if (!hasUsedEffectThisTurn(gameId, currentTurn, cardId, text)) {
+          await handleCardCostFunction(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+
+          const effectFunc = effectMap[text];
+          if (effectFunc) {
+            // Pass batchMilledCards to effect function if it needs it
+            promises.push(effectFunc(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, batchMilledCards));
+          } else {
+            console.warn(`⚠️ Effect "${text}" not found in effectMap`);
           }
         }
-        if (type === triggerType && text === 'ResurrectSelf') {
-          const cardId = card.id;
-          const currentTurn = gameState.turn?.count ?? 0;
-
-          if (!hasUsedEffectThisTurn(gameId, currentTurn, cardId, text)) {
-            promises.push(ResurrectSelf(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry));
-          }
-        }
-    // Add more conditionals as needed for other effects
-    });
-  });
+      }
+    }
+  }
   await Promise.all(promises);
+}
+
+function parseCombinedCosts(costString) {
+  const regex = /(Offer|Mill|Sacrifice)(\d+)/g;
+  const costs = [];
+  let match;
+  while ((match = regex.exec(costString)) !== null) {
+    costs.push({ type: match[1], amount: parseInt(match[2], 10) });
+  }
+  return costs;
+}
+
+
+export async function handleCardCostFunction(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
+  const deck = gameState[username].Deck;
+  const life = gameState[username].life;
+  const controlledChampions = [
+    ...(gameState[username]["Zone (Champion)"] || []),
+    ...(gameState[username]["FaceDownZone"] || [])
+  ];
+
+  // If cardCostFunction is a combined string like "Offer5Mill5Sacrifice1"
+  if (/^(Offer|Mill|Sacrifice)/.test(card.cardCostFunction)) {
+    //console.log('Parsing cost string:', card.cardCostFunction);
+    const costs = parseCombinedCosts(card.cardCostFunction);
+    //console.log('Parsed costs:', costs);
+
+    if (!Array.isArray(costs)) {
+      console.error('Parsed costs is not an array:', costs);
+      return false;
+    }
+
+    // Validate all costs first (return false if any cannot pay)
+    for (const cost of costs) {
+      if (cost.type === "Offer" && life <= cost.amount) return false;
+      if (cost.type === "Mill" && deck.length < cost.amount) return false;
+      if (cost.type === "Sacrifice" && controlledChampions.length < cost.amount) return false;
+    }
+
+    // Pay each cost in sequence
+    for (const cost of costs) {
+      switch (cost.type) {
+        case "Offer":
+          await offerLife(cost.amount, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+          break;
+        case "Mill":
+          await millCards(cost.amount, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+          break;
+        case "Sacrifice":
+          const success = await sacrificeChampions(cost.amount, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+          if (!success) return false;
+          break;
+      }
+    }
+    return true;
+  }
+
+  switch (card.cardCostFunction) {
+    case "UseBasic":
+      break;
+    default:
+      return false;
+  }
+}
+
+async function sendLifeUpdate(gameId, gameState, username) {
+    await fetch('https://geimon-app-833627ba44e0.herokuapp.com/updateGameState', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            gameId,
+            updatedZones: {
+                life: gameState[username].life
+            },
+            owner: username
+        })
+    });
+}
+
+export function changeLife(player, amount, gameState, username, gameId) {
+    if (!gameState[player]) return;
+    gameState[player].life += amount;
+
+    // Update display
+    if (player === username) {
+        document.getElementById("player-name").textContent = username;
+        document.getElementById("player-life").textContent = `${gameState[username].life}`;
+    }
+    sendLifeUpdate(gameId, gameState, username);
+}
+
+async function resolveBatchIfTombEffects(milledCards, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
+    for (const card of milledCards) {
+        const fullCard = cards.find(c => String(c.id) === String(card.id));
+        if (!fullCard) {
+            console.warn("⚠️ Could not find full card info for milled card ID:", card.id);
+            continue;
+        }
+
+        fullCard.boardState = "Tomb";
+        fullCard.lastBoardState = "Deck";
+
+        // Pass milledCards batch to declareAbility
+        await declareAbility(fullCard, 'IfTomb', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, milledCards);
+        await declareAbility(fullCard, 'IfBuried', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, milledCards);
+    }
+}
+
+export async function millCards(
+    count,
+    gameState,
+    username,
+    gameId,
+    updateLocalFromGameState,
+    addGameLogEntry
+) {
+    const deck = gameState[username].Deck;
+    const tomb = gameState[username].Tomb;
+
+    if (deck.length < count) {
+        console.warn(`⚠️ Not enough cards to mill. Requested: ${count}, Available: ${deck.length}`);
+        count = deck.length;
+    }
+
+    const milled = deck.splice(0, count); // Top X cards (0 is top)
+    const reversed = milled.reverse();    // Topmost should go beneath
+
+    // Add to tomb in reverse order
+    for (const card of reversed) {
+        card.lastBoardState = "Deck";
+        card.boardState = "Tomb";
+        tomb.push(card);
+    }
+
+    // Save deck and tomb update
+    await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+        gameId,
+        owner: username,
+        updatedZones: {
+            Deck: deck,
+            Tomb: tomb
+        }
+        })
+    });
+
+    addGameLogEntry(`${username} milled ${count} card${count > 1 ? 's' : ''}`);
+
+    // Wait one frame for state sync
+    await new Promise(requestAnimationFrame);
+
+    // Now resolve any effects of cards sent to tomb
+    await resolveBatchIfTombEffects(reversed, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+}
+
+export async function offerLife(amount, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
+    if (gameState[username].life <= amount) {
+        console.warn(`${username} cannot offer ${amount} life — would drop to 0 or less.`);
+        return false;
+    }
+
+    changeLife(username, -amount, gameState, username, gameId);
+
+    addGameLogEntry(`${username} offered ${amount} life`);
+
+    if (updateLocalFromGameState) await updateLocalFromGameState();
+
+    return true;
+}
+
+export function promptUserToSacrifice(amount, validCards) {
+    window.__pendingSacrificeSelection = null;
+    return new Promise(resolve => {
+        //console.log(`promptUserToSacrifice called: select ${amount} champions`);
+        //console.log("Valid cards to sacrifice:", validCards.map(c => c.name || c.id || c.uid));
+        let selected = [];
+
+        // Enable sacrifice mode
+        window.sacrificeMode = true;
+        window.validSacrificeIds = new Set(validCards.map(c => String(c.id)));
+
+        const banner = document.createElement("div");
+        banner.id = "sacrifice-banner";
+        banner.textContent = `Select ${amount} champion${amount > 1 ? "s" : ""} to sacrifice.`;
+        document.querySelectorAll(".card-button").forEach(button => {
+          const parentCard = button.closest(".card");
+          if (!parentCard) return;
+
+          const cardId = parentCard.dataset.cardId;
+          const isValid = validCards.some(c => String(c.id) === String(cardId) || String(c.id) === String(cardId));
+          if (isValid) {
+            button.textContent = "SacrificeThisCard";
+          } else {
+            button.textContent = "";
+          }
+        });
+
+        Object.assign(banner.style, {
+            position: "fixed",
+            top: "20px",
+            left: "50%",
+            transform: "translateX(-50%)",
+            backgroundColor: "#222",
+            color: "#fff",
+            padding: "10px 20px",
+            borderRadius: "8px",
+            zIndex: 100000,
+            fontSize: "16px",
+            fontWeight: "bold"
+        });
+        document.body.appendChild(banner);
+
+        document.querySelectorAll(".card-button").forEach(button => {
+            const parent = button.closest(".card");
+            const id = parent?.dataset.cardId;
+            if (window.validSacrificeIds?.has(id)) {
+                button.textContent = "SacrificeThisCard";
+            } else {
+                button.textContent = "";
+            }
+        });
+
+        window.__pendingSacrificeSelection = (card) => {
+          if (!selected.find(c => String(c.id) === String(card.id))) {
+            selected.push(card);
+            const el = document.getElementById(`card-${card.id}`);
+            if (el) el.classList.add("selected");
+          }
+
+          if (selected.length === amount) {
+            for (const c of validCards) {
+              const el2 = document.getElementById(`card-${c.id}`);
+              if (el2) {
+                el2.classList.remove("selectable", "selected");
+                const btn2 = el2.querySelector(".card-button");
+                if (btn2) btn2.onclick = btn2._originalHandler || (() => {});
+              }
+            }
+
+            const banner = document.getElementById("sacrifice-banner");
+            if (banner) banner.remove();
+
+            window.sacrificeMode = false;
+            window.validSacrificeIds = null;
+            window.__pendingSacrificeSelection = null;
+            resolve(selected);
+          }
+        };
+
+        for (const card of validCards) {
+            const el = document.getElementById(`card-${card.id}`);
+            if (!el) continue;
+
+            el.classList.add("selectable");
+
+            const button = el.querySelector(".card-button");
+            if (!button) continue;
+
+            // ✅ Save the logic to run globally
+            button.onclick = (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+
+                //console.log("🔥 Sacrifice button clicked:", card.name);
+
+                const confirmBox = document.createElement("div");
+                Object.assign(confirmBox.style, {
+                    position: "fixed",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    padding: "20px",
+                    backgroundColor: "#333",
+                    color: "white",
+                    border: "2px solid white",
+                    borderRadius: "10px",
+                    zIndex: "120001",
+                    textAlign: "center",
+                    boxShadow: "0 0 10px black"
+                });
+
+                confirmBox.innerHTML = `
+                    <p>Sacrifice <strong>${card.name}</strong>?</p>
+                    <button id="confirm-sacrifice">Confirm</button>
+                    <button id="cancel-sacrifice" style="margin-left: 10px;">Cancel</button>
+                `;
+
+                document.body.appendChild(confirmBox);
+
+                document.getElementById("confirm-sacrifice").onclick = () => {
+                    document.body.removeChild(confirmBox);
+
+                    // Mark selected
+                    if (!selected.find(c => c.id === card.id)) {
+                        selected.push(card);
+                        el.classList.add("selected");
+                    }
+
+                    if (selected.length === amount) {
+                        for (const c of validCards) {
+                            const el2 = document.getElementById(`card-${c.id}`);
+                            if (el2) {
+                                el2.classList.remove("selectable", "selected");
+                                const btn2 = el2.querySelector(".card-button");
+                                if (btn2) btn2.onclick = btn2._originalHandler || (() => {});
+                            }
+                        }
+
+                        const banner = document.getElementById("sacrifice-banner");
+                        if (banner) banner.remove();
+
+                        window.sacrificeMode = false;
+                        window.validSacrificeIds = null;
+                        window.__pendingSacrificeSelection = null;
+                        resolve(selected);
+                    }
+                };
+
+                document.getElementById("cancel-sacrifice").onclick = () => {
+                    document.body.removeChild(confirmBox);
+                };
+            };
+
+            // ✅ Save default so we can restore it later
+            if (!button._originalHandler) {
+                button._originalHandler = button.onclick;
+            }
+        }
+    });
+}
+
+export async function waitForChampionRemoved(cardIds, username, timeout = 5000) {
+  const start = Date.now();
+  while (Date.now() - start < timeout) {
+    await fetchGameStateFromServer();
+    const currentChampions = gameState[username]["Zone (Champion)"] || [];
+    const currentFaceDown = gameState[username]["FaceDownZone"] || [];
+
+    const currentIds = [
+      ...currentChampions.map(c => String(c.id)),
+      ...currentFaceDown.map(c => String(c.id))
+    ];
+
+    // Check if any of the cardIds remain in Champion zone
+    const stillPresent = cardIds.some(id => currentIds.includes(String(id)));
+    if (!stillPresent) {
+      return true; // All removed
+    }
+    await new Promise(r => setTimeout(r, 200)); // wait 200ms before retry
+  }
+  console.warn("Timeout waiting for champion(s) removal from server");
+  return false;
+}
+
+export async function sacrificeChampions(amount, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
+    //console.log(`sacrificeChampions called to sacrifice ${amount} champion(s)`);
+
+    if (!gameState || !gameState[username]) {
+        console.warn("⚠️ Invalid game state or username.");
+        return false;
+    }
+
+    const zoneChampions = gameState[username]["Zone (Champion)"] || [];
+    const faceDownZone = gameState[username]["FaceDownZone"] || [];
+    const champions = [...zoneChampions, ...faceDownZone].filter(c => !c.exerted);
+    //console.log("🧪 Valid champions to sacrifice:", champions.map(c => `${c.name} (exerted: ${c.exerted})`));
+
+    //console.log(`Champions available to sacrifice: ${champions.length}`);
+    if (champions.length < amount) {
+        alert("Not enough champions to sacrifice.");
+        return false;
+    }
+
+    window.sacrificeMode = true;
+    const selected = await promptUserToSacrifice(amount, champions);
+
+    const rallyPrompt = document.getElementById("rally-cost-overlay");
+    if (rallyPrompt) rallyPrompt.remove();
+
+    //console.log("User selected champions to sacrifice:", selected.map(c => c.name || c.id));
+
+    // --- Set board state for each selected card BEFORE updating any zones ---
+    for (const card of selected) {
+        card.lastBoardState = "Zone (Champion)";
+        card.boardState = "Tomb";
+    }
+
+    // --- Remove from current zones ---
+    gameState[username]["Zone (Champion)"] = zoneChampions.filter(
+        c => !selected.some(s => String(s.id) === String(c.id))
+    );
+    gameState[username]["FaceDownZone"] = faceDownZone.filter(
+        c => !selected.some(s => String(s.id) === String(c.id))
+    );
+
+    // --- Push to Tomb ---
+    gameState[username].Tomb.push(...selected);
+
+    // --- THEN do side effects (animations, triggers, etc.) ---
+    for (const card of selected) {
+        await handleBoardStateChange(
+            card,
+            "Tomb",
+            "Zone (Champion)",
+            gameState,
+            username,
+            gameId,
+            updateLocalFromGameState,
+            addGameLogEntry
+        );
+    }
+
+    addGameLogEntry(`${username} sacrificed ${amount} champion${amount > 1 ? "s" : ""}.`);
+
+    //console.log("Before updategamestate Champions:", gameState[username]["Zone (Champion)"].map(c => c.id));
+
+    const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+      method: "POST",
+      credentials: "include",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        gameId,
+        owner: username,
+        updatedZones: {
+          "Zone (Champion)": gameState[username]["Zone (Champion)"],
+          "FaceDownZone": gameState[username]["FaceDownZone"],
+          Tomb: gameState[username].Tomb
+        }
+      })
+    });
+
+    const data = await response.json();
+    if (data.success && data.updatedPlayerZone) {
+      // Replace your local zones with what the server sends
+      gameState[username] = data.updatedPlayerZone;
+      //console.log("After server update, Champion Zone:", gameState[username]["Zone (Champion)"].map(c => c.id));
+
+      const selectedIds = selected.map(c => c.id);
+      await waitForChampionRemoved(selectedIds, username);
+    } else {
+      console.warn("Server update failed or no updated zones returned");
+    }
+
+    window.sacrificeMode = false;
+    //console.log("Before updateLocalFromGameState, Champion Zone:", gameState[username]["Zone (Champion)"].map(c => c.id));
+    if (updateLocalFromGameState) {
+        await updateLocalFromGameState();  // Force rerender of zones
+    }
+    //console.log("After updateLocalFromGameState, Champion Zone:", gameState[username]["Zone (Champion)"].map(c => c.id));
+
+    return true;
 }
 
 export function checkLingerEffects(card, newZone, gameState, addGameLogEntry) {
@@ -206,11 +673,20 @@ export function ResurrectSelf(card, gameState, username, gameId, updateLocalFrom
   };
 }
 
-export function RetrieveDifferentUndead(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
+export function RetrieveDifferentUndead(
+  card,
+  gameState,
+  username,
+  gameId,
+  updateLocalFromGameState,
+  addGameLogEntry,
+  batchMilledCards = null // NEW param for batch
+) {
   return new Promise((resolve) => {
-    const tomb = gameState[username]?.Tomb || [];
+    // Use batchMilledCards if passed, else use current tomb
+    const tombSource = batchMilledCards || gameState[username]?.Tomb || [];
 
-    const validTargets = tomb.filter(
+    const validTargets = tombSource.filter(
       (targetCard) =>
         Array.isArray(targetCard.tags) &&
         targetCard.tags.includes("Undead") &&
@@ -451,13 +927,8 @@ BattleFlip
 
 cardCostFunction
 [
-  "UseBasic",
   "Offer5Mill5Sacrifice1",
-  "Offer10",
-  "Mill10",
   "Obliterate2YouControl",
-  "Offer5",
-  "Sacrifice1",
   "Discard2",
   "RevealSelfHideSelfShuffleHandRandomDiscard1",
   "Reveal1Random",

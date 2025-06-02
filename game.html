@@ -371,7 +371,6 @@
             import { keywords } from "./data/keywords.js";
             import { rules } from "./data/rules.js";
             import * as AbilityExecutor from './utils/abilityExecutor.js';
-            import { resetEffectUsageForTurn } from './utils/abilityExecutor.js';
 
             let gameId = new URLSearchParams(window.location.search).get("gameId");
             if (gameId) {
@@ -395,6 +394,13 @@
             let discardLock = false;
             let discardInstruction = null;
 
+            let sacrificeMode = false;
+            let sacrificeCallback = null;
+
+            let intervalId = null;
+            let isFetchingGameState = false;
+            let gameReady = false;
+
             const params = new URLSearchParams(window.location.search);
             const isSinglePlayer = params.get("gameType") === "single";
             const otherPlayerName = params.get("opponent") || "Unknown_Opponent"; // if multiplayer later
@@ -417,6 +423,14 @@
                 entry.textContent = `[${time}] ${message}`;
                 gameLog.appendChild(entry);
                 gameLog.scrollTop = gameLog.scrollHeight;
+            }
+
+            function findCardByUidOrId(id) {
+                const zones = [
+                    ...(gameState[username]["Zone (Champion)"] || []),
+                    ...(gameState[username]["FaceDownZone"] || []),
+                ];
+                return zones.find(c => String(c.id) === String(id) || String(c.id) === String(id));
             }
 
         function handsAreEqual(currentHand) {
@@ -538,7 +552,7 @@
                 }
             }
 
-            await renderCardZone(player["Zone (Champion)"], "playerChampionsBox");
+            //await renderCardZone(player["Zone (Champion)"], "playerChampionsBox");
             //console.log("Rendering Champions:", gameState[username]["Zone (Champion)"]);
 
             remainingDeck = player.Deck;
@@ -563,9 +577,9 @@
                 "FaceDownArsenalZone": "FaceDownArsenal"
             };
 
-            Object.entries(zoneMappings).forEach(([zoneKey, domSuffix]) => {
-                renderCardZone(gameState[username][zoneKey], `player${domSuffix}Box`);
-            });
+            for (const [zoneKey, domSuffix] of Object.entries(zoneMappings)) {
+                await renderCardZone(gameState[username][zoneKey], `player${domSuffix}Box`);
+            }
         }
 
         async function getUsername() {
@@ -575,12 +589,125 @@
                 username = data.username;
             }
         }
+
         async function initGameClient() {
             await getUsername();
             if (!username) {
                 alert("Could not retrieve username.");
                 return; // ✅ This is now valid
             }
+        }
+
+        function showCostRallyPrompt(card) {
+            const overlay = document.createElement("div");
+            Object.assign(overlay.style, {
+                position: "fixed",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                backgroundColor: "#333",
+                color: "white",
+                padding: "20px",
+                border: "2px solid white",
+                borderRadius: "10px",
+                zIndex: 120001,
+                textAlign: "center",
+                boxShadow: "0 0 10px black"
+            });
+
+            overlay.innerHTML = `
+                <p>Would you like to rally <strong>${card.name}</strong>?</p>
+                <button id="confirm-cost-rally">Rally</button>
+                <button id="cancel-cost-rally" style="margin-left: 10px;">Cancel</button>
+            `;
+            document.body.appendChild(overlay);
+
+            document.getElementById("cancel-cost-rally").onclick = async () => {
+                document.body.removeChild(overlay);
+            };
+
+            document.getElementById("confirm-cost-rally").onclick = async () => {
+            if (card.cardCostFunction?.startsWith("Sacrifice")) {
+                const sacrificeAmount = parseInt(card.cardCostFunction.replace("Sacrifice", ""), 10);
+                if (!isNaN(sacrificeAmount)) {
+                    document.body.removeChild(overlay);
+                    const success = await AbilityExecutor.sacrificeChampions(sacrificeAmount, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+                    if (!success) return; // User cancelled or failed to sacrifice
+                    // Proceed with rally now
+                    const hand = gameState[username].Hand;
+                    const handIndex = hand.findIndex(c => String(c.id) === String(card.id));
+                    if (handIndex !== -1) {
+                        hand.splice(handIndex, 1);
+                        card.lastBoardState = "Hand";
+                        card.boardState = "Zone (Champion)";
+                        gameState[username]["Zone (Champion)"].push(card);
+
+                        addGameLogEntry(`${username} rallied ${card.name} by sacrificing champions.`);
+                        
+                        await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+                            method: "POST",
+                            credentials: "include",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                gameId,
+                                owner: username,
+                                updatedZones: {
+                                    Hand: hand,
+                                    "Zone (Champion)": gameState[username]["Zone (Champion)"]
+                                }
+                            })
+                        });
+
+                        await AbilityExecutor.handleBoardStateChange(
+                            card,
+                            "Zone (Champion)",
+                            "Hand",
+                            gameState,
+                            username,
+                            gameId,
+                            updateLocalFromGameState,
+                            addGameLogEntry
+                        );
+                        await updateLocalFromGameState();
+                        }
+                        return;
+                    }
+                }
+
+                // Existing code for other costs (Offer, Mill)
+                await AbilityExecutor.handleCardCostFunction(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+
+                // Move card to Champion zone for other cost types
+                const hand = gameState[username].Hand;
+                const index = hand.findIndex(c => String(c.id) === String(card.id));
+                if (index !== -1) {
+                    hand.splice(index, 1);
+                    card.lastBoardState = "Hand";
+                    card.boardState = "Zone (Champion)";
+                    gameState[username]["Zone (Champion)"].push(card);
+
+                    await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+                        method: "POST",
+                        credentials: "include",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            gameId,
+                            owner: username,
+                            updatedZones: {
+                                Hand: hand,
+                                "Zone (Champion)": gameState[username]["Zone (Champion)"]
+                            }
+                        })
+                    });
+
+                    addGameLogEntry(`${username} rallied ${card.name} by paying its cost.`);
+
+                    await AbilityExecutor.handleBoardStateChange(card, "Zone (Champion)", "Hand", gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+                    await updateLocalFromGameState();
+                }
+
+                document.body.removeChild(overlay);
+            };
         }
 
         async function showRedrawPrompt() {
@@ -760,7 +887,10 @@
             const res = await fetch(`https://geimon-app-833627ba44e0.herokuapp.com/getGameState/${gameId}`, {
                 credentials: "include",
             });
-            if (!res.ok) return gameState;
+            if (!res.ok) {
+                console.warn("fetchLatestTurnState failed:", res.status);
+                return gameState;
+            }
             return await res.json();
             }
         async function waitForGameState(retries = 10, delayMs = 500) {
@@ -794,13 +924,13 @@
 
                 const newGameState = await response.json();
                 if (!newGameState || !newGameState.turn) {
-                console.warn("⚠️ Game state or turn missing from server");
-                return;
+                    console.warn("⚠️ Game state or turn missing from server");
+                    return;
                 }
 
                 gameState = newGameState;
                 const currentTurn = gameState.turn.count;
-                resetEffectUsageForTurn(gameId, currentTurn);
+                AbilityExecutor.resetEffectUsageForTurn(gameId, currentTurn);
 
                 updateLocalFromGameState();
                 const playerState = gameState[username];
@@ -808,6 +938,7 @@
                 console.error("💥 Error fetching game state:", err);
             }
         }
+        window.fetchGameStateFromServer = fetchGameStateFromServer;
 
         function showLossBanner(mainText, reasonText) {
             const banner = document.getElementById("loss-banner");
@@ -934,7 +1065,7 @@
                     document.body.appendChild(confirmBox);
 
                     document.getElementById("confirm-discard").onclick = async () => {
-                        console.log("🧾 Hand size before discard:", gameState[username].Hand.length);
+                        //console.log("🧾 Hand size before discard:", gameState[username].Hand.length);
 
                         const index = gameState[username].Hand.findIndex(c => String(c.id) === cardId);
                         if (index === -1) {
@@ -991,7 +1122,7 @@
                         const updatedHand = gameState[username].Hand;
 
                         if (updatedHand.length > 6) {
-                            console.log("♻️ Hand size over limit again after retrieval — restarting discard flow.");
+                            //console.log("♻️ Hand size over limit again after retrieval — restarting discard flow.");
 
                             document.body.removeChild(confirmBox);
 
@@ -1024,18 +1155,18 @@
                         document.body.removeChild(confirmBox);
 
                         if (updatedHand.length > 6) {
-                            console.log("🔁 Still need to discard. Cards in hand:", updatedHand.length);
+                            //console.log("🔁 Still need to discard. Cards in hand:", updatedHand.length);
                             updateDiscardPrompt();
                             return;
                         }
 
-                        console.log("🎉 Hand size OK. Ending discard mode.");
+                        //console.log("🎉 Hand size OK. Ending discard mode.");
                         discardMode = false;
                         discardOngoing = false;
                         discardLock = false;
 
                         if (discardInstruction && discardInstruction.parentNode) {
-                            console.log("🧹 Removing discard instruction popup.");
+                            //console.log("🧹 Removing discard instruction popup.");
                             discardInstruction.parentNode.removeChild(discardInstruction);
                             discardInstruction = null;
                         }
@@ -1585,11 +1716,20 @@
                 updateDeckText();
                 await updateLocalFromGameState();
 
-                setInterval(async () => {
-                    if (!discardMode) {
+                if (!intervalId) {
+                intervalId = setInterval(async () => {
+                    if (isFetchingGameState || discardMode) return;
+
+                    isFetchingGameState = true;
+                    try {
                         await fetchGameStateFromServer();
+                    } catch (error) {
+                        console.error("Error fetching game state:", error);
+                    } finally {
+                        isFetchingGameState = false;
                     }
                 }, 1500);
+            }
 
             const selectedTotem = params.get("totem");
             const selectedTotemText = params.get("totemText");
@@ -1639,8 +1779,11 @@
                 document.getElementById("opponent-name").textContent = opponentName;
                 document.getElementById("opponent-life").textContent = gameState[opponentName].life;
 
-                console.log("Creating game for", username, "vs", isSinglePlayer ? "Bot" : otherPlayerName);
-                await fetchGameStateFromServer();
+                //console.log("Creating game for", username, "vs", isSinglePlayer ? "Bot" : otherPlayerName);
+                if (!gameReady) {
+                    await fetchGameStateFromServer();
+                    gameReady = true;
+                }
                 if (!gameState || !gameState[username]) {
                     alert("Game could not be started.");
                     return;
@@ -1648,7 +1791,6 @@
             } else {
                 console.error("Deck loading failed:", playerDeckResult.message);
             }
-            await fetchGameStateFromServer();
         }
 
         async function fetchDeckCards(deckName) {
@@ -2200,8 +2342,8 @@
         const opponentDeckCardIds = await getDeckFromParam("opponentDeck");
 
         // You can now use these arrays:
-        console.log("Player Deck:", playerDeckCardIds);
-        console.log("Opponent Deck:", opponentDeckCardIds);
+        //console.log("Player Deck:", playerDeckCardIds);
+        //console.log("Opponent Deck:", opponentDeckCardIds);
 
         // Optionally continue setup:
         // startGameWithDecks(playerDeckCardIds, opponentDeckCardIds);
@@ -2211,7 +2353,23 @@
         let remainingDeck = []; // Store shuffled deck globally
         let drawnCardsArray = []; // Track drawn cards separately
         let initialDeckSize = 0; // Store starting deck size globally
-        let gameState = null;
+        Object.defineProperty(window, 'gameState', {
+            configurable: true,
+            enumerable: true,
+            get() {
+                return window._gameState;
+            },
+            set(value) {
+                //console.trace("🧠 gameState updated:", value);
+                if (value === undefined) {
+                    console.warn("⚠️ gameState was set to undefined!");
+                }
+                window._gameState = value;
+            }
+        });
+
+        // Initialize to empty object or null to avoid undefined errors
+        window._gameState = {};
 
 
         // Function to update deck text dynamically
@@ -2234,7 +2392,7 @@
         const FACEDOWN_ZONE = "FaceDownZone";
 
         async function handleBasicRally(card) {
-            console.log("🔵 handleBasicRally invoked for:", card);
+            //console.log("🔵 handleBasicRally invoked for:", card);
 
             if (!isBasicRallyAvailable(card, gameState.turn.currentPhase, gameState, username)) {
                 console.warn("⛔ Rally not available for:", card.name);
@@ -2431,9 +2589,70 @@
                 cardButton.style.cursor = "pointer";
 
                 cardButton.onclick = () => {
-                    console.log("Card button clicked");
                     const parentCard = cardButton.closest(".card");
                     const cardId = parentCard?.dataset.cardId;
+                    
+                    if (window.sacrificeMode && window.validSacrificeIds?.has(cardId)) {
+                        const cardData = findCardByUidOrId(cardId);
+                        if (!cardData) return;
+
+                        const confirmBox = document.createElement("div");
+                        Object.assign(confirmBox.style, {
+                            position: "fixed",
+                            top: "50%",
+                            left: "50%",
+                            transform: "translate(-50%, -50%)",
+                            padding: "20px",
+                            backgroundColor: "#333",
+                            color: "white",
+                            border: "2px solid white",
+                            borderRadius: "10px",
+                            zIndex: "120001",
+                            textAlign: "center",
+                            boxShadow: "0 0 10px black"
+                        });
+
+                        confirmBox.innerHTML = `
+                            <p>Sacrifice <strong>${cardData.name}</strong>?</p>
+                            <button id="confirm-sacrifice">Confirm</button>
+                            <button id="cancel-sacrifice" style="margin-left: 10px;">Cancel</button>
+                        `;
+
+                        document.body.appendChild(confirmBox);
+
+                        document.getElementById("confirm-sacrifice").onclick = () => {
+                            document.body.removeChild(confirmBox);
+                            const matchingCard = validCards.find(c => String(c.id) === String(cardId) || String(c.id) === String(cardId));
+                            if (matchingCard) {
+                                selected.push(matchingCard);
+                                parentCard.classList.add("selected");
+
+                                if (selected.length === amount) {
+                                    for (const c of validCards) {
+                                        const el2 = document.getElementById(`card-${c.id}`);
+                                        if (el2) {
+                                            el2.classList.remove("selectable", "selected");
+                                            el2.onclick = null;
+                                        }
+                                    }
+                                    document.body.removeChild(confirmBox);
+                                    document.body.removeChild(banner);
+                                    window.sacrificeMode = false;
+                                    window.validSacrificeIds = null;
+                                    resolve(selected);
+                                }
+                            }
+                        };
+
+                        document.getElementById("cancel-sacrifice").onclick = () => {
+                            document.body.removeChild(confirmBox);
+                        };
+
+                        return; // ⛔ Block normal behavior
+                    }
+
+                    // Existing behavior follows below...
+                    //console.log("Card button clicked");
 
                     if (!cardId) {
                         console.warn("❌ No cardId found on clicked card");
@@ -2453,7 +2672,9 @@
                     }
 
                     if (isBasicRallyAvailable(fullCard, currentPhase, gameState, username)) {
-                        handleBasicRally(fullCard); // ✅ Trigger rally!
+                        handleBasicRally(fullCard); // ✅ Trigger Basic Rally
+                    } else if (isCostRallyAvailable(fullCard, currentPhase, gameState, username)) {
+                        showCostRallyPrompt(fullCard); // ✅ Trigger Cost Rally
                     }
 
                     updateAllRallyHighlights(currentPhase, gameState, username);
@@ -2465,6 +2686,7 @@
 
                 // Initial highlight check for this card
                 updateBasicRallyHighlight(cardElement, card, currentPhase, gameState, username);
+                updateCostRallyHighlight(cardElement, card, currentPhase, gameState, username);
 
                 if (!discardMode && isArsenalSetAvailable(card, currentPhase, gameState, username)) {
                     cardElement.classList.add("card-select-for-arsenal");
@@ -2522,6 +2744,16 @@
             }
         }
 
+        function updateCostRallyHighlight(cardElement, cardData, currentPhase, gameState, username) {
+            if (isCostRallyAvailable(cardData, currentPhase, gameState, username)) {
+                //console.log("🔵 Adding glow to", cardData.name);
+                cardElement.classList.add("cost-rally-highlight");
+            } else {
+                //console.log("⚪ Removing glow from", cardData.name);
+                cardElement.classList.remove("cost-rally-highlight");
+            }
+        }
+
         async function updateAllRallyHighlights(currentPhase, gameState, username) {
             const cardElements = document.querySelectorAll(".card");
             cardElements.forEach(cardEl => {
@@ -2533,6 +2765,7 @@
                     return;
                 }
                 updateBasicRallyHighlight(cardEl, fullCard, currentPhase, gameState, username);
+                updateCostRallyHighlight(cardEl, fullCard, currentPhase, gameState, username);
             });
         }
 
@@ -2556,6 +2789,112 @@
             const hasRallied = gameState[username]?.hasBasicRallied === true;
             return isMainPhase && cost === "basic" && !hasRallied;
         }
+
+        function isCostRallyAvailable(card, currentPhase, gameState, username) {
+            if (!card || card.type !== "Champion") return false;
+            if (!card.cardCostFunction || card.cardCostFunction === "UseBasic") return false;
+
+            const turnPlayer = gameState.turn?.currentPlayer;
+            const isMain = currentPhase === "Main 1" || currentPhase === "Main 2";
+            if (turnPlayer !== username || !isMain) return false;
+
+            const deck = gameState[username]?.Deck || [];
+            const life = gameState[username]?.life ?? 0;
+            const controlledChampions = [
+                ...(gameState[username]["Zone (Champion)"] || []),
+                ...(gameState[username]["FaceDownZone"] || [])
+            ];
+
+            const costString = card.cardCostFunction;
+            const costRegex = /(Offer|Mill|Sacrifice)(\d+)/g;
+
+            let match;
+            const checks = [];
+
+            while ((match = costRegex.exec(costString)) !== null) {
+                const [_, costType, amountStr] = match;
+                const amount = parseInt(amountStr, 10);
+                if (isNaN(amount)) return false;
+
+                if (costType === "Offer") {
+                    checks.push(life > amount);
+                } else if (costType === "Mill") {
+                    checks.push(deck.length >= amount);
+                } else if (costType === "Sacrifice") {
+                    checks.push(controlledChampions.length >= amount);
+                }
+            }
+            return checks.length > 0 && checks.every(Boolean);
+        }
+
+        async function executeRallyCosts(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
+            const costParts = card.cardCostFunction.match(/(Offer|Mill|Sacrifice)(\d+)/g);
+            if (!costParts) {
+                console.warn("⚠️ No valid cost parts to execute for:", card.cardCostFunction);
+                return;
+            }
+
+            card.pendingRally = true; // ✅ Do this once before any costs
+
+            for (const cost of costParts) {
+                const amount = parseInt(cost.replace(/[^0-9]/g, ""), 10);
+                if (isNaN(amount)) continue;
+
+                if (cost.startsWith("Offer")) {
+                    await offerLife(amount, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, AbilityExecutor.changeLife);
+                } else if (cost.startsWith("Mill")) {
+                    await millCards(amount, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+                } else if (cost.startsWith("Sacrifice")) {
+                    const success = await AbilityExecutor.sacrificeChampions(amount, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+                    if (!success) {
+                        console.warn("❌ Sacrifice failed. Aborting rally.");
+                        return;
+                    }
+                }
+            }
+
+            // ✅ Promote rally card AFTER all costs
+            const rallyingCard = gameState[username].Hand.find(c => c.pendingRally);
+            if (rallyingCard) {
+                rallyingCard.lastBoardState = "Hand";
+                rallyingCard.boardState = "Zone (Champion)";
+                delete rallyingCard.pendingRally;
+
+                gameState[username].Hand = gameState[username].Hand.filter(c => c.id !== rallyingCard.id);
+                gameState[username]["Zone (Champion)"].push(rallyingCard);
+
+                addGameLogEntry(`${username} rallied ${rallyingCard.name}.`);
+
+                await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+                    method: "POST",
+                    credentials: "include",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        gameId,
+                        owner: username,
+                        updatedZones: {
+                            Hand: gameState[username].Hand,
+                            "Zone (Champion)": gameState[username]["Zone (Champion)"]
+                        }
+                    })
+                });
+
+                await AbilityExecutor.handleBoardStateChange(
+                    rallyingCard,
+                    "Zone (Champion)",
+                    "Hand",
+                    gameState,
+                    username,
+                    gameId,
+                    updateLocalFromGameState,
+                    addGameLogEntry
+                );
+            } else {
+                console.warn("⚠️ No rallying card found in hand after all costs.");
+            }
+            await updateLocalFromGameState();
+        }
+
 
         function showRallyPrompt(card, rallyHandler) {
             const popup = document.createElement("div");
@@ -2663,7 +3002,7 @@
                             }
                         })
                     });
-                    console.log("🔄 Reset hasBasicRallied for", username);
+                    //console.log("🔄 Reset hasBasicRallied for", username);
                 }
             }
             if (currentPhase === "Main 1" || currentPhase === "Main 2") {
@@ -2692,8 +3031,8 @@
         gameState[username].Hand.push(...drawnCards);
 
         // Debugging logs for confirmation
-        console.log("Initial Hand:", drawnCards);
-        console.log("Remaining Deck Contents:", deck);
+        //console.log("Initial Hand:", drawnCards);
+        //console.log("Remaining Deck Contents:", deck);
 
         await sendZoneUpdate(["Deck", "Hand"]);
 
@@ -2747,6 +3086,10 @@
             }
 
             ordered.forEach(cardData => {
+                if (!cardData || !cardData.id) {
+                    console.warn("❗ Skipping cardData due to missing ID:", cardData);
+                    return;
+                }
                 const card = cards.find(c => String(c.id) === String(cardData.id));
                 const isFaceDownArsenal = cardData.boardState === "FaceDownArsenalZone";
 
@@ -2821,18 +3164,90 @@
 
                 if (isFaceDown) {
                     const wrapperDiv = document.createElement("div");
+                    wrapperDiv.id = `card-${cardData.id}`;
                         wrapperDiv.style.display = "inline-block";
                         wrapperDiv.style.position = "relative";
                         wrapperDiv.style.marginLeft = "-39.3%";
                         wrapperDiv.style.transformOrigin = "top center";
                         wrapperDiv.style.marginTop = "16px";
                         wrapperDiv.style.pointerEvents = "auto";
-                        wrapperDiv.style.backgroundColor = "rgba(255,0,0,1)";
+                        wrapperDiv.style.backgroundColor = "rgba(255,0,0,0)";
                         wrapperDiv.style.width = "260px";
                         wrapperDiv.style.height = "400px";
                         wrapperDiv.style.transform = "translateY(11%) rotate(270deg) scale(0.33)";
                         wrapperDiv.style.outline = "0px dashed red"; // visually show wrapperDiv box
                         wrapperDiv.style.cursor = "pointer";
+
+                    if (window.sacrificeMode && window.validSacrificeIds?.has(String(cardData.id))) {
+                        const button = document.createElement("div");
+                            button.className = "card-button";
+                            button.style.position = "absolute";
+                            button.style.top = "0";
+                            button.style.left = "0";
+                            button.style.width = "100%";
+                            button.style.height = "100%";
+                            button.style.backgroundColor = "rgba(255,0,0,0)";
+                            button.style.display = "flex";
+                            button.style.alignItems = "center";
+                            button.style.justifyContent = "center";
+                            button.style.fontWeight = "bold";
+                            button.style.cursor = "pointer";
+                            button.style.zIndex = "999";
+                        wrapperDiv.appendChild(button);
+
+                        button.onclick = (e) => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            console.log("🔥 Sacrifice button clicked (facedown):", cardData.id);
+                            // Try to find the actual card object from gameState zones (not just from 'cards' array)
+                            const fullCard = (gameState[username]["Zone (Champion)"] || [])
+                                .concat(gameState[username]["FaceDownZone"] || [])
+                                .find(c => String(c.id) === String(cardData.id));
+
+                            if (!fullCard) {
+                                console.error("❌ Could not find full card in gameState for sacrifice.");
+                                return;
+                            }
+
+                            // Create confirmation popup
+                            const confirmBox = document.createElement("div");
+                            Object.assign(confirmBox.style, {
+                                position: "fixed",
+                                top: "50%",
+                                left: "50%",
+                                transform: "translate(-50%, -50%)",
+                                padding: "20px",
+                                backgroundColor: "#333",
+                                color: "white",
+                                border: "2px solid white",
+                                borderRadius: "10px",
+                                zIndex: "120001",
+                                textAlign: "center",
+                                boxShadow: "0 0 10px black"
+                            });
+
+                            confirmBox.innerHTML = `
+                                <p>Are you sure you want to sacrifice <strong>${fullCard.name}</strong>?</p>
+                                <button id="confirm-sacrifice">Confirm</button>
+                                <button id="cancel-sacrifice" style="margin-left: 10px;">Cancel</button>
+                            `;
+
+                            document.body.appendChild(confirmBox);
+
+                            // Confirm button handler
+                            document.getElementById("confirm-sacrifice").onclick = () => {
+                                document.body.removeChild(confirmBox);
+                                if (window.__pendingSacrificeSelection) {
+                                    window.__pendingSacrificeSelection(fullCard);
+                                }
+                            };
+
+                            // Cancel button handler
+                            document.getElementById("cancel-sacrifice").onclick = () => {
+                                document.body.removeChild(confirmBox);
+                            };
+                        };
+                    }
 
                     element = document.createElement("div");
                         element.style.width = "100%"; // fill wrapper
@@ -2850,7 +3265,7 @@
                         element.style.transition = "opacity 1s ease-in-out";
 
                     wrapperDiv.addEventListener("mouseenter", () => {
-                        console.log("mouseenter fired on face-down card", cardData.id);
+                        //console.log("mouseenter fired on face-down card", cardData.id);
                         const realCard = cards.find(c => String(c.id) === String(cardData.id));
                         if (!realCard) {
                             console.error(`❌ Hover preview: No card found with ID '${cardData.id}'. Check if the card exists in 'cards' array.`);
@@ -2952,6 +3367,8 @@
 
                         scaled.appendChild(preview);
                     });
+                    //console.log("Rendering Champion Zone IDs:", cardsArray.map(c => c.id));
+                    //console.log("DOM children count before:", container.children.length);
                     container.appendChild(element);
                 }
             });
@@ -3024,36 +3441,6 @@
             });
 
             updateLocalFromGameState();
-        }
-
-        function changeLife(player, amount) {
-            if (!gameState[player]) return;
-            gameState[player].life += amount;
-
-            // Update display
-            if (player === username) {
-                document.getElementById("player-name").textContent = username;
-                document.getElementById("player-life").textContent = `${gameState[username].life}`;
-            } else {
-                document.getElementById("opponent-name").textContent = opponentName;
-                document.getElementById("player-life").textContent = `${gameState[username].life}`;
-            }
-
-            sendLifeUpdate();
-        }
-
-        async function sendLifeUpdate() {
-            await fetch('https://geimon-app-833627ba44e0.herokuapp.com/updateGameState', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    gameId,
-                    updatedZones: {
-                        life: gameState[username].life
-                    },
-                    owner: username
-                })
-            });
         }
 
         // Fetch and shuffle deck, then update count
