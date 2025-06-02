@@ -2867,7 +2867,7 @@ export const cards = [
     abilities: [
       {
         text: "Fortified <br> Raise the Gates (Exhaustion): Rally 1 Blocker Token to your Opponent's Zone; Activate 1 Obelisk from your Hand, Deck, Reserve, or Tomb (Ignoring its cost).",
-        keywords: ["blank"],
+        keywords: ["Fortified"],
         effect1name: "Raise the Gates",
         effect1type: ["Standard","Exhaustion"],
         effect1condition: "",
