@@ -227,7 +227,7 @@ export function RetrieveDifferentUndead(card, gameState, username, gameId, updat
   const instruction = document.createElement("div");
   instruction.innerText = "Select 1 Undead to retrieve";
   instruction.style.color = "white";
-  instruction.style.fontSize = "2em";
+  instruction.style.fontSize = "1.2em";
   instruction.style.textAlign = "center";
   overlay.appendChild(instruction);
 
@@ -237,6 +237,8 @@ export function RetrieveDifferentUndead(card, gameState, username, gameId, updat
     flexWrap: "wrap",
     justifyContent: "center",
     gap: "10px",
+    marginLeft: "-9px",
+    marginRight: "10px",
     maxWidth: "100%",
     overflow: "visible"
   });
