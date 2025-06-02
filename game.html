@@ -422,6 +422,78 @@
         );
         }
 
+        function isMainPhase(phase) {
+            return ["Main 1", "Main 2"].includes(gameState?.turn?.currentPhase);
+        }
+
+        function isCardSettable(cardData, fullCard) {
+            if (!cardData || !fullCard) return false;
+            if (cardData.boardState !== "Hand") return false;
+            if (fullCard.type === "Champion") return false;
+            return ["Action", "Rush", "Reflex", "Equipment", "Obelisk"].includes(fullCard.type);
+        }
+
+        function showSetArsenalPrompt(cardData, fullCard) {
+            const overlay = document.createElement("div");
+            Object.assign(overlay.style, {
+                position: "fixed",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                padding: "20px",
+                backgroundColor: "#333",
+                color: "white",
+                border: "2px solid white",
+                borderRadius: "10px",
+                zIndex: 120001,
+                textAlign: "center",
+                boxShadow: "0 0 10px black"
+            });
+            overlay.innerHTML = `
+                <p>Set '${fullCard.name}' face-down in your Arsenal?</p>
+                <button id="confirm-set">Confirm</button>
+                <button id="cancel-set" style="margin-left: 10px;">Cancel</button>
+            `;
+
+            document.body.appendChild(overlay);
+
+            document.getElementById("confirm-set").onclick = async () => {
+                const handZone = gameState[username].Hand;
+                const arsenalZone = gameState[username]["Zone (Arsenal)"];
+                const faceDownArsenal = gameState[username]["FaceDownArsenalZone"] || [];
+
+                const index = handZone.findIndex(c => String(c.id) === String(cardData.id));
+                if (index === -1) return;
+                handZone.splice(index, 1);
+                fullCard.boardState = "FaceDownArsenalZone";
+                fullCard.lastBoardState = "Hand";
+                faceDownArsenal.push(fullCard);
+                gameState[username]["FaceDownArsenalZone"] = faceDownArsenal;
+
+                await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    gameId,
+                    owner: username,
+                    updatedZones: {
+                    Hand: handZone,
+                    FaceDownArsenalZone: faceDownArsenal
+                    }
+                })
+                });
+
+                addGameLogEntry(`${username} set a card facedown in the Arsenal.`);
+                document.body.removeChild(overlay);
+                updateLocalFromGameState();
+            };
+
+            document.getElementById("cancel-set").onclick = () => {
+                document.body.removeChild(overlay);
+            };
+            }
+
         async function updateLocalFromGameState() {
             if (discardMode) return;
             const player = gameState[username];
@@ -1197,7 +1269,7 @@
             const facedownArsenalBox = document.getElementById("playerFaceDownArsenalBox");
                 facedownArsenalBox.style.position = "fixed";
                 facedownArsenalBox.style.left = "50%";
-                facedownArsenalBox.style.top = "80%";
+                facedownArsenalBox.style.top = "83.2%";
                 facedownArsenalBox.style.width = "49.9%";
                 facedownArsenalBox.style.height = "13.4%";
                 facedownArsenalBox.style.zIndex = "100300";
@@ -1416,12 +1488,12 @@
             // Trigger fade-in
             setTimeout(() => {
                 totemBox.style.opacity = "1";
-            }, 1250); // Slight delay after result box
+            }, 1000); // Slight delay after result box
 
             setTimeout(() => {
                 totemBox.style.opacity = "0";
                 totemBox.style.zIndex = "10";
-            }, 5000);
+            }, 4000);
 
                 const opponentName = isSinglePlayer ? "Bot" : otherPlayerName;
                 document.getElementById("player-name").textContent = username;
@@ -2251,6 +2323,14 @@
                 // Initial highlight check for this card
                 updateBasicRallyHighlight(cardElement, card, currentPhase, gameState, username);
 
+                if (isMainPhase(currentPhase) && isCardSettable(cardObj, card)) {
+                    cardElement.classList.add("card-select-for-arsenal");
+                    cardElement.addEventListener("click", (e) => {
+                        e.stopPropagation(); // prevent hover interactions
+                        showSetArsenalPrompt(cardObj, card);
+                    });
+                }
+
                 // Hover effect for preview
                 cardElement.addEventListener("mouseenter", () => {
                     scaledCardContainer.innerHTML = "";
@@ -2516,6 +2596,7 @@
 
             ordered.forEach(cardData => {
                 const card = cards.find(c => String(c.id) === String(cardData.id));
+                const isFaceDownArsenal = cardData.boardState === "FaceDownArsenalZone";
 
                 const isFaceDown = !!cardData.faceDown;
                 if (!cardData.id) {
@@ -2527,17 +2608,76 @@
 
                 let element;
 
+                if (isFaceDownArsenal) {
+                    const arsenalWrapper = document.createElement("div");
+                    arsenalWrapper.style.display = "inline-block";
+                    arsenalWrapper.style.position = "relative";
+                    arsenalWrapper.style.marginLeft = "-33.8%";
+                    arsenalWrapper.style.transformOrigin = "top center";
+                    arsenalWrapper.style.marginTop = "-16px";
+                    arsenalWrapper.style.pointerEvents = "auto";
+                    arsenalWrapper.style.backgroundColor = "rgba(255,0,0,0)";
+                    arsenalWrapper.style.width = "260px";
+                    arsenalWrapper.style.height = "400px";
+                    arsenalWrapper.style.transform = "scale(0.3)";
+                    arsenalWrapper.style.outline = "0px dashed red";
+                    arsenalWrapper.style.cursor = "pointer";
+
+                    const arsenalCard = document.createElement("div");
+                    arsenalCard.style.width = "100%";
+                    arsenalCard.style.height = "100%";
+                    arsenalCard.style.backgroundImage = `url(${userSleeveURL || 'default-sleeve.png'})`;
+                    arsenalCard.style.backgroundSize = "cover";
+                    arsenalCard.style.backgroundPosition = "center";
+                    arsenalCard.style.border = "2px solid white";
+                    arsenalCard.style.position = "relative";
+                    arsenalCard.style.zIndex = "110";
+                    arsenalCard.style.pointerEvents = "none";
+                    arsenalCard.style.opacity = "1";
+                    arsenalCard.style.transition = "opacity 1s ease-in-out";
+
+                    // Hover logic for scaled preview
+                    arsenalWrapper.addEventListener("mouseenter", () => {
+                        const full = cards.find(c => String(c.id) === String(cardData.id));
+                        if (!full) {
+                            console.error(`❌ No card found with ID '${cardData.id}' for preview.`);
+                            return;
+                        }
+
+                        const scaled = document.querySelector("#viewing-window .scaled-card");
+                        if (!scaled) {
+                            console.warn("⚠️ #viewing-window .scaled-card not found.");
+                            return;
+                        }
+
+                        scaled.innerHTML = "";
+
+                        const preview = renderCard(full);
+                        preview.style.width = "240px";
+                        preview.style.height = "420px";
+                        preview.style.transform = "scale(1.2)";
+                        preview.style.marginLeft = "-15%";
+                        preview.style.marginTop = "7%";
+
+                        scaled.appendChild(preview);
+                    });
+
+                    arsenalWrapper.appendChild(arsenalCard);
+                    container.appendChild(arsenalWrapper);
+                    return;
+                }
+
                 if (isFaceDown) {
                     const wrapperDiv = document.createElement("div");
                         wrapperDiv.style.display = "inline-block";
                         wrapperDiv.style.position = "relative";
-                        wrapperDiv.style.marginLeft = "-37%";
+                        wrapperDiv.style.marginLeft = "-39.3%";
                         wrapperDiv.style.transformOrigin = "top center";
-                        wrapperDiv.style.marginTop = "0px";
+                        wrapperDiv.style.marginTop = "16px";
                         wrapperDiv.style.pointerEvents = "auto";
                         wrapperDiv.style.backgroundColor = "rgba(255,0,0,1)";
-                        wrapperDiv.style.width = "240px";
-                        wrapperDiv.style.height = "380px";
+                        wrapperDiv.style.width = "260px";
+                        wrapperDiv.style.height = "400px";
                         wrapperDiv.style.transform = "translateY(11%) rotate(270deg) scale(0.33)";
                         wrapperDiv.style.outline = "0px dashed red"; // visually show wrapperDiv box
                         wrapperDiv.style.cursor = "pointer";
@@ -2640,7 +2780,7 @@
                     container.appendChild(wrapperDiv);
                 } else {
                     element = renderCard(card);
-                    console.log("Trying to render:", card);
+                    //console.log("Trying to render:", card);
                         element.style.transform = "scale(0.3)";
                         element.style.marginLeft = "-19%";
                         element.style.transformOrigin = "top center";

@@ -455,9 +455,14 @@ overflow: hidden;
 }
 
 .basic-rally-highlight {
-  outline: 5px solid cyan !important;
-  box-shadow: 0 0 25px cyan !important;
-  border: 3px dashed cyan !important;
+  outline: 4px solid cyan !important;
+  box-shadow: 0 0 12px 4px cyan !important;
+}
+
+.card-select-for-arsenal {
+  outline: 4px solid #b366ff !important; /* light purple */
+  box-shadow: 0 0 12px 4px #b366ff !important;
+  cursor: pointer;
 }
 
 .bottom-bar {
