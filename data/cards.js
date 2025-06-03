@@ -85,7 +85,7 @@ export const cards = [
     condition: "",
     cardConditionFunction: "",
     cost: "Offer 5 Life, Mill 5, and Sacrifice 1",
-    cardCostFunction: "Offer5Mill5Sacrifice1",
+    cardCostFunction: "Offer5, Mill5, Sacrifice1",
     tags: ["Cryptbound", "Necromancer", "Mage"],
     damage: 5,
     life: 20,

@@ -119,7 +119,7 @@ export async function declareAbility(
         const currentTurn = gameState.turn?.count ?? 0;
 
         if (!hasUsedEffectThisTurn(gameId, currentTurn, cardId, text)) {
-          await handleCardCostFunction(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+          //await handleCardCostFunction(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
 
           const effectFunc = effectMap[text];
           if (effectFunc) {
