@@ -927,11 +927,10 @@ BattleFlip
 
 cardCostFunction
 [
-  "Offer5Mill5Sacrifice1",
   "Obliterate2YouControl",
-  "Discard2",
-  "RevealSelfHideSelfShuffleHandRandomDiscard1",
   "Reveal1Random",
+  "RevealSelfHideSelfShuffleHandRandomDiscard1",
+  "Discard2",
   "Discard1",
   "OppGet2ScrapToken",
   "OppGetScrapToken",
