@@ -840,7 +840,7 @@ export const cards = [
   {
     id: "23",
     name: "Tricksy Kitty",
-    image: `${cardArtFolder}/Actions/TricksyKitty.png`,
+    image: `${cardArtFolder}/Reflex/TricksyKitty.png`,
     type: "Reflex",
     condition: "",
     cardConditionFunction: "Set1Turn",
