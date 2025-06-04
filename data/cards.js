@@ -3740,7 +3740,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: "Bloodrage, Greedy <br> Knightsbane: Knight Champions, and their controllers, take no Damage from battles with this card. Knight Champions deal triple battle Damage to this card. <br> Furious Fire Breath (Exhaustion): Offer 6 Life and Target up to 3 Champions your Opponent controls; Destroy Targets, and if you do, draw 1 for each Champion destroyed by this effect. <br> If Destroyed by Battle: Recruit 1 Royal.",
+        text: "Bloodrage, Greedy <br> Knightsbane: Knights, and their controllers, take no Damage from battles with this card. Knights deal triple battle Damage to this card. <br> Furious Fire Breath (Exhaustion): Offer 6 Life and Target up to 3 Champions your Opponent controls; Destroy Targets, and if you do, draw 1 for each Champion destroyed by this effect. <br> If Destroyed by Battle: Recruit 1 Royal.",
         keywords: ["Bloodrage","Greedy"],
         effect1name: "Knightsbane",
         effect1type: "Passive",
