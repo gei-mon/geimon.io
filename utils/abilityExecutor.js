@@ -938,7 +938,6 @@ cardCostFunction
 
 cardConditionFunction
 [
-  "Set1Turn",
   "AttachOnlyToMarksman",
   "NoDamageDealtDisableDamageDealing",
   "ControlNoChampions"

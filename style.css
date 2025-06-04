@@ -401,6 +401,9 @@ text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2p
 .obelisk .card-cost {
   text-shadow: none;
 }
+.obelisk .card-condition {
+  text-shadow: none;
+}
 .rush .card-text {
   text-shadow: none;
 }
