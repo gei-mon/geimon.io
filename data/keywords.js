@@ -35,5 +35,6 @@ export const keywords = {
   Forged: "Increase this Champion&apos;s Damage by 1 for every Equipment attached to it.",
   Fortified: "Increase this Champion&apos;s Damage by 1 for every Obelisk you control.",
   Twitchy: "Increase this Champion&apos;s Damage by 1 for every Reflex in your Tomb.",
-  "Non-Believer": "This Champion is unaffected by other cards and effects."
+  "Non-Believer": "This Champion is unaffected by other cards and effects.",
+  Taskmaster: "Increase this Champion&apos;s Damage by 1 for every Champion your Opponent controls."
 };
