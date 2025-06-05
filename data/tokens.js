@@ -92,7 +92,7 @@ export const tokens = [
         effect1type: "Passive",
         effect1condition: "",
         effect1cost: "",
-        effect1text: "DisableChampEffects",
+        effect1text: "DisableYourOtherChampEffects",
         effect1linger: "",
         effect2name: "",
         effect2type: "",
