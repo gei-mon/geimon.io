@@ -872,8 +872,34 @@ app.post('/setPhase', (req, res) => {
     if (game.turn.currentPlayer === "Bot") {
       setTimeout(() => performBotTurn(game), 300);
     }
-  }
 
+    //If totem is Countdown Clocktower
+    if (game.turnLimit && game.turn.count >= 12) {
+      const opponentName = (game.player1 === username) ? game.player2 : game.player1;
+      const playerLife = game[username].life;
+      const opponentLife = game[opponentName].life;
+
+      let loser, reason;
+
+      if (playerLife > opponentLife) {
+        loser = opponentName;
+        reason = "More life at turn limit";
+      } else if (opponentLife > playerLife) {
+        loser = username;
+        reason = "More life at turn limit";
+      } else {
+        // Optional: record draw in logs
+        console.log("Game ended in a draw at turn limit.");
+        return res.json({ success: true, draw: true, reason: "Draw at turn limit" });
+      }
+
+      console.log(`Game ${gameId} ended. Loser: ${loser}. Reason: ${reason}`);
+
+      delete gameStates[gameId];
+
+      return res.json({ success: true, loser, reason });
+    }
+  }
   return res.json({ success: true, currentPhase: phase });
 });
 

@@ -214,7 +214,7 @@
     max-width: 100%;           /* Optional: control how much space the text gets */
     display: inline-block;     /* Required for ellipsis to take effect */
 }
-#loss-banner {
+#win-loss-banner {
     position: absolute;
     top: 50%;
     left: 50%;
@@ -228,12 +228,12 @@
     z-index: 120000;
     display: none;
 }
-#loss-banner .main {
+#win-loss-banner .main {
     font-size: 3em;
     font-weight: bold;
     margin-bottom: 10px;
 }
-#loss-banner .reason {
+#win-loss-banner .reason {
     font-size: 1.5em;
 }
 #phase-tracker {
@@ -349,9 +349,9 @@
             <div class="life" id="opponent-life"></div>
             <div class="player-name" style="font-size: 80%;">Life</div>
         </div>
-        <div id="loss-banner">
-            <div class="main" id="loss-main-text">You Lose</div>
-            <div class="reason" id="loss-reason-text">Surrendered</div>
+        <div id="win-loss-banner">
+            <div class="main" id="win-loss-main-text">You Lose</div>
+            <div class="reason" id="win-loss-reason-text">Surrendered</div>
         </div>
         <div id="phase-tracker">
             <div class="phase-box" id="phase-Intermission">Intermission</div>
@@ -953,10 +953,10 @@
         }
         window.fetchGameStateFromServer = fetchGameStateFromServer;
 
-        function showLossBanner(mainText, reasonText) {
-            const banner = document.getElementById("loss-banner");
-            document.getElementById("loss-main-text").textContent = mainText;
-            document.getElementById("loss-reason-text").textContent = reasonText;
+        function showBanner(mainText, reasonText) {
+            const banner = document.getElementById("win-loss-banner");
+            document.getElementById("win-loss-main-text").textContent = mainText;
+            document.getElementById("win-loss-reason-text").textContent = reasonText;
             banner.style.display = "block";
         }
 
@@ -1190,6 +1190,7 @@
 
                         document.querySelectorAll(".phase-box").forEach(box => box.style.pointerEvents = "auto");
 
+                        // ✅ Normal flow if no discards needed
                         const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/setPhase", {
                             method: "POST",
                             credentials: "include",
@@ -1198,10 +1199,25 @@
                         });
 
                         if (response.ok) {
-                            const updated = await response.json();
-                            updatePhaseDisplay(updated.currentPhase);
-                            await updateLocalFromGameState();
-                            renderLatestTombCard();
+                        const data = await response.json();
+
+                        updatePhaseDisplay(data.currentPhase);
+                        addGameLogEntry(`${username} changed phase to ${data.currentPhase}`);
+                        await updateLocalFromGameState();
+                        renderLatestTombCard();
+
+                        // ✅ Handle game end conditions
+                        if (data.draw) {
+                            alert("The game ended in a draw.");
+                        } else if (data.loser) {
+                            if (data.loser === username) {
+                                showBanner("You Lose", data.reason);
+                            } else {
+                                showBanner("You Win", data.reason);
+                            }
+                        }
+                        } else {
+                            console.error("Failed to change phase:", await response.text());
                         }
                     };
                         document.getElementById("cancel-discard").onclick = () => {
@@ -1288,17 +1304,31 @@
 
             // ✅ Normal flow if no discards needed
             const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/setPhase", {
-            method: "POST",
-            credentials: "include",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ gameId, username, phase })
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ gameId, username, phase })
             });
 
             if (response.ok) {
-                const updated = await response.json();
-                updatePhaseDisplay(updated.currentPhase);
-                addGameLogEntry(`${username} changed phase to ${updated.currentPhase}`);
-                await updateLocalFromGameState();
+            const data = await response.json();
+
+            updatePhaseDisplay(data.currentPhase);
+            addGameLogEntry(`${username} changed phase to ${data.currentPhase}`);
+            await updateLocalFromGameState();
+
+            // ✅ Handle game end conditions
+            if (data.draw) {
+                alert("The game ended in a draw.");
+            } else if (data.loser) {
+                if (data.loser === username) {
+                    showBanner("You Lose", data.reason);
+                } else {
+                    showBanner("You Win", data.reason);
+                }
+            }
+            } else {
+                console.error("Failed to change phase:", await response.text());
             }
         });
     });
@@ -2305,7 +2335,7 @@
                     })
                 });
 
-                showLossBanner("You Lose", "Surrendered");
+                showBanner("You Lose", "Surrendered");
                 document.body.removeChild(confirmBox);
             } catch (err) {
                 console.error("Error ending game:", err);
