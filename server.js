@@ -788,13 +788,9 @@ async function performBotTurn(game) {
     // Draw logic
     if (phase === "Draw") {
       const bot = game["Bot"];
-      if(!totem) {
-        const totem = game.totem;
-      }
-      const numToDraw = game.drawExtraCard ? 2 : 1;
 
       if (bot.Deck.length > 0) {
-        const drawn = bot.Deck.splice(0, numToDraw);
+        const drawn = bot.Deck.splice(0, 1);
         drawn.forEach(card => {
           card.lastBoardState = "Deck";
           card.boardState = "Hand";
