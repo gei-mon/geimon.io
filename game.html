@@ -377,7 +377,7 @@
             import { keywords } from "./data/keywords.js";
             import { rules } from "./data/rules.js";
             import * as AbilityExecutor from './utils/abilityExecutor.js';
-            import * as TotemExecutor from './utils/totemExecutor.js';
+            import { TotemExecutor } from './utils/totemExecutor.js';
 
             let gameId = new URLSearchParams(window.location.search).get("gameId");
             if (gameId) {
@@ -1753,6 +1753,17 @@
                 totemTextElement.innerHTML = `<strong>Description:</strong> ${selectedTotemText}`;
             document.getElementById("game-log-placeholder").appendChild(totemElement);
             document.getElementById("game-log-placeholder").appendChild(totemTextElement);
+
+            if (selectedTotem && gameState) {
+                const totemExecutor = new TotemExecutor(selectedTotem, gameState);
+                totemExecutor.applyRules();
+                //console.log("Final gameState after totem applied:", gameState);
+
+                if (typeof gameState.startingLife === "number") {
+                    gameState[username].life = gameState.startingLife;
+                    gameState[isSinglePlayer ? "Bot" : otherPlayerName].life = gameState.startingLife;
+                }
+            }
 
             const totemBox = document.createElement("div");
                 totemBox.style.position = "absolute";

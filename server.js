@@ -832,8 +832,9 @@ app.post('/setPhase', (req, res) => {
   // ✅ Draw logic — handled by server when user enters Draw phase
   if (phase === "Draw") {
     const player = game[username];
+    const numToDraw = game.drawExtraCard ? 2 : 1;
     if (player.Deck.length > 0) {
-      const drawn = player.Deck.splice(0, 1);
+      const drawn = player.Deck.splice(0, numToDraw);
       drawn.forEach(card => {
         card.lastBoardState = "Deck";
         card.boardState = "Hand";
