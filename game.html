@@ -680,6 +680,8 @@
                     }
                 }
 
+                document.body.removeChild(overlay);
+
                 // Existing code for other costs (Offer, Mill)
                 await AbilityExecutor.handleCardCostFunction(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
 
@@ -711,8 +713,6 @@
                     await AbilityExecutor.handleBoardStateChange(card, "Zone (Champion)", "Hand", gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
                     await updateLocalFromGameState();
                 }
-
-                document.body.removeChild(overlay);
             };
         }
 
