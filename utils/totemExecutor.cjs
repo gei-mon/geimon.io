@@ -1,6 +1,6 @@
-import { totems } from '../data/totems.js';
+const { totems } = require('../data/totems.cjs');
 
-export class TotemExecutor {
+class TotemExecutor {
     constructor(totemName, gameState) {
         this.totemName = totemName;
         this.gameState = gameState;
@@ -80,3 +80,5 @@ export class TotemExecutor {
         }
     }
 }
+
+module.exports = { TotemExecutor };

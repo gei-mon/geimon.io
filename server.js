@@ -1,5 +1,3 @@
-import { TotemExecutor } from './utils/totemExecutor.js';
-
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
@@ -13,6 +11,7 @@ const bodyParser = require('body-parser');
 require('dotenv').config();
 const http = require('http');
 const { Server } = require('socket.io');
+const { TotemExecutor } = require('./utils/totemExecutor.cjs');
 
 // In-memory storage
 let sessions = {};

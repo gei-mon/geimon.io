@@ -377,7 +377,7 @@
             import { keywords } from "./data/keywords.js";
             import { rules } from "./data/rules.js";
             import * as AbilityExecutor from './utils/abilityExecutor.js';
-            import { TotemExecutor } from './utils/totemExecutor.js';
+            const { TotemExecutor } = require('./utils/totemExecutor.cjs');
 
             let gameId = new URLSearchParams(window.location.search).get("gameId");
             if (gameId) {

@@ -1,4 +1,4 @@
-import { totems } from '../data/totems.js';
+const { totems } = require('../data/totems.cjs');
 import { cards } from '../data/cards.js';
 
 document.addEventListener("DOMContentLoaded", async () => {
