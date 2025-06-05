@@ -883,17 +883,17 @@ app.post('/setPhase', (req, res) => {
 
       if (playerLife > opponentLife) {
         loser = opponentName;
-        reason = "More life at turn limit";
+        reason = "You had more Life at the end of the 12th turn";
       } else if (opponentLife > playerLife) {
         loser = username;
-        reason = "More life at turn limit";
+        reason = "Your Opponent had more Life at the end of the 12th turn";
       } else {
         // Optional: record draw in logs
-        console.log("Game ended in a draw at turn limit.");
-        return res.json({ success: true, draw: true, reason: "Draw at turn limit" });
+        //console.log("Game ended in a draw.");
+        return res.json({ success: true, draw: true, reason: "Both Players had the same Life at the end of the 12th turn" });
       }
 
-      console.log(`Game ${gameId} ended. Loser: ${loser}. Reason: ${reason}`);
+      //console.log(`Game ${gameId} ended. Loser: ${loser}. Reason: ${reason}`);
 
       delete gameStates[gameId];
 

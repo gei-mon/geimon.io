@@ -1,6 +1,7 @@
 export const totems = [
     {
         "Double Double": "Turn Player draws an extra card in their Draw Phase.",
+        "Countdown Clocktower": "At the end of the 12th turn, the Player with the highest Life wins.",
         "Single File": "Turn Player can only attack with 1 Champion during their Battle Phase.",
         "Fists Only": "Damage can only be dealt by attack.",
         "Tomb Raider Rejects": "Cards cannot be Retrieved.",
@@ -12,7 +13,6 @@ export const totems = [
         "All or Nothing": "The Damage a creature takes from a single event must destroy it or the Damage does nothing.",
         "Fair Play": "Both Players play with their Hands revealed.",
         "Pendulum of Pain": "During each End Phase, both Players take 1 Damage.",
-        "Countdown Clocktower": "At the end of the 12th turn, the Player with the highest Life wins.",
         "Fake Doctor": "All Grant Life and Healing effects Damage the Player an equal amount instead, and all Damage and Offer effects now Grant/Heal that amount of Life.",
         "Shared Interest": "Neither Player can deal damage to any other until the start of Turn 7."
     }
