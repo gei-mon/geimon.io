@@ -377,6 +377,7 @@
             import { keywords } from "./data/keywords.js";
             import { rules } from "./data/rules.js";
             import * as AbilityExecutor from './utils/abilityExecutor.js';
+            import * as TotemExecutor from './utils/totemExecutor.js';
 
             let gameId = new URLSearchParams(window.location.search).get("gameId");
             if (gameId) {
@@ -3149,7 +3150,7 @@
                         button.onclick = (e) => {
                             e.stopPropagation();
                             e.preventDefault();
-                            console.log("🔥 Sacrifice button clicked (facedown):", cardData.id);
+                            //console.log("🔥 Sacrifice button clicked (facedown):", cardData.id);
                             // Try to find the actual card object from gameState zones (not just from 'cards' array)
                             const fullCard = (gameState[username]["Zone (Champion)"] || [])
                                 .concat(gameState[username]["FaceDownZone"] || [])
