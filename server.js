@@ -245,9 +245,6 @@ app.post('/startGame', async (req, res) => {
       }
     }
 
-    // ✅ Optional: handle other global rule totems here
-    // if (totem === "Countdown Clocktower") gameState.turnLimit = 12;
-
     // Draw 5 for each player before game starts
     [playerUsername, opponent].forEach(user => {
       const deck = gameState[user].Deck;

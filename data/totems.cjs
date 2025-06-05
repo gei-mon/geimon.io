@@ -1,6 +1,7 @@
 const totems = [
     {
-        "Double Double": "Turn Player draws an extra card in their Draw Phase.",
+        "Glass Bones and Paper Skin": "Starting life is set at 10.", //
+        "Double Double": "Turn Player draws an extra card in their Draw Phase.", //
         "Single File": "Turn Player can only attack with 1 Champion during their Battle Phase.",
         "Fists Only": "Damage can only be dealt by attack.",
         "Can't Punch Ghosts": "Damage can only be dealt by effect.",
@@ -8,7 +9,6 @@ const totems = [
         "Blindfolded": "Cards cannot be Added.",
         "Necromancer Died": "Cards cannot be Resurrected.",
         "Hell's Closed Today": "Cards cannot be Obliterated.",
-        "Glass Bones and Paper Skin": "Starting life is set at 10.",
         "Terrifying Toddlers": "Champions with a Damage of 3 or lower deal double battle Damage.",
         "Caught in your Underwear": "No Damage Thresholds.",
         "All or Nothing": "The Damage a creature takes from a single event must destroy it or the Damage does nothing.",

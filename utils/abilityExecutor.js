@@ -213,12 +213,23 @@ async function sendLifeUpdate(gameId, gameState, username) {
 
 export function changeLife(player, amount, gameState, username, gameId) {
     if (!gameState[player]) return;
+
+    if (gameState.invertHealingAndDamage) {
+      amount = -amount; // invert the amount: healing → damage, damage → healing
+    }
     gameState[player].life += amount;
+
+    if (gameState[player].life < 0) gameState[player].life = 0;
 
     // Update display
     if (player === username) {
         document.getElementById("player-name").textContent = username;
         document.getElementById("player-life").textContent = `${gameState[username].life}`;
+    } else if (player !== username && gameState[username]) {
+      const opponentLifeElem = document.getElementById("opponent-life");
+        if (opponentLifeElem) {
+          opponentLifeElem.textContent = gameState[player].life;
+        }
     }
     sendLifeUpdate(gameId, gameState, username);
 }
