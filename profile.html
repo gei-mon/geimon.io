@@ -161,8 +161,12 @@
             const imgEl = document.createElement('img');
             imgEl.src = `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Sleeves/${img}`;
             imgEl.className = 'thumbnail';
-            imgEl.style.width = '240px';
-            imgEl.style.height = '420px';
+            imgEl.style.width = '260px';
+            imgEl.style.height = '400px';
+            imgEl.style.transform = "scale(0.6)";
+            imgEl.style.marginLeft = "-96px";
+            imgEl.style.marginTop = "-64px";
+            imgEl.style.marginBottom = "-64px";
             imageGridSleeves.appendChild(imgEl);
           });
         });
@@ -288,6 +292,8 @@
             const sleeveImg = document.getElementById('sleeveOverlay');
             sleeveImg.src = `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Sleeves/${deckSleeve}`;
             sleeveImg.style.display = 'block';
+            sleeveImg.style.width = '130px';
+            sleeveImg.style.height = '200px';
           }
         } catch (err) {
           console.error('Failed to load profile:', err);

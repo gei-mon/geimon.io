@@ -383,6 +383,9 @@ text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2p
 .action .card-cost {
   text-shadow: none;
 }
+.action .card-condition {
+  text-shadow: none;
+}
 .equipment .card-text {
   text-shadow: none;
 }
@@ -390,6 +393,9 @@ text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2p
   text-shadow: none;
 }
 .equipment .card-cost {
+  text-shadow: none;
+}
+.equipment .card-condition {
   text-shadow: none;
 }
 .obelisk .card-text {
@@ -413,6 +419,9 @@ text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2p
 .rush .card-cost {
   text-shadow: none;
 }
+.rush .card-condition {
+  text-shadow: none;
+}
 .reflex .card-text {
   text-shadow: none;
 }
@@ -420,6 +429,9 @@ text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2p
   text-shadow: none;
 }
 .reflex .card-cost {
+  text-shadow: none;
+}
+.reflex .card-condition {
   text-shadow: none;
 }
 
