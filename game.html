@@ -450,6 +450,15 @@
             return ["Main 1", "Main 2"].includes(gameState?.turn?.currentPhase);
         }
 
+        function cleanupDiscardUI() {
+            document.querySelectorAll("div[style*='Select']").forEach(el => el.remove());
+            document.querySelectorAll("div[style*='Discard this card?']").forEach(el => el.remove());
+            document.querySelectorAll(".card-button").forEach(btn => {
+                btn.onclick = btn._originalHandler || null;
+            });
+            document.querySelectorAll(".phase-box").forEach(box => box.style.pointerEvents = "auto");
+        }
+
         function isCardSettable(cardData, fullCard) {
             if (!cardData || !fullCard) return false;
             if (cardData.boardState !== "Hand") return false;
@@ -466,36 +475,33 @@
             return ["Action", "Rush", "Reflex", "Equipment", "Obelisk"].includes(fullCard.type);
         }
 
-        function cleanupDiscardUI() {
-            document.querySelectorAll("div[style*='Select']").forEach(el => el.remove());
-            document.querySelectorAll("div[style*='Discard this card?']").forEach(el => el.remove());
-            document.querySelectorAll(".card-button").forEach(btn => {
-                btn.onclick = btn._originalHandler || null;
-            });
-            document.querySelectorAll(".phase-box").forEach(box => box.style.pointerEvents = "auto");
-        }
-
         function showSetArsenalPrompt(cardData, fullCard) {
+            const existingPrompt = document.getElementById("set-arsenal-prompt-overlay");
+            if (existingPrompt) {
+                document.body.removeChild(existingPrompt);
+            }
+
             const overlay = document.createElement("div");
-            Object.assign(overlay.style, {
-                position: "fixed",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                padding: "20px",
-                backgroundColor: "#333",
-                color: "white",
-                border: "2px solid white",
-                borderRadius: "10px",
-                zIndex: 120001,
-                textAlign: "center",
-                boxShadow: "0 0 10px black"
-            });
-            overlay.innerHTML = `
-                <p>Set '${fullCard.name}' face-down in your Arsenal?</p>
-                <button id="confirm-set">Confirm</button>
-                <button id="cancel-set" style="margin-left: 10px;">Cancel</button>
-            `;
+            overlay.id = "set-arsenal-prompt-overlay";
+                Object.assign(overlay.style, {
+                    position: "fixed",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    padding: "20px",
+                    backgroundColor: "#333",
+                    color: "white",
+                    border: "2px solid white",
+                    borderRadius: "10px",
+                    zIndex: 120001,
+                    textAlign: "center",
+                    boxShadow: "0 0 10px black"
+                });
+                overlay.innerHTML = `
+                    <p>Set '${fullCard.name}' face-down in your Arsenal?</p>
+                    <button id="confirm-set">Confirm</button>
+                    <button id="cancel-set" style="margin-left: 10px;">Cancel</button>
+                `;
 
             document.body.appendChild(overlay);
 
@@ -529,7 +535,8 @@
                 document.body.removeChild(overlay);
                 updateLocalFromGameState();
             };
-                document.getElementById("cancel-set").onclick = () => {
+
+            document.getElementById("cancel-set").onclick = () => {
                 document.body.removeChild(overlay);
             };
         }
