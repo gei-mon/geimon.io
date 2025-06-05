@@ -1,3 +1,5 @@
+import { TotemExecutor } from './utils/totemExecutor.js';
+
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
@@ -193,7 +195,8 @@ app.post('/startGame', async (req, res) => {
       playerDeck,
       opponentDeck,
       isSinglePlayer,
-      goesFirst
+      goesFirst,
+      totem // ✅ new field
     } = req.body;
 
     if (!playerUsername || !playerDeck) {
@@ -227,8 +230,24 @@ app.post('/startGame', async (req, res) => {
         currentPhase: "Intermission"
       },
       player1: goesFirst,
-      player2: goesFirst === playerUsername ? opponent : playerUsername
+      player2: goesFirst === playerUsername ? opponent : playerUsername,
+      totem: totem || null // ✅ store selected totem
     };
+
+    // ✅ Apply totem rules using TotemExecutor
+    if (totem) {
+      const totemExecutor = new TotemExecutor(totem, gameState);
+      totemExecutor.applyRules();
+
+      // Optional: if startingLife is modified, apply to each player
+      if (typeof gameState.startingLife === "number") {
+        gameState[playerUsername].life = gameState.startingLife;
+        gameState[opponent].life = gameState.startingLife;
+      }
+    }
+
+    // ✅ Optional: handle other global rule totems here
+    // if (totem === "Countdown Clocktower") gameState.turnLimit = 12;
 
     // Draw 5 for each player before game starts
     [playerUsername, opponent].forEach(user => {
@@ -243,12 +262,13 @@ app.post('/startGame', async (req, res) => {
     });
 
     gameStates.set(gameId, gameState);
+
     if (goesFirst === "Bot") {
-    // Don't block response — run bot turn in background after short delay
-    setTimeout(() => {
-      performBotTurn(gameState);
-    }, 3500); // small delay lets client start polling before bot acts
-  }
+      setTimeout(() => {
+        performBotTurn(gameState);
+      }, 3500);
+    }
+
     return res.status(200).json({ success: true });
   } catch (err) {
     console.error("Error in /startGame:", err);
@@ -772,8 +792,13 @@ async function performBotTurn(game) {
     // Draw logic
     if (phase === "Draw") {
       const bot = game["Bot"];
+      if(!totem) {
+        const totem = game.totem;
+      }
+      const numToDraw = game.drawExtraCard ? 2 : 1;
+
       if (bot.Deck.length > 0) {
-        const drawn = bot.Deck.splice(0, 1);
+        const drawn = bot.Deck.splice(0, numToDraw);
         drawn.forEach(card => {
           card.lastBoardState = "Deck";
           card.boardState = "Hand";
@@ -832,6 +857,7 @@ app.post('/setPhase', (req, res) => {
   // ✅ Draw logic — handled by server when user enters Draw phase
   if (phase === "Draw") {
     const player = game[username];
+    const totem = game.totem;
     const numToDraw = game.drawExtraCard ? 2 : 1;
     if (player.Deck.length > 0) {
       const drawn = player.Deck.splice(0, numToDraw);

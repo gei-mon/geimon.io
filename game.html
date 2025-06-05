@@ -1695,6 +1695,17 @@
             const opponentDeck = opponentDeckResult.card_ids;
             shuffleDeck(opponentDeck);
 
+            const selectedTotem = params.get("totem");
+            const selectedTotemText = params.get("totemText");
+
+            const totemElement = document.createElement("p");
+                totemElement.innerHTML = `${selectedTotem}`;
+                totemElement.style.color = "goldenrod";
+            const totemTextElement = document.createElement("p");
+                totemTextElement.innerHTML = `<strong>Description:</strong> ${selectedTotemText}`;
+            document.getElementById("game-log-placeholder").appendChild(totemElement);
+            document.getElementById("game-log-placeholder").appendChild(totemTextElement);
+
             if (playerDeckResult.success && opponentDeckResult.success) {
                 await fetch('https://geimon-app-833627ba44e0.herokuapp.com/startGame', {
                     method: 'POST',
@@ -1707,7 +1718,8 @@
                         playerDeck,
                         opponentDeck,
                         isSinglePlayer: true,
-                        goesFirst: choice === "first" ? username : (isSinglePlayer ? "Bot" : otherPlayerName)
+                        goesFirst: choice === "first" ? username : (isSinglePlayer ? "Bot" : otherPlayerName),
+                        totem: selectedTotem
                     })
                 });
 
@@ -1741,28 +1753,6 @@
                         isFetchingGameState = false;
                     }
                 }, 1500);
-            }
-
-            const selectedTotem = params.get("totem");
-            const selectedTotemText = params.get("totemText");
-
-            const totemElement = document.createElement("p");
-                totemElement.innerHTML = `${selectedTotem}`;
-                totemElement.style.color = "goldenrod";
-            const totemTextElement = document.createElement("p");
-                totemTextElement.innerHTML = `<strong>Description:</strong> ${selectedTotemText}`;
-            document.getElementById("game-log-placeholder").appendChild(totemElement);
-            document.getElementById("game-log-placeholder").appendChild(totemTextElement);
-
-            if (selectedTotem && gameState) {
-                const totemExecutor = new TotemExecutor(selectedTotem, gameState);
-                totemExecutor.applyRules();
-                //console.log("Final gameState after totem applied:", gameState);
-
-                if (typeof gameState.startingLife === "number") {
-                    gameState[username].life = gameState.startingLife;
-                    gameState[isSinglePlayer ? "Bot" : otherPlayerName].life = gameState.startingLife;
-                }
             }
 
             const totemBox = document.createElement("div");
