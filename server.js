@@ -906,7 +906,14 @@ app.post('/setPhase', (req, res) => {
       return res.json({ success: true, loser, reason });
     }
   }
-  return res.json({ success: true, currentPhase: phase });
+  return res.json({
+    success: true,
+    currentPhase: phase,
+    lifeTotals: {
+      [game.player1]: game[game.player1].life,
+      [game.player2]: game[game.player2].life,
+    }
+  });
 });
 
 // GET /logout
