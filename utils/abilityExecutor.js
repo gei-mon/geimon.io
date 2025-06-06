@@ -118,7 +118,7 @@ export async function declareAbility(
 
         if (!hasUsedEffectThisTurn(gameId, currentTurn, cardId, text)) {
           // Handle dynamic retrieval effects like RetrieveDifferentUndead
-          if (gameState.canRetrieve, text.startsWith("Retrieve")) {
+          if (gameState.canRetrieve !== false && text.startsWith("Retrieve")) { //handle Tomb Raider Rejects totem
             promises.push(
               retrieveCardByCondition(text, card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, batchMilledCards)
             );
