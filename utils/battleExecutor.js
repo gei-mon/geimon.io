@@ -103,8 +103,8 @@ export async function handleChampionClick(clickedCard, gameState, username, game
     return;
   }
 
-    console.log("maxAttacksPerTurn =", gameState[username].maxAttacksPerTurn);
-    console.log("playerAttackCount =", gameState[username].playerAttackCount);
+    //console.log("maxAttacksPerTurn =", gameState[username].maxAttacksPerTurn);
+    //console.log("playerAttackCount =", gameState[username].playerAttackCount);
   // Check if player reached max attacks per turn
   if ((gameState[username].playerAttackCount ?? 0) >= (gameState[username].maxAttacksPerTurn ?? Infinity)) {
     //alert(`You can't attack more than ${gameState[username].maxAttacksPerTurn ?? '∞'} times this turn.`);
