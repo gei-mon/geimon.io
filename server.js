@@ -873,6 +873,12 @@ app.post('/setPhase', (req, res) => {
       setTimeout(() => performBotTurn(game), 300);
     }
 
+    //If totem is Pendulum of Pain
+    if (game.endPhaseDamage) {
+      game[game.player1].life -= game.endPhaseDamage;
+      game[game.player2].life -= game.endPhaseDamage;
+    }
+
     //If totem is Countdown Clocktower
     if (game.turnLimit && game.turn.count >= 12) {
       const opponentName = (game.player1 === username) ? game.player2 : game.player1;
