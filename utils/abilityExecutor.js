@@ -86,7 +86,9 @@ function hasUsedEffectThisTurn(gameId, turn, cardId, effectText) {
 
 const effectMap = {
   resurrectByCondition,
-  retrieveCardByCondition
+  retrieveCardByCondition,
+  Add: addCardByCondition,
+  Excavate: excavateCards
 };
 
 export async function declareAbility(
@@ -126,10 +128,20 @@ export async function declareAbility(
               resurrectByCondition(text, card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry)
             );
           } else {
-            const effectFunc = effectMap[text];
+            let effectFunc = effectMap[text];
+
+            if (!effectFunc) {
+              // Handle generic Add1X cases
+              if (/^Add1[A-Za-z]+$/.test(text)) {
+                effectFunc = effectMap.Add;
+              } else if (/^Excavate(Op)?\d+$/.test(ability[`effect${num}cost`] || "")) {
+                effectFunc = effectMap.Excavate;
+              }
+            }
+
             if (effectFunc) {
               promises.push(
-                effectFunc(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, batchMilledCards)
+                effectFunc(text, card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, batchMilledCards)
               );
             } else {
               console.warn(`⚠️ Effect "${text}" not found in effectMap`);
@@ -646,6 +658,143 @@ export function checkLingerEffects(card, newZone, gameState, addGameLogEntry) {
   }
 
   return false; // No interception
+}
+
+async function updateGameStateZones(player, gameId, gameState, zones) {
+  const payload = {};
+  for (const zone of zones) {
+    payload[zone] = gameState[player][zone];
+  }
+
+  await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      gameId,
+      owner: player,
+      updatedZones: payload
+    })
+  });
+}
+
+async function promptUserToSelect(cards, max, message) {
+  return new Promise(resolve => {
+    const overlay = document.createElement("div");
+    overlay.innerHTML = `<p>${message}</p>`;
+    const container = document.createElement("div");
+    Object.assign(container.style, { display: "flex", flexWrap: "wrap", gap: "10px" });
+
+    const selected = new Set();
+
+    for (const card of cards) {
+      const el = renderCard(card);
+      el.style.cursor = "pointer";
+      el.onclick = () => {
+        if (selected.has(card)) {
+          selected.delete(card);
+          el.classList.remove("selected");
+        } else if (selected.size < max) {
+          selected.add(card);
+          el.classList.add("selected");
+        }
+
+        if (selected.size === max) {
+          overlay.remove();
+          resolve([...selected]);
+        }
+      };
+      container.appendChild(el);
+    }
+
+    overlay.appendChild(container);
+    document.body.appendChild(overlay);
+  });
+}
+
+export async function excavateCards(effectText, card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
+  const match = effectText.match(/^Excavate(Op)?(\d+)/);
+  if (!match) {
+    console.warn(`⚠️ Invalid Excavate effect: "${effectText}"`);
+    return;
+  }
+
+  const opponentMode = match[1] === "Op";
+  const count = parseInt(match[2], 10);
+  const targetPlayer = opponentMode ? getOpponent(username) : username;
+  const targetDeck = gameState[targetPlayer].Deck;
+
+  if (targetDeck.length < count) {
+    console.warn("⚠️ Not enough cards to excavate.");
+    return;
+  }
+
+  const revealed = targetDeck.slice(0, count);
+  const selection = await promptUserToSelect(revealed, 1, "Choose 1 card to Add to Hand. Others are Obliterated.");
+
+  const chosen = selection[0];
+  if (chosen) {
+    revealed.splice(revealed.indexOf(chosen), 1);
+    chosen.lastBoardState = "Deck";
+    chosen.boardState = "Hand";
+    gameState[username].Hand.push(chosen);
+  }
+
+  for (const card of revealed) {
+    const i = targetDeck.findIndex(c => c.id === card.id);
+    if (i !== -1) targetDeck.splice(i, 1);
+    card.lastBoardState = "Deck";
+    card.boardState = "Void";
+    gameState[targetPlayer].Void.push(card);
+  }
+
+  await updateGameStateZones(targetPlayer, gameId, gameState, ["Deck", "Void"]);
+  if (chosen) await updateGameStateZones(username, gameId, gameState, ["Hand"]);
+
+  addGameLogEntry(`${card.name} excavated ${count} card(s). 1 added, ${count - 1} obliterated.`);
+  updateLocalFromGameState();
+}
+
+export async function addCardByCondition(effectText, sourceCard, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
+  const match = effectText.match(/^Add1([A-Za-z]+)$/);
+  if (!match) {
+    console.warn(`❌ Invalid Add effect format: "${effectText}"`);
+    return;
+  }
+
+  const target = match[1];
+  const deck = gameState[username].Deck;
+
+  const valid = deck.filter(card => {
+    const hasTag = card.tags?.includes(target);
+    const isType = card.type === target;
+    const comboMatch = /^[A-Z][a-z]+[A-Z][a-z]+$/.test(target); // e.g., CommanderObelisk
+    const camelParts = target.match(/[A-Z][a-z]+/g);
+    const hasBoth = camelParts?.length === 2 &&
+      card.type === camelParts[1] &&
+      card.tags?.includes(camelParts[0]);
+
+    return hasTag || isType || hasBoth;
+  });
+
+  if (!valid.length) {
+    alert(`No cards in your deck match: ${target}`);
+    return;
+  }
+
+  const selected = await promptUserToSelect(valid, 1, `Choose 1 card to Add to Hand matching: ${target}`);
+  if (!selected.length) return;
+
+  const chosen = selected[0];
+  const index = deck.findIndex(c => c.id === chosen.id);
+  if (index !== -1) deck.splice(index, 1);
+  chosen.lastBoardState = "Deck";
+  chosen.boardState = "Hand";
+  gameState[username].Hand.push(chosen);
+
+  await updateGameStateZones(username, gameId, gameState, ["Deck", "Hand"]);
+  addGameLogEntry(`${username} added ${chosen.name} to hand from deck.`);
+  updateLocalFromGameState();
 }
 
 export function resurrectByCondition(
