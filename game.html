@@ -407,6 +407,7 @@
             import { keywords } from "./data/keywords.js";
             import { rules } from "./data/rules.js";
             import * as AbilityExecutor from './utils/abilityExecutor.js';
+            import * as BattleExecutor from './utils/battleExecutor.js';
 
             let gameId = new URLSearchParams(window.location.search).get("gameId");
             if (gameId) {
@@ -614,9 +615,6 @@
                 }
             }
 
-            //await renderCardZone(player["Zone (Champion)"], "playerChampionsBox");
-            //console.log("Rendering Champions:", gameState[username]["Zone (Champion)"]);
-
             remainingDeck = player.Deck;
             updateDeckText();
 
@@ -642,6 +640,9 @@
             for (const [zoneKey, domSuffix] of Object.entries(zoneMappings)) {
                 await renderCardZone(gameState[username][zoneKey], `player${domSuffix}Box`);
             }
+            gameState[username]["Zone (Champion)"].forEach(card => {
+                BattleExecutor.initializeChampionForBattle(card);
+            });
             await maybeAutoAdvanceFromIntermission();
         }
 
@@ -1382,6 +1383,37 @@
                 if (!validNextPhases.includes(phase)) {
                     console.warn(`Invalid transition from ${currentPhase} to ${phase}`);
                     return;
+                }
+
+                if (gameState.turn.currentPhase === "Battle" && gameState.turn.currentPlayer === username) {
+                    const championZone = document.getElementById("playerChampionsBox");
+
+                    championZone.querySelectorAll(".card-button").forEach(button => {
+                        const originalClick = button.onclick;
+                        button._originalHandler = originalClick;
+
+                        button.onclick = async (event) => {
+                        event.stopPropagation();
+                        event.preventDefault();
+
+                        const parentCard = button.closest(".card");
+                        const cardId = parentCard?.dataset.cardId;
+                        if (!cardId) return;
+
+                        const cardData = gameState[username]["Zone (Champion)"].find(c => String(c.id) === cardId);
+                        if (!cardData) return;
+
+                        // ✅ Trigger attack logic
+                        await BattleExecutor.handleChampionClick(
+                            cardData,
+                            gameState,
+                            username,
+                            gameId,
+                            updateLocalFromGameState,
+                            addGameLogEntry
+                        );
+                        };
+                    });
                 }
 
                 if (phase === "End" && gameState.turn.currentPlayer === username) {

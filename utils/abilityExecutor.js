@@ -29,9 +29,16 @@ export async function handleBoardStateChange(card, boardState, lastBoardState, g
   if (boardState === 'Tomb' && lastBoardState === 'Hand') {
     await declareAbility(card, 'IfDiscarded', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);          //IF DISCARDED
   }
-  if (boardState === 'Tomb' && lastBoardState === 'Zone (Champion)' || boardState === 'Tomb' && lastBoardState === 'Zone (Arsenal)') {
-    await declareAbility(card, 'IfDestroyed', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);          //IF DESTROYED
-    await declareAbility(card, 'IfTombFromField', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);      //IF SENT FROM FIELD TO TOMB
+  if (boardState === 'Tomb' && (lastBoardState === 'Zone (Champion)' || lastBoardState === 'Zone (Arsenal)')) {
+    await declareAbility(card, 'IfTombFromField', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);      //IF TOMB FROM FIELD
+  }
+  if ((boardState === 'Tomb' && lastBoardState !== 'Tomb') || (boardState === 'Void' && lastBoardState !== 'Void')) {
+    if (card.tags?.includes("Destroyed")) {
+      await declareAbility(card, 'IfDestroyed', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);          //IF DESTROYED
+    }
+    if (card.tags?.includes("DestroyedByBattle")) {
+      await declareAbility(card, 'IfDestroyedByBattle', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);  //IF DESTROYED BY BATTLE
+    }
   }
   if (boardState === 'Void' && lastBoardState !== 'Void') {
     await declareAbility(card, 'IfObliterated', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);        //IF OBLITERATED

@@ -7,7 +7,7 @@ const totems = [
         "Pendulum of Pain": "During each End Phase, both Players take 1 Damage.", //
         "Tomb Raider Rejects": "Cards cannot be Retrieved.", //
         "Necromancer Died": "Cards cannot be Resurrected.", //
-        "Blindfolded": "Cards cannot be Added.",
+        "Blindfolded": "Cards cannot be Added.", //
         "Shared Interest": "Neither Player can deal damage to any other until the start of Turn 7.",
         "Single File": "Turn Player can only attack with 1 Champion during their Battle Phase.",
         "Terrifying Toddlers": "Champions with a Damage of 3 or lower deal double battle Damage.",
