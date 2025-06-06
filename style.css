@@ -492,10 +492,56 @@ overflow: hidden;
   box-shadow: 0 0 12px 4px orange !important;
 }
 
+.can-attack-highlight {
+  outline: 4px solid red !important;
+  box-shadow: 0 0 12px 4px red !important;
+}
+
+.can-effect-highlight {
+  outline: 4px solid yellow !important;
+  box-shadow: 0 0 12px 4px yellow !important;
+}
+
+.can-attack-or-effect-highlight {
+  outline: none !important; /* Remove default outline */
+  box-shadow:
+    0 -4px 8px red,     /* Top */
+    4px 0 8px red,      /* Right */
+   -4px 0 8px yellow,   /* Left */
+    0 4px 8px yellow !important; /* Bottom */
+}
+
+.can-cost-rally-or-effect-highlight {
+  outline: none !important; /* Remove default outline */
+  box-shadow:
+    0 -4px 8px orange,     /* Top */
+    4px 0 8px orange,      /* Right */
+   -4px 0 8px yellow,   /* Left */
+    0 4px 8px yellow !important; /* Bottom */
+}
+
+.can-basic-rally-or-effect-highlight {
+  outline: none !important; /* Remove default outline */
+  box-shadow:
+    0 -4px 8px cyan,     /* Top */
+    4px 0 8px cyan,      /* Right */
+   -4px 0 8px yellow,   /* Left */
+    0 4px 8px yellow !important; /* Bottom */
+}
+
 .card-select-for-arsenal {
   outline: 4px solid #b366ff !important; /* light purple */
   box-shadow: 0 0 12px 4px #b366ff !important;
   cursor: pointer;
+}
+
+.can-activate-or-set-highlight {
+  outline: none !important; /* Remove default outline */
+  box-shadow:
+    0 -4px 8px greenyellow,     /* Top */
+    4px 0 8px greenyellow,      /* Right */
+   -4px 0 8px #b366ff,   /* Left */
+    0 4px 8px #b366ff !important; /* Bottom */
 }
 
 .bottom-bar {
