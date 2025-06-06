@@ -823,7 +823,6 @@ app.post('/setPhase', (req, res) => {
   if (!game || game.turn.currentPlayer !== username) {
     return res.status(403).json({ message: "Not your turn" });
   }
-  console.log("game.endPhaseDamage =", game.endPhaseDamage);
 
   // Block turn 1 Battle and Main 2
   if (game.turn.count === 1 && (phase === "Battle" || phase === "Main 2")) {

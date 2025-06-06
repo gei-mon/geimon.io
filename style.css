@@ -726,19 +726,18 @@ background-color: #29c7bd;
 
 #player-side,
 #opponent-side {
-    position: relative;
-    width: 100%;
+    position: absolute;
+    width: 90%;
     height: 50vh; /* half viewport height */
     overflow: visible; /* allow flash to expand outside */
 }
 
 #player-side {
-    bottom: 0;
-    /* optional to position: absolute if needed */
+    bottom: 20px;
 }
 
 #opponent-side {
-    top: 0;
+    top: 20px;
 }
 
 .life-flash {
