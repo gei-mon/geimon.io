@@ -215,23 +215,53 @@ export function changeLife(player, amount, gameState, username, gameId) {
     if (!gameState[player]) return;
 
     if (gameState.invertHealingAndDamage) {
-      amount = -amount; // invert the amount: healing → damage, damage → healing
+        amount = -amount;
     }
-    gameState[player].life += amount;
 
-    if (gameState[player].life < 0) gameState[player].life = 0;
+    const originalLife = gameState[player].life;
+    let newLife = originalLife + amount;
+    if (newLife < 0) newLife = 0;
 
-    // Update display
-    if (player === username) {
-        document.getElementById("player-name").textContent = username;
-        document.getElementById("player-life").textContent = `${gameState[username].life}`;
-    } else if (player !== username && gameState[username]) {
-      const opponentLifeElem = document.getElementById("opponent-life");
-        if (opponentLifeElem) {
-          opponentLifeElem.textContent = gameState[player].life;
-        }
+    gameState[player].life = newLife;
+
+    const isSelf = player === username;
+    const lifeElem = document.getElementById(isSelf ? "player-life" : "opponent-life");
+    const screenHalf = document.getElementById(isSelf ? "player-side" : "opponent-side");
+
+    if (lifeElem && screenHalf) {
+        animateLifeNumber(lifeElem, originalLife, newLife);
+
+        const flash = document.createElement("div");
+        flash.className = `life-flash ${amount > 0 ? "heal" : "damage"} ${isSelf ? "bottom" : "top"}`;
+        screenHalf.appendChild(flash);
+
+        // Trigger animation
+        setTimeout(() => flash.classList.add("active"), 10);
+        setTimeout(() => flash.remove(), 700);
     }
+
     sendLifeUpdate(gameId, gameState, username);
+}
+
+function animateLifeNumber(element, start, end) {
+    const duration = 500;
+    const stepTime = 30;
+    const steps = Math.floor(duration / stepTime);
+    let currentStep = 0;
+
+    const step = () => {
+        currentStep++;
+        const progress = currentStep / steps;
+        const value = Math.round(start + (end - start) * progress);
+        element.textContent = value;
+
+        if (currentStep < steps) {
+            setTimeout(step, stepTime);
+        } else {
+            element.textContent = end;
+        }
+    };
+    step();
 }
 
 async function resolveBatchIfTombEffects(milledCards, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
