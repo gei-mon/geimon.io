@@ -273,23 +273,32 @@ app.post('/startGame', async (req, res) => {
 });
 
 app.post('/updateGameState', (req, res) => {
-  const { gameId, updatedZones, owner } = req.body;
-  const state = gameStates.get(gameId);
-  
-  if (!state || !state[owner]) {
-    return res.status(404).json({ error: "Game or user not found" });
+  const { gameId, owner, updatedZones, updatedValues } = req.body;
+
+  const gameState = gameStates.get(gameId);
+  if (!gameState || !gameState[owner]) {
+    return res.status(400).json({ error: "Invalid game or player" });
   }
 
-  Object.keys(updatedZones).forEach(zone => {
-    state[owner][zone] = updatedZones[zone];
-  });
+  // ✅ Apply zone updates
+  if (updatedZones) {
+    for (const zone in updatedZones) {
+      gameState[owner][zone] = updatedZones[zone];
+    }
+  }
 
-  gameStates.set(gameId, state);
+  // ✅ Apply non-zone field updates like playerAttackCount
+  if (updatedValues) {
+    Object.assign(gameState[owner], updatedValues);
+  }
 
-  // ✅ Send back the updated zones for the requesting player
+  // ✅ Save updated state
+  gameStates.set(gameId, gameState);
+
+  // ✅ Send back updated player zone for confirmation
   res.status(200).json({
     success: true,
-    updatedPlayerZone: state[owner]
+    updatedPlayerZone: gameState[owner]
   });
 });
 
