@@ -644,6 +644,39 @@
                 BattleExecutor.initializeChampionForBattle(card);
             });
             await maybeAutoAdvanceFromIntermission();
+
+            if (gameState.turn.currentPlayer === username && gameState.turn.currentPhase === "Battle") {
+                await BattleExecutor.highlightAttackableChampions(gameState, username);
+
+                const championZone = document.getElementById("playerChampionsBox");
+                championZone.querySelectorAll(".card-button").forEach(button => {
+                    const originalClick = button.onclick;
+                    button._originalHandler = originalClick;
+
+                    button.onclick = async (event) => {
+                    event.stopPropagation();
+                    event.preventDefault();
+
+                    const parentCard = button.closest(".card");
+                    const cardId = parentCard?.dataset.cardId;
+                    if (!cardId) return;
+
+                    const cardData = gameState[username]["Zone (Champion)"].find(c => String(c.id) === cardId);
+                    if (!cardData) return;
+
+                    const element = BattleExecutor.getCardElement(cardData.id, "#playerChampionsBox");
+
+                    await BattleExecutor.handleChampionClick(
+                        cardData,
+                        gameState,
+                        username,
+                        gameId,
+                        updateLocalFromGameState,
+                        addGameLogEntry
+                    );
+                    };
+                });
+            }
         }
 
         let intermissionAutoAdvanceInProgress = false;
@@ -1385,9 +1418,18 @@
                     return;
                 }
 
-                if (gameState.turn.currentPhase === "Battle" && gameState.turn.currentPlayer === username) {
-                    const championZone = document.getElementById("playerChampionsBox");
+                if (phase === "Battle") {
+                    // Initialize attack tracking
+                    if (!gameState[username].maxAttacksPerTurn) {
+                        gameState[username].maxAttacksPerTurn = Infinity;
+                    }
+                    gameState[username].playerAttackCount = 0;
 
+                    // Highlight all attackable champions
+                    await BattleExecutor.highlightAttackableChampions(gameState, username);
+
+                    // Rebind attack click handlers
+                    const championZone = document.getElementById("playerChampionsBox");
                     championZone.querySelectorAll(".card-button").forEach(button => {
                         const originalClick = button.onclick;
                         button._originalHandler = originalClick;
@@ -1403,7 +1445,8 @@
                         const cardData = gameState[username]["Zone (Champion)"].find(c => String(c.id) === cardId);
                         if (!cardData) return;
 
-                        // ✅ Trigger attack logic
+                        const element = BattleExecutor.getCardElement(cardData.id, "#playerChampionsBox");
+
                         await BattleExecutor.handleChampionClick(
                             cardData,
                             gameState,

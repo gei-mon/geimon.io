@@ -323,19 +323,20 @@ export async function handleCardCostFunction(card, gameState, username, gameId, 
   }
 }
 
-async function sendLifeUpdate(gameId, gameState, username) {
+async function sendLifeUpdate(gameId, gameState, player) {
     await fetch('https://geimon-app-833627ba44e0.herokuapp.com/updateGameState', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
             gameId,
             updatedZones: {
-                life: gameState[username].life
+                life: gameState[player].life
             },
-            owner: username
+            owner: player
         })
     });
 }
+
 
 export function changeLife(player, amount, gameState, username, gameId) {
     if (!gameState[player]) return;
@@ -365,8 +366,7 @@ export function changeLife(player, amount, gameState, username, gameId) {
         setTimeout(() => flash.classList.add("active"), 10);
         setTimeout(() => flash.remove(), 700);
     }
-
-    sendLifeUpdate(gameId, gameState, username);
+    sendLifeUpdate(gameId, gameState, player);
 }
 
 function animateLifeNumber(element, start, end) {
