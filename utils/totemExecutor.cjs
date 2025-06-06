@@ -21,7 +21,8 @@ class TotemExecutor {
                 this.gameState.drawExtraCard = true;
                 break;
             case "Single File":
-                this.gameState.maxAttacksPerTurn = 1;
+                this.gameState[this.gameState.player1].maxAttacksPerTurn = 1;
+                this.gameState[this.gameState.player2].maxAttacksPerTurn = 1;
                 break;
             case "Fists Only":
                 this.gameState.onlyAttackDamage = true;

@@ -1416,7 +1416,7 @@
 
                 if (phase === "Battle") {
                     // Initialize attack tracking
-                    if (!gameState[username].maxAttacksPerTurn) {
+                    if (gameState[username].maxAttacksPerTurn === undefined) {
                         gameState[username].maxAttacksPerTurn = Infinity;
                     }
                     gameState[username].playerAttackCount = 0;
