@@ -819,3 +819,6 @@ background-color: #29c7bd;
 .life-flash.bottom {
     bottom: 0;
 }
+.card.selected {
+  outline: 4px solid yellow;
+}

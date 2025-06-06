@@ -120,6 +120,14 @@ export async function declareAbility(
       const typeMatches = Array.isArray(type) ? type.includes(triggerType) : type === triggerType;
       if (!typeMatches || (!text && !cost)) continue;
 
+      const isMandatory = Array.isArray(type) ? type.includes("Mandatory") : type === "Mandatory";
+      const shouldConfirm = !isMandatory && text && !/^Mill\d+$/.test(cost);
+
+      if (typeMatches && (text || cost) && shouldConfirm) {
+        const confirmed = await confirmAbilityTrigger(card.name, text);
+        if (!confirmed) continue;
+      }
+
       const cardId = card.id;
       const currentTurn = gameState.turn?.count ?? 0;
 
@@ -141,19 +149,44 @@ export async function declareAbility(
 
       let effectFunc = null;
       if (
-        cost.startsWith("Excavate") &&
-        effect === "Add1Revealed" &&
+        effect.startsWith("Excavate") &&
         linger === "ObliterateOthers"
       ) {
-        effectFunc = excavateCards; // already handles all 3 in one
+        effectFunc = excavateCards;
       } else if (effect.startsWith("Retrieve") && gameState.canRetrieve !== false) {
         effectFunc = retrieveCardByCondition;
       } else if (effect.startsWith("Resurrect") && gameState.canResurrect !== false) {
         effectFunc = resurrectByCondition;
       } else if (/^Excavate(Op)?\d+$/.test(cost)) {
         effectFunc = excavateCards;
+      } else if (/^Excavate(Op)?\d+$/.test(effect)) {
+        effectFunc = excavateCards;
       } else if (/^Add\d+[A-Za-z]+$/.test(effect)  && gameState.canAddCards !== false) {
         effectFunc = addCardByCondition;
+      } else if (/^Mill\d+$/.test(cost)) {
+        const count = parseInt(cost.replace("Mill", ""));
+        effectFunc = async (...args) => {
+          return millCards(
+            count,
+            gameState,
+            username,
+            gameId,
+            updateLocalFromGameState,
+            addGameLogEntry
+          );
+        };
+      } else if (/^Mill\d+$/.test(effect)) {
+        const count = parseInt(effect.replace("Mill", ""));
+        effectFunc = async (...args) => {
+          return millCards(
+            count,
+            gameState,
+            username,
+            gameId,
+            updateLocalFromGameState,
+            addGameLogEntry
+          );
+        };
       } else if (effectMap[effect]) {
         effectFunc = effectMap[effect];
       }
@@ -194,6 +227,41 @@ function parseCombinedCosts(costString) {
     costs.push({ type: match[1], amount: parseInt(match[2], 10) });
   }
   return costs;
+}
+
+async function confirmAbilityTrigger(cardName, effectText) {
+  return new Promise(resolve => {
+    const overlay = document.createElement("div");
+    Object.assign(overlay.style, {
+      position: "fixed",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      padding: "20px",
+      backgroundColor: "#333",
+      color: "white",
+      border: "2px solid white",
+      borderRadius: "10px",
+      zIndex: 150000,
+      textAlign: "center"
+    });
+    //<p style="font-size: 0.9em; margin-bottom: 10px;">Effect: ${effectText}</p>
+    overlay.innerHTML = `
+      <p>Activate <strong>${cardName}</strong>'s ability?</p>
+      <button id="confirm-ability">Yes</button>
+      <button id="cancel-ability" style="margin-left: 10px;">No</button>
+    `;
+    document.body.appendChild(overlay);
+
+    document.getElementById("confirm-ability").onclick = () => {
+      document.body.removeChild(overlay);
+      resolve(true);
+    };
+    document.getElementById("cancel-ability").onclick = () => {
+      document.body.removeChild(overlay);
+      resolve(false);
+    };
+  });
 }
 
 export async function handleCardCostFunction(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
@@ -713,33 +781,96 @@ async function updateGameStateZones(player, gameId, gameState, zones) {
 async function promptUserToSelect(cards, max, message) {
   return new Promise(resolve => {
     const overlay = document.createElement("div");
-    overlay.innerHTML = `<p>${message}</p>`;
-    const container = document.createElement("div");
-    Object.assign(container.style, { display: "flex", flexWrap: "wrap", gap: "10px" });
+    Object.assign(overlay.style, {
+      position: "fixed",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      backgroundColor: "rgba(0,0,0,0.85)",
+      color: "white",
+      padding: "20px",
+      borderRadius: "12px",
+      zIndex: 150000,
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      maxWidth: "90%",
+      maxHeight: "90%",
+      overflowY: "auto",
+      boxShadow: "0 0 15px black",
+    });
 
-    const selected = new Set();
+    const prompt = document.createElement("div");
+    prompt.innerHTML = `<p style="font-size: 1.2em; margin-bottom: 10px;">${message}</p>`;
+    overlay.appendChild(prompt);
+
+    const container = document.createElement("div");
+    Object.assign(container.style, {
+      display: "flex",
+      flexWrap: "wrap",
+      gap: "10px",
+      justifyContent: "center"
+    });
+
+    let selectedCard = null;
 
     for (const card of cards) {
       const el = renderCard(card);
+      el.classList.add("selectable");
       el.style.cursor = "pointer";
-      el.onclick = () => {
-        if (selected.has(card)) {
-          selected.delete(card);
-          el.classList.remove("selected");
-        } else if (selected.size < max) {
-          selected.add(card);
-          el.classList.add("selected");
-        }
 
-        if (selected.size === max) {
-          overlay.remove();
-          resolve([...selected]);
-        }
+      const cardId = card.id;
+      el.dataset.cardId = cardId;
+
+      const button = el.querySelector(".card-button");
+      if (button) {
+        button._originalHandler = button.onclick;
+        button.onclick = (e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          updateSelection(card, el);
+        };
+      }
+
+      el.onclick = () => {
+        updateSelection(card, el);
       };
+
       container.appendChild(el);
     }
 
+    function updateSelection(card, element) {
+      // Deselect previously selected card
+      document.querySelectorAll(".card.selected").forEach(el => el.classList.remove("selected"));
+      selectedCard = card;
+      element.classList.add("selected");
+    }
+
     overlay.appendChild(container);
+
+    const buttonContainer = document.createElement("div");
+    buttonContainer.style.marginTop = "20px";
+
+    const confirmBtn = document.createElement("button");
+    confirmBtn.textContent = "Confirm";
+    confirmBtn.onclick = () => {
+      if (!selectedCard) return;
+      document.body.removeChild(overlay);
+      resolve([selectedCard]);
+    };
+
+    const cancelBtn = document.createElement("button");
+    cancelBtn.textContent = "Cancel";
+    cancelBtn.style.marginLeft = "10px";
+    cancelBtn.onclick = () => {
+      document.body.removeChild(overlay);
+      resolve([]);
+    };
+
+    buttonContainer.appendChild(confirmBtn);
+    buttonContainer.appendChild(cancelBtn);
+    overlay.appendChild(buttonContainer);
+
     document.body.appendChild(overlay);
   });
 }
@@ -751,40 +882,22 @@ export async function excavateCards(effectText, card, gameState, username, gameI
     return;
   }
 
-  const opponentMode = match[1] === "Op";
+  const isOpponent = match[1] === "Op";
   const count = parseInt(match[2], 10);
-  const targetPlayer = opponentMode ? getOpponent(username) : username;
-  const targetDeck = gameState[targetPlayer].Deck;
+  const targetPlayer = isOpponent ? getOpponent(username) : username;
+  const deck = gameState[targetPlayer].Deck;
 
-  if (targetDeck.length < count) {
+  if (deck.length < count) {
     console.warn("⚠️ Not enough cards to excavate.");
     return;
   }
 
-  const revealed = targetDeck.slice(0, count);
-  const selection = await promptUserToSelect(revealed, 1, "Choose 1 card to Add to Hand. Others are Obliterated.");
+  const revealed = deck.slice(0, count).map(c => cards.find(cardObj => String(cardObj.id) === String(c.id)) || c);
+  window.lastExcavatedCards = revealed;
+  window.lastExcavatedSource = targetPlayer;
+  window.lastExcavatedCount = count;
 
-  const chosen = selection[0];
-  if (chosen) {
-    revealed.splice(revealed.indexOf(chosen), 1);
-    chosen.lastBoardState = "Deck";
-    chosen.boardState = "Hand";
-    gameState[username].Hand.push(chosen);
-  }
-
-  for (const card of revealed) {
-    const i = targetDeck.findIndex(c => c.id === card.id);
-    if (i !== -1) targetDeck.splice(i, 1);
-    card.lastBoardState = "Deck";
-    card.boardState = "Void";
-    gameState[targetPlayer].Void.push(card);
-  }
-
-  await updateGameStateZones(targetPlayer, gameId, gameState, ["Deck", "Void"]);
-  if (chosen) await updateGameStateZones(username, gameId, gameState, ["Hand"]);
-
-  addGameLogEntry(`${card.name} excavated ${count} card(s). 1 added, ${count - 1} obliterated.`);
-  updateLocalFromGameState();
+  addGameLogEntry(`${card.name} excavated ${count} card(s) from ${isOpponent ? "opponent's" : "their"} deck.`);
 }
 
 export async function addCardByCondition(effectText, sourceCard, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
@@ -855,19 +968,55 @@ async function payAbilityCost(cost, gameState, username, gameId, updateLocalFrom
   return true;
 }
 async function handleLinger(lingerText, card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
-  switch (lingerText) {
-    case "ObliterateOthers":
-      // This is handled inside excavateCards already. No-op here.
-      return null;
-
-    case "StackBackSameOrder":
-      // Could implement stacking logic here if ever needed separately.
-      return null;
-
-    default:
-      console.warn(`⚠️ Unrecognized linger effect: "${lingerText}"`);
-      return null;
+  if (!window.lastExcavatedCards || !Array.isArray(window.lastExcavatedCards)) {
+    console.warn("No excavated cards available for linger effect.");
+    return;
   }
+
+  const lingerParts = lingerText.split(",").map(p => p.trim());
+
+  for (const part of lingerParts) {
+    switch (part) {
+      case "Add1Revealed":
+        const selected = await promptUserToSelect(window.lastExcavatedCards, 1, "Choose 1 card to add to your hand.");
+        if (selected.length > 0) {
+          const chosen = selected[0];
+          const index = gameState[window.lastExcavatedSource].Deck.findIndex(c => String(c.id) === String(chosen.id));
+          if (index !== -1) {
+            gameState[window.lastExcavatedSource].Deck.splice(index, 1);
+            chosen.lastBoardState = "Deck";
+            chosen.boardState = "Hand";
+            gameState[username].Hand.push(chosen);
+            addGameLogEntry(`${username} added ${chosen.name} to hand from excavation.`);
+          }
+        }
+        break;
+
+      case "ObliterateOthers":
+        const toObliterate = window.lastExcavatedCards.filter(c => !gameState[username].Hand.includes(c));
+        for (const card of toObliterate) {
+          const index = gameState[window.lastExcavatedSource].Deck.findIndex(c => String(c.id) === String(card.id));
+          if (index !== -1) {
+            gameState[window.lastExcavatedSource].Deck.splice(index, 1);
+          }
+          card.lastBoardState = "Deck";
+          card.boardState = "Void";
+          gameState[window.lastExcavatedSource].Void.push(card);
+        }
+        if (toObliterate.length > 0)
+          addGameLogEntry(`${toObliterate.length} excavated card(s) were obliterated.`);
+        break;
+
+      default:
+        console.warn(`⚠️ Unrecognized linger effect: "${part}"`);
+    }
+  }
+
+  await updateGameStateZones(username, gameId, gameState, ["Deck", "Hand", "Void"]);
+  updateLocalFromGameState();
+  delete window.lastExcavatedCards;
+  delete window.lastExcavatedSource;
+  delete window.lastExcavatedCount;
 }
 
 export function resurrectByCondition(

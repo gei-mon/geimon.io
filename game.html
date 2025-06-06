@@ -301,6 +301,32 @@
   transform: scale(calc(100vw / 1920));
   transform-origin: top left;
 }
+@keyframes phaseWave {
+  0% {
+    left: 0px;
+    opacity: 0.5;
+  }
+  50% {
+    left: 250px;
+    opacity: 0.8;
+  }
+  100% {
+    left: 500px;
+    opacity: 0;
+  }
+}
+.phase-wave-effect {
+  position: absolute;
+  top: 0;
+  left: 0px;
+  width: 500px;
+  height: 50px;
+  background: linear-gradient(90deg, rgba(0,255,0,0.2) 0%, rgba(0,255,0,0.6) 50%, rgba(0,255,0,0.2) 100%);
+  z-index: 5;
+  pointer-events: none;
+  animation: phaseWave 1s ease-out forwards;
+  border-radius: 10px;
+}
 </style>
 <body style="background-color:rgb(78, 78, 78);">
   <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
@@ -433,6 +459,19 @@
                 entry.textContent = `[${time}] ${message}`;
                 gameLog.appendChild(entry);
                 gameLog.scrollTop = gameLog.scrollHeight;
+            }
+
+            function triggerPhaseWaveEffect() {
+                const tracker = document.getElementById("phase-tracker");
+                if (!tracker) return;
+
+                const wave = document.createElement("div");
+                wave.classList.add("phase-wave-effect");
+                tracker.appendChild(wave);
+
+                setTimeout(() => {
+                    wave.remove();
+                }, 1000); // match animation duration
             }
 
             function findCardByUidOrId(id) {
@@ -597,6 +636,54 @@
             for (const [zoneKey, domSuffix] of Object.entries(zoneMappings)) {
                 await renderCardZone(gameState[username][zoneKey], `player${domSuffix}Box`);
             }
+            await maybeAutoAdvanceFromIntermission();
+        }
+
+        let intermissionAutoAdvanceInProgress = false;
+
+        async function maybeAutoAdvanceFromIntermission() {
+            if (
+                intermissionAutoAdvanceInProgress ||
+                discardMode || discardOngoing
+            ) return;
+
+            const currentPlayer = gameState.turn.currentPlayer;
+            const currentPhase = gameState.turn.currentPhase;
+
+            if (
+                currentPlayer !== username ||
+                currentPhase !== "Intermission" ||
+                username === "Bot"
+            ) return;
+
+            if (!window.totemFullyFaded) return;
+
+            intermissionAutoAdvanceInProgress = true;
+            await delay(850);
+
+            // Move to Draw phase
+            const drawBox = Array.from(document.querySelectorAll(".phase-box"))
+                .find(el => el.textContent.trim() === "Draw");
+
+            if (drawBox) {
+                drawBox.click();
+            } else {
+                console.warn("🛑 Could not find Draw phase box for auto-advance.");
+            }
+
+            // Wait a moment before Main 1
+            await delay(850);
+
+            const main1Box = Array.from(document.querySelectorAll(".phase-box"))
+                .find(el => el.textContent.trim() === "Main 1");
+
+            if (main1Box) {
+                main1Box.click();
+            } else {
+                console.warn("🛑 Could not find Main 1 phase box for auto-advance.");
+            }
+
+            intermissionAutoAdvanceInProgress = false;
         }
 
         async function getUsername() {
@@ -1206,7 +1293,8 @@
                         const data = await response.json();
 
                         updatePhaseDisplay(data.currentPhase);
-                        addGameLogEntry(`${username} changed phase to ${data.currentPhase}`);
+                        triggerPhaseWaveEffect();
+                        //addGameLogEntry(`${username} changed phase to ${data.currentPhase}`);
                         await updateLocalFromGameState();
                         renderLatestTombCard();
 
@@ -1291,6 +1379,9 @@
                 }
 
                 if (phase === "End" && gameState.turn.currentPlayer === username) {
+                    updatePhaseDisplay(phase);
+                    triggerPhaseWaveEffect();
+                    addGameLogEntry(`${player} changed phase to ${phase}`);
                     if (gameState[username].Hand.length > 6) {
                         await handleCardDiscard(
                             gameState,
@@ -1325,7 +1416,10 @@
             const data = await response.json();
 
             updatePhaseDisplay(data.currentPhase);
-            addGameLogEntry(`${username} changed phase to ${data.currentPhase}`);
+            triggerPhaseWaveEffect();
+            if (data.currentPhase !== "Intermission" || phase !== "End") {
+                addGameLogEntry(`${username} changed phase to ${data.currentPhase}`);
+            }
             await updateLocalFromGameState();
 
             // ✅ Handle game end conditions
@@ -1424,28 +1518,28 @@
 
             // Render card scaled down
             const miniCard = renderCard(card);
-            miniCard.style.transform = "scale(0.3)";
-            miniCard.style.transformOrigin = "top left";
-            miniCard.style.marginTop = "-8%";
-            miniCard.style.marginLeft = "0%";
-            miniCard.style.pointerEvents = "none"; // Prevent dragging
+                miniCard.style.transform = "rotate(270deg) scale(0.3)";
+                miniCard.style.transformOrigin = "top left";
+                miniCard.style.marginTop = "85px";
+                miniCard.style.marginLeft = "9px";
+                miniCard.style.pointerEvents = "none"; // Prevent dragging
             playerVoidBox.appendChild(miniCard);
 
             // Void hover label (like Deck)
             const voidTextOverlay = document.createElement("div");
-            voidTextOverlay.innerText = "Void";
-            voidTextOverlay.style.position = "absolute";
-            voidTextOverlay.style.left = "45%";
-            voidTextOverlay.style.top = "3%";
-            voidTextOverlay.style.transform = "translate(-50%, -50%)";
-            voidTextOverlay.style.fontSize = "1em";
-            voidTextOverlay.style.color = "white";
-            voidTextOverlay.style.textShadow = `
-                -2px -2px 4px black,  
-                2px -2px 4px black,  
-                -2px 2px 4px black,  
-                2px 2px 4px black
-            `;
+                voidTextOverlay.innerText = "Void";
+                voidTextOverlay.style.position = "absolute";
+                voidTextOverlay.style.left = "45%";
+                voidTextOverlay.style.top = "3%";
+                voidTextOverlay.style.transform = "translate(-50%, -50%)";
+                voidTextOverlay.style.fontSize = "1em";
+                voidTextOverlay.style.color = "white";
+                voidTextOverlay.style.textShadow = `
+                    -2px -2px 4px black,  
+                    2px -2px 4px black,  
+                    -2px 2px 4px black,  
+                    2px 2px 4px black
+                `;
             playerVoidBox.appendChild(voidTextOverlay);
 
             playerVoidBox.addEventListener("mouseenter", () => {
@@ -1823,6 +1917,7 @@
             setTimeout(() => {
                 totemBox.style.opacity = "0";
                 totemBox.style.zIndex = "10";
+                window.totemFullyFaded = true;
             }, 4000);
 
                 const opponentName = isSinglePlayer ? "Bot" : otherPlayerName;
@@ -2220,6 +2315,7 @@
                     cardContainer.style.flexWrap = "wrap";
                     cardContainer.style.justifyContent = "center";
                     cardContainer.style.gap = "10px";
+                    cardContainer.style.marginRight = "10px";
                     cardContainer.style.maxWidth = "100%";
                     cardContainer.style.overflow = "visible";
 
@@ -2785,14 +2881,16 @@
             });
 
             // Fade in UI overlays
-            setTimeout(() => {
-                viewingWindow.style.opacity = "1";
-                contextWindow.style.opacity = "1";
-                playerLifeWindow.style.opacity = "1";
-                opponentLifeWindow.style.opacity = "1";
-                phaseTracker.style.opacity = "1";
-                turnCounter.style.opacity = "1";
-            }, 2500);
+            if (window.totemFullyFaded) {
+                setTimeout(() => {
+                    viewingWindow.style.opacity = "1";
+                    contextWindow.style.opacity = "1";
+                    playerLifeWindow.style.opacity = "1";
+                    opponentLifeWindow.style.opacity = "1";
+                    phaseTracker.style.opacity = "1";
+                    turnCounter.style.opacity = "1";
+                }, 0);
+            }
         }
 
         function updateBasicRallyHighlight(cardElement, cardData, currentPhase, gameState, username) {
