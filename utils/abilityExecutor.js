@@ -85,8 +85,8 @@ function hasUsedEffectThisTurn(gameId, turn, cardId, effectText) {
 }
 
 const effectMap = {
-  RetrieveDifferentUndead,
-  ResurrectSelf
+  ResurrectSelf,
+  retrieveCardByCondition
 };
 
 export async function declareAbility(
@@ -99,14 +99,12 @@ export async function declareAbility(
   addGameLogEntry,
   batchMilledCards = null
 ) {
-  //console.log(`Checking abilities on ${card.name} for trigger: ${triggerType}`);
   if (!card || !card.name || !card.abilities) {
     console.warn("🛑 Invalid or incomplete card object passed:", card);
     return;
   }
 
   const abilities = card.abilities || [];
-  //console.log("Abilities attached to card:", card.abilities);
   const promises = [];
 
   for (const ability of abilities) {
@@ -119,14 +117,20 @@ export async function declareAbility(
         const currentTurn = gameState.turn?.count ?? 0;
 
         if (!hasUsedEffectThisTurn(gameId, currentTurn, cardId, text)) {
-          //await handleCardCostFunction(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
-
-          const effectFunc = effectMap[text];
-          if (effectFunc) {
-            // Pass batchMilledCards to effect function if it needs it
-            promises.push(effectFunc(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, batchMilledCards));
+          // Handle dynamic retrieval effects like RetrieveDifferentUndead
+          if (text.startsWith("Retrieve")) {
+            promises.push(
+              retrieveCardByCondition(text, card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, batchMilledCards)
+            );
           } else {
-            console.warn(`⚠️ Effect "${text}" not found in effectMap`);
+            const effectFunc = effectMap[text];
+            if (effectFunc) {
+              promises.push(
+                effectFunc(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, batchMilledCards)
+              );
+            } else {
+              console.warn(`⚠️ Effect "${text}" not found in effectMap`);
+            }
           }
         }
       }
@@ -713,27 +717,33 @@ export function ResurrectSelf(card, gameState, username, gameId, updateLocalFrom
   };
 }
 
-export function RetrieveDifferentUndead(
+export function retrieveCardByCondition(
+  effectText,
   card,
   gameState,
   username,
   gameId,
   updateLocalFromGameState,
   addGameLogEntry,
-  batchMilledCards = null // NEW param for batch
+  batchMilledCards = null
 ) {
   return new Promise((resolve) => {
-    // Use batchMilledCards if passed, else use current tomb
+    const match = effectText.match(/^Retrieve(Different)?([A-Za-z]+)$/);
+    if (!match) {
+      console.warn(`⚠️ Invalid retrieve effect name: "${effectText}"`);
+      return resolve();
+    }
+
+    const [_, differentFlag, tag] = match;
     const tombSource = batchMilledCards || gameState[username]?.Tomb || [];
 
-    const validTargets = tombSource.filter(
-      (targetCard) =>
-        Array.isArray(targetCard.tags) &&
-        targetCard.tags.includes("Undead") &&
-        targetCard.name !== card.name
+    const validTargets = tombSource.filter(targetCard =>
+      Array.isArray(targetCard.tags) &&
+      targetCard.tags.includes(tag) &&
+      (!differentFlag || targetCard.name !== card.name)
     );
 
-    // 🔶 Prompt the user if they want to activate the ability
+    const label = `${differentFlag ? "a different " : "a "}${tag}`;
     const effectPrompt = document.createElement("div");
     Object.assign(effectPrompt.style, {
       position: "fixed",
@@ -750,17 +760,15 @@ export function RetrieveDifferentUndead(
     });
 
     effectPrompt.innerHTML = `
-      <p>Activate <strong>${card.name}</strong>'s ability to retrieve an Undead?</p>
-      <button id="activateUndeadEffectYes">Yes</button>
-      <button id="activateUndeadEffectNo" style="margin-left: 10px;">No</button>
+      <p>Activate <strong>${card.name}</strong>'s ability to retrieve ${label}?</p>
+      <button id="retrieveYes">Yes</button>
+      <button id="retrieveNo" style="margin-left: 10px;">No</button>
     `;
-
     document.body.appendChild(effectPrompt);
 
-    document.getElementById("activateUndeadEffectYes").onclick = () => {
+    document.getElementById("retrieveYes").onclick = () => {
       effectPrompt.remove();
 
-      // If no valid targets, show fallback popup
       if (validTargets.length === 0) {
         const popup = document.createElement("div");
         Object.assign(popup.style, {
@@ -770,7 +778,7 @@ export function RetrieveDifferentUndead(
           transform: "translate(-50%, -50%)",
           backgroundColor: "#333",
           color: "white",
-          padding: "20px 30px",
+          padding: "20px",
           border: "2px solid white",
           borderRadius: "10px",
           zIndex: "150001",
@@ -779,20 +787,18 @@ export function RetrieveDifferentUndead(
         });
 
         popup.innerHTML = `
-          <p>No Valid Undead Targets To Retrieve.</p>
-          <button id="closeNoUndeadPopup" style="margin-top: 15px; font-size: 1em;">Confirm</button>
+          <p>No valid ${tag} cards to retrieve.</p>
+          <button id="closePopup" style="margin-top: 15px;">Confirm</button>
         `;
 
         document.body.appendChild(popup);
-        document.getElementById("closeNoUndeadPopup").onclick = () => {
+        document.getElementById("closePopup").onclick = () => {
           popup.remove();
           resolve();
         };
-
         return;
       }
 
-      // 🔶 Show selection overlay
       const overlay = document.createElement("div");
       Object.assign(overlay.style, {
         position: "fixed",
@@ -815,10 +821,12 @@ export function RetrieveDifferentUndead(
       document.body.appendChild(overlay);
 
       const instruction = document.createElement("div");
-      instruction.innerText = "Select 1 Undead to retrieve";
-      instruction.style.color = "white";
-      instruction.style.fontSize = "1.2em";
-      instruction.style.textAlign = "center";
+      instruction.innerText = `Select 1 ${tag} to retrieve`;
+      Object.assign(instruction.style, {
+        color: "white",
+        fontSize: "1.2em",
+        textAlign: "center"
+      });
       overlay.appendChild(instruction);
 
       const cardContainer = document.createElement("div");
@@ -827,8 +835,6 @@ export function RetrieveDifferentUndead(
         flexWrap: "wrap",
         justifyContent: "center",
         gap: "10px",
-        marginLeft: "-9px",
-        marginRight: "10px",
         maxWidth: "100%",
         overflow: "visible"
       });
@@ -843,7 +849,6 @@ export function RetrieveDifferentUndead(
           transform: `scale(${scale})`,
           transformOrigin: "top left",
           margin: "5px",
-          position: "relative",
           cursor: "pointer"
         });
 
@@ -851,24 +856,23 @@ export function RetrieveDifferentUndead(
         Object.assign(wrapper.style, {
           width: `${cardWidth * scale}px`,
           height: `${cardHeight * scale}px`,
-          overflow: "visible",
           position: "relative"
         });
 
-        const invisibleButton = document.createElement("button");
-        Object.assign(invisibleButton.style, {
+        const button = document.createElement("button");
+        Object.assign(button.style, {
           position: "absolute",
           top: "0",
           left: "0",
           width: "100%",
           height: "100%",
           opacity: "0",
-          border: "none",
           background: "transparent",
+          border: "none",
           cursor: "pointer"
         });
 
-        invisibleButton.addEventListener("click", async () => {
+        button.addEventListener("click", async () => {
           const confirmBox = document.createElement("div");
           Object.assign(confirmBox.style, {
             position: "fixed",
@@ -897,25 +901,36 @@ export function RetrieveDifferentUndead(
             retrievedCard.boardState = "Hand";
             gameState[username].Hand.push(retrievedCard);
 
-            await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
-              method: "POST",
-              credentials: "include",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                gameId,
-                owner: username,
-                updatedZones: {
-                  Hand: gameState[username].Hand,
-                  Tomb: gameState[username].Tomb
-                }
-              })
-            });
+            try {
+              const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  gameId,
+                  owner: username,
+                  updatedZones: {
+                    Hand: gameState[username].Hand,
+                    Tomb: gameState[username].Tomb
+                  }
+                })
+              });
 
-            addGameLogEntry(`${username} retrieved ${retrievedCard.name} from the Tomb`);
-            overlay.remove();
-            confirmBox.remove();
-            updateLocalFromGameState();
-            resolve();
+              if (!response.ok) {
+                console.error("🛑 Failed to update game state during retrieve");
+                return resolve();
+              }
+
+              addGameLogEntry(`${username} retrieved ${retrievedCard.name} from the Tomb`);
+              overlay.remove();
+              confirmBox.remove();
+              updateLocalFromGameState(); // ✅ Now safely reflects actual backend state
+              resolve();
+
+            } catch (error) {
+              console.error("❌ Error during retrieveCardByCondition fetch:", error);
+              resolve();
+            }
           };
 
           document.getElementById("cancelRetrieve").onclick = () => {
@@ -925,16 +940,16 @@ export function RetrieveDifferentUndead(
         });
 
         wrapper.appendChild(scaledCard);
-        wrapper.appendChild(invisibleButton);
+        wrapper.appendChild(button);
         cardContainer.appendChild(wrapper);
       });
 
       overlay.appendChild(cardContainer);
     };
 
-    document.getElementById("activateUndeadEffectNo").onclick = () => {
+    document.getElementById("retrieveNo").onclick = () => {
       effectPrompt.remove();
-      resolve(); // If they say no, just finish the effect
+      resolve();
     };
   });
 }
