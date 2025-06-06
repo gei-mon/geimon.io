@@ -141,7 +141,7 @@ text-decoration: underline;
   cursor: pointer;
   table-layout: fixed;
   border-collapse: collapse;
-  width: 6%;
+  width: 130px;
 }
 
 .buttonEvenSmaller:hover {
@@ -578,7 +578,7 @@ clip-path: polygon(1.5% 0, 100% 0, 100% 100%, 0% 100%);
   border-radius: 8px;
   box-shadow: 0 0 10px black;
   position: fixed;
-  top: 56%;              /* vertically center, optional */
+  top: 565px;              /* vertically center, optional */
   left: 20px;
   transform: translateY(-50%);  /* vertically center, optional */
   z-index: 10;           /* make sure it stays above background layers */
@@ -591,45 +591,44 @@ clip-path: polygon(1.5% 0, 100% 0, 100% 100%, 0% 100%);
 }
 
 .menu-list {
-    list-style-type: none;
-    padding: 0;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  list-style-type: none;
+  padding: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .menu-item {
-    width: 30%;
-    margin-bottom: -8px;
-    font-family: 'Racing Sans One', sans-serif;
-    background-color: #c7c7c7;
-    border: 8px solid #000000;
-    color: #000000;
-    padding: 10px 20px;
-    font-size: 3em;
-    text-align: center;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    flex-grow: 1;
-    margin: -8px 8px; /* spacing between buttons */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    font-size: clamp(0.7rem, 2vw, 4rem);
-    max-width: 100%;
+  width: 500px;
+  margin-bottom: -8px;
+  font-family: 'Racing Sans One', sans-serif;
+  background-color: #c7c7c7;
+  border: 8px solid #000000;
+  color: #000000;
+  padding: 10px 20px;
+  font-size: 3em;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  flex-grow: 1;
+  margin: -8px 8px; /* spacing between buttons */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: clamp(0.7rem, 2vw, 4rem);
+  max-width: 100%;
 }
 
 .menu-item:hover {
-    background-color: #949494;
+  background-color: #949494;
 }
 
 .deck-row {
-display: flex;
-justify-content: space-between;
-align-items: center;
-width: 30%;
-margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 .left-btn, .right-btn, .copy-btn {

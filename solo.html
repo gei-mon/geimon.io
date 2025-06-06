@@ -37,7 +37,7 @@
     border: 1px solid #888;
     padding: 8px;
     border-radius: 4px;
-    min-width: 200px;
+    width: 400px;
   }
   #deckWarning {
     margin-left: 10px;
@@ -55,11 +55,11 @@
   display: inline-block;
   font-family: 'Arial';
   font-size: 1em;
-  margin-left: 12%;
+  margin-left: 510px;
   cursor: pointer;
   table-layout: fixed;
   border-collapse: collapse;
-  width: 6%;
+  width: 130px;
 }
 .buttonStart:hover {
   background-color: rgb(219, 219, 255);
@@ -78,18 +78,18 @@
 
     <div class="dropdowns">
       <div class="form-row">
-        <label for="playerDeck" style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Choose Your Deck:</label>
+        <label for="playerDeck" style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; font-weight: bold;">Choose Your Deck:</label>
         <select id="playerDeck"></select>
         <span id="deckWarning"></span>
       </div>
 
       <div class="form-row">
-        <label for="opponentDeck" style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Choose Opponent Deck:</label>
+        <label for="opponentDeck" style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; font-weight: bold;">Choose Opponent Deck:</label>
         <select id="opponentDeck"></select>
       </div>
 
       <div class="form-row">
-        <label for="gameType" style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Choose Game Type:</label>
+        <label for="gameType" style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; font-weight: bold;">Choose Game Type:</label>
         <select id="gameType">
           <option value="single">Single</option>
           <option value="match">Match</option>
@@ -97,12 +97,12 @@
       </div>
 
       <div class="form-row">
-        <label for="totem" style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Choose Totem:</label>
+        <label for="totem" style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; font-weight: bold;">Choose Totem:</label>
         <select id="totem"></select>
       </div>
 
       <div class="form-row">
-        <label for="turnOrder" style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Who Goes First:</label>
+        <label for="turnOrder" style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; font-weight: bold;">Who Goes First:</label>
         <select id="turnOrder">
           <option value="first">You</option>
           <option value="second">Opponent</option>
