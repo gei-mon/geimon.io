@@ -756,5 +756,41 @@ export const tokens = [
         effect3linger: ""
       }
     ]
+},
+{
+    id: "9022",
+    name: "Ghost Token",
+    image: `${tokenArtFolder}/Ghost.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Token"],
+    damage: "X",
+    life: "X",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "This Token’s Damage and Life are equal to the Damage and Life of the Targeted Champion in the Tomb. Destroy this Token if the Targeted Champion leaves the Tomb.",
+        keywords: ["blank"],
+        effect1name: "",
+        effect1type: "OnRally",
+        effect1condition: "",
+        effect1cost: "",
+        effect1text: "CopyTargetLifeDamage",
+        effect1linger: "DestroyIfTargetLeaves",
+        effect2name: "",
+        effect2type: "",
+        effect2condition: "",
+        effect2cost: "",
+        effect2text: "",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
 }
 ];

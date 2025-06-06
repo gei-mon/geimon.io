@@ -952,6 +952,44 @@ export const cards = [
     ]
   },
   {
+    id: "26",
+    name: "Binding Cryptbound Tether",
+    image: `${cardArtFolder}/Actions/BindingCryptboundTether.png`,
+    type: "Action",
+    condition: "",
+    cardConditionFunction: "",
+    cardCostFunction: "",
+    cost: "",
+    tags: ["Action"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Offer 4 Life; Add 1 Cryptbound.",
+        keywords: ["blank"],
+        effect1name: "",
+        effect1type: "Standard",
+        effect1condition: "",
+        effect1cost: "Offer4",
+        effect1text: "Add1Cryptbound",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: [""],
+        effect2condition: "",
+        effect2cost: "",
+        effect2text: "",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
     id: "61",
     name: "Areza, Town Harlot",
     image: `${cardArtFolder}/Champions/ArezaHarlot.png`,
