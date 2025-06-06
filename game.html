@@ -603,8 +603,14 @@
                 }
 
                 if (hasDrawnInitialHand && newLength > prevLength) {
-                    const numDrawn = newLength - prevLength;
-                    addGameLogEntry(`${username} drew ${numDrawn} card${numDrawn > 1 ? 's' : ''}`);
+                    const prevIds = new Set(previousHandIds);
+                    const newCards = currentHand.filter(c => !prevIds.has(c.id));
+
+                    const drawnCards = newCards.filter(c => c.lastBoardState === "Deck");
+
+                    if (drawnCards.length > 0) {
+                        addGameLogEntry(`${username} drew ${drawnCards.length} card${drawnCards.length > 1 ? 's' : ''}`);
+                    }
                 }
             }
 
@@ -1381,7 +1387,6 @@
                 if (phase === "End" && gameState.turn.currentPlayer === username) {
                     updatePhaseDisplay(phase);
                     triggerPhaseWaveEffect();
-                    addGameLogEntry(`${player} changed phase to ${phase}`);
                     if (gameState[username].Hand.length > 6) {
                         await handleCardDiscard(
                             gameState,
@@ -1417,9 +1422,7 @@
 
             updatePhaseDisplay(data.currentPhase);
             triggerPhaseWaveEffect();
-            if (data.currentPhase !== "Intermission" || phase !== "End") {
-                addGameLogEntry(`${username} changed phase to ${data.currentPhase}`);
-            }
+            addGameLogEntry(`${username} changed phase to ${data.currentPhase}`);
             await updateLocalFromGameState();
 
             // ✅ Handle game end conditions

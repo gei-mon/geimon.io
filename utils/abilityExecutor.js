@@ -161,7 +161,7 @@ export async function declareAbility(
         effectFunc = excavateCards;
       } else if (/^Excavate(Op)?\d+$/.test(effect)) {
         effectFunc = excavateCards;
-      } else if (/^Add\d+[A-Za-z]+$/.test(effect)  && gameState.canAddCards !== false) {
+      } else if ((/^Add\d+[A-Za-z]+$/.test(effect)) && gameState.canAddCards !== false) {
         effectFunc = addCardByCondition;
       } else if (/^Mill\d+$/.test(cost)) {
         const count = parseInt(cost.replace("Mill", ""));
@@ -247,7 +247,7 @@ async function confirmAbilityTrigger(cardName, effectText) {
     });
     //<p style="font-size: 0.9em; margin-bottom: 10px;">Effect: ${effectText}</p>
     overlay.innerHTML = `
-      <p>Activate <strong>${cardName}</strong>'s ability?</p>
+      <p>Activate the effect of <strong>${cardName}</strong>?</p>
       <button id="confirm-ability">Yes</button>
       <button id="cancel-ability" style="margin-left: 10px;">No</button>
     `;
@@ -818,10 +818,11 @@ async function promptUserToSelect(cards, max, message) {
       const el = renderCard(card);
       el.classList.add("selectable");
       el.style.cursor = "pointer";
+      el.style.transform = "scale(0.5)";
+      el.style.transformOrigin = "top left";
+      el.dataset.cardId = card.id;
 
-      const cardId = card.id;
-      el.dataset.cardId = cardId;
-
+      // Set up click handling before wrapping
       const button = el.querySelector(".card-button");
       if (button) {
         button._originalHandler = button.onclick;
@@ -836,8 +837,22 @@ async function promptUserToSelect(cards, max, message) {
         updateSelection(card, el);
       };
 
-      container.appendChild(el);
+      // Create a wrapper that maintains scaled layout integrity
+      const wrapper = document.createElement("div");
+      wrapper.style.width = `${260 * 0.5}px`;      // Adjust to your card's native width
+      wrapper.style.height = `${400 * 0.5}px`;     // Adjust to your card's native height
+      wrapper.style.overflow = "visible";
+      wrapper.style.position = "relative";
+      wrapper.style.display = "inline-block";
+      wrapper.style.marginRight = "5px";
+      wrapper.style.gap = "20px";
+      wrapper.style.padding = "20px";
+      wrapper.style.transform = "translateX(50px)";
+      wrapper.appendChild(el);
+
+      container.appendChild(wrapper);
     }
+
 
     function updateSelection(card, element) {
       // Deselect previously selected card
@@ -980,6 +995,11 @@ async function handleLinger(lingerText, card, gameState, username, gameId, updat
       case "Add1Revealed":
         const selected = await promptUserToSelect(window.lastExcavatedCards, 1, "Choose 1 card to add to your hand.");
         if (selected.length > 0) {
+          if (gameState.canAddCards === false) {
+            addGameLogEntry(`${username} attempted to add a card to hand, but was blocked by the Blindfolded Totem.`);
+            break;
+          }
+
           const chosen = selected[0];
           const index = gameState[window.lastExcavatedSource].Deck.findIndex(c => String(c.id) === String(chosen.id));
           if (index !== -1) {
@@ -1316,8 +1336,8 @@ export function retrieveCardByCondition(
       });
 
       const scale = 0.3;
-      const cardWidth = 240;
-      const cardHeight = 420;
+      const cardWidth = 260;
+      const cardHeight = 400;
 
       validTargets.forEach((targetCard) => {
         const scaledCard = renderCard(targetCard);
