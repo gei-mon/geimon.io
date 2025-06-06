@@ -85,7 +85,7 @@ function hasUsedEffectThisTurn(gameId, turn, cardId, effectText) {
 }
 
 const effectMap = {
-  ResurrectSelf,
+  resurrectByCondition,
   retrieveCardByCondition
 };
 
@@ -117,10 +117,13 @@ export async function declareAbility(
         const currentTurn = gameState.turn?.count ?? 0;
 
         if (!hasUsedEffectThisTurn(gameId, currentTurn, cardId, text)) {
-          // Handle dynamic retrieval effects like RetrieveDifferentUndead
-          if (gameState.canRetrieve !== false && text.startsWith("Retrieve")) { //handle Tomb Raider Rejects totem
+          if (gameState.canRetrieve !== false && text.startsWith("Retrieve")) {
             promises.push(
               retrieveCardByCondition(text, card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, batchMilledCards)
+            );
+          } else if (gameState.canResurrect !== false && text.startsWith("Resurrect")) {
+            promises.push(
+              resurrectByCondition(text, card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry)
             );
           } else {
             const effectFunc = effectMap[text];
@@ -645,76 +648,178 @@ export function checkLingerEffects(card, newZone, gameState, addGameLogEntry) {
   return false; // No interception
 }
 
-export function ResurrectSelf(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
-  // Create a centered overlay prompt instead of window.confirm
-  const overlay = document.createElement("div");
-  Object.assign(overlay.style, {
-    position: "fixed",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    padding: "20px",
-    backgroundColor: "#333",
-    color: "white",
-    border: "2px solid white",
-    borderRadius: "10px",
-    zIndex: 120001,
-    textAlign: "center",
-    boxShadow: "0 0 10px black"
-  });
+export function resurrectByCondition(
+  effectText,
+  card,
+  gameState,
+  username,
+  gameId,
+  updateLocalFromGameState,
+  addGameLogEntry
+) {
+  return new Promise((resolve) => {
+    const tomb = gameState[username]?.Tomb || [];
 
-  overlay.innerHTML = `
-    <p>${card.name} has a resurrection effect. Do you want to activate it?</p>
-    <button id="resurrect-yes">Yes</button>
-    <button id="resurrect-no" style="margin-left: 10px;">No</button>
-  `;
-  document.body.appendChild(overlay);
+    if (effectText === "ResurrectSelf") {
+      const index = tomb.findIndex(c => String(c.id) === String(card.id));
+      if (index === -1) {
+        console.warn("❌ Cannot resurrect self; not in tomb.");
+        return resolve();
+      }
 
-  document.getElementById("resurrect-yes").onclick = async () => {
-    // Remove card from Tomb
-    const tomb = gameState[username].Tomb;
-    const index = tomb.findIndex(c => String(c.id) === String(card.id));
-    if (index === -1) {
-      console.warn("❌ Could not find card in Tomb to resurrect.");
-      document.body.removeChild(overlay);
-      return;
+      // Confirm prompt
+      const overlay = document.createElement("div");
+      Object.assign(overlay.style, {
+        position: "fixed",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        padding: "20px",
+        backgroundColor: "#333",
+        color: "white",
+        border: "2px solid white",
+        borderRadius: "10px",
+        zIndex: 120001,
+        textAlign: "center"
+      });
+
+      overlay.innerHTML = `
+        <p>${card.name} has a resurrection effect. Do you want to activate it?</p>
+        <button id="resurrect-self-yes">Yes</button>
+        <button id="resurrect-self-no" style="margin-left: 10px;">No</button>
+      `;
+      document.body.appendChild(overlay);
+
+      document.getElementById("resurrect-self-yes").onclick = async () => {
+        tomb.splice(index, 1);
+        card.lastBoardState = "Tomb";
+        card.boardState = "Zone (Champion)";
+        card.currentZone = "Zone (Champion)";
+        card.lingerEffect = "ObliterateWhenLeave";
+        gameState[username]["Zone (Champion)"].push(card);
+
+        await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            gameId,
+            owner: username,
+            updatedZones: {
+              Tomb: gameState[username].Tomb,
+              "Zone (Champion)": gameState[username]["Zone (Champion)"]
+            }
+          })
+        });
+
+        addGameLogEntry(`${username} resurrected ${card.name} from the Tomb.`);
+        document.body.removeChild(overlay);
+        updateLocalFromGameState(gameState);
+        resolve();
+      };
+
+      document.getElementById("resurrect-self-no").onclick = () => {
+        addGameLogEntry(`${username} declined to resurrect ${card.name}.`);
+        document.body.removeChild(overlay);
+        resolve();
+      };
+
+    } else {
+      // e.g., Resurrect1Knight
+      const match = effectText.match(/^Resurrect(\d+)([A-Za-z]+)$/);
+      if (!match) {
+        console.warn(`❌ Invalid resurrection effect format: ${effectText}`);
+        return resolve();
+      }
+
+      const [, countStr, tag] = match;
+      const count = parseInt(countStr);
+      const tagName = tag;
+
+      const validTargets = tomb.filter(c => c.tags?.includes(tagName));
+      if (validTargets.length === 0) {
+        alert(`No ${tagName} cards available in your Tomb to resurrect.`);
+        return resolve();
+      }
+
+      // UI: Select `count` number of cards
+      const overlay = document.createElement("div");
+      Object.assign(overlay.style, {
+        position: "fixed",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        padding: "20px",
+        backgroundColor: "#222",
+        color: "white",
+        border: "2px solid white",
+        borderRadius: "10px",
+        zIndex: 120001,
+        textAlign: "center"
+      });
+
+      overlay.innerHTML = `<p>Select up to ${count} ${tagName}(s) to resurrect.</p>`;
+      const list = document.createElement("div");
+      list.style.display = "flex";
+      list.style.flexWrap = "wrap";
+      list.style.gap = "10px";
+      overlay.appendChild(list);
+
+      const selected = new Set();
+
+      validTargets.forEach(target => {
+        const cardEl = renderCard(target);
+        cardEl.style.cursor = "pointer";
+        cardEl.onclick = () => {
+          if (selected.has(target)) {
+            selected.delete(target);
+            cardEl.style.outline = "none";
+          } else if (selected.size < count) {
+            selected.add(target);
+            cardEl.style.outline = "2px solid lime";
+          }
+        };
+        list.appendChild(cardEl);
+      });
+
+      const confirmBtn = document.createElement("button");
+      confirmBtn.textContent = "Confirm Resurrection";
+      confirmBtn.onclick = async () => {
+        const resurrected = [...selected];
+        resurrected.forEach(c => {
+          const i = tomb.findIndex(tc => tc.id === c.id);
+          if (i !== -1) tomb.splice(i, 1);
+          c.lastBoardState = "Tomb";
+          c.boardState = "Zone (Champion)";
+          c.currentZone = "Zone (Champion)";
+          c.lingerEffect = "ObliterateWhenLeave";
+          gameState[username]["Zone (Champion)"].push(c);
+        });
+
+        await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+          method: "POST",
+          credentials: "include",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            gameId,
+            owner: username,
+            updatedZones: {
+              Tomb: gameState[username].Tomb,
+              "Zone (Champion)": gameState[username]["Zone (Champion)"]
+            }
+          })
+        });
+
+        addGameLogEntry(`${username} resurrected ${resurrected.length} ${tagName}(s) from the Tomb.`);
+        document.body.removeChild(overlay);
+        updateLocalFromGameState(gameState);
+        resolve();
+      };
+
+      overlay.appendChild(confirmBtn);
+      document.body.appendChild(overlay);
     }
-    tomb.splice(index, 1);
-
-    // Prepare card for resurrection
-    card.lastBoardState = "Tomb";
-    card.boardState = "Zone (Champion)";
-    card.currentZone = "Zone (Champion)";
-    card.lingerEffect = "ObliterateWhenLeave";
-
-    // Add to Champion Zone
-    gameState[username]["Zone (Champion)"].push(card);
-
-    addGameLogEntry(`${username} resurrected ${card.name} from the Tomb.`);
-
-    // Push updated state to server
-    await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
-      method: "POST",
-      credentials: "include",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        gameId,
-        owner: username,
-        updatedZones: {
-          Tomb: gameState[username].Tomb,
-          "Zone (Champion)": gameState[username]["Zone (Champion)"]
-        }
-      })
-    });
-
-    document.body.removeChild(overlay);
-    updateLocalFromGameState(gameState);
-  };
-
-  document.getElementById("resurrect-no").onclick = () => {
-    addGameLogEntry(`${username} chose not to resurrect ${card.name}.`);
-    document.body.removeChild(overlay);
-  };
+  });
 }
 
 export function retrieveCardByCondition(
