@@ -1205,13 +1205,6 @@
                         if (response.ok) {
                         const data = await response.json();
 
-                        if (data.success && data.lifeTotals) {
-                            const player1 = gameState.player1;
-                            const player2 = gameState.player2;
-                            gameState[player1].life = data.lifeTotals[player1];
-                            gameState[player2].life = data.lifeTotals[player2];
-                        }
-
                         updatePhaseDisplay(data.currentPhase);
                         addGameLogEntry(`${username} changed phase to ${data.currentPhase}`);
                         await updateLocalFromGameState();
@@ -1311,6 +1304,13 @@
                         );
                     return; // 🛑 Prevent premature turn advancement
                 }
+                const selectedTotem = params.get("totem");
+                const player1 = gameState.player1;
+                const player2 = gameState.player2;
+                if (selectedTotem === "Pendulum of Pain") {
+                    AbilityExecutor.changeLife(player1, -1, gameState, username, gameId);
+                    AbilityExecutor.changeLife(player2, -1, gameState, username, gameId);
+                }
             }
 
             // ✅ Normal flow if no discards needed
@@ -1323,13 +1323,6 @@
 
             if (response.ok) {
             const data = await response.json();
-
-            if (data.success && data.lifeTotals) {
-                const player1 = gameState.player1;
-                const player2 = gameState.player2;
-                gameState[player1].life = data.lifeTotals[player1];
-                gameState[player2].life = data.lifeTotals[player2];
-            }
 
             updatePhaseDisplay(data.currentPhase);
             addGameLogEntry(`${username} changed phase to ${data.currentPhase}`);

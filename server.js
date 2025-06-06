@@ -873,12 +873,6 @@ app.post('/setPhase', (req, res) => {
       setTimeout(() => performBotTurn(game), 300);
     }
 
-    //If totem is Pendulum of Pain
-    if (game.endPhaseDamage) {
-      game[game.player1].life -= game.endPhaseDamage;
-      game[game.player2].life -= game.endPhaseDamage;
-    }
-
     //If totem is Countdown Clocktower
     if (game.turnLimit && game.turn.count >= 12) {
       const opponentName = (game.player1 === username) ? game.player2 : game.player1;
@@ -906,14 +900,7 @@ app.post('/setPhase', (req, res) => {
       return res.json({ success: true, loser, reason });
     }
   }
-  return res.json({
-    success: true,
-    currentPhase: phase,
-    lifeTotals: {
-      [game.player1]: game[game.player1].life,
-      [game.player2]: game[game.player2].life,
-    }
-  });
+  return res.json({ success: true, currentPhase: phase });
 });
 
 // GET /logout
