@@ -150,10 +150,10 @@ export async function declareAbility(
         effectFunc = retrieveCardByCondition;
       } else if (effect.startsWith("Resurrect") && gameState.canResurrect !== false) {
         effectFunc = resurrectByCondition;
-      } else if (/^Add\d+[A-Za-z]+$/.test(effect)) {
-        effectFunc = addCardByCondition;
       } else if (/^Excavate(Op)?\d+$/.test(cost)) {
         effectFunc = excavateCards;
+      } else if (/^Add\d+[A-Za-z]+$/.test(effect)  && gameState.canAddCards !== false) {
+        effectFunc = addCardByCondition;
       } else if (effectMap[effect]) {
         effectFunc = effectMap[effect];
       }
