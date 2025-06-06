@@ -46,22 +46,29 @@ export function getCardElement(cardId, zoneSelector = "#playerChampionsBox") {
 
 export async function highlightAttackableChampions(gameState, username) {
   const champions = gameState[username]["Zone (Champion)"] || [];
+  const playerAttackCount = gameState[username].playerAttackCount ?? 0;
+  const maxAttacksPerTurn = gameState[username].maxAttacksPerTurn ?? Infinity;
+
   champions.forEach(card => {
-    const attackCount = card.champAttackCount ?? 0;
-    const maxAttacks = card.champMaxAttacks ?? 1;
+    const champAttackCount = card.champAttackCount ?? 0;
+    const champMaxAttacks = card.champMaxAttacks ?? 1;
+
     const el = getCardElement(card.id, "#playerChampionsBox");
     if (!el) return;
 
-    if (attackCount < maxAttacks) {
-      // Add highlight if not already present
+    const cardCanAttack = (
+      champAttackCount < champMaxAttacks &&
+      playerAttackCount < maxAttacksPerTurn &&
+      !(card.tags?.includes("exhausted")) &&
+      !(card.tags?.includes("destroyed"))
+    );
+
+    if (cardCanAttack) {
       if (!el.classList.contains("can-attack-highlight")) {
         el.classList.add("can-attack-highlight");
       }
     } else {
-      // Remove highlight if present
-      if (el.classList.contains("can-attack-highlight")) {
-        el.classList.remove("can-attack-highlight");
-      }
+      el.classList.remove("can-attack-highlight");
     }
   });
 }
