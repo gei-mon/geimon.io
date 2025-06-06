@@ -1206,6 +1206,8 @@
                         const data = await response.json();
 
                         if (data.success && data.lifeTotals) {
+                            const player1 = gameState.player1;
+                            const player2 = gameState.player2;
                             gameState[player1].life = data.lifeTotals[player1];
                             gameState[player2].life = data.lifeTotals[player2];
                         }
@@ -1323,6 +1325,8 @@
             const data = await response.json();
 
             if (data.success && data.lifeTotals) {
+                const player1 = gameState.player1;
+                const player2 = gameState.player2;
                 gameState[player1].life = data.lifeTotals[player1];
                 gameState[player2].life = data.lifeTotals[player2];
             }
