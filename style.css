@@ -727,7 +727,18 @@ background-color: #29c7bd;
 #player-side,
 #opponent-side {
     position: relative;
-    overflow: hidden;
+    width: 100%;
+    height: 50vh; /* half viewport height */
+    overflow: visible; /* allow flash to expand outside */
+}
+
+#player-side {
+    bottom: 0;
+    /* optional to position: absolute if needed */
+}
+
+#opponent-side {
+    top: 0;
 }
 
 .life-flash {
@@ -736,16 +747,15 @@ background-color: #29c7bd;
     height: 300px;
     border-radius: 50%;
     opacity: 0;
-    transform: scale(0);
     pointer-events: none;
     z-index: 1000;
     left: 50%;
-    translate: -50%;
+    transform: translateX(-50%) scale(0);
     transition: transform 0.6s ease-out, opacity 0.6s ease-out;
 }
 
 .life-flash.active {
-    transform: scale(4);
+    transform: translateX(-50%) scale(4);
     opacity: 0.5;
 }
 
