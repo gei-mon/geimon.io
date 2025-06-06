@@ -112,45 +112,77 @@ export async function declareAbility(
   for (const ability of abilities) {
     for (const num of [1, 2, 3]) {
       const type = ability[`effect${num}type`];
-      const text = ability[`effect${num}text`];
+      const condition = ability[`effect${num}condition`] || "";
+      const cost = ability[`effect${num}cost`] || "";
+      const text = ability[`effect${num}text`] || "";
+      const linger = ability[`effect${num}linger`] || "";
 
-      if (type === triggerType && text) {
-        const cardId = card.id;
-        const currentTurn = gameState.turn?.count ?? 0;
+      const typeMatches = Array.isArray(type) ? type.includes(triggerType) : type === triggerType;
+      if (!typeMatches || (!text && !cost)) continue;
 
-        if (!hasUsedEffectThisTurn(gameId, currentTurn, cardId, text)) {
-          if (gameState.canRetrieve !== false && text.startsWith("Retrieve")) {
-            promises.push(
-              retrieveCardByCondition(text, card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, batchMilledCards)
-            );
-          } else if (gameState.canResurrect !== false && text.startsWith("Resurrect")) {
-            promises.push(
-              resurrectByCondition(text, card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry)
-            );
-          } else {
-            let effectFunc = effectMap[text];
+      const cardId = card.id;
+      const currentTurn = gameState.turn?.count ?? 0;
 
-            if (!effectFunc) {
-              // Handle generic Add1X cases
-              if (/^Add1[A-Za-z]+$/.test(text)) {
-                effectFunc = effectMap.Add;
-              } else if (/^Excavate(Op)?\d+$/.test(ability[`effect${num}cost`] || "")) {
-                effectFunc = effectMap.Excavate;
-              }
-            }
+      if (hasUsedEffectThisTurn(gameId, currentTurn, cardId, text)) continue;
 
-            if (effectFunc) {
-              promises.push(
-                effectFunc(text, card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, batchMilledCards)
-              );
-            } else {
-              console.warn(`⚠️ Effect "${text}" not found in effectMap`);
-            }
-          }
-        }
+      // === CONDITION (Future: expand logic here if needed) ===
+      if (condition) {
+        const passed = await evaluateAbilityCondition(condition, card, gameState, username);
+        if (!passed) continue;
+      }
+
+      // === COST STAGE ===
+      if (cost && !(await payAbilityCost(cost, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry))) {
+        continue;
+      }
+
+      // === MAIN EFFECT ===
+      const effect = text;
+
+      let effectFunc = null;
+      if (
+        cost.startsWith("Excavate") &&
+        effect === "Add1Revealed" &&
+        linger === "ObliterateOthers"
+      ) {
+        effectFunc = excavateCards; // already handles all 3 in one
+      } else if (effect.startsWith("Retrieve") && gameState.canRetrieve !== false) {
+        effectFunc = retrieveCardByCondition;
+      } else if (effect.startsWith("Resurrect") && gameState.canResurrect !== false) {
+        effectFunc = resurrectByCondition;
+      } else if (/^Add\d+[A-Za-z]+$/.test(effect)) {
+        effectFunc = addCardByCondition;
+      } else if (/^Excavate(Op)?\d+$/.test(cost)) {
+        effectFunc = excavateCards;
+      } else if (effectMap[effect]) {
+        effectFunc = effectMap[effect];
+      }
+
+      if (!effectFunc) {
+        console.warn(`⚠️ No effect handler for "${effect}"`);
+        continue;
+      }
+
+      const promise = effectFunc(
+        effect,
+        card,
+        gameState,
+        username,
+        gameId,
+        updateLocalFromGameState,
+        addGameLogEntry,
+        batchMilledCards
+      );
+      promises.push(promise);
+
+      // === LINGER POST-EFFECT (basic hook) ===
+      if (linger) {
+        const lingerPromise = handleLinger(linger, card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+        if (lingerPromise) promises.push(lingerPromise);
       }
     }
   }
+
   await Promise.all(promises);
 }
 
@@ -756,13 +788,14 @@ export async function excavateCards(effectText, card, gameState, username, gameI
 }
 
 export async function addCardByCondition(effectText, sourceCard, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
-  const match = effectText.match(/^Add1([A-Za-z]+)$/);
+  const match = effectText.match(/^Add(\d+)([A-Za-z]+)$/);
   if (!match) {
     console.warn(`❌ Invalid Add effect format: "${effectText}"`);
     return;
   }
 
-  const target = match[1];
+  const count = parseInt(match[1]);
+  const target = match[2];
   const deck = gameState[username].Deck;
 
   const valid = deck.filter(card => {
@@ -782,19 +815,59 @@ export async function addCardByCondition(effectText, sourceCard, gameState, user
     return;
   }
 
-  const selected = await promptUserToSelect(valid, 1, `Choose 1 card to Add to Hand matching: ${target}`);
+  const selected = await promptUserToSelect(valid, Math.min(count, valid.length), `Choose up to ${count} card(s) to Add to Hand matching: ${target}`);
   if (!selected.length) return;
 
-  const chosen = selected[0];
-  const index = deck.findIndex(c => c.id === chosen.id);
-  if (index !== -1) deck.splice(index, 1);
-  chosen.lastBoardState = "Deck";
-  chosen.boardState = "Hand";
-  gameState[username].Hand.push(chosen);
+  for (const chosen of selected) {
+    const index = deck.findIndex(c => c.id === chosen.id);
+    if (index !== -1) deck.splice(index, 1);
+    chosen.lastBoardState = "Deck";
+    chosen.boardState = "Hand";
+    gameState[username].Hand.push(chosen);
+    addGameLogEntry(`${username} added ${chosen.name} to hand from deck.`);
+  }
 
   await updateGameStateZones(username, gameId, gameState, ["Deck", "Hand"]);
-  addGameLogEntry(`${username} added ${chosen.name} to hand from deck.`);
   updateLocalFromGameState();
+}
+
+async function evaluateAbilityCondition(condition, card, gameState, username) {
+  // Extend this for future condition types
+  if (condition === "") return true;
+  if (condition === "IfWouldDie") {
+    return card.boardState === "Zone (Champion)" || card.lastBoardState === "Zone (Champion)";
+  }
+  console.warn(`⚠️ Unknown condition: "${condition}"`);
+  return true;
+}
+
+async function payAbilityCost(cost, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
+  if (!cost) return true;
+
+  const compositeMatch = /^(Offer|Mill|Sacrifice)\d+(.*)/.exec(cost);
+  if (compositeMatch || cost.includes("Offer") || cost.includes("Mill") || cost.includes("Sacrifice")) {
+    const fakeCard = { cardCostFunction: cost }; // Reuse your existing logic
+    return await handleCardCostFunction(fakeCard, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+  }
+
+  // Extend here if needed
+  console.warn(`⚠️ Unknown cost format: "${cost}"`);
+  return true;
+}
+async function handleLinger(lingerText, card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
+  switch (lingerText) {
+    case "ObliterateOthers":
+      // This is handled inside excavateCards already. No-op here.
+      return null;
+
+    case "StackBackSameOrder":
+      // Could implement stacking logic here if ever needed separately.
+      return null;
+
+    default:
+      console.warn(`⚠️ Unrecognized linger effect: "${lingerText}"`);
+      return null;
+  }
 }
 
 export function resurrectByCondition(
