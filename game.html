@@ -642,6 +642,7 @@
             }
             gameState[username]["Zone (Champion)"].forEach(card => {
                 BattleExecutor.initializeChampionForBattle(card);
+                //console.log(`After updateLocalFromGameState: ${card.name} champAttackCount = ${card.champAttackCount}`);
             });
             await maybeAutoAdvanceFromIntermission();
 
@@ -650,30 +651,25 @@
 
                 const championZone = document.getElementById("playerChampionsBox");
                 championZone.querySelectorAll(".card-button").forEach(button => {
-                    const originalClick = button.onclick;
-                    button._originalHandler = originalClick;
-
                     button.onclick = async (event) => {
-                    event.stopPropagation();
-                    event.preventDefault();
+                        event.stopPropagation();
+                        event.preventDefault();
 
-                    const parentCard = button.closest(".card");
-                    const cardId = parentCard?.dataset.cardId;
-                    if (!cardId) return;
+                        const parentCard = button.closest(".card");
+                        const cardId = parentCard?.dataset.cardId;
+                        if (!cardId) return;
 
-                    const cardData = gameState[username]["Zone (Champion)"].find(c => String(c.id) === cardId);
-                    if (!cardData) return;
+                        const cardData = gameState[username]["Zone (Champion)"].find(c => String(c.id) === cardId);
+                        if (!cardData) return;
 
-                    const element = BattleExecutor.getCardElement(cardData.id, "#playerChampionsBox");
-
-                    await BattleExecutor.handleChampionClick(
-                        cardData,
-                        gameState,
-                        username,
-                        gameId,
-                        updateLocalFromGameState,
-                        addGameLogEntry
-                    );
+                        await BattleExecutor.handleChampionClick(
+                            cardData,
+                            gameState,
+                            username,
+                            gameId,
+                            updateLocalFromGameState,
+                            addGameLogEntry
+                        );
                     };
                 });
             }
@@ -1424,6 +1420,8 @@
                         gameState[username].maxAttacksPerTurn = Infinity;
                     }
                     gameState[username].playerAttackCount = 0;
+                    //console.log(`Starting Battle phase for ${username}, resetting attack counts.`);
+                    await BattleExecutor.resetChampionAttackCounts(gameState, username, gameId);
 
                     // Highlight all attackable champions
                     await BattleExecutor.highlightAttackableChampions(gameState, username);
@@ -3681,6 +3679,10 @@
                 playerDeckBox.innerText = "Deck";
             });
         }
+
+    document.addEventListener("gameStateUpdated", () => {
+        updateLocalFromGameState();
+    });
 
     document.addEventListener("DOMContentLoaded", () => {
         const tooltip = document.getElementById("tooltip");

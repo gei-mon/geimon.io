@@ -23,6 +23,11 @@ export function initializeChampionForBattle(card) {
   }
 }
 
+export function notifyUIUpdate() {
+    const event = new CustomEvent("gameStateUpdated");
+    document.dispatchEvent(event);
+}
+
 export function addTag(card, tag) {
   card.tags = card.tags || [];
   if (!card.tags.includes(tag)) {
@@ -40,37 +45,62 @@ export function getCardElement(cardId, zoneSelector = "#playerChampionsBox") {
 }
 
 export async function highlightAttackableChampions(gameState, username) {
-  document.querySelectorAll(".can-attack-highlight").forEach(el => {
-    el.classList.remove("can-attack-highlight");
-  });
-
   const champions = gameState[username]["Zone (Champion)"] || [];
   champions.forEach(card => {
     const attackCount = card.champAttackCount ?? 0;
     const maxAttacks = card.champMaxAttacks ?? 1;
+    const el = getCardElement(card.id, "#playerChampionsBox");
+    if (!el) return;
+
     if (attackCount < maxAttacks) {
-      const el = getCardElement(card.id, "#playerChampionsBox");
-      if (el) el.classList.add("can-attack-highlight");
+      // Add highlight if not already present
+      if (!el.classList.contains("can-attack-highlight")) {
+        el.classList.add("can-attack-highlight");
+      }
+    } else {
+      // Remove highlight if present
+      if (el.classList.contains("can-attack-highlight")) {
+        el.classList.remove("can-attack-highlight");
+      }
     }
   });
 }
 
-export async function handleChampionClick(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
-  card.tags = card.tags || [];
+export async function handleChampionClick(clickedCard, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
+  const playerChampions = gameState[username]["Zone (Champion)"] || [];
+  const cardIndex = playerChampions.findIndex(c => String(c.id) === String(clickedCard.id));
+    if (cardIndex < 0) return;
+    const card = playerChampions[cardIndex];
 
-  // Prevent if exhausted or already attacked
-  if (card.tags.includes("exhausted")) {
-    alert(`${card.name} cannot attack because it is exhausted.`);
+  if (!card) {
+    console.warn("❌ Clicked champion not found in gameState");
     return;
   }
 
-    const attackCount = card.champAttackCount ?? 0;
-    const maxChampAttacks = card.champMaxAttacks ?? 1;
-    if (attackCount >= maxChampAttacks) {
-    alert(`${card.name} cannot attack more than ${maxChampAttacks} time(s) this turn.`);
-    return;
-    }
+  //console.log(`handleChampionClick called for ${card.name} (ID: ${card.id})`);
+  //console.log(`  champAttackCount: ${card.champAttackCount ?? 0}, champMaxAttacks: ${card.champMaxAttacks ?? 1}`);
+  //console.log(`  tags: ${JSON.stringify(card.tags)}`);
 
+  card.tags = card.tags || [];
+
+  // Prevent if exhausted or already attacked max times for this champion
+  if (card.tags.includes("exhausted")) {
+    //console.log(`${card.name} is exhausted, cannot attack.`);
+    //alert(`${card.name} cannot attack because it is exhausted.`);
+    return;
+  }
+
+  if ((card.champAttackCount ?? 0) >= (card.champMaxAttacks ?? 1)) {
+    //console.log(`${card.name} has already attacked max times this turn.`);
+    //alert(`${card.name} cannot attack more than ${card.champMaxAttacks ?? 1} time(s) this turn.`);
+    return;
+  }
+
+  // Check if player reached max attacks per turn
+  if ((gameState[username].playerAttackCount ?? 0) >= (gameState[username].maxAttacksPerTurn ?? Infinity)) {
+    //alert(`You can't attack more than ${gameState[username].maxAttacksPerTurn ?? '∞'} times this turn.`);
+    return;
+  }
 
   // Confirm attack prompt
   const confirmed = await new Promise(resolve => {
@@ -111,27 +141,41 @@ export async function handleChampionClick(card, gameState, username, gameId, upd
       resolve(false);
     };
   });
+  await new Promise(resolve => setTimeout(resolve, 500));
   if (!confirmed) return;
 
-  // Global max attacks per turn check (player-level)
-  const player = gameState[username];
-  const maxAttacks = player.maxAttacksPerTurn ?? Infinity;
-  player.playerAttackCount = (player.playerAttackCount ?? 0) + 1;
+  //console.log(`Attacking with ${card.name}. Previous attack count: ${card.champAttackCount ?? 0}, playerAttackCount: ${gameState[username].playerAttackCount ?? 0}`);
 
-  if (player.playerAttackCount > maxAttacks) {
-    alert(`You can't attack more than ${maxAttacks} time(s) this turn.`);
-    return;
-  }
+  // Proceed with attack: increment counters
+  gameState[username].playerAttackCount = (gameState[username].playerAttackCount ?? 0) + 1;
+  card.champAttackCount = (card.champAttackCount ?? 0) + 1;
+
+  await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+        gameId,
+        owner: username,
+        updatedZones: {
+        "Zone (Champion)": gameState[username]["Zone (Champion)"]
+        }
+    })
+    });
+
+  //console.log(`Updated attack counts - champAttackCount: ${card.champAttackCount}, playerAttackCount: ${gameState[username].playerAttackCount}`);
 
   // Opponent setup
-  const opponent = username === gameState.player1 ? gameState.player2 : gameState.player1;
-  const blockers = [...(gameState[opponent]["Zone (Champion)"] || []), ...(gameState[opponent]["FaceDownZone"] || [])];
+  const opponentName = username === gameState.player1 ? gameState.player2 : gameState.player1;
+  const blockers = [...(gameState[opponentName]["Zone (Champion)"] || []), ...(gameState[opponentName]["FaceDownZone"] || [])];
 
   if (blockers.length > 0 && confirm("Opponent has champions. Use a blocker?")) {
     highlightBlockers(blockers);
     const selected = await AbilityExecutor.promptUserToSelect(blockers, 1, "Select a blocker");
     if (selected.length > 0) {
-      await resolveBattle(card, selected[0], username, opponent, gameState, gameId, updateLocalFromGameState, addGameLogEntry);
+      await resolveBattle(card, selected[0], username, opponentName, gameState, gameId, updateLocalFromGameState, addGameLogEntry);
+      notifyUIUpdate();
+      await updateLocalFromGameState();
       return;
     }
     clearBlockerHighlights(blockers);
@@ -139,9 +183,15 @@ export async function handleChampionClick(card, gameState, username, gameId, upd
 
   // No blockers: direct attack
   const damage = card.damage ?? 0;
-  await AbilityExecutor.changeLife(opponent, -damage, gameState, username, gameId);
+  await AbilityExecutor.changeLife(opponentName, -damage, gameState, username, gameId);
   addGameLogEntry(`${card.name} attacked directly for ${damage} damage.`);
   markAsAttacked(card);
+
+  // Re-highlight attackable champions after attack
+  await highlightAttackableChampions(gameState, username);
+
+  notifyUIUpdate();
+  await updateLocalFromGameState();
 }
 
 export function highlightBlockers(cards) {
@@ -164,15 +214,47 @@ export function clearBlockerHighlights(cards) {
 
 
 export function markAsAttacked(card) {
-  console.log("⚔️ markAsAttacked called for:", card.name);
+  //console.log("⚔️ markAsAttacked called for:", card.name);
+
   card.tags = card.tags || [];
   if (!card.tags.includes("attacked")) card.tags.push("attacked");
   if (!card.tags.includes("exhausted")) card.tags.push("exhausted");
-  card.champAttackCount = (card.champAttackCount ?? 0) + 1;
+
+  //card.champAttackCount = (card.champAttackCount ?? 0) + 1;
 
   const el = document.querySelector(`.card[data-card-id="${card.id}"]`);
-  if (el) el.classList.remove("can-attack-highlight");
+  if (el) {
+    el.classList.remove("can-attack-highlight");
+  }
 }
+
+export async function resetChampionAttackCounts(gameState, username, gameId) {
+  //console.log(`resetChampionAttackCounts called for player: ${username}`);
+  const champions = gameState[username]["Zone (Champion)"] || [];
+
+  champions.forEach(card => {
+    card.champAttackCount = 0;
+    card.tags = card.tags || [];
+    removeTag(card, "attacked");
+    removeTag(card, "exhausted");
+    //console.log(`  Reset attack count & tags for: ${card.name} (ID: ${card.id})`);
+  });
+
+  // 🔁 PUSH updated state to server
+  await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      gameId,
+      owner: username,
+      updatedZones: {
+        "Zone (Champion)": gameState[username]["Zone (Champion)"]
+      }
+    })
+  });
+}
+
 
 export async function resolveBattle(attacker, blocker, attackerOwner, blockerOwner, gameState, gameId, updateLocalFromGameState, addGameLogEntry) {
   const attackerDamage = attacker.damage ?? 0;
@@ -192,6 +274,7 @@ export async function resolveBattle(attacker, blocker, attackerOwner, blockerOwn
   }
 
   markAsAttacked(attacker);
+  highlightAttackableChampions(gameState, username);
 }
 
 export async function destroyChampion(card, owner, gameState, gameId, updateLocalFromGameState, addGameLogEntry, byBattle = false) {
