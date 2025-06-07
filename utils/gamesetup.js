@@ -43,14 +43,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     playerDeckSelect.addEventListener("change", () => {
         const selectedDeckName = playerDeckSelect.value;
         const deck = deckData.find(d => d.deck_name === selectedDeckName);
-        /*if (selectedDeckName !== "Random" && deck && !deck.legal) {
+        if (selectedDeckName !== "Random" && deck && !deck.legal) {
             deckWarning.textContent = "Selected deck is not legal. It must be of legal size.";
             deckWarning.style.color = "red";
             startBtn.disabled = true;
         } else {
             deckWarning.textContent = "";
             startBtn.disabled = false;
-        }*/
+        }
     });
 });
 
