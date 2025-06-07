@@ -444,6 +444,7 @@
 
             let previousHandIds = [];
             let lastDrawTurn = null;
+            let gameEnded = false;
 
             function addGameLogEntry(message) {
                 if (!username) {
@@ -3176,17 +3177,17 @@
             }
         }
         async function drawCards(deck, numCards = 5) {
-            const player = gameState[username];
-            const deckZone = player.Deck;
+            if (deck.length < numCards) {
+                if (gameEnded) return [];
+                gameEnded = true;
 
-            if (deckZone.length < numCards) {
                 console.warn("🛑 Not enough cards left to draw. Deckout loss triggered.");
 
                 const opponent = Object.keys(gameState).find(p =>
                     p !== username && p !== "turn" && p !== "player1" && p !== "player2"
                 );
 
-                // Notify the server that this player loses
+                // Notify server
                 await fetch("https://geimon-app-833627ba44e0.herokuapp.com/endGame", {
                     method: "POST",
                     credentials: "include",
@@ -3198,25 +3199,18 @@
                     })
                 });
 
-                // Show loss banner on client
+                // Client loss banner
                 showBanner("You Lose", "Deck-out: Tried to draw with no cards left");
+
                 return [];
             }
 
-            function getCardsFromZone(zone, count) {
-                return zone.splice(0, count);
-            }
-
-            function renderZone(zoneName, owner = username) {
-                const cards = gameState[owner][zoneName];
-            }
-
-            const drawnCards = getCardsFromZone(deckZone, numCards);
+            const drawnCards = deck.splice(0, numCards);
             drawnCards.forEach(card => {
                 card.lastBoardState = card.boardState;
                 card.boardState = "Hand";
             });
-            player.Hand.push(...drawnCards);
+            gameState[username].Hand.push(...drawnCards);
 
             await sendZoneUpdate(["Deck", "Hand"]);
             renderDrawnCards();
@@ -3700,6 +3694,32 @@
 
     document.addEventListener("gameStateUpdated", () => {
         updateLocalFromGameState();
+    });
+
+    document.addEventListener("playerLifeReachedZero", async (e) => {
+        if (gameEnded) return;
+        gameEnded = true;
+        const loser = e.detail.player;
+        const winner = Object.keys(gameState).find(name =>
+            name !== loser && name !== "turn" && name !== "player1" && name !== "player2"
+        );
+
+        await fetch("https://geimon-app-833627ba44e0.herokuapp.com/endGame", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                gameId,
+                loser,
+                reason: "Life reached 0"
+            })
+        });
+
+        if (loser === username) {
+            showBanner("You Lose", "Your life reached 0");
+        } else {
+            showBanner("You Win", "Opponent’s life reached 0");
+        }
     });
 
     document.addEventListener("DOMContentLoaded", () => {

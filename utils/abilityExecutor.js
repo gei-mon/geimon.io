@@ -362,11 +362,21 @@ export function changeLife(player, amount, gameState, username, gameId) {
         flash.className = `life-flash ${amount > 0 ? "heal" : "damage"} ${isSelf ? "bottom" : "top"}`;
         screenHalf.appendChild(flash);
 
-        // Trigger animation
         setTimeout(() => flash.classList.add("active"), 10);
         setTimeout(() => flash.remove(), 700);
     }
+
     sendLifeUpdate(gameId, gameState, player);
+
+    if (newLife <= 0) {
+        // Dispatch a custom event to trigger game loss
+        document.dispatchEvent(new CustomEvent("playerLifeReachedZero", {
+            detail: { player }
+        }));
+    }
+
+    // Return true if this reduced the player's life to 0
+    return newLife <= 0;
 }
 
 function animateLifeNumber(element, start, end) {
