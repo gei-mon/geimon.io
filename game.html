@@ -7,8 +7,13 @@
     <link href='https://fonts.googleapis.com/css?family=Racing Sans One' rel='stylesheet'>
     <link rel="icon" href="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/favicon.png" type="image/png">
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
     <title>ACTIVE GAME</title>
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+    <script>
+        window.socket = io("https://geimon-app-833627ba44e0.herokuapp.com", {
+            withCredentials: true
+        });
+    </script>
 </head>
 <style>
   #coin {
@@ -411,9 +416,6 @@
             import { rules } from "./data/rules.js";
             import * as AbilityExecutor from './utils/abilityExecutor.js';
             import * as BattleExecutor from './utils/battleExecutor.js';
-            const socket = io("https://geimon-app-833627ba44e0.herokuapp.com", {
-                withCredentials: true
-            });
 
             let gameId = new URLSearchParams(window.location.search).get("gameId");
             if (gameId) {
@@ -927,16 +929,20 @@
         window.onload = () => {
             (async () => {
                 await initGameClient();
-                socket.emit("join_game_room", { gameId });
-                    if (!username) {
-                        console.warn("Username not set after init.");
-                        return;
+                window.socket.emit("join_game_room", { gameId });
+                //console.log("Joined game room", gameId);
 
-                        socket.on("game_log", ({ username, message }) => {
-                            if (username === "Bot") {
-                                addGameLogEntry(message);
-                            }
-                        });
+                window.socket.on("game_log", ({ username, message }) => {
+                    //console.log("Username:", username);
+                    if (username === "Bot") {
+                        addGameLogEntry(message);
+                        //console.log("Bot log received:", message);
+                    }
+                });
+
+                if (!username) {
+                    console.warn("Username not set after init.");
+                    return;
                 }
 
             const params = new URLSearchParams(window.location.search);
@@ -2997,7 +3003,8 @@
             });
 
             // Fade in UI overlays
-            if (window.totemFullyFaded) {
+            if (window.totemFullyFaded && !window.totemFadeDoneEmitted) {
+                window.totemFadeDoneEmitted = true; // prevent multiple emits
                 setTimeout(() => {
                     viewingWindow.style.opacity = "1";
                     contextWindow.style.opacity = "1";
@@ -3006,6 +3013,7 @@
                     phaseTracker.style.opacity = "1";
                     turnCounter.style.opacity = "1";
                 }, 0);
+                window.socket.emit("totem_fade_done", { gameId });
             }
         }
 

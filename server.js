@@ -89,6 +89,9 @@ function generateRoomId() {
   return Math.random().toString(36).substring(2, 8);
 }
 
+const totemFadeStatus = new Map();
+const totemFadeWaited = new Set();
+
 io.on('connection', (socket) => {
   socket.on('init', ({ username, roomId }) => {
     let joinedRoom = roomId;
@@ -161,6 +164,9 @@ io.on('connection', (socket) => {
   });
   socket.on("join_game_room", ({ gameId }) => {
     socket.join(gameId);
+  });
+  socket.on("totem_fade_done", ({ gameId }) => {
+    totemFadeStatus.set(gameId, true);
   });
 });
 
@@ -774,7 +780,7 @@ app.post('/endGame', (req, res) => {
     console.log(`Game ${gameId} ended. Loser: ${loser}. Reason: ${reason}`);
 
     // Clean up or archive the gameState
-    delete gameStates[gameId];
+    gameStates.delete(gameId);
 
     res.json({ success: true });
 });
@@ -783,7 +789,25 @@ function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+async function waitForTotemFadeServer(gameId, timeout = 5000) {
+  // If we've already waited for this game's totem fade, skip waiting
+  if (totemFadeWaited.has(gameId)) return;
+
+  const start = Date.now();
+  while (!totemFadeStatus.get(gameId)) {
+    if (Date.now() - start > timeout) {
+      console.warn(`Timeout waiting for totem fade on game ${gameId}`);
+      break;
+    }
+    await delay(100);
+  }
+
+  // Mark that we've waited for this game's totem fade so we don't wait again
+  totemFadeWaited.add(gameId);
+}
+
 async function performBotTurn(game, gameId) {
+  await waitForTotemFadeServer(gameId);
   const phases = ["Intermission", "Draw", "Main 1", "Battle", "Main 2", "End"];
   //const startedTurn = game.turn.count;
   io.to(gameId).emit("game_log", {
@@ -813,6 +837,15 @@ async function performBotTurn(game, gameId) {
       if (bot.Deck.length > 0) {
         const drawCount = Math.min(cardsToDraw, bot.Deck.length);
         const drawn = bot.Deck.splice(0, drawCount);
+
+        if (bot.Deck.length < cardsToDraw) {
+          const loser = "Bot";
+          const winner = (game.player1 === "Bot") ? game.player2 : game.player1;
+          const reason = "Bot decked out.";
+          gameStates.delete(gameId);
+          io.to(gameId).emit("game_over", { loser, winner, reason });
+          return;
+        }
 
         drawn.forEach(card => {
           card.lastBoardState = "Deck";
@@ -851,7 +884,7 @@ if (game.turn.currentPlayer === "Bot") {
 
   // ✅ If bot is still up, repeat
   if (game.turn.currentPlayer === "Bot") {
-    setTimeout(() => performBotTurn(game), 300);
+    setTimeout(() => performBotTurn(game, gameId), 300);
   }
 }
 
@@ -895,7 +928,7 @@ app.post('/setPhase', (req, res) => {
 
       const reason = `Deck-out: Tried to draw ${numToDraw} card(s) with ${player.Deck.length} remaining`;
 
-      delete gameStates[gameId];
+      gameStates.delete(gameId);
 
       return res.json({
         success: true,
@@ -922,7 +955,7 @@ app.post('/setPhase', (req, res) => {
 
     // ✅ Trigger bot turn here if it's now the bot's turn
     if (game.turn.currentPlayer === "Bot") {
-      setTimeout(() => performBotTurn(game), 300);
+      setTimeout(() => performBotTurn(game, gameId), 300);
     }
 
     //If totem is Countdown Clocktower
@@ -947,7 +980,7 @@ app.post('/setPhase', (req, res) => {
 
       //console.log(`Game ${gameId} ended. Loser: ${loser}. Reason: ${reason}`);
 
-      delete gameStates[gameId];
+      gameStates.delete(gameId);
 
       return res.json({ success: true, loser, reason });
     }
