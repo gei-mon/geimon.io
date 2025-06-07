@@ -365,6 +365,7 @@
                 </div>
             </div>
         </div>
+        <div id="player-profile-pic"></div>
         <div id="player-side">
             <div class="player-life-window" id="player-life-window">
                 <div class="player-name" id="player-name"></div>
@@ -372,6 +373,7 @@
                 <div class="player-name" style="font-size: 80%;">Life</div>
             </div>
         </div>
+        <div id="opponent-profile-pic"></div>
         <div id="opponent-side">
             <div class="opponent-life-window" id="opponent-life-window">
                 <div class="opponent-name" id="opponent-name"></div>
@@ -1804,6 +1806,29 @@
                     zoneArtContainer.appendChild(zoneArtImage);
                     board.appendChild(zoneArtContainer);
                 }
+                const scale = window.innerWidth / 1920;
+                if (userData && userData.profilePic) {
+                    const playerProfilePic = document.createElement("div");
+                    playerProfilePic.style.position = "absolute";
+                    playerProfilePic.style.left = `${1835 * scale}px`;
+                    playerProfilePic.style.top = `${700 * scale}px`;
+                    playerProfilePic.style.width = `${100 * scale}px`;
+                    playerProfilePic.style.height = `${100 * scale}px`;
+                    playerProfilePic.style.zIndex = "100";
+                    playerProfilePic.style.overflow = "hidden";
+
+                    const profilePicImage = document.createElement("img");
+                    profilePicImage.src = `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/${userData.profilePic}`;
+                    profilePicImage.style.width = "100%";
+                    profilePicImage.style.height = "100%";
+                    profilePicImage.style.zIndex = "1100";
+                    profilePicImage.style.border = "6px solid black";
+                    profilePicImage.style.boxSizing = "border-box";
+                    profilePicImage.style.objectFit = "cover";
+
+                    playerProfilePic.appendChild(profilePicImage);
+                    board.appendChild(playerProfilePic);
+                }
             });
 
             // After all elements like playerDeckBox and deckText are added
@@ -2767,6 +2792,8 @@
             const contextWindow = document.getElementById("context-window");
             const playerLifeWindow = document.getElementById("player-life-window");
             const opponentLifeWindow = document.getElementById("opponent-life-window");
+            const playerProfilePic = document.getElementById("player-profile-pic");
+            const opponentProfilePic = document.getElementById("opponent-profile-pic");
             const phaseTracker = document.getElementById("phase-tracker");
             const turnCounter = document.getElementById("turn-counter");
             const currentPhase = gameState?.turn?.currentPhase;
