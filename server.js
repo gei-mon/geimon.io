@@ -864,7 +864,7 @@ app.post('/setPhase', (req, res) => {
       const loser = username;
       const winner = (game.player1 === username) ? game.player2 : game.player1;
 
-      const reason = `Deck-out: Tried to draw ${numToDraw} card(s) with only ${player.Deck.length} remaining`;
+      const reason = `Deck-out: Tried to draw ${numToDraw} card(s) with ${player.Deck.length} remaining`;
 
       delete gameStates[gameId];
 

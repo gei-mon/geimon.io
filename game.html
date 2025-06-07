@@ -596,11 +596,11 @@
 
             if (!handsAreEqual(currentHand)) {
                 drawnCardsArray = currentHand;
-                previousHandIds = currentHand.map(card => card.id);
                 renderDrawnCards();
 
                 if (!hasDrawnInitialHand && newLength >= 5) {
-                    //hasDrawnInitialHand = true;
+                    hasDrawnInitialHand = true;
+                    previousHandIds = currentHand.map(card => card.id);
                     return;
                 }
 
@@ -614,6 +614,7 @@
                         addGameLogEntry(`${username} drew ${drawnCards.length} card${drawnCards.length > 1 ? 's' : ''}`);
                     }
                 }
+                previousHandIds = currentHand.map(card => card.id);
             }
 
             remainingDeck = gameState[username].Deck;
