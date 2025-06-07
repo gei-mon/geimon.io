@@ -858,16 +858,30 @@ app.post('/setPhase', (req, res) => {
   // ✅ Draw logic — handled by server when user enters Draw phase
   if (phase === "Draw") {
     const player = game[username];
-    const totem = game.totem;
     const numToDraw = game.drawExtraCard ? 2 : 1;
-    if (player.Deck.length > 0) {
-      const drawn = player.Deck.splice(0, numToDraw);
-      drawn.forEach(card => {
-        card.lastBoardState = "Deck";
-        card.boardState = "Hand";
+
+    if (player.Deck.length < numToDraw) {
+      const loser = username;
+      const winner = (game.player1 === username) ? game.player2 : game.player1;
+
+      const reason = `Deck-out: Tried to draw ${numToDraw} card(s) with only ${player.Deck.length} remaining`;
+
+      delete gameStates[gameId];
+
+      return res.json({
+        success: true,
+        loser,
+        winner,
+        reason
       });
-      player.Hand.push(...drawn);
     }
+
+    const drawn = player.Deck.splice(0, numToDraw);
+    drawn.forEach(card => {
+      card.lastBoardState = "Deck";
+      card.boardState = "Hand";
+    });
+    player.Hand.push(...drawn);
   }
 
   if (phase === "End") {

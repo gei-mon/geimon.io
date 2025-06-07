@@ -616,7 +616,7 @@
                 }
             }
 
-            remainingDeck = player.Deck;
+            remainingDeck = gameState[username].Deck;
             updateDeckText();
 
             // ✅ Add this:
@@ -887,9 +887,9 @@
                     hasRedrawn = true;
                     const player = gameState[username];
                     const hand = player.Hand.splice(0);
-                    player.Deck.push(...hand);
+                    gameState[username].Deck.push(...hand);
                     addGameLogEntry(`${username} elected to redraw their Starting Hand.`);
-                    await drawCards(player.Deck, 5);
+                    await drawCards(gameState[username].Deck, 5);
                     await sendZoneUpdate(["Deck", "Hand"]);
                     await updateLocalFromGameState();
                 }
@@ -1327,24 +1327,24 @@
                         });
 
                         if (response.ok) {
-                        const data = await response.json();
+                            const data = await response.json();
 
-                        updatePhaseDisplay(data.currentPhase);
-                        triggerPhaseWaveEffect();
-                        //addGameLogEntry(`${username} changed phase to ${data.currentPhase}`);
-                        await updateLocalFromGameState();
-                        renderLatestTombCard();
+                            updatePhaseDisplay(data.currentPhase);
+                            triggerPhaseWaveEffect();
 
-                        // ✅ Handle game end conditions
-                        if (data.draw) {
-                            alert("The game ended in a draw.");
-                        } else if (data.loser) {
-                            if (data.loser === username) {
-                                showBanner("You Lose", data.reason);
-                            } else {
-                                showBanner("You Win", data.reason);
+                            await updateLocalFromGameState();
+                            renderLatestTombCard();
+
+                            // ✅ Add this block to handle deckout or other end conditions
+                            if (data.draw) {
+                                alert("The game ended in a draw.");
+                            } else if (data.loser) {
+                                if (data.loser === username) {
+                                    showBanner("You Lose", data.reason);
+                                } else {
+                                    showBanner("You Win", data.reason);
+                                }
                             }
-                        }
                         } else {
                             console.error("Failed to change phase:", await response.text());
                         }
@@ -3177,33 +3177,7 @@
             }
         }
         async function drawCards(deck, numCards = 5) {
-            if (deck.length < numCards) {
-                if (gameEnded) return [];
-                gameEnded = true;
-
-                console.warn("🛑 Not enough cards left to draw. Deckout loss triggered.");
-
-                const opponent = Object.keys(gameState).find(p =>
-                    p !== username && p !== "turn" && p !== "player1" && p !== "player2"
-                );
-
-                // Notify server
-                await fetch("https://geimon-app-833627ba44e0.herokuapp.com/endGame", {
-                    method: "POST",
-                    credentials: "include",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        gameId,
-                        loser: username,
-                        reason: "Deck-out: Tried to draw with no cards left"
-                    })
-                });
-
-                // Client loss banner
-                showBanner("You Lose", "Deck-out: Tried to draw with no cards left");
-
-                return [];
-            }
+            console.log("🔍 drawCards() called, drawing", numCards, "card(s). Current deck:", deck.length);
 
             const drawnCards = deck.splice(0, numCards);
             drawnCards.forEach(card => {
@@ -3215,6 +3189,8 @@
             await sendZoneUpdate(["Deck", "Hand"]);
             renderDrawnCards();
             updateDeckText();
+
+            addGameLogEntry(`${username} drew ${numCards} card${numCards > 1 ? "s" : ""}.`);
 
             return drawnCards;
         }
