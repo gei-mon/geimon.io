@@ -3176,35 +3176,53 @@
             }
         }
         async function drawCards(deck, numCards = 5) {
-        if (deck.length < numCards) {
-            console.warn("Not enough cards left to draw.");
-            return [];
-        }
+            const player = gameState[username];
+            const deckZone = player.Deck;
 
-        function getCardsFromZone(zone, count) {
-            return zone.splice(0, count);
-        }
+            if (deckZone.length < numCards) {
+                console.warn("🛑 Not enough cards left to draw. Deckout loss triggered.");
 
-        function renderZone(zoneName, owner = username) {
-            const cards = gameState[owner][zoneName];
-        }
+                const opponent = Object.keys(gameState).find(p =>
+                    p !== username && p !== "turn" && p !== "player1" && p !== "player2"
+                );
 
-        const drawnCards = getCardsFromZone(gameState[username].Deck, numCards);
-        drawnCards.forEach(card => {
-            card.lastBoardState = card.boardState;
-            card.boardState = "Hand";
-        });
-        gameState[username].Hand.push(...drawnCards);
+                // Notify the server that this player loses
+                await fetch("https://geimon-app-833627ba44e0.herokuapp.com/endGame", {
+                    method: "POST",
+                    credentials: "include",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        gameId,
+                        loser: username,
+                        reason: "Deck-out: Tried to draw with no cards left"
+                    })
+                });
 
-        // Debugging logs for confirmation
-        //console.log("Initial Hand:", drawnCards);
-        //console.log("Remaining Deck Contents:", deck);
+                // Show loss banner on client
+                showBanner("You Lose", "Deck-out: Tried to draw with no cards left");
+                return [];
+            }
 
-        await sendZoneUpdate(["Deck", "Hand"]);
+            function getCardsFromZone(zone, count) {
+                return zone.splice(0, count);
+            }
 
-        renderDrawnCards();
-        updateDeckText();
-        return drawnCards;
+            function renderZone(zoneName, owner = username) {
+                const cards = gameState[owner][zoneName];
+            }
+
+            const drawnCards = getCardsFromZone(deckZone, numCards);
+            drawnCards.forEach(card => {
+                card.lastBoardState = card.boardState;
+                card.boardState = "Hand";
+            });
+            player.Hand.push(...drawnCards);
+
+            await sendZoneUpdate(["Deck", "Hand"]);
+            renderDrawnCards();
+            updateDeckText();
+
+            return drawnCards;
         }
 
         async function sendZoneUpdate(zones) {
