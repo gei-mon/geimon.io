@@ -13,7 +13,7 @@ export const cards = [
     tags: ["Cryptbound", "Undead"],
     damage: 2,
     life: 3,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Deathward <br> If Sent to Tomb: Retrieve 1 other Undead Champion.",
@@ -51,7 +51,7 @@ export const cards = [
     tags: ["Cryptbound", "Undead"],
     damage: 1,
     life: 6,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Bloodrage, Deathward <br> If Sent to Tomb: Resurrect this card, but Obliterate it when it leaves the Zone.",
@@ -89,7 +89,7 @@ export const cards = [
     tags: ["Cryptbound", "Necromancer", "Mage"],
     damage: 5,
     life: 20,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Deathward, Warded <br> On Rally: Excavate 3; Add 1 revealed, Obliterate the other 2. <br> Mind Augus (Exhaustion): Excavate 5 from your Opponent&apos;s Deck; Obliterate 1, return the rest in the same order. <br> Shattered Connection (Reflex): If this card would be destroyed: Discard 1 or Sacrifice 1; it is not destroyed.",
@@ -127,7 +127,7 @@ export const cards = [
     tags: ["Cryptbound", "Hellfire", "Undead", "Lord"],
     damage: 10,
     life: 10,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Bloodrage, Deathward <br> Soulburn (Exhaustion): Offer up to a total of 3 Life from Champions you control; Destroy cards on the Zone up to the Life offered.",
@@ -241,7 +241,7 @@ export const cards = [
     tags: ["Cryptbound", "Undead", "Construct"],
     damage: 0,
     life: 7,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Deathward, Necrocharge <br> On Rally (Mandatory): Mill 3.",
@@ -279,7 +279,7 @@ export const cards = [
     tags: ["Cryptbound", "Undead", "Helper"],
     damage: 0,
     life: 1,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Library Assistant: Excavate 3; Add 1 revealed Undead or Helper, or a card that mentions an Undead or Helper. <br> Powerful Core: Sacrifice this card and Target 1 other Undead in your Tomb; Resurrect Target. The resurrected Champion gains Warded. <br> Helping Hand: If card is in your Tomb: Obliterate this card and Target 1 Undead or Helper in your Tomb; Resurrect Target.",
@@ -887,7 +887,7 @@ export const cards = [
     tags: ["Cryptbound", "Undead", "Construct"],
     damage: 4,
     life: 3,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Twitchy <br> Frantic Hoarding: Sacrifice 1; Bury up to 2 Reflex.",
@@ -1001,7 +1001,7 @@ export const cards = [
     tags: ["Frontier", "Citizen"],
     damage: 2,
     life: 3,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Bulletproof, Deathcurse, Lifetouch, Priority",
@@ -1039,7 +1039,7 @@ export const cards = [
     tags: ["Frontier", "Outlaw", "Marksman"],
     damage: 10,
     life: 8,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Heavy Hands <br> On Rally: Draw 2. <br> Deadeye (Reflex): Discard 1 and Target 1 card on the Zone; Destroy Target.",
@@ -1077,7 +1077,7 @@ export const cards = [
     tags: ["Frontier", "Marshall", "Marksman"],
     damage: 8,
     life: 8,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Priority <br> On Rally: Draw 1. <br> If Discarded: Add 1 Equipment or Rush.",
@@ -1229,7 +1229,7 @@ export const cards = [
     tags: ["Frontier","Protector","Helper"],
     damage: 0,
     life: 1,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Sniffer Sense: Target 1 face-down Champion; Flip the target face-up (Flip effects are not activated). <br> Take the Bullet (Reflex): If your Opponent declares an attack or activates an effect that Destroys a card: Sacrifice this card; Negate the attack or effect, and if you do, destroy the triggering card. <br> Helping Hand: If this card is in your Tomb: Obliterate this card and Target 1 Frontier or Helper in your Tomb; Resurrect Target.",
@@ -1267,7 +1267,7 @@ export const cards = [
     tags: ["Frontier","Outlaw","Marksman"],
     damage: 1,
     life: 1,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Deathward <br> Gotcha! (Flip): If flipped face-up by battle: Increase this Champion's Damage by half the Damage of the Champion that it is battling (rounded up). <br> If Discarded: Deal 3 Damage to 1 Champion or Player.",
@@ -1305,7 +1305,7 @@ export const cards = [
     tags: ["Frontier","Marshall","Marksman"],
     damage: 3,
     life: 2,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Deathward <br> Surrender Now! (Flip): If flipped face-up by battle: Reduce the attacking Champion's Damage to 0.",
@@ -1343,7 +1343,7 @@ export const cards = [
     tags: ["Frontier","Outlaw","Marksman"],
     damage: 3,
     life: 3,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Raider, Reach <br> Train Sniffer (Exhaustion): Your Opponent can activate 1 Commander Obelisk from their Deck (ignoring its cost); Your Opponent chooses whether: You Draw 2 for every Commander Obelisk your Opponent controls, or Your Opponent discards 1 for every Commander Obelisk they control.",
@@ -1381,7 +1381,7 @@ export const cards = [
     tags: ["Frontier","Outlaw"],
     damage: 1,
     life: 2,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "I Found It! (Flip): Target 1 card in either Tomb; Retrieve Target.",
@@ -1723,7 +1723,7 @@ export const cards = [
     tags: ["Clockwork", "Inventor", "Student"],
     damage: 5,
     life: 5,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Repair Specialist <br> On Rally: Activate 1 Equipment or Obelisk from your Hand, Deck, or Tomb (ignoring its cost). <br> Upgrade: Rally 1 Blocker Token to your Opponent's Zone; Add 1 Equipment. <br> Emergency Transport (Reflex): If this card is currently not a Commander: Obliterate the top 6 cards of your Deck; Activate 1 Commander Obelisk from your Hand, Deck, or Tomb (ignoring its cost).",
@@ -1761,7 +1761,7 @@ export const cards = [
     tags: ["Clockwork", "Helper"],
     damage: 0,
     life: 1,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Lightbulb: Excavate 1; Return it to either the top or the bottom of your Deck. <br> Wake-Up Jolt: Sacrifice this card and Target 1 Champion or Obelisk in your Reserve; Activate Target (ignoring its cost). <br> Helping Hand: If this card is in your Tomb: Obliterate this card and Target 1 Clockwork or Helper in your Tomb; Resurrect Target, it gains Deathtouch and its Life is reduced to 1.",
@@ -1837,7 +1837,7 @@ export const cards = [
     tags: ["Clockwork", "Mechanic", "Specialist"],
     damage: 2,
     life: 3,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Wake the Beast (Exhaustion): Discard 1; Activate 1 Obelisk from your Reserve (ignoring its cost).",
@@ -2711,7 +2711,7 @@ export const cards = [
     tags: ["Clockwork", "Construct","Helper"],
     damage: 3,
     life: 2,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Deathtouch <br> Mulching Overdrive (Mandatory): If this card Destroys a Champion with its Deathtouch: Rally 1 Mulch Token to the controller of that Champion's Zone.",
@@ -2749,7 +2749,7 @@ export const cards = [
     tags: ["Clockwork", "Citizen"],
     damage: 3,
     life: 3,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Brake Slam (Reflex): If this card declares an attack: Negate that attack; Draw 1. <br> If Destroyed: Add 1 Commander Obelisk.",
@@ -2901,7 +2901,7 @@ export const cards = [
     tags: ["Clockwork", "Citizen","Specialist"],
     damage: 1,
     life: 2,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Fortified <br> Raise the Gates (Exhaustion): Rally 1 Blocker Token to your Opponent's Zone; Activate 1 Obelisk from your Hand, Deck, Reserve, or Tomb (Ignoring its cost).",
@@ -3091,7 +3091,7 @@ export const cards = [
     tags: ["Noble", "Protector","Helper"],
     damage: 0,
     life: 1,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Arm Thy Knight: If you control a Knight: Activate 1 Equipment from your Hand, Deck, or Tomb (ignoring its cost), attaching the card to a Knight you control. <br> Awaken Allies: If this is the only Champion you control: Sacrifice this card; Recruit 2 Nobles. <br> Helping Hand: If this card is in your Tomb: Obliterate this card and Target 1 Noble or Helper in your Tomb; Resurrect Target.",
@@ -3205,7 +3205,7 @@ export const cards = [
     tags: ["Noble", "Royal", "Citizen"],
     damage: 1,
     life: 3,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Greedy, Reach",
@@ -3243,7 +3243,7 @@ export const cards = [
     tags: ["Noble", "Knight"],
     damage: 3,
     life: 9,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Defender, Naive <br> While Equipped: This Champion is unaffected by its Passives. <br> Hail Mary: Destroy 1 of this Champion's attached Equipments and Target 1 Champion on the Zone; Deal 3 Damage to Target.",
@@ -3319,7 +3319,7 @@ export const cards = [
     tags: ["Noble", "Helper"],
     damage: 1,
     life: 3,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Non-Believer <br> You're Not Real!: Undead deal no battle Damage to this card, and you take no battle Damage from battles involving this card and an Undead. <br> Eat That Rock! (Exhaustion): Discard 1 and Target 1 Obelisk; Destroy Target.",
@@ -3661,7 +3661,7 @@ export const cards = [
     tags: ["Noble", "Helper","Specialist"],
     damage: 0,
     life: 2,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Maintenance <br> Honest Work: Mill 4; Activate from your Deck, Reserve, or face-down Arsenal, 1 \"Castle\" Obelisk.",
@@ -3699,7 +3699,7 @@ export const cards = [
     tags: ["Noble", "Knight"],
     damage: 1,
     life: 2,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Fortified <br> If Sent to Tomb: Add 1 Obelisk.",
@@ -3737,7 +3737,7 @@ export const cards = [
     tags: ["Noble", "Royal","Citizen"],
     damage: 0,
     life: 2,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Fortified <br> On Rally: Recruit or Resurrect 1 Knight. <br> Royal Guard: This card gains Invisible and Non-Believer while you control a Knight. <br> Royal Support: Your Knight's Damage Thresholds increase by 2, and the first time they would be Destroyed each turn, they are not Destroyed.",
@@ -3813,7 +3813,7 @@ export const cards = [
     tags: ["Vivisect", "Lifebinder","Professor"],
     damage: 0,
     life: 10,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Lifebalance <br> Healing Hands (Exhaustion): Your Opponent gains 5 Life; Obliterate the top 8 cards of their Deck. <br> Bestow Life (Exhaustion): Target 1 Construct or Helper in your Tomb; Resurrect Target Champion, but Destroy all Champions Resurrected this way if this card leaves the Zone. <br><br>&nbsp;",
@@ -3851,7 +3851,7 @@ export const cards = [
     tags: ["Vivisect", "Helper"],
     damage: 0,
     life: 1,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Rescind Anasthesia: Target 1 other Champion you control; Target can use its non-Exhaustion abilities an additional time this turn. <br> Defibrillate: Sacrifice this card and Target 1 other Champion in your Tomb; Resurrect Target, but reduce its Life to 1. <br> Helping Hand: If this card is in your Tomb: Obliterate this card and Target up to 2 cards in your Tomb; Retrieve Targets.",

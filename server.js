@@ -159,6 +159,9 @@ io.on('connection', (socket) => {
 
     userMap.delete(socket.id);
   });
+  socket.on("join_game_room", ({ gameId }) => {
+    socket.join(gameId);
+  });
 });
 
 const gameStates = new Map();
@@ -261,7 +264,7 @@ app.post('/startGame', async (req, res) => {
 
     if (goesFirst === "Bot") {
       setTimeout(() => {
-        performBotTurn(gameState);
+        performBotTurn(gameState, gameId);
       }, 3500);
     }
 
@@ -780,9 +783,13 @@ function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function performBotTurn(game) {
+async function performBotTurn(game, gameId) {
   const phases = ["Intermission", "Draw", "Main 1", "Battle", "Main 2", "End"];
-  const startedTurn = game.turn.count;
+  //const startedTurn = game.turn.count;
+  io.to(gameId).emit("game_log", {
+    username: "Bot",
+    message: `Bot's turn. Turn #${game.turn.count}`
+  });
 
   for (const phase of phases) {
     // Break if bot lost its turn
@@ -793,18 +800,40 @@ async function performBotTurn(game) {
 
     game.turn.currentPhase = phase;
     console.log(`🤖 Bot now in phase: ${phase}`);
+    io.to(game.gameId).emit("game_log", {
+      username: "Bot",
+      message: `Bot changed phase to ${phase}`
+    });
 
     // Draw logic
     if (phase === "Draw") {
       const bot = game["Bot"];
+      const cardsToDraw = 1;
 
       if (bot.Deck.length > 0) {
-        const drawn = bot.Deck.splice(0, 1);
+        const drawCount = Math.min(cardsToDraw, bot.Deck.length);
+        const drawn = bot.Deck.splice(0, drawCount);
+
         drawn.forEach(card => {
           card.lastBoardState = "Deck";
           card.boardState = "Hand";
         });
+
         bot.Hand.push(...drawn);
+
+        const message = drawCount === 1
+          ? "Bot drew 1 card"
+          : `Bot drew ${drawCount} cards`;
+
+        io.to(gameId).emit("game_log", {
+          username: "Bot",
+          message
+        });
+      } else {
+        io.to(gameId).emit("game_log", {
+          username: "Bot",
+          message: "Bot tried to draw but its Deck was empty"
+        });
       }
     }
     await delay(1500);

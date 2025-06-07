@@ -740,6 +740,7 @@
                 alert("Could not retrieve username.");
                 return; // ✅ This is now valid
             }
+            socket.emit("join_game_room", { gameId });
         }
 
         function showCostRallyPrompt(card) {
@@ -926,6 +927,12 @@
                     if (!username) {
                         console.warn("Username not set after init.");
                         return;
+
+                        socket.on("game_log", ({ username, message }) => {
+                            if (username === "Bot") {
+                                addGameLogEntry(message);
+                            }
+                        });
                 }
 
             const params = new URLSearchParams(window.location.search);

@@ -103,7 +103,7 @@ export function renderCard(card, container) {
     <div class="bottom-bar">
       <div class="damage">${card.damage}</div>
       <div class="life">${card.life}</div>
-      ${card.damageThreshold ? `<div class="damageThreshold">${card.damageThreshold}</div>` : ""}
+      ${card.damageThreshold && parseInt(card.damageThreshold) >= 2 ? `<div class="damageThreshold">${card.damageThreshold}</div>` : ""}
     </div>
   ` : ""}
 `;
