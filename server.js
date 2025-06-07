@@ -789,7 +789,7 @@ function delay(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function waitForTotemFadeServer(gameId, timeout = 5000) {
+async function waitForTotemFadeServer(gameId, timeout = 15000) {
   // If we've already waited for this game's totem fade, skip waiting
   if (totemFadeWaited.has(gameId)) return;
 

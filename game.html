@@ -348,6 +348,18 @@
         <div id="drawn-cards" style="display: flex; flex-wrap: wrap; gap: 10px; padding: 10px;">
             <p id="drawn-message" style="color: white; font-size: 1.5em;"></p>
         </div>
+        <div id="opponent-hand" style="
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 0px;
+            padding: 10px;
+            position: fixed;
+            top: -200px;
+            left: 1000px;
+            transform: none;
+            z-index: 100350;
+        "></div>
+        <div id="opponentDeckBox"></div>
         <div class="viewing-window" id="viewing-window">
             <div class="scaled-card" id="scaled-card" style="transform: scale(0.797); transform-origin: center; pointer-events: none; margin-left: 14%;"></div>
         </div>
@@ -454,6 +466,8 @@
             let lastDrawTurn = null;
             let gameEnded = false;
 
+            let opponentHandRevealed = false;
+
             function addGameLogEntry(message) {
                 if (!username) {
                     console.warn("❌ addGameLogEntry called before username was set.");
@@ -501,6 +515,24 @@
 
         function isMainPhase(phase) {
             return ["Main 1", "Main 2"].includes(gameState?.turn?.currentPhase);
+        }
+
+        function updateOpponentDeckCount() {
+            const opponent = gameState[gameState.player1 === username ? gameState.player2 : gameState.player1];
+            const opponentDeck = opponent?.Deck || [];
+            const deckBox = document.getElementById("opponentDeckBox");
+
+            if (deckBox) {
+                deckBox.innerHTML = ""; // Clear old content
+
+                const overlay = document.createElement("div");
+                overlay.innerText = `Deck (${opponentDeck.length})`;
+                overlay.style.color = "white";
+                overlay.style.fontSize = "1em";
+                overlay.style.textAlign = "center";
+                overlay.style.textShadow = "2px 2px 4px black";
+                deckBox.appendChild(overlay);
+            }
         }
 
         function cleanupDiscardUI() {
@@ -634,6 +666,8 @@
             renderLatestTombCard();
             renderLatestVoidCard();
             renderDrawnCards();
+            renderOpponentHand();
+            updateOpponentDeckCount();
 
             if (gameState[username] && gameState[username].hasBasicRallied === undefined) {
                 gameState[username].hasBasicRallied = false;
@@ -1100,6 +1134,10 @@
             }
         }
         window.fetchGameStateFromServer = fetchGameStateFromServer;
+        window.toggleOpponentReveal = () => {
+            opponentHandRevealed = !opponentHandRevealed;
+            renderOpponentHand();
+        };
 
         function showBanner(mainText, reasonText) {
             const banner = document.getElementById("win-loss-banner");
@@ -1560,6 +1598,65 @@
             AbilityExecutor.handleBoardStateChange(fullCard, fullCard.boardState, fullCard.lastBoardState, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
         }
 
+        function renderOpponentHand() {
+            const container = document.getElementById("opponent-hand");
+            if (!container || !gameState) return;
+
+            const opponent = gameState[gameState.player1 === username ? gameState.player2 : gameState.player1];
+            const opponentHand = opponent?.Hand || [];
+                container.innerHTML = "";
+                container.style.overflowX = "visible";
+                container.style.flexWrap = "nowrap";
+
+            opponentHand.forEach(cardData => {
+                const cardEl = document.createElement("div");
+                cardEl.classList.add("card");
+                cardEl.style.width = "260px";
+                cardEl.style.height = "400px";
+                cardEl.style.transform = "scale(0.48)";
+                cardEl.style.marginLeft = "-200px";
+                cardEl.style.position = "relative";
+                cardEl.style.overflow = "hidden";
+                cardEl.style.boxSizing = "border-box";
+                cardEl.style.border = "none";
+                cardEl.style.outline = "none";
+                cardEl.style.boxShadow = "none";
+
+                if (opponentHandRevealed) {
+                    const fullCard = cards.find(c => String(c.id) === String(cardData.id));
+                    if (fullCard) {
+                        const renderedCard = renderCard(fullCard);
+                        cardEl.appendChild(renderedCard);
+
+                        addTooltipListeners(cardEl);
+                        addTokenTooltipListeners(cardEl);
+                    }
+                } else {
+                // render sleeve back
+                const sleeveUrl = opponentDeckBox?.style.backgroundImage?.slice(5, -2) || ""; // grab current sleeve
+                const sleeveImg = document.createElement("img");
+                sleeveImg.src = sleeveUrl;
+                sleeveImg.style.display = "block"; // eliminates extra space below images
+                sleeveImg.style.width = "100%";
+                sleeveImg.style.height = "100%";
+                sleeveImg.style.objectFit = "cover";
+                sleeveImg.style.border = "4px solid white";
+                sleeveImg.style.outline = "none";
+                sleeveImg.style.boxShadow = "none";
+                sleeveImg.style.transform = "rotate(180deg)";
+
+                cardEl.appendChild(sleeveImg);
+
+                // Disable hover view
+                cardEl.onmouseenter = null;
+                cardEl.onmousemove = null;
+                cardEl.onmouseleave = null;
+                }
+
+                container.appendChild(cardEl);
+            });
+        }
+
         function renderLatestTombCard() {
             const tombTop = gameState?.[username]?.Tomb?.slice(-1)[0];
             if (!tombTop) return; // ✅ Early return if nothing to show
@@ -1646,6 +1743,43 @@
                 voidTextOverlay.innerText = "Void";
             });
         }
+
+        function getRandomBotSleeve() {
+            return fetch("https://geimon-app-833627ba44e0.herokuapp.com/sleeve-images")
+            .then(res => res.json())
+            .then(sleeves => {
+            if (Array.isArray(sleeves) && sleeves.length > 0) {
+                const randomIndex = Math.floor(Math.random() * sleeves.length);
+                return sleeves[randomIndex];
+            } else {
+                console.warn("No sleeves returned");
+                return "DefaultSleeve.png";
+            }
+            })
+            .catch(err => {
+            console.error("Failed to fetch sleeves:", err);
+            return "DefaultSleeve.png";
+            });
+        }
+
+        function getRandomBotProfilePic() {
+            return fetch("https://geimon-app-833627ba44e0.herokuapp.com/profile-images")
+            .then(res => res.json())
+            .then(images => {
+            if (Array.isArray(images) && images.length > 0) {
+                const randomIndex = Math.floor(Math.random() * images.length);
+                return images[randomIndex];
+            } else {
+                console.warn("No profile images found.");
+                return "Sharpshooter-Square.png";
+            }
+            })
+            .catch(err => {
+            console.error("Failed to fetch profile images:", err);
+            return "Sharpshooter-Square.png";
+            });
+        }
+
 
         async function transitionToNextScreen(choice) {
             // Keep the background image visible
@@ -1846,6 +1980,32 @@
                     playerProfilePic.appendChild(profilePicImage);
                     board.appendChild(playerProfilePic);
                 }
+                if (isSinglePlayer) {
+                    getRandomBotProfilePic().then(profilePic => {
+                        const scale = window.innerWidth / 1920;
+
+                        const opponentProfilePic = document.createElement("div");
+                        opponentProfilePic.style.position = "absolute";
+                        opponentProfilePic.style.left = `${1835 * scale}px`;
+                        opponentProfilePic.style.top = `${60 * scale}px`;  // Opponent zone
+                        opponentProfilePic.style.width = `${100 * scale}px`;
+                        opponentProfilePic.style.height = `${100 * scale}px`;
+                        opponentProfilePic.style.zIndex = "100";
+                        opponentProfilePic.style.overflow = "hidden";
+
+                        const profilePicImage = document.createElement("img");
+                        profilePicImage.src = `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/${profilePic}`;
+                        profilePicImage.style.width = "100%";
+                        profilePicImage.style.height = "100%";
+                        profilePicImage.style.zIndex = "1100";
+                        profilePicImage.style.border = "6px solid black";
+                        profilePicImage.style.boxSizing = "border-box";
+                        profilePicImage.style.objectFit = "cover";
+
+                        opponentProfilePic.appendChild(profilePicImage);
+                        board.appendChild(opponentProfilePic);
+                    });
+                }
             });
 
             // After all elements like playerDeckBox and deckText are added
@@ -1855,6 +2015,19 @@
                     playerDeckBox.style.backgroundSize = "cover";
                     playerDeckBox.style.backgroundPosition = "center";
                     playerDeckBox.style.backgroundRepeat = "no-repeat";
+                }
+                if (isSinglePlayer) {
+                    getRandomBotSleeve().then(sleeve => {
+                        opponentDeckBox.style.backgroundImage = `url(https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Sleeves/${sleeve})`;
+                        opponentDeckBox.style.backgroundSize = "cover";
+                        opponentDeckBox.style.backgroundPosition = "center";
+                        opponentDeckBox.style.backgroundRepeat = "no-repeat";
+                    });
+                    } else {
+                    const opponentData = null; // if you implement this OPPONENT SLEEVE DATA
+                    if (opponentData?.deckSleeve) {
+                        opponentDeckBox.style.backgroundImage = `url(https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Sleeves/${opponentData.deckSleeve})`;
+                    }
                 }
             });
 
@@ -2140,6 +2313,44 @@
         deckText.style.transform = "translate(-50%, -50%)"; // Ensures precise centering
     playerDeckBox.appendChild(deckText);
     document.body.appendChild(playerDeckBox); // Add to the document
+
+    const opponentDeckBox = document.createElement("div");
+        opponentDeckBox.id = "opponentDeckBox";
+        opponentDeckBox.style.position = "absolute";
+        opponentDeckBox.style.left = "366px";
+        opponentDeckBox.style.top = "82px";
+        opponentDeckBox.style.width = "82px";
+        opponentDeckBox.style.height = "126px";
+        opponentDeckBox.style.outline = "0px solid white";
+        opponentDeckBox.style.display = "block";
+        opponentDeckBox.style.zIndex = "1000";
+        opponentDeckBox.style.opacity = "0";
+        opponentDeckBox.style.outline = "1px solid white";
+        opponentDeckBox.style.transition = "opacity 1s ease-in-out";
+        opponentDeckBox.style.textAlign = "center";
+        opponentDeckBox.style.fontWeight = "bold";
+        opponentDeckBox.style.fontSize = "1.2em";
+        opponentDeckBox.style.color = "white";
+        opponentDeckBox.style.transform = "rotate(180deg)";
+        opponentDeckBox.style.textShadow = `
+            -2px -2px 4px black,  
+            2px -2px 4px black,  
+            -2px 2px 4px black,  
+            2px 2px 4px black
+        `;
+
+    const opponentDeckText = document.createElement("span");
+        opponentDeckText.innerText = "Deck";
+        opponentDeckText.style.position = "absolute";
+        opponentDeckText.style.left = "50%";
+        opponentDeckText.style.top = "92%";
+        opponentDeckText.style.transform = "translate(-50%, -50%) rotate(180deg)";
+    opponentDeckBox.appendChild(opponentDeckText);
+    document.body.appendChild(opponentDeckBox);
+
+    setTimeout(() => {
+        opponentDeckBox.style.opacity = "1";
+    }, 6500);
 
     //Start of Tomb Box Stuff
     const playerTombBox = document.createElement("div");
@@ -2594,6 +2805,51 @@
         playerDeckBox.addEventListener("mouseleave", () => {
             playerDeckBox.innerText = "Deck";
         });
+    }
+
+    // Ensure it exists before adding event listeners
+    if (opponentDeckBox) {
+        opponentDeckBox.style.display = "block";
+        opponentDeckBox.style.outline = "1px solid white";
+        opponentDeckBox.style.position = "relative"; // ensure positioning context
+
+        // Create and append a rotated inner span
+        if (opponentDeckBox) {
+            opponentDeckBox.style.display = "block";
+            opponentDeckBox.style.outline = "1px solid white";
+            opponentDeckBox.style.position = "relative"; // makes positioning work
+
+            // Create or reuse the inner rotated span
+            let textSpan = opponentDeckBox.querySelector(".rotated-text");
+            if (!textSpan) {
+                textSpan = document.createElement("span");
+                textSpan.className = "rotated-text";
+                textSpan.innerText = "Deck";
+
+                // Styling for top-aligned, centered, rotated text
+                textSpan.style.position = "absolute";
+                textSpan.style.top = "100%";
+                textSpan.style.left = "50%";
+                textSpan.style.transform = "translateX(-50%) rotate(180deg)";
+                textSpan.style.transformOrigin = "top center";
+                textSpan.style.width = "100%";
+                textSpan.style.textAlign = "center";
+                textSpan.style.pointerEvents = "none"; // optional: avoid blocking hover
+
+                opponentDeckBox.innerHTML = ""; // clear anything inside
+                opponentDeckBox.appendChild(textSpan);
+            }
+
+            opponentDeckBox.addEventListener("mouseenter", () => {
+                const opponentName = gameState.player1 === username ? gameState.player2 : gameState.player1;
+                const opponentDeck = gameState?.[opponentName]?.Deck || [];
+                textSpan.innerText = `${opponentDeck.length}`;
+            });
+
+            opponentDeckBox.addEventListener("mouseleave", () => {
+                textSpan.innerText = "Deck";
+            });
+        }
     }
 
     // Fetch deck count dynamically
