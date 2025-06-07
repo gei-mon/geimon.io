@@ -95,9 +95,9 @@ export function renderCard(card, container) {
       <img src="${card.image}" alt="${card.name}" class="card-art">
     </div>
     <div class="card-tags">${tags}</div>
-    ${card.condition ? `<div class="card-condition">Condition: ${card.condition}</div>` : ""}
+    ${card.condition ? `<div class="card-condition"><strong>Condition:</strong> ${card.condition}</div>` : ""}
     ${card.cost && card.cost !== "Basic" ? 
-    `<div class="card-cost">Cost: ${renderTextWithTokens(card.cost)}</div>` : ""}
+      `<div class="card-cost"><strong>Cost:</strong> ${renderTextWithTokens(card.cost)}</div>` : ""}
     <div class="card-text" style="padding: 0;">${abilitiesHTML}</div>
     ${card.type === "Champion" ? `
     <div class="bottom-bar">
