@@ -3512,7 +3512,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Maintenance <br> Your Champions gain Reach. <br> While you control at least 1 other face-up \"Castle\" Obelisk: \"Castle\" Obelisks no longer need to be placed face-down before they can be activated. <br> While you control at least 3 other face-up \"Castle\" Obelisks (Reflex): Target 1 card on the Zone: Destroy Target.",
+        text: "Maintenance <br> Your Champions gain Reach. <br> While you control at least 1 other face-up \"Castle\" Obelisk: \"Castle\" Obelisks no longer need to be placed face-down before they can be activated. <br> While you control at least 3 other face-up \"Castle\" Obelisks (Reflex): Target 1 card on the Zone; Destroy Target.",
         keywords: ["Maintenance","Reach"],
         effect1name: "",
         effect1type: "Passive",
