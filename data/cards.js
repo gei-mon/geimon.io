@@ -3876,5 +3876,81 @@ export const cards = [
         effect3linger: ""
       }
     ]
+  },
+  {
+    id: "1001",
+    name: "Get Your Game On!",
+    image: `${cardArtFolder}/Rush/GameOn.png`,
+    type: "Rush",
+    condition: "",
+    cardConditionFunction: "",
+    cardCostFunction: "",
+    cost: "",
+    tags: ["Rush"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "If a Cryptbound, Vivisect, Clockwork, Noble, or Frontier Champion leaves your Zone: Discard your entire Hand (minimum of 1 card); Recruit 1 Cryptbound, Vivisect, Clockwork, Noble, or Frontier Champion.",
+        keywords: ["blank"],
+        effect1name: "",
+        effect1type: "",
+        effect1condition: "CryptboundVivisectClockworkNobleFrontierLeavesYourZone",
+        effect1cost: "DiscardHand",
+        effect1text: "Recruit1CryptboundVivisectClockworkNobleFrontier",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: "",
+        effect2condition: "",
+        effect2cost: "",
+        effect2text: "",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
+    id: "1002",
+    name: "Legendary Battle",
+    image: `${cardArtFolder}/Actions/LegendaryBattle.png`,
+    type: "Action",
+    condition: "Your Life must be 1",
+    cardConditionFunction: "LifeIs1",
+    cardCostFunction: "",
+    cost: "",
+    tags: ["Action"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Obliterate your Hand, Deck, Tomb, Reserve, and all other cards you control; Obliterate your Opponent’s Hand, Deck, Tomb, Reserve, and all cards your Opponent controls, and if you do, both Players can Unleash 1 (ignoring their conditions). <br><br> If either Champion leaves the Zone, that player loses. If both leave the Zone at the same time, it is a draw. Players cannot lose by failing to draw a card at the start of their turn.",
+        keywords: ["blank"],
+        effect1name: "",
+        effect1type: "Standard",
+        effect1condition: "",
+        effect1cost: "ObliterateYourEverything",
+        effect1text: "OblierateOppsEverything,BothUnleash1IgConds",
+        effect1linger: "IfChampLeavesTheyLose,IgnoreDeckout",
+        effect2name: "",
+        effect2type: "",
+        effect2condition: "",
+        effect2cost: "",
+        effect2text: "",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
   }
 ];
