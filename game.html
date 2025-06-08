@@ -1961,10 +1961,10 @@
                 if (userData && userData.profilePic) {
                     const playerProfilePic = document.createElement("div");
                     playerProfilePic.style.position = "absolute";
-                    playerProfilePic.style.left = `${1835 * scale}px`;
-                    playerProfilePic.style.top = `${700 * scale}px`;
-                    playerProfilePic.style.width = `${100 * scale}px`;
-                    playerProfilePic.style.height = `${100 * scale}px`;
+                    playerProfilePic.style.left = `1965px`;
+                    playerProfilePic.style.top = `750px`;
+                    playerProfilePic.style.width = `100px`;
+                    playerProfilePic.style.height = `100px`;
                     playerProfilePic.style.zIndex = "100";
                     playerProfilePic.style.overflow = "hidden";
 
@@ -1986,10 +1986,10 @@
 
                         const opponentProfilePic = document.createElement("div");
                         opponentProfilePic.style.position = "absolute";
-                        opponentProfilePic.style.left = `${1835 * scale}px`;
-                        opponentProfilePic.style.top = `${60 * scale}px`;  // Opponent zone
-                        opponentProfilePic.style.width = `${100 * scale}px`;
-                        opponentProfilePic.style.height = `${100 * scale}px`;
+                        opponentProfilePic.style.left = `1960px`;
+                        opponentProfilePic.style.top = `70px`;  // Opponent zone
+                        opponentProfilePic.style.width = `100px`;
+                        opponentProfilePic.style.height = `100px`;
                         opponentProfilePic.style.zIndex = "100";
                         opponentProfilePic.style.overflow = "hidden";
 
@@ -2317,8 +2317,8 @@
     const opponentDeckBox = document.createElement("div");
         opponentDeckBox.id = "opponentDeckBox";
         opponentDeckBox.style.position = "absolute";
-        opponentDeckBox.style.left = "366px";
-        opponentDeckBox.style.top = "82px";
+        opponentDeckBox.style.left = "375px";
+        opponentDeckBox.style.top = "108px";
         opponentDeckBox.style.width = "82px";
         opponentDeckBox.style.height = "126px";
         opponentDeckBox.style.outline = "0px solid white";
@@ -2811,13 +2811,13 @@
     if (opponentDeckBox) {
         opponentDeckBox.style.display = "block";
         opponentDeckBox.style.outline = "1px solid white";
-        opponentDeckBox.style.position = "relative"; // ensure positioning context
+        //opponentDeckBox.style.position = "relative"; // ensure positioning context
 
         // Create and append a rotated inner span
         if (opponentDeckBox) {
             opponentDeckBox.style.display = "block";
             opponentDeckBox.style.outline = "1px solid white";
-            opponentDeckBox.style.position = "relative"; // makes positioning work
+            //opponentDeckBox.style.position = "relative"; // makes positioning work
 
             // Create or reuse the inner rotated span
             let textSpan = opponentDeckBox.querySelector(".rotated-text");
