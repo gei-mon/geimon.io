@@ -13,7 +13,7 @@ export const totems = [
         "Single File": "Turn Player can only attack with 1 Champion during their Battle Phase.",
         "Terrifying Toddlers": "Champions with a Damage of 3 or lower deal double battle Damage.",
         "Fists Only": "Damage can only be dealt by attack.",
-        "All or Nothing": "The Damage a creature takes from a single event must Destroy it or the Damage does nothing.",
+        "All or Nothing": "The Damage a Champion takes from a single event must Destroy it or the Damage does nothing.",
         "Fair Play": "Both Players play with their Hands revealed."
     }
 ]

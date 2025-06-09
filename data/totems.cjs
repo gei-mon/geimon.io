@@ -13,7 +13,7 @@ const totems = [
         "Terrifying Toddlers": "Champions with a Damage of 3 or lower deal double battle Damage.",
         "Caught in your Underwear": "No Damage Thresholds.",
         "Fists Only": "Damage can only be dealt by attack.",
-        "All or Nothing": "The Damage a creature takes from a single event must Destroy it or the Damage does nothing.",
+        "All or Nothing": "The Damage a Champion takes from a single event must Destroy it or the Damage does nothing.",
         "Fair Play": "Both Players play with their Hands revealed."
     }
 ]
