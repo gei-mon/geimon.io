@@ -13,6 +13,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const { TotemExecutor } = require('./utils/totemExecutor.cjs');
 const { cards } = require('./data/cards.js');
+const AbilityExecutor = require('./utils/abilityExecutor.js');
 
 // In-memory storage
 let sessions = {};
