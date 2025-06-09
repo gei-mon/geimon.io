@@ -854,6 +854,15 @@ async function performBotTurn(game, gameId) {
         drawn.forEach(card => {
           card.lastBoardState = "Deck";
           card.boardState = "Hand";
+
+          // Ensure name exists (copy from card database if needed)
+          // If your deck was built using base cards, this may already be present
+          if (!card.name && card.id) {
+            const fullCard = getFullCardById(card.id); // You may need a helper function
+            if (fullCard) {
+              Object.assign(card, fullCard); // Merge full card data into partial
+            }
+          }
         });
 
         bot.Hand.push(...drawn);
