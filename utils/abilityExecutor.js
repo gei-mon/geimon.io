@@ -92,10 +92,10 @@ function hasUsedEffectThisTurn(gameId, turn, cardId, effectText) {
 }
 
 const effectMap = {
-  resurrectByCondition,
-  retrieveCardByCondition,
-  Add: addCardByCondition,
-  Excavate: excavateCards
+  "ResurrectByCondition": resurrectByCondition,
+  "RetrieveCardByCondition": retrieveCardByCondition,
+  "Add": addCardByCondition,
+  "Excavate": excavateCards
 };
 
 export async function declareAbility(
@@ -106,7 +106,8 @@ export async function declareAbility(
   gameId,
   updateLocalFromGameState,
   addGameLogEntry,
-  batchMilledCards = null
+  batchMilledCards = null,
+  fullCardDatabase = []
 ) {
   if (!card || !card.name || !card.abilities) {
     console.warn("🛑 Invalid or incomplete card object passed:", card);
@@ -211,7 +212,8 @@ export async function declareAbility(
         gameId,
         updateLocalFromGameState,
         addGameLogEntry,
-        batchMilledCards
+        batchMilledCards,
+        fullCardDatabase
       );
       promises.push(promise);
 
@@ -494,8 +496,8 @@ export function promptUserToSacrifice(amount, validCards) {
         window.validSacrificeIds = new Set(validCards.map(c => String(c.id)));
 
         const banner = document.createElement("div");
-        banner.id = "sacrifice-banner";
-        banner.textContent = `Select ${amount} champion${amount > 1 ? "s" : ""} to sacrifice.`;
+          banner.id = "sacrifice-banner";
+          banner.textContent = `Select ${amount} champion${amount > 1 ? "s" : ""} to sacrifice.`;
         document.querySelectorAll(".card-button").forEach(button => {
           const parentCard = button.closest(".card");
           if (!parentCard) return;
@@ -511,14 +513,14 @@ export function promptUserToSacrifice(amount, validCards) {
 
         Object.assign(banner.style, {
             position: "fixed",
-            top: "20px",
+            top: "50%",
             left: "50%",
-            transform: "translateX(-50%)",
+            transform: "translate(-50%, -50%)",
             backgroundColor: "#222",
             color: "#fff",
             padding: "10px 20px",
             borderRadius: "8px",
-            zIndex: 100000,
+            zIndex: 120000,
             fontSize: "16px",
             fontWeight: "bold"
         });
@@ -1056,7 +1058,7 @@ async function handleLinger(lingerText, card, gameState, username, gameId, updat
   delete window.lastExcavatedCount;
 }
 
-export function resurrectByCondition(
+export async function resurrectByCondition(
   effectText,
   card,
   gameState,
@@ -1065,7 +1067,7 @@ export function resurrectByCondition(
   updateLocalFromGameState,
   addGameLogEntry
 ) {
-  return new Promise((resolve) => {
+  return new Promise(async (resolve) => {
     const tomb = gameState[username]?.Tomb || [];
 
     if (effectText === "ResurrectSelf") {
@@ -1075,65 +1077,31 @@ export function resurrectByCondition(
         return resolve();
       }
 
-      // Confirm prompt
-      const overlay = document.createElement("div");
-      Object.assign(overlay.style, {
-        position: "fixed",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        padding: "20px",
-        backgroundColor: "#333",
-        color: "white",
-        border: "2px solid white",
-        borderRadius: "10px",
-        zIndex: 120001,
-        textAlign: "center"
+      tomb.splice(index, 1);
+      card.lastBoardState = "Tomb";
+      card.boardState = "Zone (Champion)";
+      card.currentZone = "Zone (Champion)";
+      card.lingerEffect = "ObliterateWhenLeave";
+      gameState[username]["Zone (Champion)"].push(card);
+
+      await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          gameId,
+          owner: username,
+          updatedZones: {
+            Tomb: gameState[username].Tomb,
+            "Zone (Champion)": gameState[username]["Zone (Champion)"]
+          }
+        })
       });
 
-      overlay.innerHTML = `
-        <p>${card.name} has a resurrection effect. Do you want to activate it?</p>
-        <button id="resurrect-self-yes">Yes</button>
-        <button id="resurrect-self-no" style="margin-left: 10px;">No</button>
-      `;
-      document.body.appendChild(overlay);
-
-      document.getElementById("resurrect-self-yes").onclick = async () => {
-        tomb.splice(index, 1);
-        card.lastBoardState = "Tomb";
-        card.boardState = "Zone (Champion)";
-        card.currentZone = "Zone (Champion)";
-        card.lingerEffect = "ObliterateWhenLeave";
-        gameState[username]["Zone (Champion)"].push(card);
-
-        await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
-          method: "POST",
-          credentials: "include",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            gameId,
-            owner: username,
-            updatedZones: {
-              Tomb: gameState[username].Tomb,
-              "Zone (Champion)": gameState[username]["Zone (Champion)"]
-            }
-          })
-        });
-
-        addGameLogEntry(`${username} resurrected ${card.name} from the Tomb.`);
-        document.body.removeChild(overlay);
-        updateLocalFromGameState(gameState);
-        resolve();
-      };
-
-      document.getElementById("resurrect-self-no").onclick = () => {
-        addGameLogEntry(`${username} declined to resurrect ${card.name}.`);
-        document.body.removeChild(overlay);
-        resolve();
-      };
-
+      addGameLogEntry(`${username} resurrected ${card.name} from the Tomb.`);
+      updateLocalFromGameState(gameState);
+      resolve();
     } else {
-      // e.g., Resurrect1Knight
       const match = effectText.match(/^Resurrect(\d+)([A-Za-z]+)$/);
       if (!match) {
         console.warn(`❌ Invalid resurrection effect format: ${effectText}`);
@@ -1150,48 +1118,74 @@ export function resurrectByCondition(
         return resolve();
       }
 
-      // UI: Select `count` number of cards
+      // UI Overlay Setup
       const overlay = document.createElement("div");
       Object.assign(overlay.style, {
         position: "fixed",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        padding: "20px",
-        backgroundColor: "#222",
-        color: "white",
-        border: "2px solid white",
-        borderRadius: "10px",
-        zIndex: 120001,
-        textAlign: "center"
+        top: "0",
+        left: "0",
+        width: "100vw",
+        height: "100vh",
+        backgroundColor: "rgba(0,0,0,0.9)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "12px",
+        zIndex: 120000
       });
 
-      overlay.innerHTML = `<p>Select up to ${count} ${tagName}(s) to resurrect.</p>`;
+      const title = document.createElement("div");
+      title.textContent = `Select up to ${count} ${tagName}(s) to resurrect.`;
+      title.style.color = "white";
+      title.style.fontSize = "20px";
+      overlay.appendChild(title);
+
       const list = document.createElement("div");
-      list.style.display = "flex";
-      list.style.flexWrap = "wrap";
-      list.style.gap = "10px";
+      Object.assign(list.style, {
+        display: "flex",
+        flexWrap: "wrap",
+        justifyContent: "center",
+        gap: "20px",
+        maxWidth: "90vw"
+      });
       overlay.appendChild(list);
 
       const selected = new Set();
 
       validTargets.forEach(target => {
+        const wrapper = document.createElement("div");
+        Object.assign(wrapper.style, {
+          transform: "scale(1.5)",
+          transformOrigin: "top left",
+          transition: "outline 0.3s ease",
+          cursor: "pointer"
+        });
+
         const cardEl = renderCard(target);
-        cardEl.style.cursor = "pointer";
-        cardEl.onclick = () => {
+        wrapper.appendChild(cardEl);
+
+        wrapper.onclick = () => {
           if (selected.has(target)) {
             selected.delete(target);
-            cardEl.style.outline = "none";
+            wrapper.style.outline = "none";
           } else if (selected.size < count) {
             selected.add(target);
-            cardEl.style.outline = "2px solid lime";
+            wrapper.style.outline = "3px solid yellow";
           }
         };
-        list.appendChild(cardEl);
+
+        list.appendChild(wrapper);
       });
 
       const confirmBtn = document.createElement("button");
       confirmBtn.textContent = "Confirm Resurrection";
+      Object.assign(confirmBtn.style, {
+        padding: "10px 20px",
+        fontSize: "16px",
+        cursor: "pointer"
+      });
+
       confirmBtn.onclick = async () => {
         const resurrected = [...selected];
         resurrected.forEach(c => {
@@ -1238,7 +1232,8 @@ export function retrieveCardByCondition(
   gameId,
   updateLocalFromGameState,
   addGameLogEntry,
-  batchMilledCards = null
+  batchMilledCards = null,
+  fullCardDatabase // <-- new required param
 ) {
   return new Promise((resolve) => {
     const match = effectText.match(/^Retrieve(Different)?([A-Za-z]+)$/);
@@ -1248,221 +1243,232 @@ export function retrieveCardByCondition(
     }
 
     const [_, differentFlag, tag] = match;
-    const tombSource = batchMilledCards || gameState[username]?.Tomb || [];
 
-    const validTargets = tombSource.filter(targetCard =>
-      Array.isArray(targetCard.tags) &&
-      targetCard.tags.includes(tag) &&
-      (!differentFlag || targetCard.name !== card.name)
-    );
+    // Get raw Tomb array (partial/full cards)
+    const tombArray = gameState[username]?.Tomb || [];
+    let tombSource = [...tombArray];
 
-    const label = `${differentFlag ? "a different " : "a "}${tag}`;
-    const effectPrompt = document.createElement("div");
-    Object.assign(effectPrompt.style, {
-      position: "fixed",
-      top: "50%",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
-      backgroundColor: "#333",
-      color: "white",
-      padding: "20px",
-      border: "2px solid white",
-      borderRadius: "10px",
-      zIndex: "160000",
-      textAlign: "center"
+    // Add batch milled cards if any (full objects)
+    if (Array.isArray(batchMilledCards) && batchMilledCards.length > 0) {
+      batchMilledCards.forEach(card => {
+        if (!tombSource.some(c => c.id === card.id)) {
+          tombSource.push(card);
+        }
+      });
+    }
+
+    // Hydrate tombSource cards by looking up full cards in database
+    tombSource = tombSource.map(cardOrRef => {
+      if (cardOrRef.tags && cardOrRef.name) {
+        return cardOrRef; // already full card
+      }
+      const fullCard = fullCardDatabase.find(
+        full => String(full.id) === String(cardOrRef.id)
+      );
+      if (!fullCard) {
+        console.warn(`⚠️ Could not find full card data for ID: ${cardOrRef.id}`);
+      }
+      return fullCard || null;
+    }).filter(c => c !== null);
+
+    // Filter tombSource for cards with tags array
+    tombSource = tombSource.filter(c => c && Array.isArray(c.tags));
+
+    // Clean up nulls in gameState tomb
+    gameState[username].Tomb = gameState[username].Tomb.filter(c => c != null);
+
+    // Find valid targets: has tag, and different if required
+    const validTargets = tombSource.filter(targetCard => {
+      if (!targetCard) return false;
+      if (!Array.isArray(targetCard.tags)) return false;
+
+      const hasTag = targetCard.tags.includes(tag);
+      const differentName = !differentFlag || targetCard.name !== card.name;
+
+      return hasTag && differentName;
     });
 
-    effectPrompt.innerHTML = `
-      <p>Activate <strong>${card.name}</strong>'s ability to retrieve ${label}?</p>
-      <button id="retrieveYes">Yes</button>
-      <button id="retrieveNo" style="margin-left: 10px;">No</button>
-    `;
-    document.body.appendChild(effectPrompt);
-
-    document.getElementById("retrieveYes").onclick = () => {
-      effectPrompt.remove();
-
-      if (validTargets.length === 0) {
-        const popup = document.createElement("div");
-        Object.assign(popup.style, {
-          position: "fixed",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          backgroundColor: "#333",
-          color: "white",
-          padding: "20px",
-          border: "2px solid white",
-          borderRadius: "10px",
-          zIndex: "150001",
-          textAlign: "center",
-          fontSize: "1.2em"
-        });
-
-        popup.innerHTML = `
-          <p>No valid ${tag} cards to retrieve.</p>
-          <button id="closePopup" style="margin-top: 15px;">Confirm</button>
-        `;
-
-        document.body.appendChild(popup);
-        document.getElementById("closePopup").onclick = () => {
-          popup.remove();
-          resolve();
-        };
-        return;
-      }
-
-      const overlay = document.createElement("div");
-      Object.assign(overlay.style, {
+    if (validTargets.length === 0) {
+      const popup = document.createElement("div");
+      Object.assign(popup.style, {
         position: "fixed",
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
-        maxWidth: "min(90%, 800px)",
-        overflowY: "auto",
-        height: "auto",
-        backgroundColor: "rgba(0, 0, 0, 0.85)",
-        border: "3px solid white",
-        borderRadius: "12px",
-        zIndex: "150000",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        gap: "20px",
-        padding: "10px 20px"
-      });
-      document.body.appendChild(overlay);
-
-      const instruction = document.createElement("div");
-      instruction.innerText = `Select 1 ${tag} to retrieve`;
-      Object.assign(instruction.style, {
+        backgroundColor: "#333",
         color: "white",
-        fontSize: "1.2em",
-        textAlign: "center"
-      });
-      overlay.appendChild(instruction);
-
-      const cardContainer = document.createElement("div");
-      Object.assign(cardContainer.style, {
-        display: "flex",
-        flexWrap: "wrap",
-        justifyContent: "center",
-        gap: "10px",
-        maxWidth: "100%",
-        overflow: "visible"
+        padding: "20px",
+        border: "2px solid white",
+        borderRadius: "10px",
+        zIndex: "150001",
+        textAlign: "center",
+        fontSize: "1.2em"
       });
 
-      const scale = 0.3;
-      const cardWidth = 260;
-      const cardHeight = 400;
+      popup.innerHTML = `
+        <p>No valid ${tag} cards to retrieve.</p>
+        <button id="closePopup" style="margin-top: 15px;">Confirm</button>
+      `;
 
-      validTargets.forEach((targetCard) => {
-        const scaledCard = renderCard(targetCard);
-        Object.assign(scaledCard.style, {
-          transform: `scale(${scale})`,
-          transformOrigin: "top left",
-          margin: "5px",
-          cursor: "pointer"
-        });
+      document.body.appendChild(popup);
+      document.getElementById("closePopup").onclick = () => {
+        popup.remove();
+        resolve();
+      };
+      return;
+    }
 
-        const wrapper = document.createElement("div");
-        Object.assign(wrapper.style, {
-          width: `${cardWidth * scale}px`,
-          height: `${cardHeight * scale}px`,
-          position: "relative"
-        });
+    // Create overlay for selection
+    const overlay = document.createElement("div");
+    Object.assign(overlay.style, {
+      position: "fixed",
+      top: "50%",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+      maxWidth: "min(90%, 800px)",
+      backgroundColor: "#222",
+      border: "3px solid white",
+      borderRadius: "12px",
+      zIndex: "160000",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "20px",
+      padding: "10px 20px"
+    });
+    document.body.appendChild(overlay);
 
-        const button = document.createElement("button");
-        Object.assign(button.style, {
-          position: "absolute",
-          top: "0",
-          left: "0",
-          width: "100%",
-          height: "100%",
-          opacity: "0",
-          background: "transparent",
-          border: "none",
-          cursor: "pointer"
-        });
+    const header = document.createElement("div");
+    header.innerHTML = `<p style="color: white; font-size: 1.2em;">Select 1 ${tag} to retrieve</p>`;
+    overlay.appendChild(header);
 
-        button.addEventListener("click", async () => {
-          const confirmBox = document.createElement("div");
-          Object.assign(confirmBox.style, {
-            position: "fixed",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            backgroundColor: "#333",
-            color: "white",
-            padding: "20px",
-            border: "2px solid white",
-            borderRadius: "10px",
-            zIndex: "160000",
-            textAlign: "center"
-          });
-          confirmBox.innerHTML = `
-            <p>Retrieve <strong>${targetCard.name}</strong>?</p>
-            <button id="confirmRetrieve">Yes</button>
-            <button id="cancelRetrieve" style="margin-left: 10px;">No</button>
-          `;
-          document.body.appendChild(confirmBox);
+    const cardContainer = document.createElement("div");
+    Object.assign(cardContainer.style, {
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "center",
+      gap: "10px"
+    });
+    overlay.appendChild(cardContainer);
 
-          document.getElementById("confirmRetrieve").onclick = async () => {
-            const index = gameState[username].Tomb.findIndex(c => String(c.id) === String(targetCard.id));
-            const [retrievedCard] = gameState[username].Tomb.splice(index, 1);
-            retrievedCard.lastBoardState = "Tomb";
-            retrievedCard.boardState = "Hand";
-            gameState[username].Hand.push(retrievedCard);
+    let selectedWrapper = null;
+    let selectedCard = null;
 
-            try {
-              const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
-                method: "POST",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  gameId,
-                  owner: username,
-                  updatedZones: {
-                    Hand: gameState[username].Hand,
-                    Tomb: gameState[username].Tomb
-                  }
-                })
-              });
+    validTargets.forEach(targetCard => {
+      // Assume renderCard is your existing function to create a card DOM element
+      const wrapper = document.createElement("div");
+      Object.assign(wrapper.style, {
+        width: `${260 * 0.3}px`,
+        height: `${400 * 0.3}px`,
+        position: "relative",
+        cursor: "pointer"
+      });
 
-              if (!response.ok) {
-                console.error("🛑 Failed to update game state during retrieve");
-                return resolve();
+      const scaledCard = renderCard(targetCard);
+      Object.assign(scaledCard.style, {
+        transform: "scale(0.3)",
+        transformOrigin: "top left",
+        pointerEvents: "none"
+      });
+
+      const overlayBtn = document.createElement("button");
+      Object.assign(overlayBtn.style, {
+        position: "absolute",
+        top: "0",
+        left: "0",
+        width: "100%",
+        height: "100%",
+        opacity: "0",
+        background: "transparent",
+        border: "none",
+        cursor: "pointer"
+      });
+
+      overlayBtn.onclick = () => {
+        if (selectedWrapper === wrapper) {
+          // Deselect
+          wrapper.style.outline = "none";
+          selectedWrapper = null;
+          selectedCard = null;
+        } else {
+          if (selectedWrapper) selectedWrapper.style.outline = "none";
+          wrapper.style.outline = "3px solid yellow";
+          wrapper.style.outlineOffset = "-3px";
+          wrapper.style.boxSizing = "border-box";
+          wrapper.style.margin = "0";
+          wrapper.style.padding = "0";
+          wrapper.style.position = "relative";
+
+          selectedWrapper = wrapper;
+          selectedCard = targetCard;
+        }
+      };
+
+      wrapper.appendChild(scaledCard);
+      wrapper.appendChild(overlayBtn);
+      cardContainer.appendChild(wrapper);
+    });
+
+    const confirmBtn = document.createElement("button");
+    confirmBtn.textContent = "Confirm";
+    Object.assign(confirmBtn.style, {
+      fontSize: "1.2em",
+      padding: "10px 20px",
+      marginTop: "10px",
+      //backgroundColor: "#4caf50",
+      //color: "white",
+      border: "none",
+      borderRadius: "2px",
+      cursor: "pointer"
+    });
+
+    confirmBtn.onclick = async () => {
+      if (!selectedCard) return alert("You must select a card to retrieve.");
+
+      // Find index of selectedCard in Tomb by ID
+      const index = gameState[username].Tomb.findIndex(c => String(c.id) === String(selectedCard.id));
+      if (index !== -1) {
+        const [retrievedCard] = gameState[username].Tomb.splice(index, 1);
+        retrievedCard.lastBoardState = "Tomb";
+        retrievedCard.boardState = "Hand";
+        gameState[username].Hand.push(retrievedCard);
+
+        try {
+          const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              gameId,
+              owner: username,
+              updatedZones: {
+                Hand: gameState[username].Hand,
+                Tomb: gameState[username].Tomb
               }
+            })
+          });
 
-              addGameLogEntry(`${username} retrieved ${retrievedCard.name} from the Tomb`);
-              overlay.remove();
-              confirmBox.remove();
-              updateLocalFromGameState(); // ✅ Now safely reflects actual backend state
-              resolve();
+          if (!response.ok) {
+            console.error("🛑 Failed to update game state during retrieve");
+            return resolve();
+          }
 
-            } catch (error) {
-              console.error("❌ Error during retrieveCardByCondition fetch:", error);
-              resolve();
-            }
-          };
+          addGameLogEntry(`${username} retrieved ${retrievedCard.name} from the Tomb`);
+          overlay.remove();
+          updateLocalFromGameState();
+          resolve();
 
-          document.getElementById("cancelRetrieve").onclick = () => {
-            confirmBox.remove();
-            resolve();
-          };
-        });
-
-        wrapper.appendChild(scaledCard);
-        wrapper.appendChild(button);
-        cardContainer.appendChild(wrapper);
-      });
-
-      overlay.appendChild(cardContainer);
+        } catch (error) {
+          console.error("❌ Error during retrieveCardByCondition fetch:", error);
+          resolve();
+        }
+      } else {
+        alert("❌ Card not found in Tomb.");
+        overlay.remove();
+        resolve();
+      }
     };
 
-    document.getElementById("retrieveNo").onclick = () => {
-      effectPrompt.remove();
-      resolve();
-    };
+    overlay.appendChild(confirmBtn);
   });
 }
