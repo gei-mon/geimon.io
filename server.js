@@ -824,6 +824,10 @@ async function performBotTurn(game, gameId) {
 
     game.turn.currentPhase = phase;
     console.log(`🤖 Bot now in phase: ${phase}`);
+    io.to(gameId).emit("phase_change", {
+      phase,
+      username: "Bot"
+    });
     io.to(gameId).emit("game_log", {
       username: "Bot",
       message: `Bot changed phase to ${phase}`

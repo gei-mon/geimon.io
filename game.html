@@ -392,6 +392,7 @@
             </div>
         </div>
         <div id="opponent-profile-pic"></div>
+        <div id="opponent-zone-art" style="position: absolute; top: 0; left: 0; width: 100%; height: 50%; z-index: 0; overflow: hidden;"></div>
         <div id="opponent-side">
             <div class="opponent-life-window" id="opponent-life-window">
                 <div class="opponent-name" id="opponent-name"></div>
@@ -972,6 +973,14 @@
                         addGameLogEntry(message);
                         //console.log("Bot log received:", message);
                     }
+                });
+
+                socket.on("phase_change", ({ phase, username: actingUser }) => {
+                    // Update which phase is marked as active
+                    updatePhaseDisplay(phase);
+
+                    // Trigger green wave animation for both player and bot
+                    triggerPhaseWaveEffect();
                 });
 
                 if (!username) {
@@ -1779,7 +1788,23 @@
             return "Sharpshooter-Square.png";
             });
         }
-
+        function getRandomBotZoneArt() {
+            return fetch("https://geimon-app-833627ba44e0.herokuapp.com/zone-images")
+                .then(res => res.json())
+                .then(images => {
+                    if (Array.isArray(images) && images.length > 0) {
+                        const randomIndex = Math.floor(Math.random() * images.length);
+                        return images[randomIndex];
+                    } else {
+                        console.warn("No zone images found.");
+                        return "DefaultZone.png";
+                    }
+                })
+                .catch(err => {
+                    console.error("Failed to fetch zone images:", err);
+                    return "DefaultZone.png";
+                });
+        }
 
         async function transitionToNextScreen(choice) {
             // Keep the background image visible
@@ -1939,9 +1964,9 @@
                     const zoneArtContainer = document.createElement("div");
                         zoneArtContainer.style.position = "absolute";
                         zoneArtContainer.style.left = "0";
-                        zoneArtContainer.style.bottom = "0";
+                        zoneArtContainer.style.bottom = "-18px";
                         zoneArtContainer.style.width = "100%";
-                        zoneArtContainer.style.height = "50%";
+                        zoneArtContainer.style.height = "51%";
                         zoneArtContainer.style.overflow = "hidden";
 
                     const zoneArtImage = document.createElement("img");
@@ -1954,8 +1979,44 @@
                         zoneArtImage.style.zIndex = "10";
                         zoneArtImage.style.border = "6px solid black";
                         zoneArtImage.style.objectFit = "cover";
+                        zoneArtImage.style.opacity = "0.65";
                     zoneArtContainer.appendChild(zoneArtImage);
                     board.appendChild(zoneArtContainer);
+                }
+                // Opponent side zone art
+                const opponentZoneArtContainer = document.createElement("div");
+                    opponentZoneArtContainer.style.position = "absolute";
+                    opponentZoneArtContainer.style.left = "0";
+                    opponentZoneArtContainer.style.top = "0";
+                    opponentZoneArtContainer.style.width = "100%";
+                    opponentZoneArtContainer.style.height = "51%";
+                    opponentZoneArtContainer.style.overflow = "hidden";
+                    opponentZoneArtContainer.style.zIndex = "9"; // Slightly behind player’s zone art
+
+                const opponentZoneArtImage = document.createElement("img");
+                    opponentZoneArtImage.style.position = "absolute";
+                    opponentZoneArtImage.style.width = "100%";
+                    opponentZoneArtImage.style.height = "200%"; // Still double height
+                    opponentZoneArtImage.style.bottom = "0"; // To keep bottom half showing
+                    opponentZoneArtImage.style.left = "0";
+                    opponentZoneArtImage.style.objectFit = "cover";
+                    opponentZoneArtImage.style.border = "6px solid black";
+                    opponentZoneArtImage.style.transform = "rotate(180deg)"; // Flip for opponent perspective
+                    opponentZoneArtImage.style.opacity = "0.65";
+
+                if (isSinglePlayer) {
+                    getRandomBotZoneArt().then(zoneArtFile => {
+                        opponentZoneArtImage.src = `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Zones/${zoneArtFile}`;
+                        opponentZoneArtContainer.appendChild(opponentZoneArtImage);
+                        board.appendChild(opponentZoneArtContainer);
+                    });
+                } else {
+                    const opponentData = null; // TODO: Replace with actual opponent profile fetch
+                    if (opponentData?.zoneArt) {
+                        opponentZoneArtImage.src = `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Zones/${opponentData.zoneArt}`;
+                        opponentZoneArtContainer.appendChild(opponentZoneArtImage);
+                        board.appendChild(opponentZoneArtContainer);
+                    }
                 }
                 const scale = window.innerWidth / 1920;
                 if (userData && userData.profilePic) {
