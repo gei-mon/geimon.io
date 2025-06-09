@@ -854,15 +854,6 @@ async function performBotTurn(game, gameId) {
         drawn.forEach(card => {
           card.lastBoardState = "Deck";
           card.boardState = "Hand";
-
-          // Ensure name exists (copy from card database if needed)
-          // If your deck was built using base cards, this may already be present
-          if (!card.name && card.id) {
-            const fullCard = getFullCardById(card.id); // You may need a helper function
-            if (fullCard) {
-              Object.assign(card, fullCard); // Merge full card data into partial
-            }
-          }
         });
 
         bot.Hand.push(...drawn);
@@ -895,7 +886,7 @@ async function performBotTurn(game, gameId) {
 
         io.to(gameId).emit("game_log", {
           username: "Bot",
-          message: `Bot discarded ${card.name} for hand size limit`
+          message: `Bot discarded ${card?.name || "[unknown card]"} for hand size limit`
         });
 
         // Optional: Trigger effects on card entering Tomb
