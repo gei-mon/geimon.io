@@ -880,12 +880,17 @@ async function performBotTurn(game, gameId) {
       while (bot.Hand.length > 6) {
         const discardIndex = Math.floor(Math.random() * bot.Hand.length);
         let discardedCard = bot.Hand.splice(discardIndex, 1)[0];
+        console.log("📦 Discarding card:", discardedCard);
 
         // Try to enrich the discarded card with full data if incomplete
         if (!discardedCard.name) {
-          const fullData = cards.find(c => c.id === discardedCard.id);
+          console.warn("🔍 Discarded card missing name, trying to enrich with ID:", discardedCard.id);
+          const fullData = cards.find(c => c.id === String(discardedCard.id));
           if (fullData) {
             discardedCard = { ...fullData, ...discardedCard };
+            console.log("✅ Enriched discarded card:", discardedCard);
+          } else {
+            console.error("❌ No matching full card data found for ID:", discardedCard.id);
           }
         }
 
@@ -897,6 +902,7 @@ async function performBotTurn(game, gameId) {
           username: "Bot",
           message: `Bot discarded ${discardedCard.name ?? "[unknown card]"} for hand size limit`,
         });
+        const updateLocalFromGameState = () => {};
 
         try {
           await AbilityExecutor.handleBoardStateChange(
