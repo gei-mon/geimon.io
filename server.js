@@ -876,30 +876,37 @@ async function performBotTurn(game, gameId) {
     if (phase === "End") {
       const bot = game["Bot"];
       while (bot.Hand.length > 6) {
-        // Random discard
-        const index = Math.floor(Math.random() * bot.Hand.length);
-        const card = bot.Hand.splice(index, 1)[0];
-
-        card.lastBoardState = "Hand";
-        card.boardState = "Tomb";
-        bot.Tomb.push(card);
+        const discardIndex = Math.floor(Math.random() * bot.Hand.length);
+        const discardedCard = bot.Hand.splice(discardIndex, 1)[0];
+        discardedCard.lastBoardState = "Hand";
+        discardedCard.boardState = "Tomb";
+        bot.Tomb.push(discardedCard);
 
         io.to(gameId).emit("game_log", {
           username: "Bot",
-          message: `Bot discarded ${card?.name || "[unknown card]"} for hand size limit`
+          message: `Bot discarded ${discardedCard.name || "[unknown card]"} for hand size limit`,
         });
 
-        // Optional: Trigger effects on card entering Tomb
         await AbilityExecutor.handleBoardStateChange(
-          card,
+          discardedCard,
           "Tomb",
           "Hand",
           game,
           "Bot",
           gameId,
-          () => {},   // no updateLocalFromGameState needed for bot
-          (msg) => io.to(gameId).emit("game_log", { username: "Bot", message: msg })
+          updateLocalFromGameState,
+          addGameLogEntry
         );
+
+        io.to(gameId).emit("update_zones", {
+          player: "Bot",
+          zones: {
+            Hand: bot.Hand,
+            Tomb: bot.Tomb,
+          },
+        });
+
+        await delay(500);
       }
     }
     await delay(1500);
