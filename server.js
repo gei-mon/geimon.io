@@ -12,6 +12,7 @@ require('dotenv').config();
 const http = require('http');
 const { Server } = require('socket.io');
 const { TotemExecutor } = require('./utils/totemExecutor.cjs');
+const { cards } = require('./data/cards.js');
 
 // In-memory storage
 let sessions = {};
@@ -881,7 +882,7 @@ async function performBotTurn(game, gameId) {
 
         // Try to enrich the discarded card with full data if incomplete
         if (!discardedCard.name) {
-          const fullData = allCards.find(c => c.id === discardedCard.id);
+          const fullData = cards.find(c => c.id === discardedCard.id);
           if (fullData) {
             discardedCard = { ...fullData, ...discardedCard };
           }
@@ -896,16 +897,20 @@ async function performBotTurn(game, gameId) {
           message: `Bot discarded ${discardedCard.name ?? "[unknown card]"} for hand size limit`,
         });
 
-        await AbilityExecutor.handleBoardStateChange(
-          discardedCard,
-          "Tomb",
-          "Hand",
-          game,
-          "Bot",
-          gameId,
-          updateLocalFromGameState,
-          addGameLogEntry
-        );
+        try {
+          await AbilityExecutor.handleBoardStateChange(
+            discardedCard,
+            "Tomb",
+            "Hand",
+            game,
+            "Bot",
+            gameId,
+            updateLocalFromGameState,
+            addGameLogEntry
+          );
+            } catch (err) {
+          console.error("Error handling board state change:", err);
+        }
 
         io.to(gameId).emit("update_zones", {
           player: "Bot",
