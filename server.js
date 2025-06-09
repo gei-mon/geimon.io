@@ -877,14 +877,23 @@ async function performBotTurn(game, gameId) {
       const bot = game["Bot"];
       while (bot.Hand.length > 6) {
         const discardIndex = Math.floor(Math.random() * bot.Hand.length);
-        const discardedCard = bot.Hand.splice(discardIndex, 1)[0];
+        let discardedCard = bot.Hand.splice(discardIndex, 1)[0];
+
+        // Try to enrich the discarded card with full data if incomplete
+        if (!discardedCard.name) {
+          const fullData = allCards.find(c => c.id === discardedCard.id);
+          if (fullData) {
+            discardedCard = { ...fullData, ...discardedCard };
+          }
+        }
+
         discardedCard.lastBoardState = "Hand";
         discardedCard.boardState = "Tomb";
         bot.Tomb.push(discardedCard);
 
         io.to(gameId).emit("game_log", {
           username: "Bot",
-          message: `Bot discarded ${discardedCard.name || "[unknown card]"} for hand size limit`,
+          message: `Bot discarded ${discardedCard.name ?? "[unknown card]"} for hand size limit`,
         });
 
         await AbilityExecutor.handleBoardStateChange(
