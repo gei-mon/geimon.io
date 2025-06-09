@@ -50,53 +50,53 @@
         }
         .scaled-card,
         .scaled-card * {
-        pointer-events: auto !important;
-        user-select: text !important;  /* so you can try selecting text, verifying interaction */
+            pointer-events: auto !important;
+            user-select: text !important;  /* so you can try selecting text, verifying interaction */
         }
         #scaled-card .card-button {
-        display: none !important;
-        pointer-events: none !important;
+            display: none !important;
+            pointer-events: none !important;
         }
         .main-container {
-        display: flex;
-        height: 80vh; /* adjust as needed */
-        gap: 10px;
-        padding: 0px 10px 10px 10px;
-        overflow: hidden; /* Prevent horizontal overflow */
+            display: flex;
+            height: 80vh; /* adjust as needed */
+            gap: 10px;
+            padding: 0px 10px 10px 10px;
+            overflow: hidden; /* Prevent horizontal overflow */
         }
         /* Left side: existing container */
         .container {
-        flex: 1;
-        display: flex;
-        gap: 10px;
-        overflow-y: auto;
-        padding-left: 320px;
+            flex: 1;
+            display: flex;
+            gap: 10px;
+            overflow-y: auto;
+            padding-left: 320px;
         }
         /* Right side: search panel */
         .search-panel {
-        width: 320px;
-        background-color: #2f2f2f;
-        border-radius: 8px;
-        display: flex;
-        flex-direction: column;
-        padding: 0 12px;
-        color: white;
-        box-shadow: 0 0 10px black;
-        height: 60vh;           /* fix height */
-        overflow-y: auto;     /* Allow scrolling */
-        overflow-x: hidden;   /* Prevent horizontal overflow */
+            width: 320px;
+            background-color: #2f2f2f;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            padding: 0 12px;
+            color: white;
+            box-shadow: 0 0 10px black;
+            height: 1000px;           /* fix height */
+            overflow-y: auto;     /* Allow scrolling */
+            overflow-x: hidden;   /* Prevent horizontal overflow */
         }
         .search-panel input[type="search"] {
-        padding: 8px 10px;
-        font-size: 16px;
-        border-radius: 6px;
-        border: none;
-        margin-bottom: 12px;
-        outline: none;
-        width: 100%;
-        box-sizing: border-box;
-        font-family: 'Racing Sans One', cursive;
-        flex-shrink: 0;         /* input should not shrink */
+            padding: 8px 10px;
+            font-size: 16px;
+            border-radius: 6px;
+            border: none;
+            margin-bottom: 12px;
+            outline: none;
+            width: 100%;
+            box-sizing: border-box;
+            font-family: 'Racing Sans One', cursive;
+            flex-shrink: 0;         /* input should not shrink */
         }
         .shrink-wrapper {
             flex-grow: 1;
@@ -153,7 +153,37 @@
             max-height: 300px;
             opacity: 1;
             padding-top: 10px;
-            padding-bottom: 100px;
+            padding-bottom: 300px;
+        }
+        .type-btn {
+            background-color: #444;
+            color: white;
+            border: none;
+            padding: 6px 10px;
+            border-radius: 4px;
+            font-family: 'Racing Sans One', cursive;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .type-btn:hover,
+        .type-btn.active {
+            background-color: #777;
+        }
+        #champion-filter {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .champ-filter-btn {
+            background-color: #333;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-family: 'Racing Sans One', cursive;
+            cursor: pointer;
+        }
+        .champ-filter-btn.active {
+            background-color: #888;
         }
     </style>
 </head>
@@ -195,8 +225,23 @@
             Show More Options ▼
         </button>
         <div class="search-options" id="search-options">
-            <input type="search" id="tag-search-input" placeholder="Search cards by tag..." />
-            <input type="search" id="text-search-input" placeholder="Search cards by text..." />
+            <div id="card-type-buttons" style="display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px;">
+                <button class="type-btn" data-type="Champion">Champion</button>
+                <button class="type-btn" data-type="Action">Action</button>
+                <button class="type-btn" data-type="Equipment">Equipment</button>
+                <button class="type-btn" data-type="Obelisk">Obelisk</button>
+                <button class="type-btn" data-type="Rush">Rush</button>
+                <button class="type-btn" data-type="Reflex">Reflex</button>
+            </div>
+            <div id="champion-filter" style="display: none; gap: 5px; margin-bottom: 10px;">
+                <button class="champ-filter-btn" data-champ="All">All Champions</button>
+                <button class="champ-filter-btn" data-champ="Basic">Basic Champions</button>
+                <button class="champ-filter-btn" data-champ="Elite">Elite Champions</button>
+            </div>
+            <input type="search" id="tag-search-input" placeholder="Search cards by their tags..." />
+            <input type="search" id="condition-search-input" placeholder="Search cards by their condition..." />
+            <input type="search" id="cost-search-input" placeholder="Search cards by their cost..." />
+            <input type="search" id="text-search-input" placeholder="Search cards by their text..." />
         </div>
 
             <div class="shrink-wrapper">
@@ -228,6 +273,39 @@
             //const sortedCards = cards.sort((a, b) => a.name.localeCompare(b.name));
             //sortedCards.forEach(card => renderCard(card, container));
 
+            let selectedCardType = null;
+
+            document.querySelectorAll('.type-btn').forEach(button => {
+                button.addEventListener("click", () => {
+                    if (selectedCardType === button.dataset.type) {
+                        selectedCardType = null; // toggle off
+                        button.classList.remove("active");
+                    } else {
+                        selectedCardType = button.dataset.type;
+                        document.querySelectorAll('.type-btn').forEach(b => b.classList.remove("active"));
+                        button.classList.add("active");
+                    }
+                    renderSearchResults();
+                    updateChampionSubfilterVisibility();
+                });
+            });
+
+            let selectedChampionTier = "All";
+
+            function updateChampionSubfilterVisibility() {
+                const filter = document.getElementById("champion-filter");
+                filter.style.display = selectedCardType === "Champion" ? "flex" : "none";
+            }
+
+            document.querySelectorAll(".champ-filter-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    selectedChampionTier = btn.dataset.champ;
+                    document.querySelectorAll(".champ-filter-btn").forEach(b => b.classList.remove("active"));
+                    btn.classList.add("active");
+                    renderSearchResults();
+                });
+            });
+
             const container = document.getElementById("card-wrapper");
             const emptyMessage = document.getElementById("empty-message");
             const deckNameElement = document.getElementById("deck-name");
@@ -238,6 +316,11 @@
             const searchInput = document.getElementById("search-input");
             const textSearchInput = document.getElementById("text-search-input");
             const searchResults = document.getElementById("search-results");
+            const conditionInput = document.getElementById("condition-search-input");
+            const costInput = document.getElementById("cost-search-input");
+
+            conditionInput.addEventListener("input", renderSearchResults);
+            costInput.addEventListener("input", renderSearchResults);
 
             const storedDeckName = localStorage.getItem("selectedDeckName") || "My Deck";
             deckNameElement.textContent = storedDeckName;
@@ -489,12 +572,21 @@
     const nameQuery = searchInput.value.trim().toLowerCase();
     const textQuery = textSearchInput.value.trim().toLowerCase();
     const tagQuery = (document.getElementById("tag-search-input").value || "").trim().toLowerCase();
+    const conditionQuery = conditionInput.value.trim().toLowerCase();
+    const costQuery = costInput.value.trim().toLowerCase();
 
     const filteredCards = sortedCards.filter(card => {
         const nameMatches = !nameQuery || card.name.toLowerCase().includes(nameQuery);
         const textMatches = !textQuery || card.abilities.some(ability => ability.text.toLowerCase().includes(textQuery));
         const tagMatches = !tagQuery || (card.tags && card.tags.some(tag => tag.toLowerCase().includes(tagQuery)));
-        return nameMatches && textMatches && tagMatches;
+        const conditionMatches = !conditionQuery || (card.condition && card.condition.toLowerCase().includes(conditionQuery));
+        const costMatches = !costQuery || (String(card.cost || "").toLowerCase().includes(costQuery));
+        const typeMatches = !selectedCardType || card.type === selectedCardType;
+        const champMatches =
+            selectedCardType !== "Champion" || selectedChampionTier === "All" ||
+            (selectedChampionTier === "Basic" && card.cost === "Basic") ||
+            (selectedChampionTier === "Elite" && card.cost !== "Basic");
+        return nameMatches && textMatches && tagMatches && conditionMatches && costMatches && typeMatches && champMatches;
     });
 
 
