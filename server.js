@@ -873,6 +873,35 @@ async function performBotTurn(game, gameId) {
         });
       }
     }
+    if (phase === "End") {
+      const bot = game["Bot"];
+      while (bot.Hand.length > 6) {
+        // Random discard
+        const index = Math.floor(Math.random() * bot.Hand.length);
+        const card = bot.Hand.splice(index, 1)[0];
+
+        card.lastBoardState = "Hand";
+        card.boardState = "Tomb";
+        bot.Tomb.push(card);
+
+        io.to(gameId).emit("game_log", {
+          username: "Bot",
+          message: `Bot discarded ${card.name} for hand size limit`
+        });
+
+        // Optional: Trigger effects on card entering Tomb
+        await AbilityExecutor.handleBoardStateChange(
+          card,
+          "Tomb",
+          "Hand",
+          game,
+          "Bot",
+          gameId,
+          () => {},   // no updateLocalFromGameState needed for bot
+          (msg) => io.to(gameId).emit("game_log", { username: "Bot", message: msg })
+        );
+      }
+    }
     await delay(1500);
   }
 
