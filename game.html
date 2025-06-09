@@ -351,11 +351,11 @@
         <div id="opponent-hand" style="
             display: flex;
             flex-wrap: nowrap;
-            gap: 0px;
+            gap: 30px;
             padding: 10px;
             position: fixed;
             top: -200px;
-            left: 1000px;
+            left: 700px;
             transform: none;
             z-index: 100350;
         "></div>
@@ -527,7 +527,7 @@
                 deckBox.innerHTML = ""; // Clear old content
 
                 const overlay = document.createElement("div");
-                overlay.innerText = `Deck (${opponentDeck.length})`;
+                overlay.innerText = `${opponentDeck.length}`;
                 overlay.style.color = "white";
                 overlay.style.fontSize = "1em";
                 overlay.style.textAlign = "center";
@@ -1620,16 +1620,16 @@
             opponentHand.forEach(cardData => {
                 const cardEl = document.createElement("div");
                 cardEl.classList.add("card");
-                cardEl.style.width = "260px";
-                cardEl.style.height = "400px";
-                cardEl.style.transform = "scale(0.48)";
-                cardEl.style.marginLeft = "-200px";
-                cardEl.style.position = "relative";
-                cardEl.style.overflow = "hidden";
-                cardEl.style.boxSizing = "border-box";
-                cardEl.style.border = "none";
-                cardEl.style.outline = "none";
-                cardEl.style.boxShadow = "none";
+                    cardEl.style.width = "260px";
+                    cardEl.style.height = "400px";
+                    cardEl.style.transform = "scale(0.48)";
+                    cardEl.style.marginLeft = "-200px";
+                    cardEl.style.position = "relative";
+                    cardEl.style.overflow = "hidden";
+                    cardEl.style.boxSizing = "border-box";
+                    cardEl.style.border = "none";
+                    cardEl.style.outline = "none";
+                    cardEl.style.boxShadow = "0 30px 40px rgba(0, 0, 0, 0.5)";
 
                 if (opponentHandRevealed) {
                     const fullCard = cards.find(c => String(c.id) === String(cardData.id));
@@ -1645,14 +1645,14 @@
                 const sleeveUrl = opponentDeckBox?.style.backgroundImage?.slice(5, -2) || ""; // grab current sleeve
                 const sleeveImg = document.createElement("img");
                 sleeveImg.src = sleeveUrl;
-                sleeveImg.style.display = "block"; // eliminates extra space below images
-                sleeveImg.style.width = "100%";
-                sleeveImg.style.height = "100%";
-                sleeveImg.style.objectFit = "cover";
-                sleeveImg.style.border = "4px solid white";
-                sleeveImg.style.outline = "none";
-                sleeveImg.style.boxShadow = "none";
-                sleeveImg.style.transform = "rotate(180deg)";
+                    sleeveImg.style.display = "block"; // eliminates extra space below images
+                    sleeveImg.style.width = "100%";
+                    sleeveImg.style.height = "100%";
+                    sleeveImg.style.objectFit = "cover";
+                    sleeveImg.style.border = "4px solid white";
+                    sleeveImg.style.outline = "none";
+                    sleeveImg.style.boxShadow = "none";
+                    sleeveImg.style.transform = "rotate(180deg)";
 
                 cardEl.appendChild(sleeveImg);
 
