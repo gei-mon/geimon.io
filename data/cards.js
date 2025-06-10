@@ -1037,8 +1037,8 @@ export const cards = [
     cardCostFunction: "Discard2",
     cost: "Discard 2 other cards",
     tags: ["Frontier", "Outlaw", "Marksman"],
-    damage: 10,
-    life: 8,
+    damage: 6,
+    life: 6,
     damageThreshold: "1",
     abilities: [
       {
@@ -1075,9 +1075,9 @@ export const cards = [
     cardCostFunction: "RevealSelfHideSelfShuffleHandRandomDiscard1",
     cost: "Reveal this card, then your Opponent randomly chooses 1 card from your Hand which you discard. If the discarded card was not this card, it will be Rallied.",
     tags: ["Frontier", "Marshall", "Marksman"],
-    damage: 8,
-    life: 8,
-    damageThreshold: "1",
+    damage: 7,
+    life: 5,
+    damageThreshold: "3",
     abilities: [
       {
         text: "Priority <br> On Rally: Draw 1. <br> If Discarded: Add 1 Equipment or Rush.",
@@ -3025,6 +3025,44 @@ export const cards = [
         effect1condition: "",
         effect1cost: "",
         effect1text: "Retrieve1HelperOrObelisk,Move1HelperOrObeliskFromDeckToReserve",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: "",
+        effect2condition: "",
+        effect2cost: "",
+        effect2text: "",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
+    id: "156",
+    name: "Street Dealer",
+    image: `${cardArtFolder}/Champions/StreetDealer.png`,
+    type: "Champion",
+    condition: "",
+    cardConditionFunction: "",
+    cardCostFunction: "Offer2",
+    cost: "Offer 2 Life",
+    tags: ["Clockwork", "Outlaw","Specialist"],
+    damage: 0,
+    life: 2,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: "Acquired Product: The turn Player can Offer 2 Life from a Champion they control: Until the End Phase, that Champion gains Priority.",
+        keywords: ["Priority"],
+        effect1name: "",
+        effect1type: "Passive",
+        effect1condition: "",
+        effect1cost: "ChampOffer2",
+        effect1text: "ChampGainsPriority",
         effect1linger: "",
         effect2name: "",
         effect2type: "",
