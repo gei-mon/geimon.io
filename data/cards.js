@@ -3201,7 +3201,7 @@ export const cards = [
     condition: "",
     cardConditionFunction: "",
     cardCostFunction: "DestroyYourObeliskEquipment",
-    cost: "Destroy all Equipments and Obelisks you control (minimum of 1 card)",
+    cost: "Destroy all face-up Equipments and Obelisks you control (minimum of 1 card)",
     tags: ["Action"],
     damage: 0,
     life: 0,
