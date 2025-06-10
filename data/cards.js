@@ -3882,7 +3882,7 @@ export const cards = [
     name: "Trojan Token",
     image: `${cardArtFolder}/Reflex/TrojanToken.png`,
     type: "Reflex",
-    condition: "Your Opponent control at least 1 Token",
+    condition: "Your Opponent controls at least 1 Token",
     cardConditionFunction: "OppControls1+Token",
     cardCostFunction: "",
     cost: "",
