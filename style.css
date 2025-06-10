@@ -326,7 +326,7 @@ text-decoration: underline;
 }
 
 .card-cost {
-  font-size: 0.8em;      /* Base font size */
+  font-size: 0.715em;      /* Base font size */
   padding-top: 4px;
   text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;
   text-align: left !important;

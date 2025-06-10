@@ -1802,7 +1802,7 @@ export const cards = [
     damageThreshold: 2,
     abilities: [
       {
-        text: "Repair Specialist <br> On Rally: Place 1 Commander Obelisk from your Deck into your Reserve. That Obelisk gains the Reserve Reflex Effect: Discard 1; Activate this card (ignoring its cost). <br> Garage Baby: Attach 1 appropriate Equipment from your Hand, Deck, or Tomb to an Obelisk in your Reserve (ignoring its cost). <br> Secret Weapon (Reflex, Exhaustion): Destroy 1 Obelisk you control; Destroy up to 2 cards on the Zone.",
+        text: "Repair Specialist <br> On Rally: Place 1 Commander Obelisk from your Deck into your Reserve. That Obelisk gains \"Reserve (Reflex): Discard 1; Activate this card (ignoring its cost)\". <br> Garage Baby: Attach 1 appropriate Equipment from your Hand, Deck, or Tomb to an Obelisk in your Reserve (ignoring its cost). <br> Secret Weapon (Exhaustion): Destroy 1 Obelisk you control; Destroy up to 2 cards on the Zone.",
         keywords: ["Repair Specialist"],
         effect1name: "",
         effect1type: "OnRally",

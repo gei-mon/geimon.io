@@ -15,7 +15,7 @@ export function resetEffectUsageForTurn(gameId, turnNumber) {
 export async function handleBoardStateChange(card, boardState, lastBoardState, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
   //console.log(`State change: ${card.name} from ${lastBoardState} to ${boardState}`);
   if (boardState === 'Tomb' && lastBoardState !== 'Tomb') {
-    await declareAbility(card, 'IfTomb', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);               //IF SENT TO TOMB
+    await declareAbility(card, 'IfTomb', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, null, cards);               //IF SENT TO TOMB
   }
   if (boardState === 'Hand' && lastBoardState === 'Deck') {
     await declareAbility(card, 'IfDrawnAdded', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);         //IF DRAWN / IF ADDED
@@ -404,18 +404,23 @@ function animateLifeNumber(element, start, end) {
 
 async function resolveBatchIfTombEffects(milledCards, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
     for (const card of milledCards) {
-        const fullCard = cards.find(c => String(c.id) === String(card.id));
-        if (!fullCard) {
-            console.warn("⚠️ Could not find full card info for milled card ID:", card.id);
-            continue;
-        }
+      const fullCard = cards.find(c => String(c.id) === String(card.id));
+      if (!fullCard) {
+        console.warn("⚠️ Could not find full card info for milled card ID:", card.id);
+        continue;
+      }
 
-        fullCard.boardState = "Tomb";
-        fullCard.lastBoardState = "Deck";
+      fullCard.boardState = "Tomb";
+      fullCard.lastBoardState = "Deck";
 
-        // Pass milledCards batch to declareAbility
-        await declareAbility(fullCard, 'IfTomb', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, milledCards);
-        await declareAbility(fullCard, 'IfBuried', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, milledCards);
+      // Replace the card in the batch with the full version
+      const index = milledCards.findIndex(c => String(c.id) === String(card.id));
+      if (index !== -1) {
+        milledCards[index] = fullCard;
+      }
+
+      await declareAbility(fullCard, 'IfTomb', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, milledCards, cards);
+      await declareAbility(fullCard, 'IfBuried', gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, milledCards, cards);
     }
 }
 
@@ -1366,6 +1371,8 @@ export function retrieveCardByCondition(
 
       const scaledCard = renderCard(targetCard);
       Object.assign(scaledCard.style, {
+        top: "-22.5%",
+        left: "50%",
         transform: "scale(0.3)",
         transformOrigin: "top left",
         pointerEvents: "none"
@@ -1388,12 +1395,14 @@ export function retrieveCardByCondition(
         if (selectedWrapper === wrapper) {
           // Deselect
           wrapper.style.outline = "none";
+          wrapper.style.boxShadow = "none";
           selectedWrapper = null;
           selectedCard = null;
         } else {
           if (selectedWrapper) selectedWrapper.style.outline = "none";
-          wrapper.style.outline = "3px solid yellow";
-          wrapper.style.outlineOffset = "-3px";
+          if (selectedWrapper) selectedWrapper.style.boxShadow = "none";
+          wrapper.style.outline = "4px solid yellow";
+          wrapper.style.boxShadow = "0 0 12px 4px yellow";
           wrapper.style.boxSizing = "border-box";
           wrapper.style.margin = "0";
           wrapper.style.padding = "0";

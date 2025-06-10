@@ -27,7 +27,7 @@
     position: fixed;
     bottom: 22px; /* Positions the cards near the bottom */
     left: 900px;
-    gap: 0px; /* Allows 5% overlap */
+    gap: -960px; /* Allows 5% overlap */
     transform: translate(-25%, 30%);
     display: flex;
     flex-direction: row; /* Aligns cards in a horizontal row */
@@ -1317,10 +1317,18 @@
                             updateLocalFromGameState,
                             addGameLogEntry
                         );
+                        await new Promise(requestAnimationFrame);
 
+                        // ✅ Force sync from server BEFORE rendering the hand
+                        const updated = await fetchLatestTurnState();
+                        if (updated && updated[username]) {
+                            gameState[username] = updated[username];
+                        }
+
+                        await updateLocalFromGameState();
                         await renderLatestTombCard();
                         await renderDrawnCards();
-                        await updateLocalFromGameState();
+                        await renderCardZone(gameState[username]["Zone (Champion)"], "playerChampionsBox");
 
                         // 🧠 Refetch latest state after effects and updates
                         const updatedState = await fetchLatestTurnState();
@@ -1369,6 +1377,7 @@
                         if (updatedHand.length > 6) {
                             //console.log("🔁 Still need to discard. Cards in hand:", updatedHand.length);
                             updateDiscardPrompt();
+                            renderDrawnCards();
                             return;
                         }
 
@@ -1405,6 +1414,7 @@
 
                             await updateLocalFromGameState();
                             renderLatestTombCard();
+                            await renderDrawnCards();
 
                             // ✅ Add this block to handle deckout or other end conditions
                             if (data.draw) {
