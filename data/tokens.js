@@ -50,7 +50,7 @@ export const tokens = [
     damageThreshold: "",
     abilities: [
       {
-        text: "While you control this token: You draw 1 additional card during each of your Draw Phases.",
+        text: "While you control this Token: You draw 1 additional card during each of your Draw Phases.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "Passive",
@@ -86,7 +86,7 @@ export const tokens = [
     damageThreshold: "",
     abilities: [
       {
-        text: "While you control this token: You cannot activate Champion effects.",
+        text: "While you control this Token: You cannot activate Champion effects.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "Passive",
@@ -122,7 +122,7 @@ export const tokens = [
     damageThreshold: "",
     abilities: [
       {
-        text: "While you control this token: You cannot bury, discard, sacrifice, or obliterate cards.",
+        text: "While you control this Token: You cannot Bury, Discard, Sacrifice, or Obliterate cards.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "Passive",
@@ -266,7 +266,7 @@ export const tokens = [
     damageThreshold: "",
     abilities: [
       {
-        text: "While you control this token: This is the only Champion you can attack with during your Battle Phase.",
+        text: "While you control this Token: This is the only Champion you can attack with during your Battle Phase.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "Passive",
@@ -302,7 +302,7 @@ export const tokens = [
     damageThreshold: "",
     abilities: [
       {
-        text: "While you control this token: You skip your Main Phase 1 and immediately enter your Battle Phase.",
+        text: "While you control this Token: You skip your Main Phase 1 and immediately enter your Battle Phase.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "Passive",
@@ -338,7 +338,7 @@ export const tokens = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Sacrifice this token; draw 1.",
+        text: "Sacrifice this Token; Draw 1.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "Standard",
@@ -374,7 +374,7 @@ export const tokens = [
     damageThreshold: "",
     abilities: [
       {
-        text: "While you control this token: You cannot declare attacks.",
+        text: "While you control this Token: You cannot declare attacks.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "Passive",
@@ -410,7 +410,7 @@ export const tokens = [
     damageThreshold: "",
     abilities: [
       {
-        text: "While you control this token: Your Life cannot be increased or decreased.",
+        text: "While you control this Token: Your Life cannot be increased or decreased.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "Passive",
@@ -446,7 +446,7 @@ export const tokens = [
     damageThreshold: "",
     abilities: [
       {
-        text: "While you control this token: You cannot declare attacks.",
+        text: "While you control this Token: You cannot declare attacks.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "Passive",
@@ -554,7 +554,7 @@ export const tokens = [
     damageThreshold: "",
     abilities: [
       {
-        text: "While you control this token: Decrease the Damage Threshold of all Champions on the Zone by 1.",
+        text: "While you control this Token: Decrease the Damage Threshold of all Champions on the Zone by 1.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "Passive",
