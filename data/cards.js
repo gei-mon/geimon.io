@@ -3844,7 +3844,7 @@ export const cards = [
     name: "Off and On Again",
     image: `${cardArtFolder}/Reflex/OffOnAgain.png`,
     type: "Reflex",
-    condition: "A card or effect is negated",
+    condition: "A card or effect is activated that would negate a card or effect",
     cardConditionFunction: "CardNegated",
     cardCostFunction: "",
     cost: "",
