@@ -605,6 +605,8 @@
                 const index = handZone.findIndex(c => String(c.id) === String(cardData.id));
                 if (index === -1) return;
                 handZone.splice(index, 1);
+
+                fullCard.setTurn = gameState.turn.count;
                 fullCard.boardState = "FaceDownArsenalZone";
                 fullCard.lastBoardState = "Hand";
                 faceDownArsenal.push(fullCard);
@@ -999,6 +1001,13 @@
                         animateCardDraw(true); // animate for opponent
                     }
                 });
+                socket.on("opponent_discard_card", ({ player, count }) => {
+                    if (!username || player === username) return;
+                    for (let i = 0; i < count; i++) {
+                        animateCardDiscard("opponent-hand", "opponentTombBox", true);
+                    }
+                });
+
 
                 socket.on("game_over", ({ winner, loser, reason }) => {
                     const mainText = (winner === username) ? "You Win" : "You Lose";
@@ -1325,6 +1334,7 @@
                         enrichedCard.lastBoardState = "Hand";
                         enrichedCard.boardState = "Tomb";
 
+                        animateCardDiscard("drawn-cards", "playerTombBox", false);
                         gameState[username].Hand.splice(index, 1);
                         gameState[username].Tomb.push(enrichedCard);
 
@@ -1692,6 +1702,43 @@
 
             setTimeout(() => cardImg.remove(), 1000);
         }
+
+        function animateCardDiscard(fromHandBoxId, toTombBoxId, isOpponent = false) {
+            const handBox = document.getElementById(fromHandBoxId);
+            const tombBox = document.getElementById(toTombBoxId);
+
+            if (!handBox || !tombBox) return;
+
+            const startRect = handBox.getBoundingClientRect();
+            const endRect = tombBox.getBoundingClientRect();
+
+            const sleeveUrl = isOpponent
+                ? opponentDeckBox?.style.backgroundImage?.slice(5, -2)
+                : userSleeveURL;
+
+            const cardImg = document.createElement("img");
+            cardImg.src = sleeveUrl || "https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site%20Assets/DefaultSleeve.png";
+            cardImg.style.position = "fixed";
+            cardImg.style.width = "260px";
+            cardImg.style.height = "400px";
+            cardImg.style.left = `${startRect.left + startRect.width / 2 - 500}px`;
+            cardImg.style.top = `${startRect.top + startRect.height / 2 - 35}px`;
+            cardImg.style.transition = "all 0.5s ease-in-out";
+            cardImg.style.zIndex = 99999;
+            cardImg.style.opacity = "1";
+
+            document.body.appendChild(cardImg);
+
+            requestAnimationFrame(() => {
+                cardImg.style.left = `${endRect.left + endRect.width / 2 - 60}px`;
+                cardImg.style.top = `${endRect.top + endRect.height / 2 - 220}px`;
+                cardImg.style.opacity = "0.05";
+                cardImg.style.transform = "scale(0.3)";
+            });
+
+            setTimeout(() => cardImg.remove(), 1000);
+        }
+
 
         function renderOpponentHand() {
             const container = document.getElementById("opponent-hand");
@@ -3691,6 +3738,54 @@
             updateAllRallyHighlights(gameState.turn.currentPhase, gameState, username);
         }
 
+        async function handleNonChampionActivation(card) {
+            const type = String(card.type).toLowerCase();
+            const costFn = card.cardCostFunction;
+
+            // ✅ Pay cost (sacrifice1, offer, etc)
+            await AbilityExecutor.handleCardCostFunction(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+
+            // ✅ Move card to arsenal (if Obelisk or Equipment)
+            const hand = gameState[username].Hand;
+            const index = hand.findIndex(c => String(c.id) === String(card.id));
+            if (index !== -1) hand.splice(index, 1);
+
+            if (type === "obelisk") {
+                card.boardState = "Zone (Arsenal)";
+                card.lastBoardState = "Hand";
+                gameState[username]["Zone (Arsenal)"].push(card);
+            }
+
+            // ✅ Send to tomb if Action, Rush, Reflex
+            if (["action", "rush", "reflex"].includes(type)) {
+                card.boardState = "Tomb";
+                card.lastBoardState = "Hand";
+                gameState[username].Tomb.push(card);
+                animateCardDiscard("drawn-cards", "playerTombBox", false);
+            }
+
+            addGameLogEntry(`${username} activated ${card.name} by paying its cost.`);
+
+            await AbilityExecutor.handleBoardStateChange(card, card.boardState, "Hand", gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+
+            await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    gameId,
+                    owner: username,
+                    updatedZones: {
+                        Hand: gameState[username].Hand,
+                        Tomb: gameState[username].Tomb,
+                        "Zone (Arsenal)": gameState[username]["Zone (Arsenal)"]
+                    }
+                })
+            });
+
+            await updateLocalFromGameState();
+        }
+
         const ARSENAL_ZONE = "Zone (Arsenal)";
         const FACEDOWN_ARSENAL_ZONE = "FaceDownArsenalZone";
 
@@ -3846,6 +3941,14 @@
                         handleBasicRally(fullCard); // ✅ Trigger Basic Rally
                     } else if (isCostRallyAvailable(fullCard, currentPhase, gameState, username)) {
                         showCostRallyPrompt(fullCard); // ✅ Trigger Cost Rally
+                    } else if (canActivateCard(fullCard, currentPhase, gameState, username)) {
+                        handleNonChampionActivation(fullCard);
+                    }
+
+                    if (canActivateCard(fullCard, currentPhase, gameState, username)) {
+                        cardElement.classList.add("can-activate-or-set-highlight");
+                    } else {
+                        cardElement.classList.remove("can-activate-or-set-highlight");
                     }
 
                     updateAllRallyHighlights(currentPhase, gameState, username);
@@ -3927,6 +4030,26 @@
                 //console.log("⚪ Removing glow from", cardData.name);
                 cardElement.classList.remove("cost-rally-highlight");
             }
+        }
+
+        function canActivateCard(card, currentPhase, gameState, username) {
+            const isMainPhase = currentPhase === "Main 1" || currentPhase === "Main 2";
+            const isTurnPlayer = gameState.turn.currentPlayer === username;
+            const cardType = String(card.type).toLowerCase();
+
+            // Can only activate during own main phase unless Rush
+            if (!isTurnPlayer && cardType !== "rush") return false;
+
+            // Reflex must wait until next turn after being set
+            if (cardType === "reflex" && card.boardState === "FaceDownArsenalZone") {
+                const setTurn = Number(card.setTurn || 0);
+                if (gameState.turn.count <= setTurn) return false;
+            }
+
+            // Check if condition met and cost function exists
+            return card.cardCostFunction &&
+                (card.cardConditionFunction === "" || evaluateCardCondition(card, gameState, username)) &&
+                (cardType === "rush" || isMainPhase);
         }
 
         async function updateAllRallyHighlights(currentPhase, gameState, username) {

@@ -878,6 +878,10 @@ async function performBotTurn(game, gameId) {
       const bot = game["Bot"];
       while (bot.Hand.length > 6) {
         const discardIndex = Math.floor(Math.random() * bot.Hand.length);
+        io.to(gameRoomId).emit("opponent_discard_card", {
+          player: "Bot",
+          count: 1
+        });
         let discardedCard = bot.Hand.splice(discardIndex, 1)[0];
         console.log("📦 Discarding card:", discardedCard);
 
