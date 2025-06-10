@@ -125,7 +125,7 @@ export const cards = [
     cost: "Offer 10 Life",
     cardCostFunction: "Offer10",
     tags: ["Cryptbound", "Hellfire", "Undead", "Lord"],
-    damage: 10,
+    damage: 1,
     life: 10,
     damageThreshold: "1",
     abilities: [

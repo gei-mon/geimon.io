@@ -27,7 +27,7 @@
     position: fixed;
     bottom: 22px; /* Positions the cards near the bottom */
     left: 900px;
-    gap: -960px; /* Allows 5% overlap */
+    gap: 0px; /* Allows 5% overlap */
     transform: translate(-25%, 30%);
     display: flex;
     flex-direction: row; /* Aligns cards in a horizontal row */
@@ -469,6 +469,8 @@
 
             let opponentHandRevealed = false;
 
+            let opponentName;
+
             function addGameLogEntry(message) {
                 if (!username) {
                     console.warn("❌ addGameLogEntry called before username was set.");
@@ -617,7 +619,7 @@
                         }
                     })
                 });
-                addGameLogEntry(`${username} set a card facedown in the Arsenal.`);
+                addGameLogEntry(`${username} set a card facedown in the Arsenal`);
                 document.body.removeChild(overlay);
                 updateLocalFromGameState();
             };
@@ -666,6 +668,8 @@
             updatePhaseDisplay(gameState.turn.currentPhase);
             renderLatestTombCard();
             renderLatestVoidCard();
+            renderLatestOpponentTombCard();
+            renderLatestOpponentVoidCard();
             renderDrawnCards();
             renderOpponentHand();
             updateOpponentDeckCount();
@@ -1753,6 +1757,92 @@
             });
         }
 
+        function renderLatestOpponentTombCard() {
+            const tombTop = gameState?.[opponentName]?.Tomb?.slice(-1)[0];
+            if (!tombTop) return; // ✅ Early return if nothing to show
+
+            const card = cards.find(c => String(c.id) === String(tombTop.id));
+            if (!card) return;
+
+            opponentTombBox.innerHTML = "";
+
+            // Render card scaled down
+            const miniCard = renderCard(card);
+                miniCard.style.transform = "scale(0.3) rotate(180deg)";
+                miniCard.style.transformOrigin = "top left";
+                miniCard.style.marginTop = "140%";
+                miniCard.style.marginLeft = "95.5%";
+                miniCard.style.pointerEvents = "none"; // Prevent dragging
+            opponentTombBox.appendChild(miniCard);
+
+            // Tomb hover label (like Deck)
+            const tombTextOverlay = document.createElement("div");
+                tombTextOverlay.innerText = "Tomb";
+                tombTextOverlay.style.position = "absolute";
+                tombTextOverlay.style.left = "45%";
+                tombTextOverlay.style.top = "3%";
+                tombTextOverlay.style.transform = "translate(-50%, -50%)";
+                tombTextOverlay.style.fontSize = "1em";
+                tombTextOverlay.style.color = "white";
+                tombTextOverlay.style.textShadow = `
+                    -2px -2px 4px black,  
+                    2px -2px 4px black,  
+                    -2px 2px 4px black,  
+                    2px 2px 4px black
+                `;
+            opponentTombBox.appendChild(tombTextOverlay);
+
+            opponentTombBox.addEventListener("mouseenter", () => {
+                tombTextOverlay.innerText = `${gameState[opponentName].Tomb.length}`;
+            });
+            opponentTombBox.addEventListener("mouseleave", () => {
+                tombTextOverlay.innerText = "Tomb";
+            });
+        }
+
+        function renderLatestOpponentVoidCard() {
+            const voidTop = gameState?.[opponentName]?.Void?.slice(-1)[0];
+            if (!voidTop) return;
+
+            const card = cards.find(c => String(c.id) === String(voidTop.id));
+            if (!card) return;
+
+            opponentVoidBox.innerHTML = ""; // ✅ Always clear it first
+
+            // Render card scaled down
+            const miniCard = renderCard(card);
+                miniCard.style.transform = "rotate(90deg) scale(0.3)";
+                miniCard.style.transformOrigin = "top left";
+                miniCard.style.marginTop = "140%";
+                miniCard.style.marginLeft = "95.5%";
+                miniCard.style.pointerEvents = "none"; // Prevent dragging
+            opponentVoidBox.appendChild(miniCard);
+
+            // Void hover label (like Deck)
+            const voidTextOverlay = document.createElement("div");
+                voidTextOverlay.innerText = "Void";
+                voidTextOverlay.style.position = "absolute";
+                voidTextOverlay.style.left = "45%";
+                voidTextOverlay.style.top = "3%";
+                voidTextOverlay.style.transform = "translate(-50%, -50%)";
+                voidTextOverlay.style.fontSize = "1em";
+                voidTextOverlay.style.color = "white";
+                voidTextOverlay.style.textShadow = `
+                    -2px -2px 4px black,  
+                    2px -2px 4px black,  
+                    -2px 2px 4px black,  
+                    2px 2px 4px black
+                `;
+            opponentVoidBox.appendChild(voidTextOverlay);
+
+            opponentVoidBox.addEventListener("mouseenter", () => {
+                voidTextOverlay.innerText = `${gameState[opponentName].Void.length}`;
+            });
+            opponentVoidBox.addEventListener("mouseleave", () => {
+                voidTextOverlay.innerText = "Void";
+            });
+        }
+
         function getRandomBotSleeve() {
             return fetch("https://geimon-app-833627ba44e0.herokuapp.com/sleeve-images")
             .then(res => res.json())
@@ -1908,7 +1998,7 @@
 
             const championBox = document.getElementById("playerChampionsBox");
                 championBox.style.position = "fixed";
-                championBox.style.left = "725px";
+                championBox.style.left = "710px";
                 championBox.style.top = "675px";
                 championBox.style.width = "525px";
                 championBox.style.height = "128px";
@@ -1920,7 +2010,7 @@
                 facedownBox.style.position = "fixed";
                 facedownBox.style.left = "1235px";
                 facedownBox.style.top = "675px";
-                facedownBox.style.width = "488px";
+                facedownBox.style.width = "470px";
                 facedownBox.style.height = "128px";
                 facedownBox.style.zIndex = "100300";
                 facedownBox.style.pointerEvents = "none";
@@ -1939,8 +2029,8 @@
             const facedownArsenalBox = document.getElementById("playerFaceDownArsenalBox");
                 facedownArsenalBox.style.position = "fixed";
                 facedownArsenalBox.style.left = "1235px";
-                facedownArsenalBox.style.top = "820px";
-                facedownArsenalBox.style.width = "488px";
+                facedownArsenalBox.style.top = "822.5px";
+                facedownArsenalBox.style.width = "565px";
                 facedownArsenalBox.style.height = "128px";
                 facedownArsenalBox.style.zIndex = "100300";
                 facedownArsenalBox.style.pointerEvents = "none";
@@ -2193,6 +2283,11 @@
                 totemTextElement.innerHTML = `<strong>Description:</strong> ${selectedTotemText}`;
             document.getElementById("game-log-placeholder").appendChild(totemElement);
             document.getElementById("game-log-placeholder").appendChild(totemTextElement);
+
+            await getUsername();
+
+            const otherPlayerName = params.get("opponent") || "Unknown_Opponent";
+            opponentName = isSinglePlayer ? "Bot" : otherPlayerName;
 
             if (playerDeckResult.success && opponentDeckResult.success) {
                 await fetch('https://geimon-app-833627ba44e0.herokuapp.com/startGame', {
@@ -2781,6 +2876,375 @@
 
     document.body.appendChild(voidButton);
     //End of Void Stack Creation
+
+    //Start of Opponent Tomb Box Stuff
+    const opponentTombBox = document.createElement("div");
+        opponentTombBox.id = "opponentTombBox";
+        opponentTombBox.style.position = "absolute";
+        opponentTombBox.style.left = "372px";  // Same X as Deck
+        opponentTombBox.style.top = "260px";   // Directly above the Deck
+        opponentTombBox.style.width = "88px";
+        opponentTombBox.style.height = "126px";
+        opponentTombBox.style.outline = "none";//"4px solid white";
+        opponentTombBox.style.zIndex = "1000";
+        //opponentTombBox.style.backgroundColor = "rgba(255, 0, 0)";
+        opponentTombBox.style.opacity = "0";
+        opponentTombBox.style.transition = "opacity 1s ease-in-out";
+        opponentTombBox.style.textAlign = "center";
+        opponentTombBox.style.fontWeight = "bold";
+        opponentTombBox.style.fontSize = "1.2em";
+        opponentTombBox.style.color = "white";
+        opponentTombBox.style.textShadow = `
+            -2px -2px 4px black,  
+            2px -2px 4px black,  
+            -2px 2px 4px black,  
+            2px 2px 4px black
+        `;
+
+        const opponentTombText = document.createElement("span");
+            opponentTombText.innerText = "Tomb";
+            opponentTombText.style.position = "absolute";
+            opponentTombText.style.left = "50%";
+            opponentTombText.style.top = "2%";
+            opponentTombText.style.transform = "translate(-50%, -50%)";
+        opponentTombBox.appendChild(opponentTombText);
+        document.body.appendChild(opponentTombBox);
+
+        setTimeout(() => {
+            opponentTombBox.style.opacity = "1";
+        }, 6500);
+
+        function updateOpponentTombText() {
+            if (gameState && gameState[opponentName]) {
+                const count = gameState[opponentName].Tomb.length;
+                opponentTombText.innerText = `${count}`;
+                opponentTombText.style.position = "absolute";
+                opponentTombText.style.left = "50%";
+                opponentTombText.style.top = "2%";
+                opponentTombText.style.transform = "translate(-50%, -50%)";
+            }
+        }
+
+        opponentTombBox.addEventListener("mouseenter", updateOpponentTombText);
+        opponentTombBox.addEventListener("mouseleave", () => {
+            opponentTombText.innerText = "Tomb";
+            opponentTombText.style.position = "absolute";
+            opponentTombText.style.left = "50%";
+            opponentTombText.style.top = "2%";
+            opponentTombText.style.transform = "translate(-50%, -50%)";
+        });
+
+    // Create Tomb Button Overlay
+    const opponentTombButton = document.createElement("button");
+        opponentTombButton.style.position = "absolute";
+        opponentTombButton.style.left = "372px";
+        opponentTombButton.style.top = "270px";
+        opponentTombButton.style.width = "87px";
+        opponentTombButton.style.height = "115px";
+        opponentTombButton.style.backgroundColor = "rgba(0, 255, 0)";
+        opponentTombButton.style.opacity = "0";
+        opponentTombButton.style.border = "none";
+        opponentTombButton.style.zIndex = "100800";
+        opponentTombButton.style.cursor = "pointer";
+        opponentTombButton.title = "Tomb";
+
+        // Add event listener for click
+        opponentTombButton.addEventListener("click", () => {
+            const popup = document.createElement("div");
+                popup.style.position = "fixed";
+                popup.style.top = "50%";
+                popup.style.left = "50%";
+                popup.style.transform = "translate(-50%, -50%)";
+                popup.style.maxWidth = "min(90%, 800px)";
+                popup.style.overflowY = "auto";
+                popup.style.maxHeight = "unset";
+                popup.style.height = "auto";
+                popup.style.overflow = "visible";
+                popup.style.padding = "10px 20px";
+                popup.style.backgroundColor = "rgba(0, 0, 0, 0.85)";
+                popup.style.border = "3px solid white";
+                popup.style.borderRadius = "12px";
+                popup.style.zIndex = "100900";
+                popup.style.display = "flex";
+                popup.style.flexDirection = "column";
+                popup.style.alignItems = "center";
+                popup.style.gap = "20px";
+
+            const title = document.createElement("div");
+                title.textContent = "Opponent's Tomb";
+                title.style.color = "white";
+                title.style.fontSize = "2em";
+                title.style.textAlign = "center";
+            popup.appendChild(title);
+
+            const tombCards = gameState?.[opponentName]?.Tomb || [];
+
+            if (tombCards.length === 0) {
+                const none = document.createElement("div");
+                none.textContent = "Opponent's Tomb is empty.";
+                none.style.color = "white";
+                popup.appendChild(none);
+            } else {
+                const cardContainer = document.createElement("div");
+                    cardContainer.style.display = "flex";
+                    cardContainer.style.flexWrap = "wrap";
+                    cardContainer.style.justifyContent = "center";
+                    cardContainer.style.gap = "10px";
+                    cardContainer.style.marginRight = "10px";
+                    cardContainer.style.maxWidth = "100%";
+                    cardContainer.style.overflow = "visible";
+
+                const scale = 0.3;
+                const cardWidth = 240;
+                const cardHeight = 420;
+
+                tombCards.forEach(cardData => {
+                    const card = cards.find(c => String(c.id) === String(cardData.id));
+                    if (!card) return;
+
+                    const scale = 0.3;
+                    const scaledCard = renderCard(card);
+                        scaledCard.style.transform = `scale(${scale})`;
+                        scaledCard.style.transformOrigin = "top left";
+                        scaledCard.style.margin = "5px";
+                        scaledCard.style.position = "relative";
+
+                    const wrapper = document.createElement("div");
+                        wrapper.style.width = `${260 * scale}px`;
+                        wrapper.style.height = `${400 * scale}px`;
+                        wrapper.style.overflow = "visible";
+                        wrapper.style.position = "relative";
+
+                    // Tomb card click overlay
+                    const overlay = document.createElement("button");
+                        overlay.style.position = "absolute";
+                        overlay.style.top = "0";
+                        overlay.style.left = "0";
+                        overlay.style.width = "100%";
+                        overlay.style.height = "100%";
+                        overlay.style.opacity = "0";
+                        overlay.style.border = "none";
+                        overlay.style.background = "transparent";
+                        overlay.style.cursor = "pointer";
+                    overlay.onclick = () => alert(`Card in Tomb Clicked: ${card.name}`);
+
+                    wrapper.appendChild(scaledCard);
+                    wrapper.appendChild(overlay);
+
+                    // Hover preview
+                    wrapper.addEventListener("mouseenter", () => {
+                        const scaled = document.querySelector("#viewing-window .scaled-card");
+                            scaled.innerHTML = "";
+                        const preview = renderCard(card);
+                            preview.style.width = "240px";
+                            preview.style.height = "420px";
+                            preview.style.transform = "scale(1.2)";
+                            preview.style.marginLeft = "-15%";
+                            preview.style.marginTop = "7%";
+                        scaled.appendChild(preview);
+                    });
+
+                    cardContainer.appendChild(wrapper);
+                });
+                popup.appendChild(cardContainer);
+            }
+
+            const closeBtn = document.createElement("button");
+                closeBtn.textContent = "Close";
+                closeBtn.style.marginTop = "10px";
+                closeBtn.style.padding = "10px 20px";
+                closeBtn.style.fontSize = "1.2em";
+                closeBtn.style.cursor = "pointer";
+                closeBtn.style.zIndex = "120000";
+            closeBtn.onclick = () => popup.remove();
+            popup.appendChild(closeBtn);
+
+            document.body.appendChild(popup);
+    });
+
+    document.body.appendChild(opponentTombButton);
+    //End of Opponent Tomb Creation Stuff
+
+    //Start of Opponent Void Box Stuff
+    const opponentVoidBox = document.createElement("div");
+        opponentVoidBox.id = "opponentVoidBox";
+        opponentVoidBox.style.position = "absolute";
+        opponentVoidBox.style.left = "372px";  // Same X as Deck
+        opponentVoidBox.style.top = "415px";   // Directly above the Deck
+        opponentVoidBox.style.width = "147px";
+        opponentVoidBox.style.height = "90px";
+        opponentVoidBox.style.outline = "none";//"4px solid white";
+        opponentVoidBox.style.zIndex = "1000";
+        //opponentVoidBox.style.backgroundColor = "rgba(255, 0, 0)";
+        opponentVoidBox.style.opacity = "0";
+        opponentVoidBox.style.transition = "opacity 1s ease-in-out";
+        opponentVoidBox.style.textAlign = "center";
+        opponentVoidBox.style.fontWeight = "bold";
+        opponentVoidBox.style.fontSize = "1.2em";
+        opponentVoidBox.style.color = "white";
+        opponentVoidBox.style.textShadow = `
+            -2px -2px 4px black,  
+            2px -2px 4px black,  
+            -2px 2px 4px black,  
+            2px 2px 4px black
+        `;
+
+        const opponentVoidText = document.createElement("span");
+            opponentVoidText.innerText = "Void";
+            opponentVoidText.style.position = "absolute";
+            opponentVoidText.style.left = "50%";
+            opponentVoidText.style.top = "5%";
+            opponentVoidText.style.transform = "translate(-50%, -50%)";
+
+        opponentVoidBox.appendChild(opponentVoidText);
+        document.body.appendChild(opponentVoidBox);
+
+        setTimeout(() => {
+            opponentVoidBox.style.opacity = "1";
+        }, 6500);
+
+        function updateOpponentVoidText() {
+            if (gameState && gameState[opponentName]) {
+                const count = gameState[opponentName].Void.length;
+                opponentVoidText.innerText = `${count}`;
+            }
+        }
+
+        opponentVoidBox.addEventListener("mouseenter", updateOpponentVoidText);
+        opponentVoidBox.addEventListener("mouseleave", () => {
+            opponentVoidText.innerText = "Void";
+        });
+
+    // Create Void Button Overlay
+    const opponentVoidButton = document.createElement("button");
+        opponentVoidButton.style.position = "absolute";
+        opponentVoidButton.style.left = "372px";
+        opponentVoidButton.style.top = "425px";
+        opponentVoidButton.style.width = "148px";
+        opponentVoidButton.style.height = "81px";
+        opponentVoidButton.style.backgroundColor = "rgba(255, 0, 0)";
+        opponentVoidButton.style.opacity = "0";
+        opponentVoidButton.style.border = "none";
+        opponentVoidButton.style.zIndex = "100800";
+        opponentVoidButton.style.cursor = "pointer";
+        opponentVoidButton.title = "Void";
+
+        // Add event listener for click
+        opponentVoidButton.addEventListener("click", () => {
+            const popup = document.createElement("div");
+                popup.style.position = "fixed";
+                popup.style.top = "50%";
+                popup.style.left = "50%";
+                popup.style.transform = "translate(-50%, -50%)";
+                popup.style.maxWidth = "min(90%, 800px)";
+                popup.style.overflowY = "auto";
+                popup.style.maxHeight = "unset";
+                popup.style.height = "auto";
+                popup.style.overflow = "visible";
+                popup.style.padding = "10px 20px";
+                popup.style.backgroundColor = "rgba(0, 0, 0, 0.85)";
+                popup.style.border = "3px solid white";
+                popup.style.borderRadius = "12px";
+                popup.style.zIndex = "100900";
+                popup.style.display = "flex";
+                popup.style.flexDirection = "column";
+                popup.style.alignItems = "center";
+                popup.style.gap = "20px";
+
+            const title = document.createElement("div");
+                title.textContent = "Opponent's Void";
+                title.style.color = "white";
+                title.style.fontSize = "2em";
+                title.style.textAlign = "center";
+            popup.appendChild(title);
+
+            const voidCards = gameState?.[username]?.Void || [];
+
+            if (voidCards.length === 0) {
+                const none = document.createElement("div");
+                none.textContent = "Opponent's Void is empty.";
+                none.style.color = "white";
+                popup.appendChild(none);
+            } else {
+                const cardContainer = document.createElement("div");
+                    cardContainer.style.display = "flex";
+                    cardContainer.style.flexWrap = "wrap";
+                    cardContainer.style.justifyContent = "center";
+                    cardContainer.style.gap = "10px";
+                    cardContainer.style.marginRight = "10px";
+                    cardContainer.style.maxWidth = "100%";
+                    cardContainer.style.overflow = "visible";
+
+                const scale = 0.3;
+                const cardWidth = 240;
+                const cardHeight = 420;
+
+                voidCards.forEach(cardData => {
+                    const card = cards.find(c => String(c.id) === String(cardData.id));
+                    if (!card) return;
+
+                    const scale = 0.3;
+                    const scaledCard = renderCard(card);
+                        scaledCard.style.transform = `scale(${scale})`;
+                        scaledCard.style.transformOrigin = "top left";
+                        scaledCard.style.margin = "5px";
+                        scaledCard.style.position = "relative";
+
+                    const wrapper = document.createElement("div");
+                        wrapper.style.width = `${240 * scale}px`;
+                        wrapper.style.height = `${420 * scale}px`;
+                        wrapper.style.overflow = "visible";
+                        wrapper.style.position = "relative";
+
+                    // Void card click overlay
+                    const overlay = document.createElement("button");
+                        overlay.style.position = "absolute";
+                        overlay.style.top = "0";
+                        overlay.style.left = "0";
+                        overlay.style.width = "100%";
+                        overlay.style.height = "100%";
+                        overlay.style.opacity = "0";
+                        overlay.style.border = "none";
+                        overlay.style.background = "transparent";
+                        overlay.style.cursor = "pointer";
+                    overlay.onclick = () => alert(`Card in Void Clicked: ${card.name}`);
+
+                    wrapper.appendChild(scaledCard);
+                    wrapper.appendChild(overlay);
+
+                    // Hover preview
+                    wrapper.addEventListener("mouseenter", () => {
+                        const scaled = document.querySelector("#viewing-window .scaled-card");
+                            scaled.innerHTML = "";
+                        const preview = renderCard(card);
+                            preview.style.width = "240px";
+                            preview.style.height = "420px";
+                            preview.style.transform = "scale(1.2)";
+                            preview.style.marginLeft = "-15%";
+                            preview.style.marginTop = "7%";
+                        scaled.appendChild(preview);
+                    });
+
+                    cardContainer.appendChild(wrapper);
+                });
+                popup.appendChild(cardContainer);
+            }
+
+            const closeBtn = document.createElement("button");
+                closeBtn.textContent = "Close";
+                closeBtn.style.marginTop = "10px";
+                closeBtn.style.padding = "10px 20px";
+                closeBtn.style.fontSize = "1.2em";
+                closeBtn.style.cursor = "pointer";
+                closeBtn.style.zIndex = "120000";
+            closeBtn.onclick = () => popup.remove();
+            popup.appendChild(closeBtn);
+
+            document.body.appendChild(popup);
+    });
+
+    document.body.appendChild(opponentVoidButton);
+    //End of Opponent Void Stack Creation
 
     // Create Surrender Button Overlay
     const surrenderButton = document.createElement("button");
@@ -3585,6 +4049,8 @@
 
         async function renderCardZone(cardsArray, containerId) {
             const container = document.getElementById(containerId);
+                container.style.gap = containerId === "playerFaceDownBox" ? "75px" : "4px";
+                container.style.gap = containerId === "playerFaceDownArsenalBox" ? "25px" : "4px";
             if (!container) return;
 
             container.innerHTML = ""; // Clear previous
@@ -3887,6 +4353,12 @@
                     });
                     //console.log("Rendering Champion Zone IDs:", cardsArray.map(c => c.id));
                     //console.log("DOM children count before:", container.children.length);
+                    if (containerId === "playerChampionsBox") {
+                        element.style.margin = "0 -85px"; // tighter spacing between Champions
+                    } else if (containerId === "playerFaceDownBox") {
+                        element.style.margin = "0 40px"; // wider spacing between FaceDown cards
+                        element.style.marginLeft = "0";
+                    }
                     container.appendChild(element);
                 }
             });
