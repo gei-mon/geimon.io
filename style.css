@@ -845,3 +845,8 @@ background-color: #29c7bd;
   outline: 4px solid silver !important;
   box-shadow: 0 0 12px 4px silver !important;
 }
+
+@keyframes cardDrawSlide {
+    0% { transform: scale(0.9); opacity: 1; }
+    100% { transform: scale(1); opacity: 0.5; }
+}

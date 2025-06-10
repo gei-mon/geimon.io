@@ -659,10 +659,12 @@
 
                     if (drawnCards.length > 0) {
                         addGameLogEntry(`${username} drew ${drawnCards.length} card${drawnCards.length > 1 ? 's' : ''}`);
+                        animateCardDraw(false);
                     }
                 }
                 previousHandIds = currentHand.map(card => card.id);
             }
+            opponentHandRevealed = gameState?.handsRevealed === true;
 
             remainingDeck = gameState[username].Deck;
             updateDeckText();
@@ -989,6 +991,13 @@
 
                     // Trigger green wave animation for both player and bot
                     triggerPhaseWaveEffect();
+                });
+
+                socket.on("opponent_draw_card", ({ player, count }) => {
+                    if (!username || player === username) return; // ignore self
+                    for (let i = 0; i < count; i++) {
+                        animateCardDraw(true); // animate for opponent
+                    }
                 });
 
                 socket.on("game_over", ({ winner, loser, reason }) => {
@@ -1649,45 +1658,111 @@
             AbilityExecutor.handleBoardStateChange(fullCard, fullCard.boardState, fullCard.lastBoardState, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
         }
 
+        function animateCardDraw(isOpponent = false) {
+            const cardImg = document.createElement("img");
+            const sleeveUrl = isOpponent
+                ? opponentDeckBox?.style.backgroundImage?.slice(5, -2)
+                : userSleeveURL;
+
+            cardImg.src = sleeveUrl || "https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site%20Assets/DefaultSleeve.png";
+            cardImg.style.position = "fixed";
+            cardImg.style.width = "260px";
+            cardImg.style.height = "400px";
+            cardImg.style.zIndex = "99999";
+            cardImg.style.transition = "all 0.5s ease-in-out";
+
+            // Determine start and end locations
+            const startBox = isOpponent ? opponentDeckBox : playerDeckBox;
+            const endBox = isOpponent ? document.getElementById("opponent-hand") : document.getElementById("drawn-cards");
+
+            const startRect = startBox.getBoundingClientRect();
+            const endRect = endBox.getBoundingClientRect();
+
+            cardImg.style.left = `${startRect.left + startRect.width / 2 - 60}px`;
+            cardImg.style.top = `${startRect.top + startRect.height / 2 - 105}px`;
+
+            document.body.appendChild(cardImg);
+
+            requestAnimationFrame(() => {
+                cardImg.style.left = `${endRect.left + endRect.width / 2 - 900}px`;
+                cardImg.style.top = `${endRect.top + endRect.height / 2 - 35}px`;
+                cardImg.style.opacity = "0.2";
+                cardImg.style.transform = "scale(0.5)";
+            });
+
+            setTimeout(() => cardImg.remove(), 1000);
+        }
+
         function renderOpponentHand() {
             const container = document.getElementById("opponent-hand");
             if (!container || !gameState) return;
 
             const opponent = gameState[gameState.player1 === username ? gameState.player2 : gameState.player1];
-            const opponentHand = opponent?.Hand || [];
-                container.innerHTML = "";
-                container.style.overflowX = "visible";
-                container.style.flexWrap = "nowrap";
+            let opponentHand = opponent?.Hand || [];
+
+            // Sort hand by type priority
+            const typePriority = {
+                "Champion": 6,
+                "Action": 5,
+                "Equipment": 4,
+                "Obelisk": 3,
+                "Rush": 2,
+                "Reflex": 1
+            };
+            opponentHand = opponentHand.slice().sort((a, b) => {
+                const fullA = cards.find(c => String(c.id) === String(a.id));
+                const fullB = cards.find(c => String(c.id) === String(b.id));
+
+                const typeA = typePriority[fullA?.type] || 99;
+                const typeB = typePriority[fullB?.type] || 99;
+
+                if (typeA !== typeB) {
+                    return typeA - typeB;
+                }
+
+                // Reverse alphabetical comparison within type
+                const nameA = fullA?.name?.toLowerCase() || "";
+                const nameB = fullB?.name?.toLowerCase() || "";
+                return nameB.localeCompare(nameA);
+            });
+
+            container.innerHTML = "";
+            container.style.overflowX = "visible";
+            container.style.flexWrap = "nowrap";
 
             opponentHand.forEach(cardData => {
                 const cardEl = document.createElement("div");
                 cardEl.classList.add("card");
-                    cardEl.style.width = "260px";
-                    cardEl.style.height = "400px";
-                    cardEl.style.transform = "scale(0.48)";
-                    cardEl.style.marginLeft = "-200px";
-                    cardEl.style.position = "relative";
-                    cardEl.style.overflow = "hidden";
-                    cardEl.style.boxSizing = "border-box";
-                    cardEl.style.border = "none";
-                    cardEl.style.outline = "none";
-                    cardEl.style.boxShadow = "0 30px 40px rgba(0, 0, 0, 0.5)";
+                cardEl.style.width = "260px";
+                cardEl.style.height = "400px";
+                cardEl.style.transform = "scale(0.48)";
+                cardEl.style.marginLeft = "-200px";
+                cardEl.style.top = "10px";
+                cardEl.style.position = "relative";
+                cardEl.style.overflow = "visible";
+                cardEl.style.boxSizing = "border-box";
+                cardEl.style.border = "none";
+                cardEl.style.outline = "none";
+                cardEl.style.boxShadow = "0 30px 40px rgba(0, 0, 0, 0.5)";
 
                 if (opponentHandRevealed) {
                     const fullCard = cards.find(c => String(c.id) === String(cardData.id));
                     if (fullCard) {
                         const renderedCard = renderCard(fullCard);
+                        renderedCard.style.transformOrigin = "center center";
+                        renderedCard.style.transform = "rotate(180deg)";
+                        renderedCard.style.marginLeft = "25px";
+                        renderedCard.style.marginTop = "100px";
                         cardEl.appendChild(renderedCard);
 
                         addTooltipListeners(cardEl);
                         addTokenTooltipListeners(cardEl);
                     }
                 } else {
-                // render sleeve back
-                const sleeveUrl = opponentDeckBox?.style.backgroundImage?.slice(5, -2) || ""; // grab current sleeve
-                const sleeveImg = document.createElement("img");
-                sleeveImg.src = sleeveUrl;
-                    sleeveImg.style.display = "block"; // eliminates extra space below images
+                    const sleeveUrl = opponentDeckBox?.style.backgroundImage?.slice(5, -2) || "";
+                    const sleeveImg = document.createElement("img");
+                    sleeveImg.src = sleeveUrl;
+                    sleeveImg.style.display = "block";
                     sleeveImg.style.width = "100%";
                     sleeveImg.style.height = "100%";
                     sleeveImg.style.objectFit = "cover";
@@ -1695,13 +1770,11 @@
                     sleeveImg.style.outline = "none";
                     sleeveImg.style.boxShadow = "none";
                     sleeveImg.style.transform = "rotate(180deg)";
+                    cardEl.appendChild(sleeveImg);
 
-                cardEl.appendChild(sleeveImg);
-
-                // Disable hover view
-                cardEl.onmouseenter = null;
-                cardEl.onmousemove = null;
-                cardEl.onmouseleave = null;
+                    cardEl.onmouseenter = null;
+                    cardEl.onmousemove = null;
+                    cardEl.onmouseleave = null;
                 }
 
                 container.appendChild(cardEl);

@@ -815,17 +815,14 @@ async function waitForTotemFadeServer(gameId, timeout = 15000) {
 async function performBotTurn(game, gameId) {
   await waitForTotemFadeServer(gameId);
   const phases = ["Intermission", "Draw", "Main 1", "Battle", "Main 2", "End"];
-  //const startedTurn = game.turn.count;
+
   io.to(gameId).emit("game_log", {
     username: "Bot",
     message: `Bot's turn. Turn #${game.turn.count}`
   });
 
   for (const phase of phases) {
-    // Break if bot lost its turn
     if (game.turn.currentPlayer !== "Bot") break;
-
-    // Skip Battle and Main 2 on Turn 1
     if (game.turn.count === 1 && (phase === "Battle" || phase === "Main 2")) continue;
 
     game.turn.currentPhase = phase;
@@ -839,11 +836,8 @@ async function performBotTurn(game, gameId) {
       message: `Bot changed phase to ${phase}`
     });
 
-    // Draw logic
     if (phase === "Draw") {
       const bot = game["Bot"];
-
-      // ✅ Adjust based on the active totem
       let cardsToDraw = 1;
       if (game.totem === "Double Double") {
         cardsToDraw = 2;
@@ -858,6 +852,10 @@ async function performBotTurn(game, gameId) {
         io.to(gameId).emit("game_over", { loser, winner, reason });
         return;
       }
+      io.to(gameRoomId).emit("opponent_draw_card", {
+        player: drawingPlayerUsername,
+        count: cardsToDraw // or however many cards were drawn
+      });
 
       const drawn = bot.Deck.splice(0, cardsToDraw);
       drawn.forEach(card => {
@@ -874,13 +872,8 @@ async function performBotTurn(game, gameId) {
         username: "Bot",
         message
       });
-    } else {
-        io.to(gameId).emit("game_log", {
-          username: "Bot",
-          message: "Bot tried to draw but its Deck was empty"
-        });
-      }
     }
+
     if (phase === "End") {
       const bot = game["Bot"];
       while (bot.Hand.length > 6) {
@@ -888,7 +881,6 @@ async function performBotTurn(game, gameId) {
         let discardedCard = bot.Hand.splice(discardIndex, 1)[0];
         console.log("📦 Discarding card:", discardedCard);
 
-        // Try to enrich the discarded card with full data if incomplete
         if (!discardedCard.name) {
           console.warn("🔍 Discarded card missing name, trying to enrich with ID:", discardedCard.id);
           const fullData = cards.find(c => c.id === String(discardedCard.id));
@@ -908,8 +900,8 @@ async function performBotTurn(game, gameId) {
           username: "Bot",
           message: `Bot discarded ${discardedCard.name ?? "[unknown card]"} for hand size limit`,
         });
-        const updateLocalFromGameState = () => {};
 
+        const updateLocalFromGameState = () => {};
         try {
           await AbilityExecutor.handleBoardStateChange(
             discardedCard,
@@ -921,7 +913,7 @@ async function performBotTurn(game, gameId) {
             updateLocalFromGameState,
             addGameLogEntry
           );
-            } catch (err) {
+        } catch (err) {
           console.error("Error handling board state change:", err);
         }
 
@@ -936,20 +928,19 @@ async function performBotTurn(game, gameId) {
         await delay(500);
       }
     }
+
     await delay(1500);
   }
 
-  // ✅ If bot still has the turn, end it and switch
-if (game.turn.currentPlayer === "Bot") {
-  game.turn.count++;
-  game.turn.currentPlayer = (game.turn.currentPlayer === game.player1)
-    ? game.player2
-    : game.player1;
-  game.turn.currentPhase = "Intermission";
-  console.log(`🤖 Bot ended turn. Next player: ${game.turn.currentPlayer}`);
-}
+  if (game.turn.currentPlayer === "Bot") {
+    game.turn.count++;
+    game.turn.currentPlayer = (game.turn.currentPlayer === game.player1)
+      ? game.player2
+      : game.player1;
+    game.turn.currentPhase = "Intermission";
+    console.log(`🤖 Bot ended turn. Next player: ${game.turn.currentPlayer}`);
+  }
 
-  // ✅ If bot is still up, repeat
   if (game.turn.currentPlayer === "Bot") {
     setTimeout(() => performBotTurn(game, gameId), 300);
   }
