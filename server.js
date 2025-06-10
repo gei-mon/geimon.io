@@ -775,16 +775,20 @@ app.post('/deleteDeck', async (req, res) => {
 app.post('/endGame', (req, res) => {
     const { gameId, loser, reason } = req.body;
 
-    if (!gameId || !gameStates[gameId]) {
+    const game = gameStates.get(gameId);
+    if (!game) {
         return res.status(404).json({ success: false, message: "Game not found" });
     }
 
-    console.log(`Game ${gameId} ended. Loser: ${loser}. Reason: ${reason}`);
+    const winner = [game.player1, game.player2].find(name => name !== loser);
+    console.log(`Game ${gameId} ended. Loser: ${loser}. Winner: ${winner}. Reason: ${reason}`);
 
-    // Clean up or archive the gameState
+    // Emit to clients
+    io.to(gameId).emit("game_over", { loser, winner, reason });
+
+    // Cleanup
     gameStates.delete(gameId);
-
-    res.json({ success: true });
+    return res.json({ success: true, loser, winner, reason });
 });
 
 function delay(ms) {
@@ -838,37 +842,39 @@ async function performBotTurn(game, gameId) {
     // Draw logic
     if (phase === "Draw") {
       const bot = game["Bot"];
-      const cardsToDraw = 1;
 
-      if (bot.Deck.length > 0) {
-        const drawCount = Math.min(cardsToDraw, bot.Deck.length);
-        const drawn = bot.Deck.splice(0, drawCount);
+      // ✅ Adjust based on the active totem
+      let cardsToDraw = 1;
+      if (game.totem === "Double Double") {
+        cardsToDraw = 2;
+      }
 
-        if (bot.Deck.length < cardsToDraw) {
-          const loser = "Bot";
-          const winner = (game.player1 === "Bot") ? game.player2 : game.player1;
-          const reason = "Bot decked out.";
-          gameStates.delete(gameId);
-          io.to(gameId).emit("game_over", { loser, winner, reason });
-          return;
-        }
+      if (bot.Deck.length < cardsToDraw) {
+        const loser = "Bot";
+        const winner = (game.player1 === "Bot") ? game.player2 : game.player1;
+        const reason = `Bot decked out trying to draw ${cardsToDraw} card(s).`;
 
-        drawn.forEach(card => {
-          card.lastBoardState = "Deck";
-          card.boardState = "Hand";
-        });
+        gameStates.delete(gameId);
+        io.to(gameId).emit("game_over", { loser, winner, reason });
+        return;
+      }
 
-        bot.Hand.push(...drawn);
+      const drawn = bot.Deck.splice(0, cardsToDraw);
+      drawn.forEach(card => {
+        card.lastBoardState = "Deck";
+        card.boardState = "Hand";
+      });
+      bot.Hand.push(...drawn);
 
-        const message = drawCount === 1
-          ? "Bot drew 1 card"
-          : `Bot drew ${drawCount} cards`;
+      const message = cardsToDraw === 1
+        ? "Bot drew 1 card"
+        : `Bot drew ${cardsToDraw} cards`;
 
-        io.to(gameId).emit("game_log", {
-          username: "Bot",
-          message
-        });
-      } else {
+      io.to(gameId).emit("game_log", {
+        username: "Bot",
+        message
+      });
+    } else {
         io.to(gameId).emit("game_log", {
           username: "Bot",
           message: "Bot tried to draw but its Deck was empty"

@@ -358,8 +358,8 @@
             gap: 30px;
             padding: 10px;
             position: fixed;
-            top: -200px;
-            left: 700px;
+            top: -235px;
+            left: 765px;
             transform: none;
             z-index: 100350;
         "></div>
@@ -991,6 +991,11 @@
                     triggerPhaseWaveEffect();
                 });
 
+                socket.on("game_over", ({ winner, loser, reason }) => {
+                    const mainText = (winner === username) ? "You Win" : "You Lose";
+                    showBanner(mainText, reason);
+                });
+
                 if (!username) {
                     console.warn("Username not set after init.");
                     return;
@@ -1161,6 +1166,25 @@
             document.getElementById("win-loss-main-text").textContent = mainText;
             document.getElementById("win-loss-reason-text").textContent = reasonText;
             banner.style.display = "block";
+
+            // ✅ Add game log entry
+            const result = `${mainText.toUpperCase()}`;
+            addGameLogEntry(`Game Ended: ${result} – ${reasonText}`);
+
+            // ✅ Block all game interactions
+            const blocker = document.createElement("div");
+            blocker.id = "game-interaction-blocker";
+            Object.assign(blocker.style, {
+                position: "fixed",
+                top: 0,
+                left: 0,
+                width: "100vw",
+                height: "100vh",
+                backgroundColor: "rgba(0, 0, 0, 0.1)",
+                zIndex: 130000,
+                pointerEvents: "all"
+            });
+            document.body.appendChild(blocker);
         }
 
         function checkActivatableCards() {
