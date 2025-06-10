@@ -552,6 +552,17 @@ overflow: hidden;
     0 4px 8px #b366ff !important; /* Bottom */
 }
 
+.can-flip-arsenal {
+  outline: 4px solid gold !important;
+  box-shadow: 0 0 12px 5px gold, 0 0 20px 10px #b366ff;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease-in-out, outline 0.3s ease-in-out;
+}
+
+.card:hover.can-flip-arsenal {
+  box-shadow: 0 0 20px 8px gold, 0 0 28px 14px #b366ff;
+}
+
 .bottom-bar {
 width: 70%;                  /* Reduced width */
 height: 32px;

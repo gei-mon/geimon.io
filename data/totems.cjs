@@ -8,13 +8,13 @@ const totems = [
         "Tomb Raider Rejects": "Cards cannot be Retrieved.", //
         "Necromancer Died": "Cards cannot be Resurrected.", //
         "Blindfolded": "Cards cannot be Added.", //
+        "Single File": "Turn Player can only attack with 1 Champion during their Battle Phase.", //
+        "Fair Play": "Both Players play with their Hands revealed.", //
         "Shared Interest": "Neither Player can deal damage to any other until the start of Turn 7.",
-        "Single File": "Turn Player can only attack with 1 Champion during their Battle Phase.",
         "Terrifying Toddlers": "Champions with a Damage of 3 or lower deal double battle Damage.",
-        "Caught in your Underwear": "No Damage Thresholds.",
         "Fists Only": "Damage can only be dealt by attack.",
-        "All or Nothing": "The Damage a Champion takes from a single event must Destroy it or the Damage does nothing.",
-        "Fair Play": "Both Players play with their Hands revealed." //
+        "Caught in your Underwear": "No Damage Thresholds.",
+        "All or Nothing": "The Damage a Champion takes from a single event must Destroy it or the Damage does nothing."
     }
 ]
 
