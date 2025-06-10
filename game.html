@@ -25,14 +25,18 @@
 }
   #drawn-cards {
     position: fixed;
-    bottom: 22px; /* Positions the cards near the bottom */
-    left: 900px;
-    gap: -960px; /* Allows 5% overlap */
-    transform: translate(-25%, 30%);
+    bottom: -180px; /* Positions the cards near the bottom */
+    left: 775px;
     display: flex;
     flex-direction: row; /* Aligns cards in a horizontal row */
     align-items: center;
     z-index: 100350; /* Places it over (almost) everything */
+    overflow: visible;
+    pointer-events: none;
+    max-height: 475px;
+}
+#drawn-cards > * {
+  pointer-events: auto; /* re-enable interaction on individual cards */
 }
 .card {
     width: 240px; /* Reduces card size */
