@@ -1009,6 +1009,7 @@ app.post('/setPhase', (req, res) => {
   }
 
   if (phase === "End") {
+    const player = game[username];
     const hand = game[username]?.Hand || [];
 
     // Prevent progressing turn if player still has over 6 cards
