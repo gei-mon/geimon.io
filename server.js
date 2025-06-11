@@ -1014,7 +1014,7 @@ app.post('/setPhase', (req, res) => {
 
     // Prevent progressing turn if player still has over 6 cards
     if (hand.length > 6) {
-      console.warn(`Player ${player} still has ${hand.length} cards. End phase will not advance until discard is complete.`);
+      console.warn(`Player ${username} still has ${hand.length} cards in hand.`);
       game.turn.currentPhase = "End";
 
       return res.json({ success: true, currentPhase: "End" });

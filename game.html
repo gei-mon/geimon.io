@@ -1677,6 +1677,7 @@
                         triggerPhaseWaveEffect();
                         addGameLogEntry(`${username} changed phase to ${data.currentPhase}`);
                         await updateLocalFromGameState();
+                        await new Promise(resolve => setTimeout(resolve, 100));
 
                         // ⏳ Check for discard AFTER entering End phase
                         const currentHandSize = gameState[username].Hand.length;
