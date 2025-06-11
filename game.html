@@ -692,7 +692,7 @@
             const prevLength = previousHandIds.length;
             const newLength = currentHand.length;
 
-            console.log("✅ Rehydrated Hand:", gameState[username].Hand);
+            //console.log("✅ Rehydrated Hand:", gameState[username].Hand);
 
             if (!handsAreEqual(currentHand)) {
                 drawnCardsArray = currentHand;
@@ -1645,11 +1645,12 @@
 
                 const validNextPhases = allowedTransitions[currentPhase] || [];
                 if (!validNextPhases.includes(phase)) {
-                    console.warn(`Invalid transition from ${currentPhase} to ${phase}`);
-                    return;
+                    // Special case: allow re-entering End to complete post-discard retry
+                    if (!(currentPhase === "End" && phase === "End")) {
+                        return res.status(400).json({ message: "Invalid phase transition" });
+                    }
                 }
 
-                // 🎯 Special logic for End Phase (entering it)
                 if (phase === "End" && gameState.turn.currentPlayer === username) {
                     updatePhaseDisplay(phase);
                     triggerPhaseWaveEffect();
@@ -1662,7 +1663,7 @@
                         AbilityExecutor.changeLife(player2, -1, gameState, username, gameId);
                     }
 
-                    // 🛰️ Sync phase with server and log immediately
+                    // ⬇️ First attempt to end the turn
                     const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/setPhase", {
                         method: "POST",
                         credentials: "include",
@@ -1677,39 +1678,65 @@
                         triggerPhaseWaveEffect();
                         addGameLogEntry(`${username} changed phase to ${data.currentPhase}`);
                         await updateLocalFromGameState();
-                        await new Promise(resolve => setTimeout(resolve, 100));
 
-                        // ⏳ Check for discard AFTER entering End phase
-                        const currentHandSize = gameState[username].Hand.length;
-                        if (currentHandSize > 6) {
-                            console.log("🔁 Triggering discard due to hand size > 6 at end of turn.");
-                            await handleCardDiscard(
-                                gameState,
-                                username,
-                                cards,
-                                gameId,
-                                phase,
-                                updateLocalFromGameState,
-                                addGameLogEntry,
-                                updatePhaseDisplay
-                            );
+                        // ✅ CASE A: The server blocked turn advancement (still in End)
+                        if (data.currentPhase === "End") {
+                            await updateLocalFromGameState();
+                            const currentHandSize = gameState[username].Hand.length;
+                            if (currentHandSize > 6) {
+                                console.log("🔁 Discard required to end turn. Triggering discard...");
+
+                                await handleCardDiscard(
+                                    gameState,
+                                    username,
+                                    cards,
+                                    gameId,
+                                    phase,
+                                    updateLocalFromGameState,
+                                    addGameLogEntry,
+                                    updatePhaseDisplay
+                                );
+
+                                // 🔄 Wait for update to apply
+                                await sendZoneUpdate(["Hand", "Tomb"]);
+                                await updateLocalFromGameState();
+                                await new Promise(resolve => setTimeout(resolve, 100));
+
+                                // 🛰️ Retry End phase → this time turn should advance
+                                const retry = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/setPhase", {
+                                    method: "POST",
+                                    credentials: "include",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({ gameId, username, phase })
+                                });
+
+                                if (retry.ok) {
+                                    const retryData = await retry.json();
+                                    updatePhaseDisplay(retryData.currentPhase);
+                                    triggerPhaseWaveEffect();
+                                    addGameLogEntry(`${username} changed phase to ${retryData.currentPhase}`);
+                                    await updateLocalFromGameState();
+
+                                    if (retryData.draw) {
+                                        alert("The game ended in a draw.");
+                                    } else if (retryData.loser) {
+                                        showBanner(retryData.loser === username ? "You Lose" : "You Win", retryData.reason);
+                                    }
+                                }
+                            }
                         }
 
-                        // ✅ Game end conditions
+                        // ✅ CASE B: Normal turn advancement
                         if (data.draw) {
                             alert("The game ended in a draw.");
                         } else if (data.loser) {
-                            if (data.loser === username) {
-                                showBanner("You Lose", data.reason);
-                            } else {
-                                showBanner("You Win", data.reason);
-                            }
+                            showBanner(data.loser === username ? "You Lose" : "You Win", data.reason);
                         }
                     } else {
                         console.error("Failed to change phase:", await response.text());
                     }
 
-                    return; // Don't fall through to general phase flow again
+                    return;
                 }
 
                 // 🧠 For all other valid phases

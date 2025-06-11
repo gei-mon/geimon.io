@@ -974,7 +974,10 @@ app.post('/setPhase', (req, res) => {
   const validNextPhases = allowedTransitions[currentPhase] || [];
 
   if (!validNextPhases.includes(phase)) {
-    return res.status(400).json({ message: "Invalid phase transition" });
+    // Special case: allow re-entering End to complete post-discard retry
+    if (!(currentPhase === "End" && phase === "End")) {
+      return res.status(400).json({ message: "Invalid phase transition" });
+    }
   }
 
   game.turn.currentPhase = phase;
