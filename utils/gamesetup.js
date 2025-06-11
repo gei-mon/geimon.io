@@ -64,7 +64,7 @@ function populateDropdown(dropdown, options) {
     });
 }
 
-function startGame() {
+function startGame(isSinglePlayer = false) {
     const playerDeckName = document.getElementById("playerDeck").value;
     const opponentDeckName = document.getElementById("opponentDeck").value;
     const gameType = document.getElementById("gameType").value;
@@ -84,27 +84,23 @@ function startGame() {
     }
     selectedTotemText = allTotems[selectedTotem] || "Unknown Totem";
 
-    const playerDeck = playerDeckName;
-    const opponentDeck = opponentDeckName;
-
-    const gameId = Math.random().toString(36).substr(2, 9);
-    localStorage.setItem("gameId", gameId); // overwrite old game ID
+    //const isSinglePlayer = document.getElementById("isSinglePlayer")?.value === "true";
 
     const settings = {
-        playerDeck,
-        opponentDeck,
+        playerDeck: playerDeckName,
+        opponentDeck: opponentDeckName,
         gameType,
         totem: selectedTotem,
         totemText: selectedTotemText,
         turnOrder,
-        gameId // pass it to game.html via URL
+        gameId: Math.random().toString(36).substr(2, 9),
+        isSinglePlayer // ✅ Append to URL
     };
 
-    console.log("playerDeck final value:", playerDeck);
-    console.log("URL params being sent:", new URLSearchParams(settings).toString());
+    localStorage.setItem("gameId", settings.gameId);
+
     const params = new URLSearchParams(settings).toString();
     window.location.href = `game.html?${params}`;
 }
 
 window.startGame = startGame;
-
