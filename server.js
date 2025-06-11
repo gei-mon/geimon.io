@@ -1058,7 +1058,7 @@ app.post('/setPhase', (req, res) => {
       return res.json({ success: true, loser, reason });
     }
   }
-  return res.json({ success: true, currentPhase: "Intermission" });
+  return res.json({ success: true, currentPhase: phase });
 });
 
 // GET /logout
