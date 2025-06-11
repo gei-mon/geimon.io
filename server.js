@@ -1009,11 +1009,22 @@ app.post('/setPhase', (req, res) => {
   }
 
   if (phase === "End") {
-  game.turn.count++;
-  game.turn.currentPlayer = (game.turn.currentPlayer === game.player1)
-    ? game.player2
-    : game.player1;
-  game.turn.currentPhase = "Intermission";
+    const hand = game[player]?.Hand || [];
+
+    // Prevent progressing turn if player still has over 6 cards
+    if (hand.length > 6) {
+      console.warn(`Player ${player} still has ${hand.length} cards. End phase will not advance until discard is complete.`);
+      game.turn.currentPhase = "End";
+
+      return res.json({ success: true, currentPhase: "End" });
+    }
+
+    // ✅ Proceed with turn change
+    game.turn.count++;
+    game.turn.currentPlayer = (game.turn.currentPlayer === game.player1)
+      ? game.player2
+      : game.player1;
+    game.turn.currentPhase = "Intermission";
 
     // ✅ Trigger bot turn here if it's now the bot's turn
     if (game.turn.currentPlayer === "Bot") {
@@ -1043,11 +1054,10 @@ app.post('/setPhase', (req, res) => {
       //console.log(`Game ${gameId} ended. Loser: ${loser}. Reason: ${reason}`);
 
       gameStates.delete(gameId);
-
       return res.json({ success: true, loser, reason });
     }
   }
-  return res.json({ success: true, currentPhase: phase });
+  return res.json({ success: true, currentPhase: "Intermission" });
 });
 
 // GET /logout
