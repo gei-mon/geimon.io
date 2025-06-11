@@ -567,6 +567,25 @@
             return ["Action", "Rush", "Reflex", "Equipment", "Obelisk"].includes(fullCard.type);
         }
 
+        async function canRallyChampion(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
+            if (card.cardConditionFunction) {
+                const conditionMet = !card.cardConditionFunction || AbilityExecutor.checkCardConditionFunction(card, gameState, username);
+                if (isBasicRallyAvailable(card, phase, gameState, username) && conditionMet) {
+                    cardElement.classList.add("can-rally-faceup");
+                } else {
+                    cardElement.classList.remove("can-rally-faceup");
+                }
+                if (!conditionMet) return false;
+            }
+
+            if (card.cardCostFunction && card.cardCostFunction !== "UseBasic") {
+                const paid = await AbilityExecutor.handleCardCostFunction(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+                if (!paid) return false;
+            }
+
+            return true;
+        }
+
         function showSetArsenalPrompt(cardData, fullCard) {
             const existingPrompt = document.getElementById("set-arsenal-prompt-overlay");
             if (existingPrompt) {
@@ -819,64 +838,22 @@
             `;
             document.body.appendChild(overlay);
 
-            document.getElementById("cancel-cost-rally").onclick = async () => {
+            document.getElementById("cancel-cost-rally").onclick = () => {
                 document.body.removeChild(overlay);
             };
 
             document.getElementById("confirm-cost-rally").onclick = async () => {
-            if (card.cardCostFunction?.startsWith("Sacrifice")) {
-                const sacrificeAmount = parseInt(card.cardCostFunction.replace("Sacrifice", ""), 10);
-                if (!isNaN(sacrificeAmount)) {
-                    document.body.removeChild(overlay);
-                    const success = await AbilityExecutor.sacrificeChampions(sacrificeAmount, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
-                    if (!success) return; // User cancelled or failed to sacrifice
-                    // Proceed with rally now
-                    const hand = gameState[username].Hand;
-                    const handIndex = hand.findIndex(c => String(c.id) === String(card.id));
-                    if (handIndex !== -1) {
-                        hand.splice(handIndex, 1);
-                        card.lastBoardState = "Hand";
-                        card.boardState = "Zone (Champion)";
-                        gameState[username]["Zone (Champion)"].push(card);
-
-                        addGameLogEntry(`${username} rallied ${card.name} by sacrificing champions.`);
-                        
-                        await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
-                            method: "POST",
-                            credentials: "include",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify({
-                                gameId,
-                                owner: username,
-                                updatedZones: {
-                                    Hand: hand,
-                                    "Zone (Champion)": gameState[username]["Zone (Champion)"]
-                                }
-                            })
-                        });
-
-                        await AbilityExecutor.handleBoardStateChange(
-                            card,
-                            "Zone (Champion)",
-                            "Hand",
-                            gameState,
-                            username,
-                            gameId,
-                            updateLocalFromGameState,
-                            addGameLogEntry
-                        );
-                        await updateLocalFromGameState();
-                        }
-                        return;
-                    }
-                }
-
                 document.body.removeChild(overlay);
 
-                // Existing code for other costs (Offer, Mill)
-                await AbilityExecutor.handleCardCostFunction(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+                // ✅ FULL waterfall logic applied
+                const canRally = await canRallyChampion(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
 
-                // Move card to Champion zone for other cost types
+                if (!canRally) {
+                    // ❌ Cannot rally due to condition or cost
+                    return;
+                }
+
+                // ✅ Rally is allowed — move card from hand to champion zone
                 const hand = gameState[username].Hand;
                 const index = hand.findIndex(c => String(c.id) === String(card.id));
                 if (index !== -1) {
@@ -884,6 +861,8 @@
                     card.lastBoardState = "Hand";
                     card.boardState = "Zone (Champion)";
                     gameState[username]["Zone (Champion)"].push(card);
+
+                    addGameLogEntry(`${username} rallied ${card.name}.`);
 
                     await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
                         method: "POST",
@@ -898,8 +877,6 @@
                             }
                         })
                     });
-
-                    addGameLogEntry(`${username} rallied ${card.name} by paying its cost.`);
 
                     await AbilityExecutor.handleBoardStateChange(card, "Zone (Champion)", "Hand", gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
                     await updateLocalFromGameState();
@@ -3616,12 +3593,13 @@
         const FACEDOWN_ZONE = "FaceDownZone";
 
         async function handleBasicRally(card) {
-            //console.log("🔵 handleBasicRally invoked for:", card);
-
             if (!isBasicRallyAvailable(card, gameState.turn.currentPhase, gameState, username)) {
                 console.warn("⛔ Rally not available for:", card.name);
                 return;
             }
+
+            const hasCondition = !!card.cardConditionFunction;
+            const conditionMet = hasCondition ? AbilityExecutor.checkCardConditionFunction(card, gameState, username) : true;
 
             // ✅ Ask player how to rally
             const choice = await new Promise(resolve => {
@@ -3639,10 +3617,14 @@
                     zIndex: "120000"
                 });
 
+                const faceDownOption = hasCondition
+                    ? `<button id="rally-facedown" disabled title="This Champion has a condition and cannot be rallied face-down.">Face-Down (Disabled)</button>`
+                    : `<button id="rally-facedown">Yes, Face-Down</button>`;
+
                 popup.innerHTML = `
-                    <p>Do you want to Rally this Champion?</p>
+                    <p>Do you want to Rally <strong>${card.name}</strong>?</p>
                     <button id="rally-faceup">Yes, Face-Up</button>
-                    <button id="rally-facedown">Yes, Face-Down</button>
+                    ${faceDownOption}
                     <button id="rally-cancel">Cancel Rally</button>
                 `;
 
@@ -3652,18 +3634,28 @@
                     document.body.removeChild(popup);
                     resolve("faceup");
                 };
-                document.getElementById("rally-facedown").onclick = () => {
-                    document.body.removeChild(popup);
-                    resolve("facedown");
-                };
+                const facedownBtn = document.getElementById("rally-facedown");
+                if (facedownBtn && !hasCondition) {
+                    facedownBtn.onclick = () => {
+                        document.body.removeChild(popup);
+                        resolve("facedown");
+                    };
+                }
+
                 document.getElementById("rally-cancel").onclick = () => {
                     document.body.removeChild(popup);
                     resolve("cancel");
+                    updateAllRallyHighlights(gameState.turn.currentPhase, gameState, username);
                 };
             });
 
             if (choice === "cancel") {
                 console.log("❌ Rally cancelled by user.");
+                return;
+            }
+
+            if (choice === "faceup" && hasCondition && !conditionMet) {
+                console.warn("⛔ Cannot rally face-up: condition not met.");
                 return;
             }
 
@@ -3681,7 +3673,6 @@
             gameState[username].Hand = gameState[username].Hand.filter(c => c.id !== ralliedCard.id);
 
             if (choice === "facedown") {
-                // ⚠️ Mark card for flipping restriction
                 ralliedCard.faceDown = true;
                 ralliedCard.setTurn = gameState.turn.count;
 
@@ -3697,7 +3688,6 @@
                 gameState[username][CHAMPION_ZONE].push(ralliedCard);
                 gameState[username].hasBasicRallied = true;
 
-                // ✅ Trigger Rally effects (Face-Up only)
                 AbilityExecutor.handleBoardStateChange(
                     ralliedCard,
                     ralliedCard.boardState,
@@ -3744,54 +3734,6 @@
             }
 
             updateAllRallyHighlights(gameState.turn.currentPhase, gameState, username);
-        }
-
-        async function handleNonChampionActivation(card) {
-            const type = String(card.type).toLowerCase();
-            const costFn = card.cardCostFunction;
-
-            // ✅ Pay cost (sacrifice1, offer, etc)
-            await AbilityExecutor.handleCardCostFunction(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
-
-            // ✅ Move card to arsenal (if Obelisk or Equipment)
-            const hand = gameState[username].Hand;
-            const index = hand.findIndex(c => String(c.id) === String(card.id));
-            if (index !== -1) hand.splice(index, 1);
-
-            if (type === "obelisk") {
-                card.boardState = "Zone (Arsenal)";
-                card.lastBoardState = "Hand";
-                gameState[username]["Zone (Arsenal)"].push(card);
-            }
-
-            // ✅ Send to tomb if Action, Rush, Reflex
-            if (["action", "rush", "reflex"].includes(type)) {
-                card.boardState = "Tomb";
-                card.lastBoardState = "Hand";
-                gameState[username].Tomb.push(card);
-                animateCardDiscard("drawn-cards", "playerTombBox", false);
-            }
-
-            addGameLogEntry(`${username} activated ${card.name} by paying its cost.`);
-
-            await AbilityExecutor.handleBoardStateChange(card, card.boardState, "Hand", gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
-
-            await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
-                method: "POST",
-                credentials: "include",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    gameId,
-                    owner: username,
-                    updatedZones: {
-                        Hand: gameState[username].Hand,
-                        Tomb: gameState[username].Tomb,
-                        "Zone (Arsenal)": gameState[username]["Zone (Arsenal)"]
-                    }
-                })
-            });
-
-            await updateLocalFromGameState();
         }
 
         const ARSENAL_ZONE = "Zone (Arsenal)";
@@ -3946,17 +3888,15 @@
                     }
 
                     if (isBasicRallyAvailable(fullCard, currentPhase, gameState, username)) {
-                        handleBasicRally(fullCard); // ✅ Trigger Basic Rally
+                        const conditionMet = !fullCard.cardConditionFunction || AbilityExecutor.checkCardConditionFunction(fullCard, gameState, username);
+                        if (conditionMet) {
+                            handleBasicRally(fullCard); // ✅ Trigger only if valid
+                        }
                     } else if (isCostRallyAvailable(fullCard, currentPhase, gameState, username)) {
-                        showCostRallyPrompt(fullCard); // ✅ Trigger Cost Rally
-                    } else if (canActivateCard(fullCard, currentPhase, gameState, username)) {
-                        handleNonChampionActivation(fullCard);
-                    }
-
-                    if (canActivateCard(fullCard, currentPhase, gameState, username)) {
-                        cardElement.classList.add("can-activate-or-set-highlight");
-                    } else {
-                        cardElement.classList.remove("can-activate-or-set-highlight");
+                        const conditionMet = !fullCard.cardConditionFunction || AbilityExecutor.checkCardConditionFunction(fullCard, gameState, username);
+                        if (conditionMet) {
+                            showCostRallyPrompt(fullCard); // ✅ Trigger Cost Rally
+                        }
                     }
 
                     updateAllRallyHighlights(currentPhase, gameState, username);
@@ -4021,14 +3961,16 @@
         }
 
         function updateBasicRallyHighlight(cardElement, cardData, currentPhase, gameState, username) {
-            if (isBasicRallyAvailable(cardData, currentPhase, gameState, username)) {
-                //console.log("🔵 Adding glow to", cardData.name);
+            const canRallyNormally = isBasicRallyAvailable(cardData, currentPhase, gameState, username);
+            const conditionMet = !cardData.cardConditionFunction || AbilityExecutor.checkCardConditionFunction(cardData, gameState, username);
+
+            if (canRallyNormally && conditionMet) {
                 cardElement.classList.add("basic-rally-highlight");
             } else {
-                //console.log("⚪ Removing glow from", cardData.name);
                 cardElement.classList.remove("basic-rally-highlight");
             }
         }
+
 
         function updateCostRallyHighlight(cardElement, cardData, currentPhase, gameState, username) {
             if (isCostRallyAvailable(cardData, currentPhase, gameState, username)) {
@@ -4038,26 +3980,6 @@
                 //console.log("⚪ Removing glow from", cardData.name);
                 cardElement.classList.remove("cost-rally-highlight");
             }
-        }
-
-        function canActivateCard(card, currentPhase, gameState, username) {
-            const isMainPhase = currentPhase === "Main 1" || currentPhase === "Main 2";
-            const isTurnPlayer = gameState.turn.currentPlayer === username;
-            const cardType = String(card.type).toLowerCase();
-
-            // Can only activate during own main phase unless Rush
-            if (!isTurnPlayer && cardType !== "rush") return false;
-
-            // Reflex must wait until next turn after being set
-            if (cardType === "reflex" && card.boardState === "FaceDownArsenalZone") {
-                const setTurn = Number(card.setTurn || 0);
-                if (gameState.turn.count <= setTurn) return false;
-            }
-
-            // Check if condition met and cost function exists
-            return card.cardCostFunction &&
-                (card.cardConditionFunction === "" || evaluateCardCondition(card, gameState, username)) &&
-                (cardType === "rush" || isMainPhase);
         }
 
         async function updateAllRallyHighlights(currentPhase, gameState, username) {

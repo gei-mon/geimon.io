@@ -273,6 +273,30 @@ async function confirmAbilityTrigger(cardName, effectText) {
   });
 }
 
+export function checkCardConditionFunction(card, gameState, username) {
+  const tomb = gameState[username]?.Tomb || [];
+
+  if (!card.cardConditionFunction) return true;
+
+  // Pattern 1: Tomb5+
+  const basicMatch = card.cardConditionFunction.match(/^Tomb(\d+)\+$/);
+  if (basicMatch) {
+    const minCount = parseInt(basicMatch[1], 10);
+    return tomb.length >= minCount;
+  }
+
+  // Pattern 2: Tomb1+Knight
+  const tagMatch = card.cardConditionFunction.match(/^Tomb(\d+)\+([A-Za-z]+)$/);
+  if (tagMatch) {
+    const minCount = parseInt(tagMatch[1], 10);
+    const tag = tagMatch[2];
+    const matchingCards = tomb.filter(c => c.tags?.includes(tag));
+    return matchingCards.length >= minCount;
+  }
+
+  return false; // Unknown or invalid condition
+}
+
 export async function handleCardCostFunction(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
   const deck = gameState[username].Deck;
   const life = gameState[username].life;
