@@ -1675,11 +1675,13 @@
                 : userSleeveURL;
 
             cardImg.src = sleeveUrl || "https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site%20Assets/DefaultSleeve.png";
-            cardImg.style.position = "fixed";
-            cardImg.style.width = "260px";
-            cardImg.style.height = "400px";
-            cardImg.style.zIndex = "99999";
-            cardImg.style.transition = "all 0.5s ease-in-out";
+                cardImg.style.position = "fixed";
+                cardImg.style.width = "173px";
+                cardImg.style.height = "267px";
+                cardImg.style.zIndex = "99999";
+                cardImg.style.transition = "all 0.5s ease-in-out";
+                cardImg.style.transform = "scale(0.8)";
+                cardImg.style.outline = "2px solid white";
 
             // Determine start and end locations
             const startBox = isOpponent ? opponentDeckBox : playerDeckBox;
@@ -1694,9 +1696,14 @@
             document.body.appendChild(cardImg);
 
             requestAnimationFrame(() => {
-                cardImg.style.left = `${endRect.left + endRect.width / 2 - 900}px`;
-                cardImg.style.top = `${endRect.top + endRect.height / 2 - 35}px`;
-                cardImg.style.opacity = "0.2";
+                if(!isOpponent) {
+                    cardImg.style.left = `${endRect.left + endRect.width / 2 - 900}px`;
+                    cardImg.style.top = `${endRect.top + endRect.height / 2 - 60}px`;
+                } else {
+                    cardImg.style.left = `${endRect.left + endRect.width / 2 - 0}px`;
+                    cardImg.style.top = `${endRect.top + endRect.height / 2 - 120}px`;
+                }
+                cardImg.style.opacity = "0";
                 cardImg.style.transform = "scale(0.5)";
             });
 
@@ -1718,14 +1725,15 @@
 
             const cardImg = document.createElement("img");
             cardImg.src = sleeveUrl || "https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site%20Assets/DefaultSleeve.png";
-            cardImg.style.position = "fixed";
-            cardImg.style.width = "260px";
-            cardImg.style.height = "400px";
-            cardImg.style.left = `${startRect.left + startRect.width / 2 - 500}px`;
-            cardImg.style.top = `${startRect.top + startRect.height / 2 - 35}px`;
-            cardImg.style.transition = "all 0.5s ease-in-out";
-            cardImg.style.zIndex = 99999;
-            cardImg.style.opacity = "1";
+                cardImg.style.position = "fixed";
+                cardImg.style.width = "260px";
+                cardImg.style.height = "400px";
+                cardImg.style.left = `${startRect.left + startRect.width / 2 - 500}px`;
+                cardImg.style.top = `${startRect.top + startRect.height / 2 - 35}px`;
+                cardImg.style.transition = "all 0.5s ease-in-out";
+                cardImg.style.zIndex = 99999;
+                cardImg.style.opacity = "1";
+                cardImg.style.outline = "2px solid white";
 
             document.body.appendChild(cardImg);
 
