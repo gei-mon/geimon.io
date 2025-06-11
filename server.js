@@ -852,7 +852,7 @@ async function performBotTurn(game, gameId) {
         io.to(gameId).emit("game_over", { loser, winner, reason });
         return;
       }
-      io.to(gameRoomId).emit("opponent_draw_card", {
+      io.to(gameId).emit("opponent_draw_card", {
         player: drawingPlayerUsername,
         count: cardsToDraw
       });
@@ -878,7 +878,7 @@ async function performBotTurn(game, gameId) {
       const bot = game["Bot"];
       while (bot.Hand.length > 6) {
         const discardIndex = Math.floor(Math.random() * bot.Hand.length);
-        io.to(gameRoomId).emit("opponent_discard_card", {
+        io.to(gameId).emit("opponent_discard_card", {
           player: "Bot",
           count: 1
         });
