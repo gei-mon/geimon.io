@@ -839,7 +839,7 @@ async function performBotTurn(game, gameId) {
     if (phase === "Draw") {
       const bot = game["Bot"];
       let cardsToDraw = 1;
-      if (game.totem === "Double Double") {
+      if (game.drawExtraCard) {
         cardsToDraw = 2;
       }
 
@@ -854,7 +854,7 @@ async function performBotTurn(game, gameId) {
       }
       io.to(gameRoomId).emit("opponent_draw_card", {
         player: drawingPlayerUsername,
-        count: cardsToDraw // or however many cards were drawn
+        count: cardsToDraw
       });
 
       const drawn = bot.Deck.splice(0, cardsToDraw);
