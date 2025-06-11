@@ -1,7 +1,6 @@
 import { renderCard } from './cardRenderer.js';
 import { cards } from '../data/cards.js';
 const effectUsageTracker = new Map();
-if (!window.effectPath) window.effectPath = [];
 
 export function resetEffectUsageForTurn(gameId, turnNumber) {
   if (!effectUsageTracker.has(gameId)) return;

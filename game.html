@@ -435,6 +435,10 @@
             import * as AbilityExecutor from './utils/abilityExecutor.js';
             import * as BattleExecutor from './utils/battleExecutor.js';
 
+            if (!window.effectPath) {
+                window.effectPath = [];
+            }
+
             let gameId = new URLSearchParams(window.location.search).get("gameId");
             if (gameId) {
                 // Use the gameId from URL and update localStorage
