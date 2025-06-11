@@ -662,14 +662,37 @@
 
         async function updateLocalFromGameState() {
             if (discardMode) return;
+
+            function rehydrateZone(zone, cards) {
+                return zone.map(card => {
+                    const full = cards.find(c => String(c.id) === String(card.id));
+                    if (!full) {
+                    console.warn("⚠️ Failed to rehydrate card", card);
+                    return card;
+                    }
+                    return {
+                    ...full,
+                    boardState: card.boardState,
+                    lastBoardState: card.lastBoardState
+                    };
+                });
+            }
+
+            gameState[username].Hand = rehydrateZone(gameState[username].Hand, cards);
+            gameState[username].Tomb = rehydrateZone(gameState[username].Tomb, cards);
+
+            // ✅ Now get the hydrated player object
             const player = gameState[username];
             const currentHand = player.Hand;
 
             const prevLength = previousHandIds.length;
             const newLength = currentHand.length;
 
+            console.log("✅ Rehydrated Hand:", gameState[username].Hand);
+
             if (!handsAreEqual(currentHand)) {
                 drawnCardsArray = currentHand;
+                console.log("✅ drawnCardsArray just before render:", drawnCardsArray);
                 renderDrawnCards();
 
                 if (!hasDrawnInitialHand && newLength >= 5) {
@@ -682,7 +705,9 @@
                     const prevIds = new Set(previousHandIds);
                     const newCards = currentHand.filter(c => !prevIds.has(c.id));
 
-                    const drawnCards = newCards.filter(c => c.lastBoardState === "Deck");
+                    const drawnCards = newCards.filter(c =>
+                        ["Deck", "Tomb", "Void", "Reserve"].includes(c.lastBoardState)
+                    );
 
                     if (drawnCards.length > 0) {
                         addGameLogEntry(`${username} drew ${drawnCards.length} card${drawnCards.length > 1 ? 's' : ''}`);
@@ -703,6 +728,7 @@
             renderLatestVoidCard();
             renderLatestOpponentTombCard();
             renderLatestOpponentVoidCard();
+            console.log("✅ drawnCardsArray just before render:", drawnCardsArray);
             renderDrawnCards();
             renderOpponentHand();
             updateOpponentDeckCount();
@@ -884,8 +910,10 @@
                         })
                     });
 
-                    await AbilityExecutor.handleBoardStateChange(card, "Zone (Champion)", "Hand", gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
-                    await updateLocalFromGameState();
+                    await AbilityExecutor.handleBoardStateChange(card, "Zone (Champion)", "Hand", gameState, username, gameId, () => {}, addGameLogEntry);
+                    setTimeout(async () => {
+                        await updateLocalFromGameState();
+                    }, 100); // adjust if needed
                 }
             };
         }
@@ -1205,82 +1233,81 @@
         }
 
         function prepareTotemSelectionForNextGame() {
-    const allTotems = Object.assign({}, ...totems); // Assuming `totems` is an array of objects
-    const usedTotem = params.get("totem");
-    const unusedTotems = Object.keys(allTotems).filter(name => name !== usedTotem);
-    const randomChoices = unusedTotems.sort(() => 0.5 - Math.random()).slice(0, 3);
+            const allTotems = Object.assign({}, ...totems); // Assuming `totems` is an array of objects
+            const usedTotem = params.get("totem");
+            const unusedTotems = Object.keys(allTotems).filter(name => name !== usedTotem);
+            const randomChoices = unusedTotems.sort(() => 0.5 - Math.random()).slice(0, 3);
 
-    const overlay = document.createElement("div");
-    Object.assign(overlay.style, {
-        position: "fixed",
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        padding: "30px",
-        backgroundColor: "#333",
-        color: "white",
-        border: "2px solid white",
-        borderRadius: "10px",
-        zIndex: 130001,
-        textAlign: "center",
-        boxShadow: "0 0 10px black"
-    });
+            const overlay = document.createElement("div");
+            Object.assign(overlay.style, {
+                position: "fixed",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                padding: "30px",
+                backgroundColor: "#333",
+                color: "white",
+                border: "2px solid white",
+                borderRadius: "10px",
+                zIndex: 130001,
+                textAlign: "center",
+                boxShadow: "0 0 10px black"
+            });
 
-    overlay.innerHTML = `<p style="font-size: 1.2em;">You lost the last game.<br><strong>First, choose who goes first:</strong></p>`;
+            overlay.innerHTML = `<p style="font-size: 1.2em;">You lost the last game.<br><strong>First, choose who goes first:</strong></p>`;
 
-    const goFirstBtn = document.createElement("button");
-    goFirstBtn.textContent = "Go First";
-    goFirstBtn.style.margin = "10px";
-    goFirstBtn.onclick = () => showTotemOptions("first");
+            const goFirstBtn = document.createElement("button");
+            goFirstBtn.textContent = "Go First";
+            goFirstBtn.style.margin = "10px";
+            goFirstBtn.onclick = () => showTotemOptions("first");
 
-    const goSecondBtn = document.createElement("button");
-    goSecondBtn.textContent = "Go Second";
-    goSecondBtn.style.margin = "10px";
-    goSecondBtn.onclick = () => showTotemOptions("second");
+            const goSecondBtn = document.createElement("button");
+            goSecondBtn.textContent = "Go Second";
+            goSecondBtn.style.margin = "10px";
+            goSecondBtn.onclick = () => showTotemOptions("second");
 
-    overlay.appendChild(goFirstBtn);
-    overlay.appendChild(goSecondBtn);
+            overlay.appendChild(goFirstBtn);
+            overlay.appendChild(goSecondBtn);
 
-    function showTotemOptions(turnOrder) {
-        overlay.innerHTML = `<p style="font-size: 1.2em;">Now choose a Totem for Game ${gameNumber + 1}:</p>`;
+            function showTotemOptions(turnOrder) {
+                overlay.innerHTML = `<p style="font-size: 1.2em;">Now choose a Totem for Game ${gameNumber + 1}:</p>`;
 
-        randomChoices.forEach(totem => {
-            const button = document.createElement("button");
-            button.textContent = totem;
-            button.style.margin = "10px";
-            button.onclick = async () => {
-                const newGameId = Math.random().toString(36).substr(2, 9);
-                const settings = {
-                    gameId: newGameId,
-                    playerDeck: params.get("playerDeck"),
-                    opponentDeck: params.get("opponentDeck"),
-                    gameType: "match",
-                    totem,
-                    totemText: allTotems[totem],
-                    turnOrder,
-                    isSinglePlayer: params.get("isSinglePlayer") === "true",
-                    playerUsername: username,
-                    opponentUsername: "Bot",
-                    goesFirst: turnOrder
-                };
+                randomChoices.forEach(totem => {
+                    const button = document.createElement("button");
+                    button.textContent = totem;
+                    button.style.margin = "10px";
+                    button.onclick = async () => {
+                        const newGameId = Math.random().toString(36).substr(2, 9);
+                        const settings = {
+                            gameId: newGameId,
+                            playerDeck: params.get("playerDeck"),
+                            opponentDeck: params.get("opponentDeck"),
+                            gameType: "match",
+                            totem,
+                            totemText: allTotems[totem],
+                            turnOrder,
+                            isSinglePlayer: params.get("isSinglePlayer") === "true",
+                            playerUsername: username,
+                            opponentUsername: "Bot",
+                            goesFirst: turnOrder
+                        };
 
-                await fetch("https://geimon-app-833627ba44e0.herokuapp.com/startGame", {
-                    method: "POST",
-                    credentials: "include",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(settings)
+                        await fetch("https://geimon-app-833627ba44e0.herokuapp.com/startGame", {
+                            method: "POST",
+                            credentials: "include",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(settings)
+                        });
+
+                        const urlParams = new URLSearchParams(settings).toString();
+                        window.location.href = `game.html?${urlParams}`;
+                    };
+                    overlay.appendChild(button);
                 });
+            }
 
-                const urlParams = new URLSearchParams(settings).toString();
-                window.location.href = `game.html?${urlParams}`;
-            };
-            overlay.appendChild(button);
-        });
-    }
-
-    document.body.appendChild(overlay);
-}
-
+            document.body.appendChild(overlay);
+        }
 
         async function handleCardDiscard(gameState, username, cards, gameId, phase, updateLocalFromGameState, addGameLogEntry, updatePhaseDisplay) {
             if (discardLock) {
@@ -1434,7 +1461,7 @@
                             gameState,
                             username,
                             gameId,
-                            updateLocalFromGameState,
+                            () => {},
                             addGameLogEntry
                         );
                         await new Promise(requestAnimationFrame);
@@ -1445,7 +1472,9 @@
                             gameState[username] = updated[username];
                         }
 
-                        await updateLocalFromGameState();
+                        setTimeout(async () => {
+                            await updateLocalFromGameState();
+                        }, 100); // adjust if needed
                         await renderLatestTombCard();
                         await renderDrawnCards();
                         await renderCardZone(gameState[username]["Zone (Champion)"], "playerChampionsBox");
@@ -1738,7 +1767,7 @@
 
             gameState[username].Tomb.push(fullCard);
 
-            AbilityExecutor.handleBoardStateChange(fullCard, fullCard.boardState, fullCard.lastBoardState, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+            AbilityExecutor.handleBoardStateChange(fullCard, fullCard.boardState, fullCard.lastBoardState, gameState, username, gameId, () => {}, addGameLogEntry);
         }
 
         function animateCardDraw(isOpponent = false) {
@@ -3791,7 +3820,7 @@
                     gameState,
                     username,
                     gameId,
-                    updateLocalFromGameState,
+                    () => {},
                     addGameLogEntry
                 );
 
@@ -3824,12 +3853,11 @@
                 if (responseJson?.updatedPlayerZone) {
                     gameState[username] = responseJson.updatedPlayerZone;
                 }
-                updateLocalFromGameState();
+                await updateLocalFromGameState();
             } catch (err) {
                 console.error("💥 Error sending rally update:", err);
             }
-
-            updateAllRallyHighlights(gameState.turn.currentPhase, gameState, username);
+            await updateAllRallyHighlights(gameState.turn.currentPhase, gameState, username);
         }
 
         const ARSENAL_ZONE = "Zone (Arsenal)";
@@ -3854,6 +3882,7 @@
                 console.log("No cards have been drawn yet.");
                 return;
             }
+            console.log("drawnCardsArray length:", drawnCardsArray.length);
 
             // Sort drawn cards (optional, as you had)
             drawnCardsArray.sort((a, b) => {
@@ -4670,7 +4699,7 @@
                 gameState,
                 username,
                 gameId,
-                updateLocalFromGameState,
+                () => {},
                 addGameLogEntry
             );
 
@@ -4689,8 +4718,9 @@
                     }
                 })
             });
-
-            updateLocalFromGameState();
+            setTimeout(async () => {
+                await updateLocalFromGameState();
+            }, 100); // adjust if needed
         }
 
         // Fetch and shuffle deck, then update count
@@ -4765,6 +4795,7 @@
         }
 
     document.addEventListener("gameStateUpdated", () => {
+        console.log("gameStateUpdated event fired");
         updateLocalFromGameState();
     });
 
