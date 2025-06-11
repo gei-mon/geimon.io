@@ -3778,7 +3778,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Destroy all Tokens, and if you do, deal 1 Damage per Token Destroyed to the Player that controlled it ",
+        text: "Destroy all Tokens, and if you do, deal 1 Damage per Token Destroyed to the Player that controlled it.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "",
@@ -4823,6 +4823,44 @@ export const cards = [
         effect3condition: "",
         effect3cost: "ObliterateSelf,Target2InTomb",
         effect3text: "RetrieveTargets",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
+    id: "243",
+    name: "Accelerated Response",
+    image: `${cardArtFolder}/Rush/AcceleratedResponse.png`,
+    type: "Rush",
+    condition: "",
+    cardConditionFunction: "",
+    cardCostFunction: "Oblierate1UnusedActionOrReflexFromTomb",
+    cost: "Obliterate 1 Action or Reflex from your Tomb that you did not activate this turn",
+    tags: ["Rush"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Activate the Obliterated card.",
+        keywords: ["blank"],
+        effect1name: "",
+        effect1type: "",
+        effect1condition: "",
+        effect1cost: "",
+        effect1text: "ActivateObliterated",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: "",
+        effect2condition: "",
+        effect2cost: "",
+        effect2text: "",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
         effect3linger: ""
       }
     ]
