@@ -468,6 +468,8 @@
             let isFetchingGameState = false;
             let gameReady = false;
 
+            let renderingHand = false;
+
             const params = new URLSearchParams(window.location.search);
             const gameType = params.get("gameType") || "single"; // "single" or "match"
             const isSinglePlayer = params.get("isSinglePlayer") === "true"; // true/false
@@ -575,6 +577,39 @@
             if (turnPlayer !== username) return false; // ✅ Only current turn player can set
 
             return ["Action", "Rush", "Reflex", "Equipment", "Obelisk"].includes(fullCard.type);
+        }
+
+        async function updateObeliskHandCardUI(card, cardElement, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, fullCard) {
+            if (card.type !== "Obelisk" || card.boardState !== "Hand") return;
+
+            const turnPlayer = gameState?.turn?.currentPlayer;
+            const phase = gameState?.turn?.currentPhase;
+            const isMain = phase === "Main 1" || phase === "Main 2";
+
+            const canActivate =
+                turnPlayer === username &&
+                isMain &&
+                AbilityExecutor.checkCardConditionFunction(card, gameState, username);
+
+            const canPayCost = await AbilityExecutor.handleCardCostFunction(
+                card,
+                gameState,
+                username,
+                gameId,
+                null,
+                addGameLogEntry
+            );
+
+            if (canActivate && canPayCost) {
+                const cardButton = cardElement.querySelector(".card-button");
+                if (cardButton) {
+                    cardButton.classList.add("can-activate-or-set-highlight");
+                    cardButton.onclick = () => showObeliskActivatePrompt(card);
+                }
+            } else {
+                cardElement.classList.add("card-select-for-arsenal");
+                cardElement.onclick = () => showSetArsenalPrompt(card, fullCard);
+            }
         }
 
         async function canRallyChampion(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
@@ -751,6 +786,26 @@
 
             for (const [zoneKey, domSuffix] of Object.entries(zoneMappings)) {
                 await renderCardZone(gameState[username][zoneKey], `player${domSuffix}Box`);
+
+                if (["Zone (Arsenal)"].includes(zoneKey)) {
+                    gameState[username][zoneKey].forEach(card => {
+                        const cardElem = document.querySelector(`[data-card-id='${card.id}']`);
+                        if (!cardElem) return;
+
+                        const hasTrigger = card.abilities.some(ability =>
+                        ["Standard", "Tomb", "IfDestroyed"].some(type =>
+                            [ability.effect1type, ability.effect2type, ability.effect3type].flat().includes(type)
+                        )
+                        );
+
+                        if (hasTrigger) {
+                            cardElem.classList.add("can-activate-arsenal-highlight");
+                            cardElem.onclick = () => {
+                                AbilityExecutor.showEffectChoicePrompt(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+                            };
+                        }
+                    });
+                }
             }
             gameState[username]["Zone (Champion)"].forEach(card => {
                 BattleExecutor.initializeChampionForBattle(card);
@@ -920,6 +975,48 @@
                     }, 100); // adjust if needed
                 }
             };
+        }
+
+        async function activateObeliskFromHand(card) {
+            const hand = gameState[username].Hand;
+            const arsenal = gameState[username]["Zone (Arsenal)"];
+
+            const index = hand.findIndex(c => String(c.id) === String(card.id));
+            if (index === -1) return;
+
+            hand.splice(index, 1);
+            card.lastBoardState = "Hand";
+            card.boardState = "Zone (Arsenal)";
+            arsenal.push(card);
+
+            addGameLogEntry(`${username} activated Obelisk: ${card.name}`);
+
+            await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                gameId,
+                owner: username,
+                updatedZones: {
+                    Hand: hand,
+                    "Zone (Arsenal)": arsenal
+                }
+                })
+            });
+
+            await AbilityExecutor.handleBoardStateChange(
+                card,
+                "Zone (Arsenal)",
+                "Hand",
+                gameState,
+                username,
+                gameId,
+                updateLocalFromGameState,
+                addGameLogEntry
+            );
+
+            await updateLocalFromGameState();
         }
 
         async function showRedrawPrompt() {
@@ -3907,225 +4004,236 @@
         const ARSENAL_ZONE = "Zone (Arsenal)";
         const FACEDOWN_ARSENAL_ZONE = "FaceDownArsenalZone";
 
-        function renderDrawnCards() {
-            const drawnCardsContainer = document.getElementById("drawn-cards");
-            const scaledCardContainer = document.getElementById("scaled-card");
-            const viewingWindow = document.getElementById("viewing-window");
-            const contextWindow = document.getElementById("context-window");
-            const playerLifeWindow = document.getElementById("player-life-window");
-            const opponentLifeWindow = document.getElementById("opponent-life-window");
-            const playerProfilePic = document.getElementById("player-profile-pic");
-            const opponentProfilePic = document.getElementById("opponent-profile-pic");
-            const phaseTracker = document.getElementById("phase-tracker");
-            const turnCounter = document.getElementById("turn-counter");
-            const currentPhase = gameState?.turn?.currentPhase;
+        async function renderDrawnCards() {
+            if (renderingHand) return; // ✅ prevent double render
+                renderingHand = true;
 
-            drawnCardsContainer.innerHTML = ""; // Clear previous renders
+            try {
+                const drawnCardsContainer = document.getElementById("drawn-cards");
+                const scaledCardContainer = document.getElementById("scaled-card");
+                const viewingWindow = document.getElementById("viewing-window");
+                const contextWindow = document.getElementById("context-window");
+                const playerLifeWindow = document.getElementById("player-life-window");
+                const opponentLifeWindow = document.getElementById("opponent-life-window");
+                const playerProfilePic = document.getElementById("player-profile-pic");
+                const opponentProfilePic = document.getElementById("opponent-profile-pic");
+                const phaseTracker = document.getElementById("phase-tracker");
+                const turnCounter = document.getElementById("turn-counter");
+                const currentPhase = gameState?.turn?.currentPhase;
 
-            if (drawnCardsArray.length === 0) {
-                console.log("No cards have been drawn yet.");
-                return;
-            }
-            //console.log("drawnCardsArray length:", drawnCardsArray.length);
+                drawnCardsContainer.innerHTML = ""; // Clear previous renders
 
-            // Sort drawn cards (optional, as you had)
-            drawnCardsArray.sort((a, b) => {
-                const cardA = cards.find(c => String(c.id) === String(a.id));
-                const cardB = cards.find(c => String(c.id) === String(b.id));
-                if (!cardA || !cardB) return 0;
-
-                const typeOrder = ["Champion", "Action", "Equipment", "Obelisk", "Rush", "Reflex"];
-                const indexA = typeOrder.indexOf(cardA.type);
-                const indexB = typeOrder.indexOf(cardB.type);
-
-                if (indexA !== indexB) return indexA - indexB;
-                return cardA.name.localeCompare(cardB.name);
-            });
-
-            // --- Now render each drawn card ---
-            drawnCardsArray.forEach(cardObj => {
-                const card = cards.find(c => String(c.id) === String(cardObj.id));
-                if (!card) return;
-
-                const cardElement = renderCard(card);
-                cardElement.dataset.boardState = cardObj.boardState;
-                cardElement.dataset.lastBoardState = cardObj.lastBoardState;
-                cardElement.dataset.cardId = String(card.id); // Ensure this is set for lookup!
-                cardElement.style.transform = "scale(0.5)";
-                cardElement.style.position = "relative";
-                cardElement.style.marginLeft = "-15%";
-                cardElement.style.opacity = "1";
-                cardElement.style.transition = "opacity 1s ease-in-out";
-
-                // Invisible button to capture clicks
-                const cardButton = document.createElement("button");
-                cardButton.classList.add("card-button");
-                cardButton.style.position = "absolute";
-                cardButton.style.top = "0";
-                cardButton.style.right = "0";
-                cardButton.style.width = "100%";
-                cardButton.style.height = "100%";
-                cardButton.style.opacity = "0";
-                cardButton.style.background = "transparent";
-                cardButton.style.border = "none";
-                cardButton.style.pointerEvents = "auto";
-                cardButton.style.padding = "5px";
-                cardButton.style.zIndex = "100100";
-                cardButton.style.cursor = "pointer";
-
-                cardButton.onclick = () => {
-                    const parentCard = cardButton.closest(".card");
-                    const cardId = parentCard?.dataset.cardId;
-                    
-                    if (window.sacrificeMode && window.validSacrificeIds?.has(cardId)) {
-                        const cardData = findCardByUidOrId(cardId);
-                        if (!cardData) return;
-
-                        const confirmBox = document.createElement("div");
-                        Object.assign(confirmBox.style, {
-                            position: "fixed",
-                            top: "50%",
-                            left: "50%",
-                            transform: "translate(-50%, -50%)",
-                            padding: "20px",
-                            backgroundColor: "#333",
-                            color: "white",
-                            border: "2px solid white",
-                            borderRadius: "10px",
-                            zIndex: "120001",
-                            textAlign: "center",
-                            boxShadow: "0 0 10px black"
-                        });
-
-                        confirmBox.innerHTML = `
-                            <p>Sacrifice <strong>${cardData.name}</strong>?</p>
-                            <button id="confirm-sacrifice">Confirm</button>
-                            <button id="cancel-sacrifice" style="margin-left: 10px;">Cancel</button>
-                        `;
-
-                        document.body.appendChild(confirmBox);
-
-                        document.getElementById("confirm-sacrifice").onclick = () => {
-                            document.body.removeChild(confirmBox);
-                            const matchingCard = validCards.find(c => String(c.id) === String(cardId) || String(c.id) === String(cardId));
-                            if (matchingCard) {
-                                selected.push(matchingCard);
-                                parentCard.classList.add("selected");
-
-                                if (selected.length === amount) {
-                                    for (const c of validCards) {
-                                        const el2 = document.getElementById(`card-${c.id}`);
-                                        if (el2) {
-                                            el2.classList.remove("selectable", "selected");
-                                            el2.onclick = null;
-                                        }
-                                    }
-                                    document.body.removeChild(confirmBox);
-                                    document.body.removeChild(banner);
-                                    window.sacrificeMode = false;
-                                    window.validSacrificeIds = null;
-                                    resolve(selected);
-                                }
-                            }
-                        };
-
-                        document.getElementById("cancel-sacrifice").onclick = () => {
-                            document.body.removeChild(confirmBox);
-                        };
-
-                        return; // ⛔ Block normal behavior
-                    }
-
-                    // Existing behavior follows below...
-                    //console.log("Card button clicked");
-
-                    if (!cardId) {
-                        console.warn("❌ No cardId found on clicked card");
-                        return;
-                    }
-
-                    if (discardMode) {
-                        event.stopPropagation();
-                        event.preventDefault();
-                        return handleCardDiscard(gameState, username, cards, gameId, currentPhase, updateLocalFromGameState, addGameLogEntry, updatePhaseDisplay);
-                    }
-
-                    const fullCard = cards.find(c => String(c.id) === String(cardId));
-                    if (!fullCard) {
-                        console.warn("❌ Card not found in cards array:", cardId);
-                        return;
-                    }
-
-                    if (isBasicRallyAvailable(fullCard, currentPhase, gameState, username)) {
-                        const conditionMet = !fullCard.cardConditionFunction || AbilityExecutor.checkCardConditionFunction(fullCard, gameState, username);
-                        if (conditionMet) {
-                            handleBasicRally(fullCard); // ✅ Trigger only if valid
-                        }
-                    } else if (isCostRallyAvailable(fullCard, currentPhase, gameState, username)) {
-                        const conditionMet = !fullCard.cardConditionFunction || AbilityExecutor.checkCardConditionFunction(fullCard, gameState, username);
-                        if (conditionMet) {
-                            showCostRallyPrompt(fullCard); // ✅ Trigger Cost Rally
-                        }
-                    }
-
-                    updateAllRallyHighlights(currentPhase, gameState, username);
-                };
-
-                cardButton._originalHandler = cardButton.onclick;
-
-                cardElement.classList.remove("highlight-rally", "card-select-for-arsenal");
-
-                // Initial highlight check for this card
-                updateBasicRallyHighlight(cardElement, card, currentPhase, gameState, username);
-                updateCostRallyHighlight(cardElement, card, currentPhase, gameState, username);
-
-                if (!discardMode && isArsenalSetAvailable(card, currentPhase, gameState, username)) {
-                    cardElement.classList.add("card-select-for-arsenal");
-                    cardElement.addEventListener("click", (e) => {
-                        e.stopPropagation();
-                        showSetArsenalPrompt(cardObj, card);
-                    });
-                } else {
-                    cardElement.classList.remove("card-select-for-arsenal");
+                if (drawnCardsArray.length === 0) {
+                    console.log("No cards have been drawn yet.");
+                    return;
                 }
+                //console.log("drawnCardsArray length:", drawnCardsArray.length);
 
-                // Hover effect for preview
-                cardElement.addEventListener("mouseenter", () => {
-                    scaledCardContainer.innerHTML = "";
-                    const clone = cardElement.cloneNode(true);
-                    const cloneButton = clone.querySelector(".card-button");
-                    if (cloneButton) cloneButton.remove();
-                    clone.style.transform = "scale(1.2)";
-                    clone.style.width = "100%";
-                    clone.style.position = "relative";
-                    scaledCardContainer.appendChild(clone);
-                    addTooltipListeners(clone);
-                    addTokenTooltipListeners(clone);
+                // Sort drawn cards (optional, as you had)
+                drawnCardsArray.sort((a, b) => {
+                    const cardA = cards.find(c => String(c.id) === String(a.id));
+                    const cardB = cards.find(c => String(c.id) === String(b.id));
+                    if (!cardA || !cardB) return 0;
+
+                    const typeOrder = ["Champion", "Action", "Equipment", "Obelisk", "Rush", "Reflex"];
+                    const indexA = typeOrder.indexOf(cardA.type);
+                    const indexB = typeOrder.indexOf(cardB.type);
+
+                    if (indexA !== indexB) return indexA - indexB;
+                    return cardA.name.localeCompare(cardB.name);
                 });
 
-                cardElement.appendChild(cardButton);
-                drawnCardsContainer.appendChild(cardElement);
+                // --- Now render each drawn card ---
+                for (const cardObj of drawnCardsArray) {
+                    const card = cards.find(c => String(c.id) === String(cardObj.id));
+                    if (!card) return;
 
-                // Fade in after render
-                setTimeout(() => {
+                    const cardElement = renderCard(card);
+                    cardElement.dataset.boardState = cardObj.boardState;
+                    cardElement.dataset.lastBoardState = cardObj.lastBoardState;
+                    cardElement.dataset.cardId = String(card.id); // Ensure this is set for lookup!
+                    cardElement.style.transform = "scale(0.5)";
+                    cardElement.style.position = "relative";
+                    cardElement.style.marginLeft = "-15%";
                     cardElement.style.opacity = "1";
-                    cardButton.style.opacity = "1";
-                    cardButton.style.cursor = "pointer";
-                }, 1500);
-            });
+                    cardElement.style.transition = "opacity 1s ease-in-out";
 
-            // Fade in UI overlays
-            if (window.totemFullyFaded && !window.totemFadeDoneEmitted) {
-                window.totemFadeDoneEmitted = true; // prevent multiple emits
-                setTimeout(() => {
-                    viewingWindow.style.opacity = "1";
-                    contextWindow.style.opacity = "1";
-                    playerLifeWindow.style.opacity = "1";
-                    opponentLifeWindow.style.opacity = "1";
-                    phaseTracker.style.opacity = "1";
-                    turnCounter.style.opacity = "1";
-                }, 0);
-                window.socket.emit("totem_fade_done", { gameId });
+                    // Invisible button to capture clicks
+                    const cardButton = document.createElement("button");
+                    cardButton.classList.add("card-button");
+                    cardButton.style.position = "absolute";
+                    cardButton.style.top = "0";
+                    cardButton.style.right = "0";
+                    cardButton.style.width = "100%";
+                    cardButton.style.height = "100%";
+                    cardButton.style.opacity = "0";
+                    cardButton.style.background = "transparent";
+                    cardButton.style.border = "none";
+                    cardButton.style.pointerEvents = "auto";
+                    cardButton.style.padding = "5px";
+                    cardButton.style.zIndex = "100100";
+                    cardButton.style.cursor = "pointer";
+
+                    cardButton.onclick = () => {
+                        const parentCard = cardButton.closest(".card");
+                        const cardId = parentCard?.dataset.cardId;
+                        
+                        if (window.sacrificeMode && window.validSacrificeIds?.has(cardId)) {
+                            const cardData = findCardByUidOrId(cardId);
+                            if (!cardData) return;
+
+                            const confirmBox = document.createElement("div");
+                            Object.assign(confirmBox.style, {
+                                position: "fixed",
+                                top: "50%",
+                                left: "50%",
+                                transform: "translate(-50%, -50%)",
+                                padding: "20px",
+                                backgroundColor: "#333",
+                                color: "white",
+                                border: "2px solid white",
+                                borderRadius: "10px",
+                                zIndex: "120001",
+                                textAlign: "center",
+                                boxShadow: "0 0 10px black"
+                            });
+
+                            confirmBox.innerHTML = `
+                                <p>Sacrifice <strong>${cardData.name}</strong>?</p>
+                                <button id="confirm-sacrifice">Confirm</button>
+                                <button id="cancel-sacrifice" style="margin-left: 10px;">Cancel</button>
+                            `;
+
+                            document.body.appendChild(confirmBox);
+
+                            document.getElementById("confirm-sacrifice").onclick = () => {
+                                document.body.removeChild(confirmBox);
+                                const matchingCard = validCards.find(c => String(c.id) === String(cardId) || String(c.id) === String(cardId));
+                                if (matchingCard) {
+                                    selected.push(matchingCard);
+                                    parentCard.classList.add("selected");
+
+                                    if (selected.length === amount) {
+                                        for (const c of validCards) {
+                                            const el2 = document.getElementById(`card-${c.id}`);
+                                            if (el2) {
+                                                el2.classList.remove("selectable", "selected");
+                                                el2.onclick = null;
+                                            }
+                                        }
+                                        document.body.removeChild(confirmBox);
+                                        document.body.removeChild(banner);
+                                        window.sacrificeMode = false;
+                                        window.validSacrificeIds = null;
+                                        resolve(selected);
+                                    }
+                                }
+                            };
+
+                            document.getElementById("cancel-sacrifice").onclick = () => {
+                                document.body.removeChild(confirmBox);
+                            };
+
+                            return; // ⛔ Block normal behavior
+                        }
+
+                        // Existing behavior follows below...
+                        //console.log("Card button clicked");
+
+                        if (!cardId) {
+                            console.warn("❌ No cardId found on clicked card");
+                            return;
+                        }
+
+                        if (discardMode) {
+                            event.stopPropagation();
+                            event.preventDefault();
+                            return handleCardDiscard(gameState, username, cards, gameId, currentPhase, updateLocalFromGameState, addGameLogEntry, updatePhaseDisplay);
+                        }
+
+                        const fullCard = cards.find(c => String(c.id) === String(cardId));
+                        if (!fullCard) {
+                            console.warn("❌ Card not found in cards array:", cardId);
+                            return;
+                        }
+
+                        if (isBasicRallyAvailable(fullCard, currentPhase, gameState, username)) {
+                            const conditionMet = !fullCard.cardConditionFunction || AbilityExecutor.checkCardConditionFunction(fullCard, gameState, username);
+                            if (conditionMet) {
+                                handleBasicRally(fullCard); // ✅ Trigger only if valid
+                            }
+                        } else if (isCostRallyAvailable(fullCard, currentPhase, gameState, username)) {
+                            const conditionMet = !fullCard.cardConditionFunction || AbilityExecutor.checkCardConditionFunction(fullCard, gameState, username);
+                            if (conditionMet) {
+                                showCostRallyPrompt(fullCard); // ✅ Trigger Cost Rally
+                            }
+                        }
+
+                        updateAllRallyHighlights(currentPhase, gameState, username);
+                    };
+
+                    cardButton._originalHandler = cardButton.onclick;
+
+                    cardElement.classList.remove("highlight-rally", "card-select-for-arsenal");
+
+                    // Initial highlight check for this card
+                    updateBasicRallyHighlight(cardElement, card, currentPhase, gameState, username);
+                    updateCostRallyHighlight(cardElement, card, currentPhase, gameState, username);
+
+                    if (!discardMode && isArsenalSetAvailable(card, currentPhase, gameState, username)) {
+                        cardElement.classList.add("card-select-for-arsenal");
+                        cardElement.addEventListener("click", (e) => {
+                            e.stopPropagation();
+                            showSetArsenalPrompt(cardObj, card);
+                        });
+                    } else {
+                        cardElement.classList.remove("card-select-for-arsenal");
+                    }
+
+                    // Hover effect for preview
+                    cardElement.addEventListener("mouseenter", () => {
+                        scaledCardContainer.innerHTML = "";
+                        const clone = cardElement.cloneNode(true);
+                        const cloneButton = clone.querySelector(".card-button");
+                        if (cloneButton) cloneButton.remove();
+                        clone.style.transform = "scale(1.2)";
+                        clone.style.width = "100%";
+                        clone.style.position = "relative";
+                        scaledCardContainer.appendChild(clone);
+                        addTooltipListeners(clone);
+                        addTokenTooltipListeners(clone);
+                    });
+
+                    cardElement.appendChild(cardButton);
+                    drawnCardsContainer.appendChild(cardElement);
+
+                    if (card.type === "Obelisk") {
+                        await updateObeliskHandCardUI(card, cardElement, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, card);
+                    }
+
+                    // Fade in after render
+                    setTimeout(() => {
+                        cardElement.style.opacity = "1";
+                        cardButton.style.opacity = "1";
+                        cardButton.style.cursor = "pointer";
+                    }, 1500);
+                }
+
+                // Fade in UI overlays
+                if (window.totemFullyFaded && !window.totemFadeDoneEmitted) {
+                    window.totemFadeDoneEmitted = true; // prevent multiple emits
+                    setTimeout(() => {
+                        viewingWindow.style.opacity = "1";
+                        contextWindow.style.opacity = "1";
+                        playerLifeWindow.style.opacity = "1";
+                        opponentLifeWindow.style.opacity = "1";
+                        phaseTracker.style.opacity = "1";
+                        turnCounter.style.opacity = "1";
+                    }, 0);
+                    window.socket.emit("totem_fade_done", { gameId });
+                }
+            } finally {
+                renderingHand = false;
             }
         }
 
@@ -4260,6 +4368,46 @@
 
             document.getElementById("rally-cancel").onclick = () => {
                 document.body.removeChild(popup);
+            };
+        }
+
+        function showObeliskActivatePrompt(cardData) {
+            const overlay = document.createElement("div");
+            overlay.id = "obelisk-activate-prompt-overlay";
+            Object.assign(overlay.style, {
+                position: "fixed",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                backgroundColor: "#333",
+                color: "white",
+                padding: "20px",
+                border: "2px solid white",
+                borderRadius: "10px",
+                zIndex: 120001,
+                textAlign: "center",
+                boxShadow: "0 0 10px black"
+            });
+
+            overlay.innerHTML = `
+                <p>Activate or Set '${cardData.name}'?</p>
+                <button id="activate-obelisk">Activate</button>
+                <button id="set-obelisk">Set</button>
+                <button id="cancel-obelisk" style="margin-left: 10px;">Cancel</button>
+            `;
+            document.body.appendChild(overlay);
+
+            document.getElementById("activate-obelisk").onclick = async () => {
+                document.body.removeChild(overlay);
+                await activateObeliskFromHand(cardData);
+            };
+            document.getElementById("set-obelisk").onclick = () => {
+                document.body.removeChild(overlay);
+                const fullCard = cards.find(c => String(c.id) === String(cardData.id));
+                showSetArsenalPrompt(cardData, fullCard);
+            };
+            document.getElementById("cancel-obelisk").onclick = () => {
+                document.body.removeChild(overlay);
             };
         }
 

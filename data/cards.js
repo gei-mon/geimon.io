@@ -703,7 +703,7 @@ export const cards = [
         text: "Each Player must offer 1 Life to declare an attack.",
         keywords: ["blank"],
         effect1name: "",
-        effect1type: ["Mandatory"],
+        effect1type: ["Passive"],
         effect1condition: "ChampAttacks",
         effect1cost: "",
         effect1text: "Toll1",
@@ -4310,7 +4310,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Maintenance <br> Mill 1; Place 1 \"Castle\" Obelisk from your deck or Tomb into your Reserve. <br> If you control at least 1 other face-up \"Castle\" Obelisk: Discard 2; Add 1 \"Castle\" Obelisk. <br> If Destroyed: Activate up to 3 \"Castle\" Obelisks in your Reserve.",
+        text: "Maintenance <br> Mill 1; Place 1 \"Castle\" Obelisk from your Deck or Tomb into your Reserve. <br> If you control at least 1 other face-up \"Castle\" Obelisk: Discard 2; Add 1 \"Castle\" Obelisk. <br> If Destroyed: Activate up to 3 \"Castle\" Obelisks in your Reserve.",
         keywords: ["Maintenance"],
         effect1name: "",
         effect1type: "Standard",

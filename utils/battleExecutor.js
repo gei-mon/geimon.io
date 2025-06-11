@@ -153,6 +153,20 @@ export async function handleChampionClick(clickedCard, gameState, username, game
   await new Promise(resolve => setTimeout(resolve, 500));
   if (!confirmed) return;
 
+  // ✅ Process all Obelisks with passive "ChampAttacks" triggers
+  const arsenal = gameState[username]["Zone (Arsenal)"] || [];
+  for (const obelisk of arsenal) {
+    await AbilityExecutor.declareAbility(
+      obelisk,
+      "ChampAttacks",
+      gameState,
+      username,
+      gameId,
+      updateLocalFromGameState,
+      addGameLogEntry
+    );
+  }
+
   //console.log(`Attacking with ${card.name}. Previous attack count: ${card.champAttackCount ?? 0}, playerAttackCount: ${gameState[username].playerAttackCount ?? 0}`);
 
   // Proceed with attack: increment counters

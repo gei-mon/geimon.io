@@ -95,7 +95,14 @@ const effectMap = {
   "ResurrectByCondition": resurrectByCondition,
   "RetrieveCardByCondition": retrieveCardByCondition,
   "Add": addCardByCondition,
-  "Excavate": excavateCards
+  "Excavate": excavateCards,
+  "Toll1": async function(effectText, card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
+    const currentPlayer = gameState.turn.currentPlayer;
+    const attacker = gameState[currentPlayer];
+    if (!attacker) return;
+    await changeLife(currentPlayer, -1, gameState, username, gameId);
+    addGameLogEntry(`${currentPlayer} paid 1 Life due to ${card.name}`);
+  }
 };
 
 function getFallbackEffectFunc(effectText) {
@@ -393,6 +400,11 @@ export function checkCardConditionFunction(card, gameState, username) {
     const tag = tagMatch[2];
     const matchingCards = tomb.filter(c => c.tags?.includes(tag));
     return matchingCards.length >= minCount;
+  }
+
+  if (card.cardConditionFunction === "Set1Turn") {
+    const currentTurn = gameState?.turn?.count || 0;
+    return card.setTurn !== undefined && card.setTurn < currentTurn;
   }
 
   return false; // Unknown or invalid condition
@@ -1197,14 +1209,31 @@ async function handleLinger(lingerText, card, gameState, username, gameId, updat
           }
 
           const chosen = selected[0];
-          const index = gameState[window.lastExcavatedSource].Deck.findIndex(c => String(c.id) === String(chosen.id));
+          const deck = gameState[window.lastExcavatedSource].Deck;
+
+          const index = deck.findIndex(c => String(c.id) === String(chosen.id));
           if (index !== -1) {
-            gameState[window.lastExcavatedSource].Deck.splice(index, 1);
+            deck.splice(index, 1);
             chosen.lastBoardState = "Deck";
             chosen.boardState = "Hand";
             gameState[username].Hand.push(chosen);
             addGameLogEntry(`${username} added ${chosen.name} to hand from excavation.`);
           }
+
+          // ✅ NEW: Return unchosen cards to deck and shuffle
+          const remaining = window.lastExcavatedCards.filter(c => c.id !== chosen.id);
+          for (const r of remaining) {
+            const alreadyInDeck = deck.find(c => String(c.id) === String(r.id));
+            if (!alreadyInDeck) deck.push(r);
+          }
+
+          // Fisher-Yates Shuffle
+          for (let i = deck.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [deck[i], deck[j]] = [deck[j], deck[i]];
+          }
+
+          addGameLogEntry(`${remaining.length} excavated card(s) were returned and the deck was shuffled.`);
         }
         break;
 
@@ -1705,4 +1734,52 @@ export function retrieveCardByCondition(
     };
     overlay.appendChild(confirmBtn);
   });
+}
+
+export async function showEffectChoicePrompt(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
+  const effects = [];
+  for (let i = 1; i <= 3; i++) {
+    const text = card.abilities?.[0]?.[`effect${i}text`];
+    const type = card.abilities?.[0]?.[`effect${i}type`];
+    if (text && type && (Array.isArray(type) ? type.includes("Standard") : type === "Standard")) {
+      effects.push(text);
+    }
+  }
+
+  if (effects.length === 0) return;
+
+  const overlay = document.createElement("div");
+  Object.assign(overlay.style, {
+    position: "fixed",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    backgroundColor: "#333",
+    color: "white",
+    padding: "20px",
+    border: "2px solid white",
+    borderRadius: "10px",
+    zIndex: 120001,
+    textAlign: "center",
+    boxShadow: "0 0 10px black"
+  });
+
+  overlay.innerHTML = `<p>Choose effect to activate:</p>`;
+  effects.forEach(effect => {
+    const btn = document.createElement("button");
+    btn.textContent = effect;
+    btn.onclick = async () => {
+      document.body.removeChild(overlay);
+      await AbilityExecutor.declareAbility(card, "Standard", gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+    };
+    overlay.appendChild(btn);
+  });
+
+  const cancel = document.createElement("button");
+  cancel.textContent = "Cancel";
+  cancel.style.marginLeft = "10px";
+  cancel.onclick = () => document.body.removeChild(overlay);
+  overlay.appendChild(cancel);
+
+  document.body.appendChild(overlay);
 }
