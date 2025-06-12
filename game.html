@@ -579,36 +579,70 @@
             return ["Action", "Rush", "Reflex", "Equipment", "Obelisk"].includes(fullCard.type);
         }
 
-        async function updateObeliskHandCardUI(card, cardElement, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, fullCard) {
-            if (card.type !== "Obelisk" || card.boardState !== "Hand") return;
+        export async function updateObeliskHandCardUI(
+            card,
+            cardElement,
+            gameState,
+            username,
+            gameId,
+            updateLocalFromGameState,
+            addGameLogEntry,
+            fullCard
+        ) {
+            const currentPhase = gameState.turn?.currentPhase;
+            const isMainPhase = currentPhase === "Main 1" || currentPhase === "Main 2";
+            const isPlayerTurn = gameState.turn?.currentPlayer === username;
 
-            const turnPlayer = gameState?.turn?.currentPlayer;
-            const phase = gameState?.turn?.currentPhase;
-            const isMain = phase === "Main 1" || phase === "Main 2";
+            const hand = gameState[username]?.Hand || [];
+            const faceDownArsenal = gameState[username]?.FaceDownArsenalZone || [];
 
-            const canActivate =
-                turnPlayer === username &&
-                isMain &&
-                AbilityExecutor.checkCardConditionFunction(card, gameState, username);
+            const conditionMet =
+                !fullCard.cardConditionFunction ||
+                AbilityExecutor.checkCardConditionFunction(fullCard, gameState, username);
 
-            const canPayCost = await AbilityExecutor.handleCardCostFunction(
-                card,
-                gameState,
-                username,
-                gameId,
-                null,
-                addGameLogEntry
-            );
+            const costMet =
+                !fullCard.cardCostFunction ||
+                AbilityExecutor.canPayCardCost(fullCard, gameState, username);
 
-            if (canActivate && canPayCost) {
-                const cardButton = cardElement.querySelector(".card-button");
-                if (cardButton) {
-                    cardButton.classList.add("can-activate-or-set-highlight");
-                    cardButton.onclick = () => showObeliskActivatePrompt(card);
-                }
-            } else {
+            //console.log("▶️ Checking Obelisk", card.name);
+            //console.log("  in Hand:", hand.some(c => c.id === card.id));
+            //console.log("  in FaceDownArsenalZone:", faceDownArsenal.some(c => c.id === card.id));
+            //console.log("  type:", fullCard.type);
+            //console.log("  phase:", currentPhase);
+            //console.log("  isPlayerTurn:", isPlayerTurn);
+            //console.log("  conditionMet:", conditionMet);
+            //console.log("  costMet:", costMet);
+
+            if (!isMainPhase || !isPlayerTurn) return;
+
+            const inHand = hand.some(c => c.id === card.id);
+            const inFaceDownArsenal = faceDownArsenal.some(c => c.id === card.id);
+
+            if (!inHand && !inFaceDownArsenal) return;
+
+            // Clear any existing highlights or handlers
+            cardElement.classList.remove("can-activate-or-set-highlight", "card-select-for-arsenal");
+            cardElement.onclick = null;
+
+            if (conditionMet && costMet) {
+                cardElement.classList.add("can-activate-or-set-highlight");
+                cardElement.onclick = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log(`🟢 Activating Obelisk ${fullCard.name}`);
+                    showObeliskActivatePrompt(fullCard);
+                };
+                //console.log("🔧 onclick set to activate Obelisk");
+            } else if (inHand) {
+                // Only allow setting to arsenal
                 cardElement.classList.add("card-select-for-arsenal");
-                cardElement.onclick = () => showSetArsenalPrompt(card, fullCard);
+                cardElement.onclick = (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log(`🟠 Setting Obelisk ${fullCard.name} to arsenal`);
+                    showSetArsenalPrompt(card, fullCard);
+                };
+                //console.log("🔧 onclick set to Set Arsenal");
             }
         }
 
@@ -632,32 +666,40 @@
         }
 
         function showSetArsenalPrompt(cardData, fullCard) {
-            const existingPrompt = document.getElementById("set-arsenal-prompt-overlay");
-            if (existingPrompt) {
-                document.body.removeChild(existingPrompt);
+            console.log("🛠️ showSetArsenalPrompt called for card:", fullCard?.name || fullCard?.id || fullCard);
+            // Remove any existing activate prompt overlay before showing set prompt
+            const existingActivatePrompt = document.getElementById("obelisk-activate-prompt-overlay");
+            if (existingActivatePrompt) {
+                document.body.removeChild(existingActivatePrompt);
+            }
+
+            // Remove any existing set prompt overlay to avoid duplicates
+            const existingSetPrompt = document.getElementById("set-arsenal-prompt-overlay");
+            if (existingSetPrompt) {
+                document.body.removeChild(existingSetPrompt);
             }
 
             const overlay = document.createElement("div");
             overlay.id = "set-arsenal-prompt-overlay";
-                Object.assign(overlay.style, {
-                    position: "fixed",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
-                    padding: "20px",
-                    backgroundColor: "#333",
-                    color: "white",
-                    border: "2px solid white",
-                    borderRadius: "10px",
-                    zIndex: 120001,
-                    textAlign: "center",
-                    boxShadow: "0 0 10px black"
-                });
-                overlay.innerHTML = `
-                    <p>Set '${fullCard.name}' face-down in your Arsenal?</p>
-                    <button id="confirm-set">Confirm</button>
-                    <button id="cancel-set" style="margin-left: 10px;">Cancel</button>
-                `;
+            Object.assign(overlay.style, {
+                position: "fixed",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                padding: "20px",
+                backgroundColor: "#333",
+                color: "white",
+                border: "2px solid white",
+                borderRadius: "10px",
+                zIndex: 120001,
+                textAlign: "center",
+                boxShadow: "0 0 10px black"
+            });
+            overlay.innerHTML = `
+                <p>Set '${fullCard.name}' face-down in your Arsenal?</p>
+                <button id="confirm-set">Confirm</button>
+                <button id="cancel-set" style="margin-left: 10px;">Cancel</button>
+            `;
 
             document.body.appendChild(overlay);
 
@@ -684,8 +726,8 @@
                         gameId,
                         owner: username,
                         updatedZones: {
-                        Hand: handZone,
-                        FaceDownArsenalZone: faceDownArsenal
+                            Hand: handZone,
+                            FaceDownArsenalZone: faceDownArsenal
                         }
                     })
                 });
@@ -787,22 +829,73 @@
             for (const [zoneKey, domSuffix] of Object.entries(zoneMappings)) {
                 await renderCardZone(gameState[username][zoneKey], `player${domSuffix}Box`);
 
+                if (zoneKey === "Zone (Tomb)") {
+                    gameState[username][zoneKey].forEach(card => {
+                    const cardElem = document.querySelector(`#playerTombBox [data-card-id='${card.id}']`);
+                    if (!cardElem) return;
+
+                    const hasTombTrigger = card.abilities.some(ability =>
+                        ["Tomb"].some(trigger =>
+                        [ability.effect1type, ability.effect2type, ability.effect3type]
+                            .flat()
+                            .includes(trigger)
+                        )
+                    );
+
+                    if (hasTombTrigger) {
+                        cardElem.classList.add("can-activate-arsenal-highlight"); // Yellow glow
+                        cardElem.onclick = () => {
+                        console.log(`⚡ Activating Tomb effect for ${card.name}`);
+                        AbilityExecutor.showEffectChoicePrompt(
+                            card,
+                            gameState,
+                            username,
+                            gameId,
+                            updateLocalFromGameState,
+                            addGameLogEntry
+                        );
+                        };
+                    } else {
+                        cardElem.classList.remove("can-activate-arsenal-highlight");
+                        cardElem.onclick = null;
+                    }
+                    });
+                }
+
                 if (["Zone (Arsenal)"].includes(zoneKey)) {
                     gameState[username][zoneKey].forEach(card => {
-                        const cardElem = document.querySelector(`[data-card-id='${card.id}']`);
+                        const cardElem = document.querySelector(`#playerArsenalBox [data-card-id='${card.id}']`);
                         if (!cardElem) return;
 
-                        const hasTrigger = card.abilities.some(ability =>
-                        ["Standard", "Tomb", "IfDestroyed"].some(type =>
-                            [ability.effect1type, ability.effect2type, ability.effect3type].flat().includes(type)
-                        )
-                        );
+                        const hasValidStandardTrigger = card.abilities.some(ability =>
+                            ["Standard", "IfDestroyed"].some(type =>
+                                [ability.effect1type, ability.effect2type, ability.effect3type].flat().includes(type)
+                            )
+                            );
 
-                        if (hasTrigger) {
+                            // ❌ Tomb triggers should not apply in Arsenal
+                            const hasOnlyTombEffects = card.abilities.every(ability =>
+                            [ability.effect1type, ability.effect2type, ability.effect3type]
+                                .flat()
+                                .filter(t => !!t)
+                                .every(type => type === "Tomb")
+                            );
+
+                            if (hasValidStandardTrigger && !hasOnlyTombEffects) {
                             cardElem.classList.add("can-activate-arsenal-highlight");
                             cardElem.onclick = () => {
-                                AbilityExecutor.showEffectChoicePrompt(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+                                AbilityExecutor.showEffectChoicePrompt(
+                                card,
+                                gameState,
+                                username,
+                                gameId,
+                                updateLocalFromGameState,
+                                addGameLogEntry
+                                );
                             };
+                        } else {
+                        cardElem.classList.remove("can-activate-arsenal-highlight");
+                        cardElem.onclick = null;
                         }
                     });
                 }
@@ -1750,7 +1843,8 @@
                 if (!validNextPhases.includes(phase)) {
                     // Special case: allow re-entering End to complete post-discard retry
                     if (!(currentPhase === "End" && phase === "End")) {
-                        return res.status(400).json({ message: "Invalid phase transition" });
+                        console.error("❌ Invalid phase transition from", currentPhase, "to", phase);
+                        return;
                     }
                 }
 
@@ -2427,8 +2521,8 @@
 
             const arsenalBox = document.getElementById("playerArsenalBox");
                 arsenalBox.style.position = "fixed";
-                arsenalBox.style.left = "725px";
-                arsenalBox.style.top = "820px";
+                arsenalBox.style.left = "710px";
+                arsenalBox.style.top = "825px";
                 arsenalBox.style.width = "525px";
                 arsenalBox.style.height = "128px";
                 arsenalBox.style.zIndex = "100300"; // ensure it's above the board
@@ -4207,8 +4301,10 @@
                     cardElement.appendChild(cardButton);
                     drawnCardsContainer.appendChild(cardElement);
 
-                    if (card.type === "Obelisk") {
-                        await updateObeliskHandCardUI(card, cardElement, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, card);
+                    const fullCard = cards.find(c => String(c.id) === String(card.id));
+                    if (fullCard?.type === "Obelisk") {
+                        //console.log("🧪 Checking if updateObeliskHandCardUI is called inside loop: ", fullCard?.name, fullCard?.type);
+                        await updateObeliskHandCardUI(card, cardElement, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, fullCard);
                     }
 
                     // Fade in after render
@@ -4372,6 +4468,18 @@
         }
 
         function showObeliskActivatePrompt(cardData) {
+            // Remove any existing set prompt overlay before showing activate prompt
+            const existingSetPrompt = document.getElementById("set-arsenal-prompt-overlay");
+            if (existingSetPrompt) {
+                document.body.removeChild(existingSetPrompt);
+            }
+
+            // Remove any existing activate prompt overlay to avoid duplicates
+            const existingActivatePrompt = document.getElementById("obelisk-activate-prompt-overlay");
+            if (existingActivatePrompt) {
+                document.body.removeChild(existingActivatePrompt);
+            }
+
             const overlay = document.createElement("div");
             overlay.id = "obelisk-activate-prompt-overlay";
             Object.assign(overlay.style, {

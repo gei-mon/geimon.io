@@ -130,6 +130,7 @@ export async function declareAbility(
 
   const abilities = card.abilities || [];
   const promises = [];
+  let revealedCards = null;
 
   for (const ability of abilities) {
     for (const num of [1, 2, 3]) {
@@ -142,10 +143,21 @@ export async function declareAbility(
       const typeMatches = Array.isArray(type) ? type.includes(triggerType) : type === triggerType;
       if (!typeMatches || (!text && !cost)) continue;
 
+      const isTombOnly = Array.isArray(type) ? type.includes("Tomb") : type === "Tomb";
+      if (isTombOnly && card.boardState !== "Tomb") {
+        console.log(`⛔ Skipping Tomb effect for ${card.name} — not in Tomb (currently in ${card.boardState})`);
+        continue;
+      }
+
+      if (!isTombOnly && card.boardState === "Tomb") {
+        console.log(`⛔ Skipping non-Tomb effect for ${card.name} — it is in the Tomb`);
+        continue;
+      }
+
       const isMandatory = Array.isArray(type) ? type.includes("Mandatory") : type === "Mandatory";
       const shouldConfirm = !isMandatory && text && !/^Mill\d+$/.test(cost);
 
-      if (typeMatches && (text || cost) && shouldConfirm) {
+      if (shouldConfirm) {
         const confirmed = await confirmAbilityTrigger(card.name, text);
         if (!confirmed) continue;
       }
@@ -155,91 +167,170 @@ export async function declareAbility(
 
       if (hasUsedEffectThisTurn(gameId, currentTurn, cardId, text)) continue;
 
-      // === CONDITION (Future: expand logic here if needed) ===
       if (condition) {
         const passed = await evaluateAbilityCondition(condition, card, gameState, username);
         if (!passed) continue;
       }
 
-      // === COST STAGE ===
       if (cost && !(await payAbilityCost(cost, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry))) {
         continue;
       }
 
-      // === MAIN EFFECT ===
-      const effect = text;
+      const effects = text.split(",");
 
-      let effectFunc = null;
-      if (
-        effect.startsWith("Excavate") &&
-        linger === "ObliterateOthers"
-      ) {
-        effectFunc = excavateCards;
-      } else if (effect.startsWith("Retrieve") && gameState.canRetrieve !== false) {
-        effectFunc = retrieveCardByCondition;
-      } else if (effect.startsWith("Resurrect") && gameState.canResurrect !== false) {
-        effectFunc = resurrectByCondition;
-      } else if (/^Excavate(Op)?\d+$/.test(cost)) {
-        effectFunc = excavateCards;
-      } else if (/^Excavate(Op)?\d+$/.test(effect)) {
-        effectFunc = excavateCards;
-      } else if ((/^Add\d+[A-Za-z]+$/.test(effect)) && gameState.canAddCards !== false) {
-        effectFunc = addCardByCondition;
-      } else if (/^Mill\d+$/.test(cost)) {
-        const count = parseInt(cost.replace("Mill", ""));
-        effectFunc = async (...args) => {
-          return millCards(
-            count,
+      for (const individualEffect of effects) {
+        let effectFunc = null;
+
+        if (individualEffect.startsWith("Excavate")) {
+          revealedCards = await excavateCards(
+            individualEffect,
+            card,
             gameState,
             username,
             gameId,
             updateLocalFromGameState,
             addGameLogEntry
           );
-        };
-      } else if (/^Mill\d+$/.test(effect)) {
-        const count = parseInt(effect.replace("Mill", ""));
-        effectFunc = async (...args) => {
-          return millCards(
-            count,
-            gameState,
-            username,
-            gameId,
-            updateLocalFromGameState,
-            addGameLogEntry
-          );
-        };
-      } else if (effectMap[effect]) {
-        effectFunc = effectMap[effect];
+
+          // ✅ Immediately remove revealed cards from deck
+          if (revealedCards?.length > 0) {
+            const revealedIds = new Set(revealedCards.map(c => c.id));
+            gameState[username].Deck = gameState[username].Deck.filter(c => !revealedIds.has(c.id));
+          }
+
+          continue;
+        }
+
+        if (individualEffect === "Add1Revealed") {
+          effectFunc = async () => {
+            if (!revealedCards || revealedCards.length === 0) {
+              console.warn("🚫 No revealed cards available for Add1Revealed.");
+              alert("No cards were revealed to add.");
+              return;
+            }
+
+            const added = await addCardByCondition(
+              individualEffect,
+              card,
+              gameState,
+              username,
+              gameId,
+              updateLocalFromGameState,
+              addGameLogEntry,
+              revealedCards
+            );
+
+            if (added && added.length > 0) {
+              const addedCard = added[0];
+
+              // ✅ Remove from revealedCards so it isn't returned or obliterated later
+              revealedCards = revealedCards.filter(c => c.id !== addedCard.id);
+
+              // ✅ Also remove from deck in case it was still there
+              gameState[username].Deck = gameState[username].Deck.filter(c => c.id !== addedCard.id);
+            }
+
+            return added;
+          };
+        } else if (individualEffect.startsWith("Retrieve") && gameState.canRetrieve !== false) {
+          effectFunc = retrieveCardByCondition;
+        } else if (/^Add\d+[A-Za-z]+$/.test(individualEffect) && gameState.canAddCards !== false) {
+          effectFunc = addCardByCondition;
+        } else if (/^Mill\d+$/.test(individualEffect)) {
+          const count = parseInt(individualEffect.replace("Mill", ""));
+          effectFunc = async () => {
+            return millCards(count, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+          };
+        } else if (effectMap[individualEffect]) {
+          effectFunc = effectMap[individualEffect];
+        }
+
+        if (!effectFunc) {
+          console.warn(`⚠️ No effect handler for "${individualEffect}"`);
+          continue;
+        }
+
+        const result = await effectFunc();
+        if (result) promises.push(result);
       }
 
-      if (!effectFunc) {
-        console.warn(`⚠️ No effect handler for "${effect}"`);
-        continue;
+      if (revealedCards?.length > 0) {
+        const keptIds = gameState[username].Hand.map(c => c.id);
+        const returned = revealedCards.filter(c => !keptIds.includes(c.id));
+        const obliterateUsed = effects.includes("ObliterateOthers");
+
+        if (obliterateUsed) {
+          if (returned.length > 0) {
+            for (const card of returned) {
+              card.lastBoardState = "Deck";
+              card.boardState = "Void";
+              gameState[username].Void.push(card);
+              addGameLogEntry(`${card.name} was obliterated from the revealed cards`);
+            }
+
+            await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+              method: "POST",
+              credentials: "include",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                gameId,
+                owner: username,
+                updatedZones: {
+                  Void: gameState[username].Void
+                }
+              })
+            });
+          }
+        } else if (returned.length > 0) {
+          // ✅ Return remaining revealed cards to deck
+          gameState[username].Deck.push(...returned);
+
+          // ✅ Shuffle the deck
+          gameState[username].Deck = shuffleArray(gameState[username].Deck);
+
+          // ✅ Log the shuffle
+          addGameLogEntry(`${returned.length} excavated card(s) were returned and the deck was shuffled`);
+
+          // ✅ Persist updated deck
+          await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              gameId,
+              owner: username,
+              updatedZones: {
+                Deck: gameState[username].Deck
+              }
+            })
+          });
+        }
       }
 
-      const promise = effectFunc(
-        effect,
-        card,
-        gameState,
-        username,
-        gameId,
-        updateLocalFromGameState,
-        addGameLogEntry,
-        batchMilledCards,
-        fullCardDatabase
-      );
-      promises.push(promise);
-
-      // === LINGER POST-EFFECT (basic hook) ===
       if (linger) {
-        const lingerPromise = handleLinger(linger, card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+        const lingerPromise = handleLinger(
+          linger,
+          card,
+          gameState,
+          username,
+          gameId,
+          updateLocalFromGameState,
+          addGameLogEntry
+        );
         if (lingerPromise) promises.push(lingerPromise);
       }
     }
   }
 
   await Promise.all(promises);
+}
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }
 
 function parseCombinedCosts(costString) {
@@ -408,6 +499,21 @@ export function checkCardConditionFunction(card, gameState, username) {
   }
 
   return false; // Unknown or invalid condition
+}
+
+export function canPayCardCost(card, gameState, username) {
+    // Basic check for Sacrifice1, Offer3, etc. without resolving
+    if (!card.cardCostFunction) return true;
+
+    switch (card.cardCostFunction) {
+        case "Sacrifice1":
+            return (gameState[username]["Zone (Champion)"]?.length ?? 0) >= 1;
+        case "Offer3":
+            return (gameState[username].life ?? 0) >= 3;
+        // Add more cost checks as needed
+        default:
+            return false;
+    }
 }
 
 export async function handleCardCostFunction(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
@@ -1098,11 +1204,19 @@ async function promptUserToSelect(cards, max, message) {
   });
 }
 
-export async function excavateCards(effectText, card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
+export async function excavateCards(
+  effectText,
+  card,
+  gameState,
+  username,
+  gameId,
+  updateLocalFromGameState,
+  addGameLogEntry
+) {
   const match = effectText.match(/^Excavate(Op)?(\d+)/);
   if (!match) {
     console.warn(`⚠️ Invalid Excavate effect: "${effectText}"`);
-    return;
+    return [];
   }
 
   const isOpponent = match[1] === "Op";
@@ -1112,18 +1226,41 @@ export async function excavateCards(effectText, card, gameState, username, gameI
 
   if (deck.length < count) {
     console.warn("⚠️ Not enough cards to excavate.");
-    return;
+    return [];
   }
 
-  const revealed = deck.slice(0, count).map(c => cards.find(cardObj => String(cardObj.id) === String(c.id)) || c);
-  window.lastExcavatedCards = revealed;
+  // Slice top N cards
+  const topCards = deck.slice(0, count);
+
+  // Look up full card data if needed
+  const revealedCards = topCards.map(c =>
+    cards.find(cardObj => String(cardObj.id) === String(c.id)) || c
+  );
+
+  // 🧹 Remove revealed cards from the deck
+  const revealedIds = new Set(topCards.map(c => c.id));
+  gameState[targetPlayer].Deck = deck.filter(c => !revealedIds.has(c.id));
+
+  // Store for external access (UI etc.)
+  window.lastExcavatedCards = revealedCards;
   window.lastExcavatedSource = targetPlayer;
   window.lastExcavatedCount = count;
 
   addGameLogEntry(`${card.name} excavated ${count} card(s) from ${isOpponent ? "opponent's" : "their"} deck.`);
+
+  return revealedCards;
 }
 
-export async function addCardByCondition(effectText, sourceCard, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
+export async function addCardByCondition(
+  effectText,
+  sourceCard,
+  gameState,
+  username,
+  gameId,
+  updateLocalFromGameState,
+  addGameLogEntry,
+  poolOverride = null
+) {
   const match = effectText.match(/^Add(\d+)([A-Za-z]+)$/);
   if (!match) {
     console.warn(`❌ Invalid Add effect format: "${effectText}"`);
@@ -1132,11 +1269,24 @@ export async function addCardByCondition(effectText, sourceCard, gameState, user
 
   const count = parseInt(match[1]);
   const target = match[2];
-  const deck = gameState[username].Deck;
 
-  const valid = deck.filter(card => {
+  // Special case for 'Revealed' — use lastExcavatedCards
+  let sourcePool = poolOverride || gameState[username].Deck;
+
+  if (target === "Revealed") {
+    sourcePool = window.lastExcavatedCards || [];
+    if (!sourcePool.length) {
+      alert("No cards were revealed to add.");
+      return;
+    }
+  }
+
+  const valid = sourcePool.filter(card => {
+    if (target === "Revealed") return true; // no filtering on revealed cards
+
     const hasTag = card.tags?.includes(target);
     const isType = card.type === target;
+
     const comboMatch = /^[A-Z][a-z]+[A-Z][a-z]+$/.test(target); // e.g., CommanderObelisk
     const camelParts = target.match(/[A-Z][a-z]+/g);
     const hasBoth = camelParts?.length === 2 &&
@@ -1155,12 +1305,16 @@ export async function addCardByCondition(effectText, sourceCard, gameState, user
   if (!selected.length) return;
 
   for (const chosen of selected) {
-    const index = deck.findIndex(c => c.id === chosen.id);
-    if (index !== -1) deck.splice(index, 1);
+    // Only remove from deck if the pool was the real deck (not revealed)
+    if (!poolOverride && target !== "Revealed") {
+      const index = gameState[username].Deck.findIndex(c => c.id === chosen.id);
+      if (index !== -1) gameState[username].Deck.splice(index, 1);
+    }
+
     chosen.lastBoardState = "Deck";
     chosen.boardState = "Hand";
     gameState[username].Hand.push(chosen);
-    addGameLogEntry(`${username} added ${chosen.name} to hand from deck.`);
+    addGameLogEntry(`${username} added ${chosen.name} to hand from ${target === "Revealed" ? "excavated cards" : "deck"}.`);
   }
 
   await updateGameStateZones(username, gameId, gameState, ["Deck", "Hand"]);
@@ -1232,8 +1386,6 @@ async function handleLinger(lingerText, card, gameState, username, gameId, updat
             const j = Math.floor(Math.random() * (i + 1));
             [deck[i], deck[j]] = [deck[j], deck[i]];
           }
-
-          addGameLogEntry(`${remaining.length} excavated card(s) were returned and the deck was shuffled.`);
         }
         break;
 
@@ -1770,7 +1922,7 @@ export async function showEffectChoicePrompt(card, gameState, username, gameId, 
     btn.textContent = effect;
     btn.onclick = async () => {
       document.body.removeChild(overlay);
-      await AbilityExecutor.declareAbility(card, "Standard", gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+      await declareAbility(card, "Standard", gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
     };
     overlay.appendChild(btn);
   });

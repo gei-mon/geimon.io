@@ -552,7 +552,7 @@ overflow: hidden;
     0 4px 8px #b366ff !important; /* Bottom */
 }
 
-.triggerable-effect-glow {
+.can-activate-arsenal-highlight {
     outline: 4px solid yellow;
     box-shadow: 0 0 12px 4px yellow;
     cursor: pointer;
