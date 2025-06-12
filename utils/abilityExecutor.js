@@ -282,6 +282,7 @@ export async function declareAbility(
             });
           }
         } else if (returned.length > 0) {
+          const obliterateUsed = linger.includes("ObliterateOthers");
           // ✅ Return remaining revealed cards to deck
           gameState[username].Deck.push(...returned);
 
@@ -289,7 +290,9 @@ export async function declareAbility(
           gameState[username].Deck = shuffleArray(gameState[username].Deck);
 
           // ✅ Log the shuffle
-          addGameLogEntry(`${returned.length} excavated card(s) were returned and the deck was shuffled`);
+          if (!obliterateUsed) {
+            addGameLogEntry(`${returned.length} excavated card(s) were returned and the deck was shuffled`);
+          }
 
           // ✅ Persist updated deck
           await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
@@ -1401,7 +1404,7 @@ async function handleLinger(lingerText, card, gameState, username, gameId, updat
           gameState[window.lastExcavatedSource].Void.push(card);
         }
         if (toObliterate.length > 0)
-          addGameLogEntry(`${toObliterate.length} excavated card(s) were obliterated.`);
+          addGameLogEntry(`${toObliterate.length} excavated card(s) were obliterated`);
         break;
 
       default:
