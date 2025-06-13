@@ -990,6 +990,44 @@ export const cards = [
     ]
   },
   {
+    id: "27",
+    name: "Queen Mother Maybelline",
+    image: `${cardArtFolder}/Champions/LadyMaybellineRisenBride.png`,
+    type: "Champion",
+    condition: "",
+    cardConditionFunction: "",
+    cost: "Basic",
+    cardCostFunction: "UseBasic",
+    tags: ["Cryptbound", "Undead", "Royal"],
+    damage: 2,
+    life: 7,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: "Bloodrage, Deathward, Lifesteal, Undertaker <br> Behold my Subjects: Offer 5 Life and Target 1 Undead in either Tomb; Resurrect Target. <br> Crafted Brilliance (Exhaustion): Sacrifice 1; Destroy 1 Champion your Opponent controls. <br> Rise Again!: If this card is in your Tomb while you control \"Markerion, Magus Supreme\" (Reflex): Resurrect this card.",
+        keywords: ["Bloodrage","Deathward","Lifesteal","Undertaker"],
+        effect1name: "Behold my Subjects",
+        effect1type: ["Standard"],
+        effect1condition: "",
+        effect1cost: "Offer5,Target1TombUndead",
+        effect1text: "ResurrectTarget",
+        effect1linger: "",
+        effect2name: "Crafted Brilliance",
+        effect2type: ["Standard","Exhaustion"],
+        effect2condition: "",
+        effect2cost: "Sacrifice1",
+        effect2text: "Destroy1OppChamp",
+        effect2linger: "",
+        effect3name: "Rise Again",
+        effect3type: ["Reflex","Tomb"],
+        effect3condition: "YouControlMarkerion",
+        effect3cost: "",
+        effect3text: "ResurrectSelf",
+        effect3linger: ""
+      }
+    ]
+  },
+  {
     id: "61",
     name: "Areza, Town Harlot",
     image: `${cardArtFolder}/Champions/ArezaHarlot.png`,
@@ -3664,7 +3702,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "On Activation: Rally 1 Clockwork, that Champion becomes this card's Commander.<br> Mount <br> Shielded <br> Mounted: This card's Commander cannot attack. <br> Mounted: Target 1 Champion on the Zone; Target takes 10 Damage.",
+        text: "On Activation: Recruit 1 Clockwork, that Champion becomes this card's Commander.<br> Mount <br> Shielded <br> Mounted: This card's Commander cannot attack. <br> Mounted: Target 1 Champion on the Zone; Target takes 10 Damage.",
         keywords: ["Shielded","Mount"],
         effect1name: "On Activation",
         effect1type: "OnActivation",
