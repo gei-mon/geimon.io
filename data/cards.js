@@ -6058,8 +6058,8 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Emergency Tunnel (Reflex): If your Opponent declares an attack: Flip this card face-down, and if you do, Rally 3 Burrow Token. This card's face-down display then becomes a Burrow Token.",
-        keywords: ["blank"],
+        text: "Deathward <br> Emergency Tunnel (Reflex): If your Opponent declares an attack: Flip this card face-down, and if you do, Rally 3 Burrow Token. This card's face-down display then becomes a Burrow Token.",
+        keywords: ["Deathward"],
         effect1name: "Emergency Tunnel",
         effect1type: "OppAttacks",
         effect1condition: "",
