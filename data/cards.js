@@ -1270,16 +1270,16 @@ export const cards = [
     damageThreshold: "6",
     abilities: [
       {
-        text: "Deathtouch, Warded <br> Unlimited Power (Exhaustion): Offer X (Maximum of 6): This card can make X attacks during your next Battle Phase. <br> Everlasting life (Exhaustion): Mill 12; Gain 6 Life. <br> Riches Beyond Your Imagination (Exhaustion): Offer 6; Draw 2.",
+        text: "Deathtouch, Warded <br> Unlimited Power: Offer X (Maximum of 3): This card can make X attacks during your next Battle Phase. <br> Everlasting life: Mill 12; Gain 6 Life. <br> Riches Beyond Your Imagination (Exhaustion): Offer 6; Draw 2.",
         keywords: ["Deathtouch","Warded"],
         effect1name: "Unlimited Power",
-        effect1type: ["Standard","Exhaustion"],
+        effect1type: ["Standard"],
         effect1condition: "",
-        effect1cost: "OfferXMax6",
+        effect1cost: "OfferXMax3",
         effect1text: "SelfGainsXAttacksNextBattlePhase",
         effect1linger: "",
         effect2name: "Everlasting Life",
-        effect2type: ["Standard","Exhaustion"],
+        effect2type: ["Standard"],
         effect2condition: "",
         effect2cost: "Mill12",
         effect2text: "Gain6Life",
@@ -1955,7 +1955,7 @@ export const cards = [
     abilities: [
       {
         text: "Decrease Target's Damage by 3, and if you do, it gains Non-Believer until the end of the turn.",
-        keywords: ["blank"],
+        keywords: ["Non-Believer"],
         effect1name: "",
         effect1type: "",
         effect1condition: "",
@@ -4956,7 +4956,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "On Activation: Recruit 1 Clockwork, that Champion becomes this card's Commander.<br> Mount <br> Shielded <br> Mounted: This card's Commander cannot attack. <br> Mounted: Target 1 Champion on the Zone; Target takes 10 Damage.",
+        text: "On Activation: Recruit 1 Clockwork, that Champion becomes this card's Commander.<br> Mount <br> Shielded <br> Mounted: This card's Commander cannot attack. <br> Mounted: Target 1 Champion on the Zone; Target takes 5 Damage.",
         keywords: ["Shielded","Mount"],
         effect1name: "On Activation",
         effect1type: "OnActivation",
@@ -4974,7 +4974,7 @@ export const cards = [
         effect3type: ["Mounted"],
         effect3condition: "",
         effect3cost: "Target1ChampOnZone",
-        effect3text: "TargetTakes10Damage",
+        effect3text: "TargetTakes5Damage",
         effect3linger: ""
       }
     ]
@@ -6053,18 +6053,18 @@ export const cards = [
     cardCostFunction: "UseBasic",
     cost: "Basic",
     tags: ["Noble", "Helper"],
-    damage: 2,
-    life: 3,
+    damage: 0,
+    life: 1,
     damageThreshold: "1",
     abilities: [
       {
-        text: "Deathward <br> Emergency Tunnel (Reflex): If your Opponent declares an attack: Flip this card face-down, and if you do, Rally 3 Burrow Token. This card's face-down display then becomes a Burrow Token.",
+        text: "Deathward <br> Emergency Tunnel (Reflex): If your Opponent declares an attack: Flip this card face-down, and if you do, Rally 2 Burrow Token. This card's face-down display then becomes a Burrow Token.",
         keywords: ["Deathward"],
         effect1name: "Emergency Tunnel",
         effect1type: "OppAttacks",
         effect1condition: "",
         effect1cost: "",
-        effect1text: "FlipSelfFacedown,Rally3BurrowToken,ChangeBackSpriteToBurrowToken",
+        effect1text: "FlipSelfFacedown,Rally2BurrowToken,ChangeBackSpriteToBurrowToken",
         effect1linger: "",
         effect2name: "",
         effect2type: "",
@@ -6172,10 +6172,10 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "If Destroyed: Add or Retrieve 1 Dragon.",
+        text: "If Sent to Tomb: Add or Retrieve 1 Dragon.",
         keywords: ["blank"],
         effect1name: "",
-        effect1type: "IfDestroyed",
+        effect1type: "IfTomb",
         effect1condition: "",
         effect1cost: "",
         effect1text: "AddOrRetrieve1Dragon",
@@ -7502,10 +7502,10 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "If the attached Champion would be Damaged or Destroyed: Your Opponent draws 2; The attached Champion is not Damaged or Destroyed.",
+        text: "The first time each turn the attached Champion would be Damaged or Destroyed (Mandatory): Your Opponent draws 2; The attached Champion is not Damaged or Destroyed.",
         keywords: ["blank"],
         effect1name: "",
-        effect1type: "Passive",
+        effect1type: ["Reflex","Mandatory"],
         effect1condition: "AttachedWouldBeDamagedOrDestroyed",
         effect1cost: "OppDraw2",
         effect1text: "ProtectAttached",
@@ -7678,7 +7678,7 @@ export const cards = [
     ]
   },
   {
-    id: "1001",
+    id: "901",
     name: "Get Your Game On!",
     image: `${cardArtFolder}/Rush/GameOn.png`,
     type: "Rush",
@@ -7716,7 +7716,7 @@ export const cards = [
     ]
   },
   {
-    id: "1002",
+    id: "902",
     name: "Legendary Battle",
     image: `${cardArtFolder}/Actions/LegendaryBattle.png`,
     type: "Action",

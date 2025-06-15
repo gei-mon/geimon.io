@@ -82,7 +82,8 @@
             padding: 0 12px;
             color: white;
             box-shadow: 0 0 10px black;
-            height: 1000px;           /* fix height */
+            max-height: 100vh;
+            height: auto;           /* fix height */
             overflow-y: auto;     /* Allow scrolling */
             overflow-x: hidden;   /* Prevent horizontal overflow */
         }
@@ -139,21 +140,18 @@
             cursor: pointer;
         }
         .search-options {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease, opacity 0.4s ease;
-            opacity: 0;
             display: flex;
             flex-direction: column;
             gap: 10px;
-            padding-top: 0;
-            padding-bottom: 0;
+            overflow: hidden;
+            opacity: 0;
+            max-height: 0;
+            transition: max-height 0.4s ease, opacity 0.4s ease;
         }
         .search-options.open {
-            max-height: 300px;
             opacity: 1;
-            padding-top: 10px;
-            padding-bottom: 300px;
+            overflow: visible;
+            max-height: 1000px;  /* enough to allow full expansion */
         }
         .type-btn {
             background-color: #444;
