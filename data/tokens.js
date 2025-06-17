@@ -792,5 +792,41 @@ export const tokens = [
         effect3linger: ""
       }
     ]
+},
+{
+    id: "9023",
+    name: "Cow Token",
+    image: `${tokenArtFolder}/Cow.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Token"],
+    damage: "0",
+    life: "2",
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: "",
+        keywords: ["blank"],
+        effect1name: "",
+        effect1type: "",
+        effect1condition: "",
+        effect1cost: "",
+        effect1text: "",
+        effect1linger: "",
+        effect2name: "",
+        effect2type: "",
+        effect2condition: "",
+        effect2cost: "",
+        effect2text: "",
+        effect2linger: "",
+        effect3name: "",
+        effect3type: "",
+        effect3condition: "",
+        effect3cost: "",
+        effect3text: "",
+        effect3linger: ""
+      }
+    ]
 }
 ];
