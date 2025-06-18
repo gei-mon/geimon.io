@@ -489,14 +489,9 @@ text-shadow: 1px 1px 2px black, -1px -1px 2px black, 1px -1px 2px black, -1px 1p
   height: 100%;
   background-image: url('https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/noise.png'); /* Make sure this path is correct */
   background-repeat: repeat;
-  opacity: 0.08; /* tweak this for more or less texture */
+  opacity: 0.05; /* tweak this for more or less texture */
   z-index: 0;
   pointer-events: none;
-}
-
-.card > * {
-  position: relative;
-  z-index: 1;
 }
 
 .card::after {
@@ -509,7 +504,7 @@ text-shadow: 1px 1px 2px black, -1px -1px 2px black, 1px -1px 2px black, -1px 1p
   background-image: url('https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/paper-fiber.png'); /* optional additional texture */
   background-repeat: repeat;
   mix-blend-mode: soft-light;
-  opacity: 0.1;
+  opacity: 0.05;
   z-index: 0;
   pointer-events: none;
 }
