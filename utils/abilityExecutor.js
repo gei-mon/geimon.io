@@ -92,6 +92,7 @@ function hasUsedEffectThisTurn(gameId, turn, cardId, effectText) {
 }
 
 const effectMap = {
+  "ResurrectSelf":   resurrectByCondition,
   "ResurrectByCondition": resurrectByCondition,
   "RetrieveCardByCondition": retrieveCardByCondition,
   "Add": addCardByCondition,
@@ -143,7 +144,9 @@ export async function declareAbility(
       const typeMatches = Array.isArray(type) ? type.includes(triggerType) : type === triggerType;
       if (!typeMatches || (!text && !cost)) continue;
 
-      const isTombOnly = Array.isArray(type) ? type.includes("Tomb") : type === "Tomb";
+      const isTombOnly = typeof type === "string"
+        ? type.includes("Tomb")
+        : Array.isArray(type) && type.some(t => t.includes("Tomb"));
       if (isTombOnly && card.boardState !== "Tomb") {
         console.log(`⛔ Skipping Tomb effect for ${card.name} — not in Tomb (currently in ${card.boardState})`);
         continue;
@@ -235,14 +238,37 @@ export async function declareAbility(
         } else if (individualEffect.startsWith("Retrieve") && gameState.canRetrieve !== false) {
           effectFunc = retrieveCardByCondition;
         } else if (/^Add\d+[A-Za-z]+$/.test(individualEffect) && gameState.canAddCards !== false) {
-          effectFunc = addCardByCondition;
+          effectFunc = async () => {
+            return await addCardByCondition(
+              individualEffect,
+              card,
+              gameState,
+              username,
+              gameId,
+              updateLocalFromGameState,
+              addGameLogEntry
+            );
+          };
         } else if (/^Mill\d+$/.test(individualEffect)) {
           const count = parseInt(individualEffect.replace("Mill", ""));
           effectFunc = async () => {
             return millCards(count, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
           };
         } else if (effectMap[individualEffect]) {
-          effectFunc = effectMap[individualEffect];
+          effectFunc = () =>
+            effectMap[individualEffect](
+              individualEffect,
+              card,
+              gameState,
+              username,
+              gameId,
+              updateLocalFromGameState,
+              addGameLogEntry
+            );
+        }
+
+        if (!effectFunc) {
+          effectFunc = getFallbackEffectFunc(individualEffect);
         }
 
         if (!effectFunc) {
@@ -508,15 +534,36 @@ export function canPayCardCost(card, gameState, username) {
     // Basic check for Sacrifice1, Offer3, etc. without resolving
     if (!card.cardCostFunction) return true;
 
-    switch (card.cardCostFunction) {
-        case "Sacrifice1":
-            return (gameState[username]["Zone (Champion)"]?.length ?? 0) >= 1;
-        case "Offer3":
-            return (gameState[username].life ?? 0) >= 3;
-        // Add more cost checks as needed
-        default:
-            return false;
+    const offerMatch = card.cardCostFunction.match(/^Offer(\d+)$/);
+    if (offerMatch) {
+      const offerAmt = parseInt(offerMatch[1], 10);
+      return (gameState[username].life ?? 0) >= offerAmt;
     }
+
+    switch (card.cardCostFunction) {
+      case "Sacrifice1":
+        return (gameState[username]["Zone (Champion)"]?.length ?? 0) >= 1;
+        // Add more cost checks as needed
+      default:
+        return false;
+    }
+}
+
+export function isActivatableActionCard(fullCard, gameState, username) {
+  const currentPhase = gameState?.turn?.currentPhase;
+  const isMainPhase = currentPhase === "Main 1" || currentPhase === "Main 2";
+  const isPlayerTurn = gameState.turn?.currentPlayer === username;
+
+  const conditionMet = !fullCard.cardConditionFunction || checkCardConditionFunction(fullCard, gameState, username);
+  const costMet = !fullCard.cardCostFunction || canPayCardCost(fullCard, gameState, username);
+
+  const isPlayableEffect = fullCard.abilities?.some(a =>
+    [a.effect1text, a.effect2text, a.effect3text].some(text =>
+      text && !text.includes("Target1") // ✅ skip unimplemented effect types
+    )
+  );
+
+  return isMainPhase && isPlayerTurn && conditionMet && costMet && isPlayableEffect;
 }
 
 export async function handleCardCostFunction(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
@@ -1284,7 +1331,16 @@ export async function addCardByCondition(
     }
   }
 
-  const valid = sourcePool.filter(card => {
+  let poolCards;
+  if (target === "Revealed") {
+    poolCards = sourcePool;
+  } else {
+    poolCards = sourcePool.map(c =>
+      cards.find(db => String(db.id) === String(c.id)) || c
+    );
+  }
+
+  const valid = poolCards.filter(card => {
     if (target === "Revealed") return true; // no filtering on revealed cards
 
     const hasTag = card.tags?.includes(target);
@@ -1322,6 +1378,7 @@ export async function addCardByCondition(
 
   await updateGameStateZones(username, gameId, gameState, ["Deck", "Hand"]);
   updateLocalFromGameState();
+  return selected;
 }
 
 async function evaluateAbilityCondition(condition, card, gameState, username) {
