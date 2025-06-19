@@ -10,6 +10,8 @@ export function renderCard(card, container) {
   if (card.type === "Champion") {
     cardElement.classList.add("champion");
     const firstTag = card.tags?.[0] || "";
+    const secondTag = card.tags?.[1] || "";
+    const thirdTag = card.tags?.[2] || "";
     if (firstTag === "Cryptbound") {
       cardElement.classList.add("cryptbound");}
     if (firstTag === "Frontier") {
@@ -21,6 +23,10 @@ export function renderCard(card, container) {
     if (firstTag === "Vivisect") {
       cardElement.classList.add("vivisect");}
     if (firstTag === "Token") {
+      cardElement.classList.add("token");}
+    if (secondTag === "Token") {
+      cardElement.classList.add("token");}
+    if (thirdTag === "Token") {
       cardElement.classList.add("token");}
   }
   else if (card.type === "Action") {

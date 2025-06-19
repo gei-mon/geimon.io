@@ -84,6 +84,8 @@ const defaultZones = () => ({
   Void: [],
   "Zone (Champion)": [],
   "Zone (Arsenal)": [],
+  "FaceDownZone": [],
+  "FaceDownArsenalZone": [],
   Reserve: []
 });
 

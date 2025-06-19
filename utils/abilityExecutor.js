@@ -1,5 +1,6 @@
 import { renderCard } from './cardRenderer.js';
 import { cards } from '../data/cards.js';
+import { tokens } from '../data/tokens.js';
 const effectUsageTracker = new Map();
 
 export function resetEffectUsageForTurn(gameId, turnNumber) {
@@ -254,6 +255,18 @@ export async function declareAbility(
           effectFunc = async () => {
             return millCards(count, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
           };
+        } else if (/^Rally\d+[A-Za-z]+Token$/.test(individualEffect)) {
+            effectFunc = () => rallyToken(
+            individualEffect, card,
+            gameState, username, gameId,
+            updateLocalFromGameState, addGameLogEntry
+          );
+        } else if (/^OppRally\d+[A-Za-z]+Token$/.test(individualEffect)) {
+          effectFunc = () => oppRallyToken(
+            individualEffect, card,
+            gameState, username, gameId,
+            updateLocalFromGameState, addGameLogEntry
+          );
         } else if (effectMap[individualEffect]) {
           effectFunc = () =>
             effectMap[individualEffect](
@@ -538,6 +551,9 @@ export function canPayCardCost(card, gameState, username) {
     if (offerMatch) {
       const offerAmt = parseInt(offerMatch[1], 10);
       return (gameState[username].life ?? 0) >= offerAmt;
+    } else if (/^Rally\d+[A-Za-z]+Token$/.test(card.cardCostFunction) ||
+      /^OppRally\d+[A-Za-z]+Token$/.test(card.cardCostFunction)) {
+      return true;
     }
 
     switch (card.cardCostFunction) {
@@ -566,6 +582,11 @@ export function isActivatableActionCard(fullCard, gameState, username) {
   return isMainPhase && isPlayerTurn && conditionMet && costMet && isPlayableEffect;
 }
 
+function getOpponent(username, gameState) {
+  return Object.keys(gameState)
+    .filter(key => key !== username && key !== 'turn')[0];
+}
+
 export async function handleCardCostFunction(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
   const deck = gameState[username].Deck;
   const life = gameState[username].life;
@@ -573,6 +594,21 @@ export async function handleCardCostFunction(card, gameState, username, gameId, 
     ...(gameState[username]["Zone (Champion)"] || []),
     ...(gameState[username]["FaceDownZone"] || [])
   ];
+
+  if (/^Rally\d+[A-Za-z]+Token$/.test(card.cardCostFunction)) {
+    return await rallyToken(
+      card.cardCostFunction, card,
+      gameState, username, gameId,
+      updateLocalFromGameState, addGameLogEntry
+    );
+  }
+  if (/^OppRally\d+[A-Za-z]+Token$/.test(card.cardCostFunction)) {
+    return await oppRallyToken(
+      card.cardCostFunction, card,
+      gameState, username, gameId,
+      updateLocalFromGameState, addGameLogEntry
+    );
+  }
 
   // If cardCostFunction is a combined string like "Offer5Mill5Sacrifice1"
   if (/^(Offer|Mill|Sacrifice)/.test(card.cardCostFunction)) {
@@ -1994,4 +2030,84 @@ export async function showEffectChoicePrompt(card, gameState, username, gameId, 
   overlay.appendChild(cancel);
 
   document.body.appendChild(overlay);
+}
+
+// Rally tokens to your own face-up Champion zone
+export async function rallyToken(
+  effectText, card,
+  gameState, username, gameId,
+  updateLocalFromGameState, addGameLogEntry
+) {
+  const m = effectText.match(/^Rally(\d+)([A-Za-z]+)Token$/);
+  if (!m) {
+    console.warn(`⚠️ Invalid RallyToken effect: "${effectText}"`);
+    return;
+  }
+  const [, countStr, type] = m;
+  const count = parseInt(countStr, 10);
+  const tpl = tokens.find(t => t.name === `${type} Token`);
+  if (!tpl) {
+    console.warn(`⚠️ No token template for type: ${type}`);
+    return;
+  }
+  const zone = gameState[username]["Zone (Champion)"];
+  for (let i = 0; i < count; i++) {
+    zone.push({ ...tpl, boardState: "Zone (Champion)", lastBoardState: null });
+  }
+  console.log(`🪙 [rallyToken] ${username}'s Zone (Champion) now contains:`, 
+              zone.map(c => `${c.id} (${c.name})`));
+  await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+    method: "POST", credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      gameId, owner: username,
+      updatedZones: { "Zone (Champion)": zone }
+    })
+  });
+  addGameLogEntry(`${username} rallied ${count} ${type} Token${count>1?'s':''}`);
+  updateLocalFromGameState();
+  console.log(`🪙 After updateLocal [rallyToken] ${username}'s Zone (Champion) now contains:`, 
+              zone.map(c => `${c.id} (${c.name})`));
+  return true;
+}
+
+// Rally tokens to your opponent’s face-up Champion zone
+export async function oppRallyToken(
+  effectText, card,
+  gameState, username, gameId,
+  updateLocalFromGameState, addGameLogEntry
+) {
+  const m = effectText.match(/^OppRally(\d+)([A-Za-z]+)Token$/);
+  if (!m) {
+    console.warn(`⚠️ Invalid OppRallyToken effect: "${effectText}"`);
+    return;
+  }
+  const [, countStr, type] = m;
+  const count = parseInt(countStr, 10);
+  const tpl = tokens.find(t => t.name === `${type} Token`);
+  if (!tpl) {
+    console.warn(`⚠️ No token template for type: ${type}`);
+    return;
+  }
+  // helper from excavateCards
+  const opponent = getOpponent(username, gameState);
+  const zone = gameState[opponent]["Zone (Champion)"];
+  for (let i = 0; i < count; i++) {
+    zone.push({ ...tpl, boardState: "Zone (Champion)", lastBoardState: null });
+  }
+  console.log(`🪙 [oppRallyToken] Opponent’s Zone (Champion) now contains:`, 
+              zone.map(c => `${c.id} (${c.name})`));
+  await fetch("https://geimon-app-833627ba44e0.herokuapp.com/updateGameState", {
+    method: "POST", credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      gameId, owner: opponent,
+      updatedZones: { "Zone (Champion)": zone }
+    })
+  });
+  addGameLogEntry(`${username} rallied ${count} ${type} Token${count>1?'s':''} for opponent`);
+  updateLocalFromGameState();
+  console.log(`🪙 After updateLocal [oppRallyToken] Opponent’s Zone (Champion) now contains:`, 
+              zone.map(c => `${c.id} (${c.name})`));
+  return true;
 }

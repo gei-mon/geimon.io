@@ -352,17 +352,7 @@
         <div id="drawn-cards" style="display: flex; flex-wrap: wrap; gap: 10px; padding: 10px;">
             <p id="drawn-message" style="color: white; font-size: 1.5em;"></p>
         </div>
-        <div id="opponent-hand" style="
-            display: flex;
-            flex-wrap: nowrap;
-            gap: 30px;
-            padding: 10px;
-            position: fixed;
-            top: -235px;
-            left: 765px;
-            transform: none;
-            z-index: 100350;
-        "></div>
+        <div id="opponent-hand" style="display: flex; flex-wrap: nowrap; gap: 30px; padding: 10px; position: fixed; top: -235px; left: 765px; transform: none; z-index: 100350;"></div>
         <div id="opponentDeckBox"></div>
         <div class="viewing-window" id="viewing-window">
             <div class="scaled-card" id="scaled-card" style="transform: scale(0.797); transform-origin: center; pointer-events: none; margin-left: 14%;"></div>
@@ -423,6 +413,11 @@
         <div id="playerFaceDownBox" class="card-zone"></div>
         <div id="playerFaceDownArsenalBox" class="card-zone"></div>
         <div id="playerReserveBox" class="card-zone"></div>
+        <div id="opponentArsenalBox" class="card-zone"></div>
+        <div id="opponentChampionsBox" class="card-zone"></div>
+        <div id="opponentFaceDownBox" class="card-zone"></div>
+        <div id="opponentFaceDownArsenalBox" class="card-zone"></div>
+        <div id="opponentReserveBox" class="card-zone"></div>
 
         <script type="module">
             import { cards } from "./data/cards.js";
@@ -434,6 +429,8 @@
             import { rules } from "./data/rules.js";
             import * as AbilityExecutor from './utils/abilityExecutor.js';
             import * as BattleExecutor from './utils/battleExecutor.js';
+
+            const allCards = [...cards, ...tokens];
 
             if (!window.effectPath) {
                 window.effectPath = [];
@@ -944,6 +941,12 @@
                 BattleExecutor.initializeChampionForBattle(card);
                 //console.log(`After updateLocalFromGameState: ${card.name} champAttackCount = ${card.champAttackCount}`);
             });
+
+            const opponent = gameState[ gameState.player1 === username ? gameState.player2 : gameState.player1 ];
+            for (const [zoneKey, domSuffix] of Object.entries(zoneMappings)) {
+                await renderCardZone( opponent[zoneKey], `opponent${domSuffix}Box` );
+            }
+
             await maybeAutoAdvanceFromIntermission();
 
             if (gameState.turn.currentPlayer === username && gameState.turn.currentPhase === "Battle") {
@@ -3875,6 +3878,65 @@
     document.body.appendChild(opponentVoidButton);
     //End of Opponent Void Stack Creation
 
+    // Opponent zones (mirror of player) :contentReference[oaicite:0]{index=0}
+    const oppChampionBox = document.getElementById("opponentChampionsBox");
+        oppChampionBox.style.position       = "fixed";
+        oppChampionBox.style.left           = "1080px";
+        oppChampionBox.style.top            = "255px";
+        oppChampionBox.style.width          = "525px";
+        oppChampionBox.style.height         = "128px";
+        oppChampionBox.style.zIndex         = "100300";
+        oppChampionBox.style.pointerEvents  = "none";
+        oppChampionBox.style.backgroundColor= "rgba(255,0,0,0)";
+        oppChampionBox.style.display        = "flex";
+        oppChampionBox.style.justifyContent = "flex-start";
+        oppChampionBox.style.alignItems     = "center";
+        oppChampionBox.style.transform      = "none";
+        oppChampionBox.style.gap            = "0px";
+        oppChampionBox.style.flexWrap       = "nowrap";
+
+    const overlapCSS = document.createElement('style');
+        overlapCSS.innerHTML = `
+        #opponentChampionsBox .card {
+            flex-shrink: 0 !important;
+            margin-left: -180px !important;
+            transform: rotate(180deg) scale(0.3) !important;
+            transform-origin: center center !important;
+        }
+        `;
+    document.head.appendChild(overlapCSS);
+
+    const oppFaceDownBox = document.getElementById("opponentFaceDownBox");
+        oppFaceDownBox.style.position = "fixed";
+        oppFaceDownBox.style.left     = "1235px";
+        oppFaceDownBox.style.top      = "200px";     // same top as oppChampionBox
+        oppFaceDownBox.style.width    = "470px";
+        oppFaceDownBox.style.height   = "128px";
+        oppFaceDownBox.style.zIndex   = "100300";
+        oppFaceDownBox.style.pointerEvents = "none";
+        oppFaceDownBox.style.backgroundColor = "rgba(0,255,0,0)";
+
+    const oppArsenalBox = document.getElementById("opponentArsenalBox");
+        oppArsenalBox.style.position = "fixed";
+        oppArsenalBox.style.left     = "710px";
+        oppArsenalBox.style.top      = "350px";     // mirror player’s arsenal top (825px → ~350px)
+        oppArsenalBox.style.width    = "525px";
+        oppArsenalBox.style.height   = "128px";
+        oppArsenalBox.style.zIndex   = "100300";
+        oppArsenalBox.style.pointerEvents = "none";
+        oppArsenalBox.style.backgroundColor = "rgba(255,0,0,0)";
+
+    const oppFaceDownArsenalBox = document.getElementById("opponentFaceDownArsenalBox");
+        oppFaceDownArsenalBox.style.position = "fixed";
+        oppFaceDownArsenalBox.style.left     = "1235px";
+        oppFaceDownArsenalBox.style.top      = "347.5px"; // mirror facedownArsenal top :contentReference[oaicite:1]{index=1}
+        oppFaceDownArsenalBox.style.width    = "565px";
+        oppFaceDownArsenalBox.style.height   = "128px";
+        oppFaceDownArsenalBox.style.zIndex   = "100300";
+        oppFaceDownArsenalBox.style.pointerEvents = "none";
+        oppFaceDownArsenalBox.style.backgroundColor = "rgba(255,0,0,0)";
+    // End of opponent field stuff
+
     // Create Surrender Button Overlay
     const surrenderButton = document.createElement("button");
         surrenderButton.style.position = "absolute";
@@ -4536,6 +4598,11 @@
             const isMain = currentPhase === "Main 1" || currentPhase === "Main 2";
             if (turnPlayer !== username || !isMain) return false;
 
+            if (/^Rally\d+[A-Za-z]+Token$/.test(card.cardCostFunction) ||
+                /^OppRally\d+[A-Za-z]+Token$/.test(card.cardCostFunction)) {
+                return true;
+            }
+
             const deck = gameState[username]?.Deck || [];
             const life = gameState[username]?.life ?? 0;
             const controlledChampions = [
@@ -4866,15 +4933,21 @@
                     console.warn("❗ Skipping cardData due to missing ID:", cardData);
                     return;
                 }
-                const card = cards.find(c => String(c.id) === String(cardData.id));
-                const isFaceDownArsenal = cardData.boardState === "FaceDownArsenalZone";
 
-                const isFaceDown = !!cardData.faceDown;
-                if (!cardData.id) {
-                    console.warn("❗ Invalid cardData: missing ID", cardData);
-                    return;
+                // Try to find a normal card first…
+                let card = cards.find(c => String(c.id) === String(cardData.id));
+                // …and if not found, fall back to tokens
+                if (!card) {
+                    card = tokens.find(t => String(t.id) === String(cardData.id));
+                    if (card) {
+                        console.debug(`🪙 renderCardZone: resolved token ID ${cardData.id}`);
+                    }
                 }
 
+                const isFaceDownArsenal = cardData.boardState === "FaceDownArsenalZone";
+                const isFaceDown        = !!cardData.faceDown;
+
+                // If neither a real card nor a token (and not face-down), skip it
                 if (!card && !isFaceDown) return;
 
                 let element;
@@ -5107,6 +5180,9 @@
 
                         wrapperDiv.onclick = () => {
                             const fullCard = cards.find(c => String(c.id) === String(cardData.id));
+                            if (!fullCard) {
+                                fullCard = tokens.find(t => String(t.id) === String(cardData.id));
+                            }
                             if (!fullCard) {
                                 console.error("❌ Could not find full card data for flip prompt.");
                                 return;

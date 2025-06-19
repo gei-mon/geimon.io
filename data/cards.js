@@ -283,7 +283,7 @@ export const cards = [
     abilities: [
       {
         text: "Library Assistant: Excavate 3; Add 1 revealed Undead or Helper, or a card that mentions an Undead or Helper. <br> Powerful Core: Sacrifice this card and Target 1 other Undead in your Tomb; Resurrect Target. The resurrected Champion gains Warded. <br> Helping Hand: If card is in your Tomb: Obliterate this card and Target 1 Undead or Helper in your Tomb; Resurrect Target.",
-        keywords: ["blank"],
+        keywords: ["Warded"],
         effect1name: "Library Assistant",
         effect1type: "Standard",
         effect1condition: "",
@@ -2327,7 +2327,7 @@ export const cards = [
     condition: "",
     cardConditionFunction: "",
     cardCostFunction: "Discard2",
-    cost: "Discard 2 other cards",
+    cost: "Discard 2",
     tags: ["Frontier", "Outlaw", "Marksman"],
     damage: 6,
     life: 6,
@@ -2638,7 +2638,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Raider, Reach <br> Train Sniffer (Exhaustion): Your Opponent can activate 1 Commander Obelisk from their Deck (ignoring its cost); Your Opponent chooses whether: You Draw 2 for every Commander Obelisk your Opponent controls, or Your Opponent discards 1 for every Commander Obelisk they control.",
+        text: "Raider, Reach <br> Train Sniffer (Exhaustion): Your Opponent can activate 1 Commander Obelisk from their Deck (ignoring its cost); Your Opponent chooses whether: You Draw 2 for every Commander Obelisk your Opponent controls, or Your Opponent discards 1 for every Commander Obelisk they control. <br><br>&nbsp;",
         keywords: ["Raider","Reach"],
         effect1name: "Train Sniffer",
         effect1type: ["Standard","Exhaustion"],
@@ -3246,13 +3246,13 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Hungry Dog: Either Player Sacrifices 1 Token; Take control of this card.",
+        text: "Hungry Dog: Either Player Sacrifices 1 Token; Take control of this card, and if you do, increase its Damage by 1, and its Life by 2.",
         keywords: ["blank"],
         effect1name: "Hungry Dog",
         effect1type: "Standard",
         effect1condition: "",
         effect1cost: "EitherPlayerSacrifice1Token",
-        effect1text: "TakeControlThisCard",
+        effect1text: "TakeControlThisCard,IncreaseSelfDamageBy1,IncreaseSelfLifeBy2",
         effect1linger: "",
         effect2name: "",
         effect2type: [""],
@@ -3505,7 +3505,7 @@ export const cards = [
     condition: "",
     cardConditionFunction: "",
     cardCostFunction: "RevealFacedowns",
-    cost: "Reveal all face-down cards you control",
+    cost: "Reveal all face-down cards you control (minimum of 1)",
     tags: ["Action"],
     damage: "",
     life: "",
@@ -4038,7 +4038,7 @@ export const cards = [
     cardConditionFunction: "",
     cardCostFunction: "",
     cost: "",
-    tags: ["Obelisk"],
+    tags: ["Commander","Obelisk"],
     damage: "",
     life: "",
     damageThreshold: "",
@@ -11226,7 +11226,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Draw X cards.",
+        text: "Draw X.",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "",
