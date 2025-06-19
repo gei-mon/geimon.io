@@ -2644,14 +2644,28 @@
 
             const arsenalBox = document.getElementById("playerArsenalBox");
                 arsenalBox.style.position = "fixed";
-                arsenalBox.style.left = "710px";
+                arsenalBox.style.left = "805px";
                 arsenalBox.style.top = "825px";
                 arsenalBox.style.width = "525px";
                 arsenalBox.style.height = "128px";
                 arsenalBox.style.zIndex = "100300"; // ensure it's above the board
                 arsenalBox.style.pointerEvents = "none";
                 arsenalBox.style.backgroundColor = "rgba(255, 0, 0, 0)"; // debug transparent background
-            
+                arsenalBox.style.display        = "flex";
+                arsenalBox.style.justifyContent = "flex-start";
+                arsenalBox.style.alignItems     = "center";
+                arsenalBox.style.gap            = "0px";
+                arsenalBox.style.flexWrap       = "nowrap";
+
+            const overlapCSS = document.createElement('style');
+                overlapCSS.innerHTML = `
+                #playerArsenalBox .card {
+                    flex-shrink: 0 !important;
+                    margin-left: -190px !important;
+                }
+                `;
+            document.head.appendChild(overlapCSS);
+
             const facedownArsenalBox = document.getElementById("playerFaceDownArsenalBox");
                 facedownArsenalBox.style.position = "fixed";
                 facedownArsenalBox.style.left = "1235px";
@@ -3899,7 +3913,7 @@
         overlapCSS.innerHTML = `
         #opponentChampionsBox .card {
             flex-shrink: 0 !important;
-            margin-left: -180px !important;
+            margin-left: -190px !important;
             transform: rotate(180deg) scale(0.3) !important;
             transform-origin: center center !important;
         }
