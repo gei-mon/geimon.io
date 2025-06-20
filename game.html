@@ -2624,23 +2624,51 @@
 
             const championBox = document.getElementById("playerChampionsBox");
                 championBox.style.position = "fixed";
-                championBox.style.left = "710px";
+                championBox.style.left = "810px";
                 championBox.style.top = "675px";
                 championBox.style.width = "525px";
                 championBox.style.height = "128px";
                 championBox.style.zIndex = "100300"; // ensure it's above the board
                 championBox.style.pointerEvents = "none";
                 championBox.style.backgroundColor = "rgba(255, 0, 0, 0)"; // debug transparent background
-            
+                championBox.style.display        = "flex";
+                championBox.style.justifyContent = "flex-start";
+                championBox.style.alignItems     = "center";
+                championBox.style.gap            = "0px";
+                championBox.style.flexWrap       = "nowrap";
+
+            const overlapChampionCSS = document.createElement('style');
+                overlapChampionCSS.innerHTML = `
+                #playerChampionsBox > .card {
+                    flex-shrink: 0 !important;
+                    margin-left: -195px !important;
+                }
+                `;
+            document.head.appendChild(overlapChampionCSS);
+
             const facedownBox = document.getElementById("playerFaceDownBox");
                 facedownBox.style.position = "fixed";
-                facedownBox.style.left = "1235px";
+                facedownBox.style.left = "1245px";
                 facedownBox.style.top = "675px";
                 facedownBox.style.width = "470px";
                 facedownBox.style.height = "128px";
                 facedownBox.style.zIndex = "100300";
                 facedownBox.style.pointerEvents = "none";
                 facedownBox.style.backgroundColor = "rgba(0, 255, 0, 0)";
+                facedownBox.style.display        = "flex";
+                facedownBox.style.justifyContent = "flex-end";
+                facedownBox.style.alignItems     = "center";
+                facedownBox.style.gap            = "0px";
+                facedownBox.style.flexWrap       = "nowrap";
+
+            const overlapFacedownCSS = document.createElement('style');
+                overlapFacedownCSS.innerHTML = `
+                #playerFaceDownBox > div[id^="card-"] {
+                    flex-shrink: 0 !important;
+                    margin-left: -120px !important;
+                }
+                `;
+            document.head.appendChild(overlapFacedownCSS);
 
             const arsenalBox = document.getElementById("playerArsenalBox");
                 arsenalBox.style.position = "fixed";
@@ -2668,13 +2696,27 @@
 
             const facedownArsenalBox = document.getElementById("playerFaceDownArsenalBox");
                 facedownArsenalBox.style.position = "fixed";
-                facedownArsenalBox.style.left = "1235px";
+                facedownArsenalBox.style.left = "1245px";
                 facedownArsenalBox.style.top = "822.5px";
                 facedownArsenalBox.style.width = "565px";
                 facedownArsenalBox.style.height = "128px";
                 facedownArsenalBox.style.zIndex = "100300";
                 facedownArsenalBox.style.pointerEvents = "none";
                 facedownArsenalBox.style.backgroundColor = "rgba(255, 0, 0, 0)";
+                facedownArsenalBox.style.display        = "flex";
+                facedownArsenalBox.style.justifyContent = "flex-end";
+                facedownArsenalBox.style.alignItems     = "center";
+                facedownArsenalBox.style.gap            = "0px";
+                facedownArsenalBox.style.flexWrap       = "nowrap";
+
+            const overlapArsenalCSS = document.createElement('style');
+                overlapArsenalCSS.innerHTML = `
+                #playerFaceDownArsenalBox .card {
+                    flex-shrink: 0 !important;
+                    margin-left: -250px !important;
+                }
+                `;
+            document.head.appendChild(overlapArsenalCSS);
 
             const reserveBox = document.createElement("div");
                 reserveBox.id = "playerReserveBox";
@@ -3892,10 +3934,10 @@
     document.body.appendChild(opponentVoidButton);
     //End of Opponent Void Stack Creation
 
-    // Opponent zones (mirror of player) :contentReference[oaicite:0]{index=0}
+    // Opponent zones
     const oppChampionBox = document.getElementById("opponentChampionsBox");
         oppChampionBox.style.position       = "fixed";
-        oppChampionBox.style.left           = "1080px";
+        oppChampionBox.style.left           = "1090px";
         oppChampionBox.style.top            = "255px";
         oppChampionBox.style.width          = "525px";
         oppChampionBox.style.height         = "128px";
@@ -3903,7 +3945,7 @@
         oppChampionBox.style.pointerEvents  = "none";
         oppChampionBox.style.backgroundColor= "rgba(255,0,0,0)";
         oppChampionBox.style.display        = "flex";
-        oppChampionBox.style.justifyContent = "flex-start";
+        oppChampionBox.style.justifyContent = "flex-end";
         oppChampionBox.style.alignItems     = "center";
         oppChampionBox.style.transform      = "none";
         oppChampionBox.style.gap            = "0px";
@@ -3913,7 +3955,7 @@
         overlapCSS.innerHTML = `
         #opponentChampionsBox .card {
             flex-shrink: 0 !important;
-            margin-left: -190px !important;
+            margin-left: -195px !important;
             transform: rotate(180deg) scale(0.3) !important;
             transform-origin: center center !important;
         }
@@ -3929,6 +3971,23 @@
         oppFaceDownBox.style.zIndex   = "100300";
         oppFaceDownBox.style.pointerEvents = "none";
         oppFaceDownBox.style.backgroundColor = "rgba(0,255,0,0)";
+        oppFaceDownBox.style.display        = "flex";
+        oppFaceDownBox.style.justifyContent = "flex-start";
+        oppFaceDownBox.style.alignItems     = "center";
+        oppFaceDownBox.style.transform      = "none";
+        oppFaceDownBox.style.gap            = "0px";
+        oppFaceDownBox.style.flexWrap       = "nowrap";
+
+    const overlapOppFacedownCSS = document.createElement('style');
+        overlapOppFacedownCSS.innerHTML = `
+        #opponentFaceDownBox .card {
+            flex-shrink: 0 !important;
+            margin-left: -195px !important;
+            transform: rotate(180deg) scale(0.3) !important;
+            transform-origin: center center !important;
+        }
+        `;
+    document.head.appendChild(overlapOppFacedownCSS);
 
     const oppArsenalBox = document.getElementById("opponentArsenalBox");
         oppArsenalBox.style.position = "fixed";
@@ -3939,6 +3998,23 @@
         oppArsenalBox.style.zIndex   = "100300";
         oppArsenalBox.style.pointerEvents = "none";
         oppArsenalBox.style.backgroundColor = "rgba(255,0,0,0)";
+        oppArsenalBox.style.display        = "flex";
+        oppArsenalBox.style.justifyContent = "flex-end";
+        oppArsenalBox.style.alignItems     = "center";
+        oppArsenalBox.style.transform      = "none";
+        oppArsenalBox.style.gap            = "0px";
+        oppArsenalBox.style.flexWrap       = "nowrap";
+
+    const overlapArsenalCSS = document.createElement('style');
+        overlapArsenalCSS.innerHTML = `
+        #opponentArsenalBox .card {
+            flex-shrink: 0 !important;
+            margin-left: -195px !important;
+            transform: rotate(180deg) scale(0.3) !important;
+            transform-origin: center center !important;
+        }
+        `;
+    document.head.appendChild(overlapArsenalCSS);
 
     const oppFaceDownArsenalBox = document.getElementById("opponentFaceDownArsenalBox");
         oppFaceDownArsenalBox.style.position = "fixed";
@@ -3949,6 +4025,23 @@
         oppFaceDownArsenalBox.style.zIndex   = "100300";
         oppFaceDownArsenalBox.style.pointerEvents = "none";
         oppFaceDownArsenalBox.style.backgroundColor = "rgba(255,0,0,0)";
+        oppFaceDownArsenalBox.style.display        = "flex";
+        oppFaceDownArsenalBox.style.justifyContent = "flex-start";
+        oppFaceDownArsenalBox.style.alignItems     = "center";
+        oppFaceDownArsenalBox.style.transform      = "none";
+        oppFaceDownArsenalBox.style.gap            = "0px";
+        oppFaceDownArsenalBox.style.flexWrap       = "nowrap";
+
+    const overlapFacedownArsenalCSS = document.createElement('style');
+        overlapFacedownArsenalCSS.innerHTML = `
+        #opponentFaceDownArsenalBox .card {
+            flex-shrink: 0 !important;
+            margin-left: -195px !important;
+            transform: rotate(180deg) scale(0.3) !important;
+            transform-origin: center center !important;
+        }
+        `;
+    document.head.appendChild(overlapFacedownArsenalCSS);
     // End of opponent field stuff
 
     // Create Surrender Button Overlay
@@ -5263,12 +5356,12 @@
                     });
                     //console.log("Rendering Champion Zone IDs:", cardsArray.map(c => c.id));
                     //console.log("DOM children count before:", container.children.length);
-                    if (containerId === "playerChampionsBox") {
-                        element.style.margin = "0 -85px"; // tighter spacing between Champions
-                    } else if (containerId === "playerFaceDownBox") {
-                        element.style.margin = "0 40px"; // wider spacing between FaceDown cards
-                        element.style.marginLeft = "0";
-                    }
+                    //if (containerId === "playerChampionsBox") {
+                        //element.style.margin = "0 -85px"; // tighter spacing between Champions
+                    //} else if (containerId === "playerFaceDownBox") {
+                        //element.style.margin = "0 40px"; // wider spacing between FaceDown cards
+                        //element.style.marginLeft = "0";
+                    //}
                     container.appendChild(element);
                 }
             });
