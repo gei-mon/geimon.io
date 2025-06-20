@@ -309,7 +309,7 @@ export async function declareAbility(
           effectFunc = retrieveCardByCondition;
         } else if (/^Add\d+[A-Za-z]+$/.test(individualEffect) && gameState.canAddCards !== false) {
           effectFunc = async () => {
-            return await addCardByCondition(
+            const added = await addCardByCondition(
               individualEffect,
               card,
               gameState,
@@ -318,6 +318,15 @@ export async function declareAbility(
               updateLocalFromGameState,
               addGameLogEntry
             );
+
+            // ✅ REMOVE added card from revealedCards if present
+            if (revealedCards?.length && Array.isArray(added)) {
+              for (const addedCard of added) {
+                revealedCards = revealedCards.filter(c => c.id !== addedCard.id);
+              }
+            }
+
+            return added;
           };
         } else if (/^Mill\d+$/.test(individualEffect)) {
           const count = parseInt(individualEffect.replace("Mill", ""));
@@ -1523,8 +1532,7 @@ export async function addCardByCondition(
   for (const chosen of selected) {
     // Only remove from deck if the pool was the real deck (not revealed)
     if (!poolOverride && target !== "Revealed") {
-      const index = gameState[username].Deck.findIndex(c => c.id === chosen.id);
-      if (index !== -1) gameState[username].Deck.splice(index, 1);
+      gameState[username].Deck = gameState[username].Deck.filter(c => String(c.id) !== String(chosen.id));
     }
 
     chosen.lastBoardState = "Deck";
