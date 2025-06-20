@@ -114,6 +114,75 @@ function getFallbackEffectFunc(effectText) {
   return null;
 }
 
+const serverUrl = "https://geimon-app-833627ba44e0.herokuapp.com";
+
+// replicate your global helper from game.html
+async function sendZoneUpdate(zones, gameState, username, gameId) {
+  const updatedZones = {};
+  zones.forEach(z => updatedZones[z] = gameState[username][z]);
+
+  const res = await fetch(`${serverUrl}/updateGameState`, {
+    method: "POST",
+    credentials: "include",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ gameId, owner: username, updatedZones })
+  });
+  const data = await res.json();
+  if (data.updatedPlayerZone) {
+    gameState[username] = data.updatedPlayerZone; // sync back
+  }
+  return data;
+}
+
+async function drawCardsHandler(count, card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
+  // 1) Remove from Deck
+  const deck = gameState[username].Deck;
+  const drawn = deck.splice(0, count);
+  // 2) Move to Hand
+  drawn.forEach(c => {
+      c.lastBoardState = c.boardState;
+      c.boardState     = "Hand";
+  });
+  gameState[username].Hand.push(...drawn);
+
+  // 3) Persist changes
+  await sendZoneUpdate(["Deck", "Hand"], gameState, username, gameId);
+  // 4) UI & log
+  addGameLogEntry(`${username} drew ${count} card${count>1?"s":""}.`);
+  await updateLocalFromGameState();
+
+  return drawn;
+}
+
+async function oppDrawCardsHandler(count, card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
+  // Find opponent
+  const opponent = Object.keys(gameState).find(p => p !== username && p !== "turn");
+  if (!opponent) return;
+
+  const deck = gameState[opponent].Deck;
+  const drawn = deck.splice(0, count);
+  drawn.forEach(c => {
+      c.lastBoardState = c.boardState;
+      c.boardState     = "Hand";
+  });
+  gameState[opponent].Hand.push(...drawn);
+
+  // Persist opponent zones
+  await fetch(`${serverUrl}/updateGameState`, {
+      method: 'POST', credentials: 'include',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+      gameId, owner: opponent,
+      updatedZones: { Deck: deck, Hand: gameState[opponent].Hand }
+      })
+  });
+
+  addGameLogEntry(`${opponent} drew ${count} card${count>1?"s":""} (via ${card.name}).`);
+  await updateLocalFromGameState();
+
+  return drawn;
+}
+
 export async function declareAbility(
   card,
   triggerType,
@@ -267,6 +336,24 @@ export async function declareAbility(
             gameState, username, gameId,
             updateLocalFromGameState, addGameLogEntry
           );
+        } else if (/^Draw(\d+)$/.test(individualEffect)) {
+          const count = +individualEffect.match(/^Draw(\d+)$/)[1];
+          effectFunc = () =>
+            drawCardsHandler(
+              count, card,
+              gameState, username, gameId,
+              updateLocalFromGameState,
+              addGameLogEntry
+            );
+        } else if (/^OppDraw(\d+)$/.test(individualEffect)) {
+          const count = +individualEffect.match(/^OppDraw(\d+)$/)[1];
+          effectFunc = () =>
+            oppDrawCardsHandler(
+              count, card,
+              gameState, username, gameId,
+              updateLocalFromGameState,
+              addGameLogEntry
+            );
         } else if (effectMap[individualEffect]) {
           effectFunc = () =>
             effectMap[individualEffect](
@@ -547,6 +634,20 @@ export function canPayCardCost(card, gameState, username) {
     // Basic check for Sacrifice1, Offer3, etc. without resolving
     if (!card.cardCostFunction) return true;
 
+    const drawMatch = card.cardCostFunction.match(/^Draw(\d+)$/);
+    if (drawMatch) {
+      const count = parseInt(drawMatch[1], 10);
+      return (gameState[username].Deck?.length ?? 0) >= count;
+    }
+
+    const oppDrawMatch = card.cardCostFunction.match(/^OppDraw(\d+)$/);
+    if (oppDrawMatch) {
+      const count = parseInt(oppDrawMatch[1], 10);
+      const opponent = Object.keys(gameState).find(p => p !== username && p !== "turn");
+      if (!opponent) return false;
+      return (gameState[opponent].Deck?.length ?? 0) >= count;
+    }
+
     const offerMatch = card.cardCostFunction.match(/^Offer(\d+)$/);
     if (offerMatch) {
       const offerAmt = parseInt(offerMatch[1], 10);
@@ -608,6 +709,26 @@ export async function handleCardCostFunction(card, gameState, username, gameId, 
       gameState, username, gameId,
       updateLocalFromGameState, addGameLogEntry
     );
+  }
+  if (/^Draw(\d+)$/.test(card.cardCostFunction)) {
+    const count = +card.cardCostFunction.match(/^Draw(\d+)$/)[1];
+    await drawCardsHandler(
+      count, card,
+      gameState, username, gameId,
+      updateLocalFromGameState,
+      addGameLogEntry
+    );
+    return true;
+  }
+  if (/^OppDraw(\d+)$/.test(card.cardCostFunction)) {
+    const count = +card.cardCostFunction.match(/^OppDraw(\d+)$/)[1];
+    await oppDrawCardsHandler(
+      count, card,
+      gameState, username, gameId,
+      updateLocalFromGameState,
+      addGameLogEntry
+    );
+    return true;
   }
 
   // If cardCostFunction is a combined string like "Offer5Mill5Sacrifice1"

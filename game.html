@@ -4710,6 +4710,19 @@
                 return true;
             }
 
+            const drawMatch = card.cardCostFunction.match(/^Draw(\d+)$/);
+            if (drawMatch) {
+                const count = parseInt(drawMatch[1], 10);
+                return (gameState[username].Deck?.length ?? 0) >= count;
+            }
+            const oppDrawMatch = card.cardCostFunction.match(/^OppDraw(\d+)$/);
+            if (oppDrawMatch) {
+                const count = parseInt(oppDrawMatch[1], 10);
+                const opponent = Object.keys(gameState).find(p => p !== username && p !== "turn");
+                if (!opponent) return false;
+                return (gameState[opponent].Deck?.length ?? 0) >= count;
+            }
+
             const deck = gameState[username]?.Deck || [];
             const life = gameState[username]?.life ?? 0;
             const controlledChampions = [
