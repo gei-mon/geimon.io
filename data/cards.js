@@ -10168,7 +10168,7 @@ export const cards = [
         effect1type: "OnActivation",
         effect1condition: "",
         effect1cost: "",
-        effect1text: "OppDiscards1,Draw1",
+        effect1text: "OppDiscard1,Draw1",
         effect1linger: "",
         effect2name: "",
         effect2type: "",
