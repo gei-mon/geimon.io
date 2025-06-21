@@ -67,7 +67,7 @@ export async function handleBoardStateChange(card, boardState, lastBoardState, g
   }
 }
 
-function hasUsedEffectThisTurn(gameId, turn, cardId, effectText) {
+export function hasUsedEffectThisTurn(gameId, turn, cardId, effectText) {
   if (!effectUsageTracker.has(gameId)) {
     effectUsageTracker.set(gameId, new Map());
   }
@@ -104,7 +104,8 @@ const effectMap = {
     if (!attacker) return;
     await changeLife(currentPlayer, -1, gameState, username, gameId);
     addGameLogEntry(`${currentPlayer} paid 1 Life due to ${card.name}`);
-  }
+  },
+  "Activate": activateCardByCondition
 };
 
 function getFallbackEffectFunc(effectText) {
@@ -229,6 +230,15 @@ export async function declareAbility(
 
       const isMandatory = Array.isArray(type) ? type.includes("Mandatory") : type === "Mandatory";
       const shouldConfirm = !isMandatory && text && !/^Mill\d+$/.test(cost);
+
+      if (Array.isArray(type) && type.includes("Exhaustion")) {
+        if (card.exhausted) {
+          addGameLogEntry(`${card.name} is exhausted and cannot use another Exhaustion effect this turn.`);
+          continue;
+        }
+        card.exhausted = true;
+        addGameLogEntry(`${card.name} is now exhausted.`);
+      }
 
       if (shouldConfirm) {
         const confirmed = await confirmAbilityTrigger(card.name, text);
@@ -363,6 +373,18 @@ export async function declareAbility(
               updateLocalFromGameState,
               addGameLogEntry
             );
+        } else if (/^Activate\d*(Free)?[A-Za-z]+From/.test(individualEffect)) {
+            effectFunc = async () => {
+              await activateCardByCondition(
+                individualEffect,
+                card,
+                gameState,
+                username,
+                gameId,
+                updateLocalFromGameState,
+                addGameLogEntry
+              );
+            };
         } else if (effectMap[individualEffect]) {
           effectFunc = () =>
             effectMap[individualEffect](
@@ -385,8 +407,23 @@ export async function declareAbility(
           continue;
         }
 
-        const result = await effectFunc();
-        if (result) promises.push(result);
+        const isReflexSpeed = ["Reflex", "Rush"].includes(type);
+        if (isReflexSpeed) {
+          await addPathStep(
+            card,
+            card.boardState,
+            gameState,
+            username,
+            gameId,
+            updateLocalFromGameState,
+            addGameLogEntry,
+            effectFunc,
+            individualEffect
+          );
+        } else {
+          const result = await effectFunc();
+          if (result) promises.push(result);
+        }
       }
 
       if (revealedCards?.length > 0) {
@@ -461,6 +498,136 @@ export async function declareAbility(
   }
 
   await Promise.all(promises);
+}
+
+export async function addPathStep(card, zone, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry, effectFunc, label) {
+  const stepNumber = window.pathStepNumber++;
+  window.effectPath.push({
+    cardId: card.id,
+    zone,
+    stepNumber,
+    effectFunc,
+    label
+  });
+
+  showPathStepIndicator(card.id, zone, stepNumber);
+  addGameLogEntry(`${label} was added to the Path as Step ${stepNumber}`);
+
+  // 🔁 Now prompt opposing player
+  await promptOpponentToRespond(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+}
+
+export async function resolvePath(gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
+  const path = [...window.effectPath];
+  window.effectPath = [];
+  window.pathStepNumber = 1;
+
+  for (let i = path.length - 1; i >= 0; i--) {
+    const step = path[i];
+    addGameLogEntry(`Resolving Step ${step.stepNumber}: ${step.label}`);
+    if (typeof step.effectFunc === "function") {
+      await step.effectFunc();
+    }
+  }
+
+  document.querySelectorAll(".path-step-indicator").forEach(el => el.remove());
+  await updateLocalFromGameState();
+}
+
+async function promptOpponentToRespond(triggerCard, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
+  const opponent = Object.keys(gameState).find(p => p !== username && p !== "turn");
+  if (!opponent) return;
+
+  const currentTurn = gameState.turn.count;
+  const isTurnPlayer = gameState.turn.currentPlayer === opponent;
+
+  const reflexCards = [
+    ...gameState[opponent]["Zone (Champion)"],
+    ...gameState[opponent]["FaceDownArsenalZone"],
+    ...gameState[opponent].Hand,
+    ...gameState[opponent].Tomb,
+    ...gameState[opponent].Void
+  ].filter(card => {
+    if (!card || !card.abilities) return false;
+    const full = cards.find(c => String(c.id) === String(card.id));
+    if (!full) return false;
+
+    const currentTurn = gameState.turn.count;
+    const isTurnPlayer = gameState.turn.currentPlayer === opponent;
+    const isSet = card.boardState === "FaceDownArsenalZone";
+    const wasSetAtLeastOneTurnAgo = (card.setTurn || 0) < currentTurn;
+
+    // 🧪 Reflex cards (Traps)
+    if (full.type === "Reflex") {
+      return isSet && wasSetAtLeastOneTurnAgo;
+    }
+
+    // ⚡ Rush cards (Quick Spells)
+    if (full.type === "Rush") {
+      if (isTurnPlayer && card.boardState === "Hand") return true;
+      return isSet && wasSetAtLeastOneTurnAgo;
+    }
+
+    // 🧟 Reflex-speed effects from Tomb/Void
+    if (["Tomb", "Void"].includes(card.boardState)) {
+      const zoneType = card.boardState; // "Tomb" or "Void"
+      return full.abilities.some(ability =>
+        (Array.isArray(ability.effect1type) && ability.effect1type.includes("Reflex") && ability.effect1type.includes(zoneType)) ||
+        (Array.isArray(ability.effect2type) && ability.effect2type.includes("Reflex") && ability.effect2type.includes(zoneType)) ||
+        (Array.isArray(ability.effect3type) && ability.effect3type.includes("Reflex") && ability.effect3type.includes(zoneType))
+      );
+    }
+
+    // 🛡️ Champion Reflex Effects
+    const isChampion = card.boardState === "Zone (Champion)";
+    const hasReflexEffect = full.abilities.some(ability =>
+      (Array.isArray(ability.effect1type) && ability.effect1type.includes("Reflex")) ||
+      (Array.isArray(ability.effect2type) && ability.effect2type.includes("Reflex")) ||
+      (Array.isArray(ability.effect3type) && ability.effect3type.includes("Reflex"))
+    );
+
+    return isChampion && hasReflexEffect;
+  });
+
+  if (reflexCards.length === 0) {
+    await new Promise(res => setTimeout(res, 600));
+    resolvePath(gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+    return;
+  }
+
+  // Show selection prompt
+  window.showResponsePrompt(reflexCards, async selectedCard => {
+    const full = cards.find(c => c.id === selectedCard.id);
+    const firstReflexEffect = full.abilities.find(a => a.effect1type === "Reflex");
+
+    if (!firstReflexEffect) {
+      addGameLogEntry(`${opponent} selected ${selectedCard.name}, but no Reflex effect was found.`);
+      resolvePath(gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+      return;
+    }
+
+    const effectFunc = AbilityExecutor[firstReflexEffect.effect1name];
+    if (!effectFunc) {
+      addGameLogEntry(`${selectedCard.name} has no handler for ${firstReflexEffect.effect1name}`);
+      resolvePath(gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+      return;
+    }
+
+    await addPathStep(
+      selectedCard,
+      selectedCard.boardState,
+      gameState,
+      opponent,
+      gameId,
+      updateLocalFromGameState,
+      addGameLogEntry,
+      effectFunc,
+      firstReflexEffect.effect1text
+    );
+  }, () => {
+    addGameLogEntry(`${opponent} passed on responding.`);
+    resolvePath(gameState, username, gameId, updateLocalFromGameState, addGameLogEntry);
+  });
 }
 
 function shuffleArray(array) {
@@ -2112,7 +2279,6 @@ export function retrieveCardByCondition(
     overlay.appendChild(confirmBtn);
   });
 }
-
 export async function showEffectChoicePrompt(card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
   const effects = [];
   for (let i = 1; i <= 3; i++) {
@@ -2239,4 +2405,162 @@ export async function oppRallyToken(
   console.log(`🪙 After updateLocal [oppRallyToken] Opponent’s Zone (Champion) now contains:`, 
               zone.map(c => `${c.id} (${c.name})`));
   return true;
+}
+
+export async function ActivateXFreeCardFromZones ({
+  card,
+  effectText,
+  gameState,
+  username,
+  gameId,
+  updateLocalFromGameState,
+  addGameLogEntry
+}) {
+  const match = effectText.match(/^Activate(\d+)Free([A-Za-z]+)From([A-Za-z]+(?:Or[A-Za-z]+)*)$/);
+  if (!match) return console.warn("❌ Invalid ActivateXFree format:", effectText);
+
+  const [, countRaw, type, zoneText] = match;
+  const count = parseInt(countRaw);
+  const zones = zoneText.split("Or");
+
+  const validZones = {
+    Hand: "Hand",
+    Deck: "Deck",
+    Reserve: "Reserve",
+    Tomb: "Tomb"
+  };
+
+  const availableCards = [];
+
+  for (const zone of zones) {
+    const zoneKey = validZones[zone];
+    if (!zoneKey) continue;
+
+    const zoneCards = gameState[username][zoneKey];
+    if (!Array.isArray(zoneCards)) continue;
+
+    for (const target of zoneCards) {
+      const fullTarget = cards.find(c => String(c.id) === String(target.id));
+      if (!fullTarget) continue;
+      if (fullTarget.type !== type) continue;
+
+      // Check condition
+      if (fullTarget.cardConditionFunction) {
+        const meets = checkCardConditionFunction(fullTarget, gameState, username);
+        if (!meets) continue;
+      }
+
+      availableCards.push({ card: target, full: fullTarget, zone: zoneKey });
+    }
+  }
+
+  if (availableCards.length === 0) {
+    addGameLogEntry(`No valid ${type} found in ${zones.join(", ")} to activate.`);
+    return;
+  }
+
+  const selected = await new Promise(resolve => {
+    const overlay = document.createElement("div");
+    overlay.style = `
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.8); display: flex; flex-wrap: wrap;
+      align-items: center; justify-content: center; z-index: 100000;
+    `;
+
+    availableCards.forEach(entry => {
+      const btn = document.createElement("div");
+      btn.textContent = entry.full.name + ` (${entry.zone})`;
+      btn.style = `
+        background: white; color: black; padding: 10px; margin: 10px;
+        border: 2px solid black; cursor: pointer;
+      `;
+      btn.onclick = () => {
+        document.body.removeChild(overlay);
+        resolve(entry);
+      };
+      overlay.appendChild(btn);
+    });
+
+    document.body.appendChild(overlay);
+  });
+
+  const sourceZone = gameState[username][selected.zone];
+  const idx = sourceZone.findIndex(c => String(c.id) === String(selected.card.id));
+  if (idx >= 0) sourceZone.splice(idx, 1);
+
+  selected.full.boardState = "Zone (Arsenal)";
+  selected.full.lastBoardState = selected.zone;
+  gameState[username]["Zone (Arsenal)"].push(selected.full);
+
+  addGameLogEntry(`${username} activated ${selected.full.name} from their ${selected.zone}.`);
+  await updateLocalFromGameState();
+};
+
+async function activateCardByCondition(effectText, card, gameState, username, gameId, updateLocalFromGameState, addGameLogEntry) {
+  const free = effectText.includes("Free");
+  const match = effectText.match(/^Activate(\d*)(Free)?([A-Za-z]+)From(.+)$/);
+
+  if (!match) {
+    console.warn(`🚫 Invalid Activate pattern: ${effectText}`);
+    return;
+  }
+
+  const count = parseInt(match[1] || "1", 10);
+  const cardType = match[3];
+  const rawZones = match[4];
+
+  const validZones = rawZones
+    .split(/Or/i)
+    .map(z => z.trim())
+    .filter(z => !!z);
+
+  const candidates = validZones.flatMap(zone => {
+    const zoneCards = gameState[username][zone] || [];
+    return zoneCards.filter(c => {
+      const full = cards.find(f => f.id === c.id);
+      return full && full.type === cardType;
+    });
+  });
+
+  if (candidates.length === 0) {
+    alert(`No valid ${cardType} found in ${validZones.join(", ")}`);
+    return;
+  }
+
+  const selected = candidates.slice(0, count); // TODO: implement selection UI if needed
+
+  if (!free) {
+    for (const target of selected) {
+      const full = cards.find(c => c.id === target.id);
+      if (full?.cardCostFunction) {
+        const costPassed = await AbilityExecutor.payCardCostFunction(
+          full,
+          gameState,
+          username,
+          gameId,
+          updateLocalFromGameState,
+          addGameLogEntry
+        );
+        if (!costPassed) {
+          alert(`Cost could not be paid for ${full.name}`);
+          continue;
+        }
+      }
+    }
+  }
+
+  for (const target of selected) {
+    const sourceZone = gameState[username][target.boardState] || [];
+    const idx = sourceZone.findIndex(c => c.id === target.id);
+    if (idx !== -1) sourceZone.splice(idx, 1);
+
+    target.lastBoardState = target.boardState;
+    target.boardState = "Zone (Arsenal)";
+
+    gameState[username]["Zone (Arsenal)"].push(target);
+    addGameLogEntry(`${username} activated ${target.name} from ${target.lastBoardState}`);
+  }
+
+  await sendZoneUpdate(["Zone (Arsenal)", ...validZones], gameState, username, gameId);
+  await updateLocalFromGameState();
 }

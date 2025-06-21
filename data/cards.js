@@ -5760,7 +5760,7 @@ export const cards = [
         effect1type: ["Standard","Exhaustion"],
         effect1condition: "",
         effect1cost: "OppRally1BlockerToken",
-        effect1text: "Activate1FreeObeliskFromHandDeckReserveTomb",
+        effect1text: "Activate1FreeObeliskFromHandOrDeckOrReserveOrTomb",
         effect1linger: "",
         effect2name: "",
         effect2type: "",

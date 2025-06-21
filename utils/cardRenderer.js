@@ -212,11 +212,38 @@ const defaultHandler = (e) => {
     };
     return;
   }
-
   console.log(`🟢 Default card clicked: ${card.name}`);
 };
-cardButton.onclick = defaultHandler;
-cardButton._originalHandler = defaultHandler;
+// Check if card has at least one reflex-speed effect and is currently in a legal zone
+const canRespondFromTomb = card.abilities?.some(ab =>
+  Array.isArray(ab.effect1type) && ab.effect1type.includes("Reflex") && ab.effect1type.includes("Tomb") && card.boardState === "Tomb"
+);
+const canRespondFromVoid = card.abilities?.some(ab =>
+  Array.isArray(ab.effect1type) && ab.effect1type.includes("Reflex") && ab.effect1type.includes("Void") && card.boardState === "Void"
+);
+const isReflexSpeedCard =
+  card.type === "Reflex" ||
+  card.type === "Rush" ||
+  canRespondFromTomb ||
+  canRespondFromVoid ||
+  card.abilities?.some(ab => ab.effect1type === "Reflex" || (Array.isArray(ab.effect1type) && ab.effect1type.includes("Reflex")));
+
+if (isReflexSpeedCard && (card.boardState === "Hand" || card.boardState?.includes("Zone") || canRespondFromTomb || canRespondFromVoid)) {
+  cardButton.onclick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log(`⚡ Reflex-speed click: ${card.name}`);
+    if (window.__onReflexClick) {
+      window.__onReflexClick(card);
+    } else {
+      console.warn("⚠️ No reflex handler wired.");
+    }
+  };
+} else {
+  cardButton.onclick = defaultHandler;
+}
+
+cardButton._originalHandler = cardButton.onclick;
 
 cardElement.appendChild(cardButton);
 if (container) {

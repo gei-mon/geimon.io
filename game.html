@@ -424,6 +424,13 @@
         <div id="opponentFaceDownBox" class="card-zone"></div>
         <div id="opponentFaceDownArsenalBox" class="card-zone"></div>
         <div id="opponentReserveBox" class="card-zone"></div>
+        <div id="path-response-modal" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%, -50%);
+            background:#222; color:white; padding:20px; border-radius:10px; z-index:200000; max-height:70vh; overflow:auto;">
+            <h3>Respond to the Last Step?</h3>
+            <div id="response-options" style="margin-top:10px; display:flex; flex-wrap:wrap; gap:10px;"></div>
+            <button id="cancel-response" style="margin-top:10px;">Cancel</button>
+        </div>
+
 
         <script type="module">
             import { cards } from "./data/cards.js";
@@ -441,6 +448,7 @@
             if (!window.effectPath) {
                 window.effectPath = [];
             }
+            window.pathStepNumber = 1;
 
             let gameId = new URLSearchParams(window.location.search).get("gameId");
             if (gameId) {
@@ -491,6 +499,25 @@
 
             let opponentName;
 
+            window.__onReflexClick = (card) => {
+                // Reflex path response logic
+                if (!window.buildingPathStep) {
+                    console.warn("Not currently building Path Step. Ignoring reflex click.");
+                    return;
+                }
+
+                // Check condition/cost if needed
+                const fullCard = cards.find(c => c.id === String(card.id)) || card;
+                const valid = AbilityExecutor.checkCardConditionFunction(fullCard, gameState, username);
+                if (!valid) {
+                    console.warn("Card condition not met for reflex activation.");
+                    return;
+                }
+
+                // Add to Path
+                addCardEffectToPath(card);
+            };
+
             function addGameLogEntry(message) {
                 if (!username) {
                     console.warn("❌ addGameLogEntry called before username was set.");
@@ -506,6 +533,43 @@
                 entry.textContent = `[${time}] ${message}`;
                 gameLog.appendChild(entry);
                 gameLog.scrollTop = gameLog.scrollHeight;
+            }
+
+            function showPathStepIndicator(cardId, zone, stepNumber) {
+                const zoneMap = {
+                    "Hand": "playerDeckBox",
+                    "Tomb": "playerTombBox",
+                    "Void": "playerVoidBox",
+                    "Deck": "playerDeckBox",
+                    "Reserve": "playerReserveBox",
+                    "Zone (Champion)": "playerChampionsBox",
+                    "Zone (Arsenal)": "playerArsenalBox",
+                    "FaceDownArsenalZone": "playerFaceDownArsenalBox"
+                };
+
+                let container = document.querySelector(`#${zoneMap[zone]} [data-card-id='${cardId}']`) || document.getElementById(zoneMap[zone]);
+                if (!container) return;
+
+                const indicator = document.createElement("div");
+                indicator.className = "path-step-indicator";
+                indicator.innerText = stepNumber;
+                Object.assign(indicator.style, {
+                    position: "absolute",
+                    top: "0",
+                    right: "0",
+                    width: "24px",
+                    height: "24px",
+                    backgroundColor: "goldenrod",
+                    color: "black",
+                    fontWeight: "bold",
+                    borderRadius: "50%",
+                    zIndex: "120000",
+                    textAlign: "center",
+                    fontSize: "18px"
+                });
+
+                container.appendChild(indicator);
+                setTimeout(() => indicator.remove(), 1000);
             }
 
             function triggerPhaseWaveEffect() {
@@ -982,6 +1046,32 @@
                     };
                 });
             }
+        }
+
+        function showResponsePrompt(cards, onChoose, onCancel) {
+            const modal = document.getElementById("path-response-modal");
+            const container = document.getElementById("response-options");
+            modal.style.display = "block";
+            container.innerHTML = "";
+
+            cards.forEach(card => {
+                const el = document.createElement("div");
+                el.textContent = card.name;
+                el.style.padding = "8px";
+                el.style.border = "1px solid white";
+                el.style.cursor = "pointer";
+                el.style.background = "#444";
+                el.onclick = () => {
+                modal.style.display = "none";
+                onChoose(card);
+                };
+                container.appendChild(el);
+            });
+
+            document.getElementById("cancel-response").onclick = () => {
+                modal.style.display = "none";
+                onCancel();
+            };
         }
 
         let intermissionAutoAdvanceInProgress = false;
@@ -5373,17 +5463,73 @@
 
                         scaled.appendChild(preview);
                     });
-                    //console.log("Rendering Champion Zone IDs:", cardsArray.map(c => c.id));
-                    //console.log("DOM children count before:", container.children.length);
-                    //if (containerId === "playerChampionsBox") {
-                        //element.style.margin = "0 -85px"; // tighter spacing between Champions
-                    //} else if (containerId === "playerFaceDownBox") {
-                        //element.style.margin = "0 40px"; // wider spacing between FaceDown cards
-                        //element.style.marginLeft = "0";
-                    //}
+
+                    if (containerId === "playerChampionsBox") {
+                        const fullCard = cards.find(c => String(c.id) === String(card.id)) || card;
+                        if (!fullCard || fullCard.type !== "Champion") return;
+
+                        const isTurnPlayer = gameState.turn?.currentPlayer === username;
+                        const isMainPhase = ["Main 1", "Main 2"].includes(gameState.turn?.currentPhase);
+                        const canClickChampion = isTurnPlayer && isMainPhase;
+
+                        const usableEffect = fullCard.abilities?.some(ab =>
+                            ab.effect1type?.includes("Standard") &&
+                            (!ab.effect1type.includes("Exhaustion") || !card.exhausted)
+                        );
+
+                        const hasActivatableEffect = fullCard.abilities?.some(ability =>
+                            ["effect1", "effect2", "effect3"].some(i => {
+                                const types = ability[`${i}type`];
+                                const effect = ability[`${i}text`];
+                                const alreadyUsed = AbilityExecutor.hasUsedEffectThisTurn(
+                                    gameId,
+                                    gameState.turn?.count,
+                                    fullCard.id,
+                                    effect
+                                );
+                                const isStandard = Array.isArray(types)
+                                    ? types.includes("Standard")
+                                    : types === "Standard";
+                                return isStandard && effect && !alreadyUsed;
+                            })
+                        );
+
+                        if (usableEffect && hasActivatableEffect) {
+                            element.classList.add("can-effect-highlight");
+                            element.style.cursor = "pointer";
+
+                            const button = element.querySelector(".card-button");
+                            if (button) {
+                                button.onclick = null;
+                                button.onpointerdown = null;
+                            }
+
+                            element.onclick = (e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                AbilityExecutor.declareAbility(
+                                    fullCard,
+                                    "Standard",
+                                    gameState,
+                                    username,
+                                    gameId,
+                                    updateLocalFromGameState,
+                                    addGameLogEntry
+                                );
+                            };
+                        }
+                    }
                     container.appendChild(element);
                 }
             });
+        }
+
+        function exhaustChampion(championCard) {
+            championCard.exhausted = true;
+        }
+
+        function championIsExhausted(championCard) {
+            return !!championCard.exhausted;
         }
 
         async function flipCard(cardId) {
