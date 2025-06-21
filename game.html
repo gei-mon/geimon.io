@@ -1550,180 +1550,195 @@
         }
 
         function renderLatestTombCard() {
-            const tombTop = gameState?.[username]?.Tomb?.slice(-1)[0];
-            if (!tombTop) return; // ✅ Early return if nothing to show
+            const tombCards = gameState?.[username]?.Tomb || [];
+            const tombTop = tombCards[tombCards.length - 1];
+            playerTombBox.innerHTML = ""; // Always clear
+
+            // Tomb hover label (always "Tomb")
+            const tombTextOverlay = document.createElement("div");
+            tombTextOverlay.innerText = "Tomb";
+            Object.assign(tombTextOverlay.style, {
+                position: "absolute",
+                zIndex: "110000",
+                left: "45%",
+                top: "3%",
+                transform: "translate(-50%, -50%)",
+                fontSize: "1em",
+                color: "white",
+                textShadow: `
+                    -2px -2px 4px black,  
+                    2px -2px 4px black,  
+                    -2px  2px 4px black,  
+                    2px  2px 4px black`
+            });
+            playerTombBox.appendChild(tombTextOverlay);
+
+            playerTombBox.onmouseenter = () => {
+                tombTextOverlay.innerText = `${tombCards.length}`;
+            };
+            playerTombBox.onmouseleave = () => {
+                tombTextOverlay.innerText = "Tomb";
+            };
+
+            if (!tombTop) return;
 
             const card = cards.find(c => String(c.id) === String(tombTop.id));
             if (!card) return;
 
-            playerTombBox.innerHTML = "";
-
-            // Render card scaled down
             const miniCard = renderCard(card);
-                miniCard.style.transform = "scale(0.3)";
-                miniCard.style.transformOrigin = "top left";
-                miniCard.style.marginTop = "-8%";
-                miniCard.style.marginLeft = "0%";
-                miniCard.style.pointerEvents = "none"; // Prevent dragging
+            Object.assign(miniCard.style, {
+                transform: "scale(0.3)",
+                transformOrigin: "top left",
+                marginTop: "-8%",
+                marginLeft: "0%",
+                pointerEvents: "none"
+            });
+
             playerTombBox.appendChild(miniCard);
-
-            // Tomb hover label (like Deck)
-            const tombTextOverlay = document.createElement("div");
-                tombTextOverlay.innerText = "Tomb";
-                tombTextOverlay.style.position = "absolute";
-                tombTextOverlay.style.zIndex = "110000";
-                tombTextOverlay.style.left = "45%";
-                tombTextOverlay.style.top = "3%";
-                tombTextOverlay.style.transform = "translate(-50%, -50%)";
-                tombTextOverlay.style.fontSize = "1em";
-                tombTextOverlay.style.color = "white";
-                tombTextOverlay.style.textShadow = `
-                    -2px -2px 4px black,  
-                    2px -2px 4px black,  
-                    -2px 2px 4px black,  
-                    2px 2px 4px black
-                `;
-            playerTombBox.appendChild(tombTextOverlay);
-
-            playerTombBox.addEventListener("mouseenter", () => {
-                tombTextOverlay.innerText = `${gameState[username].Tomb.length}`;
-            });
-            playerTombBox.addEventListener("mouseleave", () => {
-                tombTextOverlay.innerText = "Tomb";
-            });
         }
 
         function renderLatestVoidCard() {
+            const voidCards = gameState?.[username]?.Void || [];
+            const voidTop = voidCards[voidCards.length - 1];
+            playerVoidBox.innerHTML = ""; // Always clear
 
-            const voidTop = gameState?.[username]?.Void?.slice(-1)[0];
+            // Void hover label (always "Void")
+            const voidTextOverlay = document.createElement("div");
+            voidTextOverlay.innerText = "Void";
+            Object.assign(voidTextOverlay.style, {
+                position: "absolute",
+                zIndex: "110000",
+                left: "45%",
+                top: "3%",
+                transform: "translate(-50%, -50%)",
+                fontSize: "1em",
+                color: "white",
+                textShadow: `
+                    -2px -2px 4px black,  
+                    2px -2px 4px black,  
+                    -2px  2px 4px black,  
+                    2px  2px 4px black`
+            });
+            playerVoidBox.appendChild(voidTextOverlay);
+
+            playerVoidBox.onmouseenter = () => {
+                voidTextOverlay.innerText = `${voidCards.length}`;
+            };
+            playerVoidBox.onmouseleave = () => {
+                voidTextOverlay.innerText = "Void";
+            };
+
             if (!voidTop) return;
 
             const card = cards.find(c => String(c.id) === String(voidTop.id));
             if (!card) return;
 
-            playerVoidBox.innerHTML = ""; // ✅ Always clear it first
-
-            // Render card scaled down
             const miniCard = renderCard(card);
-                miniCard.style.transform = "rotate(270deg) scale(0.3)";
-                miniCard.style.transformOrigin = "top left";
-                miniCard.style.marginTop = "85px";
-                miniCard.style.marginLeft = "9px";
-                miniCard.style.pointerEvents = "none"; // Prevent dragging
+            Object.assign(miniCard.style, {
+                transform: "rotate(270deg) scale(0.3)",
+                transformOrigin: "top left",
+                marginTop: "85px",
+                marginLeft: "9px",
+                pointerEvents: "none"
+            });
+
             playerVoidBox.appendChild(miniCard);
-
-            // Void hover label (like Deck)
-            const voidTextOverlay = document.createElement("div");
-                voidTextOverlay.innerText = "Void";
-                voidTextOverlay.style.position = "absolute";
-                voidTextOverlay.style.zIndex = "110000";
-                voidTextOverlay.style.left = "45%";
-                voidTextOverlay.style.top = "3%";
-                voidTextOverlay.style.transform = "translate(-50%, -50%)";
-                voidTextOverlay.style.fontSize = "1em";
-                voidTextOverlay.style.color = "white";
-                voidTextOverlay.style.textShadow = `
-                    -2px -2px 4px black,  
-                    2px -2px 4px black,  
-                    -2px 2px 4px black,  
-                    2px 2px 4px black
-                `;
-            playerVoidBox.appendChild(voidTextOverlay);
-
-            playerVoidBox.addEventListener("mouseenter", () => {
-                voidTextOverlay.innerText = `${gameState[username].Void.length}`;
-            });
-            playerVoidBox.addEventListener("mouseleave", () => {
-                voidTextOverlay.innerText = "Void";
-            });
         }
 
         function renderLatestOpponentTombCard() {
-            const tombTop = gameState?.[opponentName]?.Tomb?.slice(-1)[0];
-            if (!tombTop) return; // ✅ Early return if nothing to show
+            const tombCards = gameState?.[opponentName]?.Tomb || [];
+            const tombTop = tombCards[tombCards.length - 1];
+            opponentTombBox.innerHTML = ""; // Always clear
+
+            // Tomb hover label (always "Tomb")
+            const tombTextOverlay = document.createElement("div");
+            tombTextOverlay.innerText = "Tomb";
+            Object.assign(tombTextOverlay.style, {
+                position: "absolute",
+                zIndex: "110000",
+                left: "45%",
+                top: "3%",
+                transform: "translate(-50%, -50%)",
+                fontSize: "1em",
+                color: "white",
+                textShadow: `
+                    -2px -2px 4px black,  
+                    2px -2px 4px black,  
+                    -2px  2px 4px black,  
+                    2px  2px 4px black`
+            });
+            opponentTombBox.appendChild(tombTextOverlay);
+
+            opponentTombBox.onmouseenter = () => {
+                tombTextOverlay.innerText = `${tombCards.length}`;
+            };
+            opponentTombBox.onmouseleave = () => {
+                tombTextOverlay.innerText = "Tomb";
+            };
+
+            if (!tombTop) return;
 
             const card = cards.find(c => String(c.id) === String(tombTop.id));
             if (!card) return;
 
-            opponentTombBox.innerHTML = "";
-
-            // Render card scaled down
             const miniCard = renderCard(card);
-                miniCard.style.transform = "scale(0.3) rotate(180deg)";
-                miniCard.style.transformOrigin = "top left";
-                miniCard.style.marginTop = "140%";
-                miniCard.style.marginLeft = "95.5%";
-                miniCard.style.pointerEvents = "none"; // Prevent dragging
+            Object.assign(miniCard.style, {
+                transform: "scale(0.3) rotate(180deg)",
+                transformOrigin: "top left",
+                marginTop: "140%",
+                marginLeft: "95.5%",
+                pointerEvents: "none"
+            });
+
             opponentTombBox.appendChild(miniCard);
-
-            // Tomb hover label (like Deck)
-            const tombTextOverlay = document.createElement("div");
-                tombTextOverlay.innerText = "Tomb";
-                tombTextOverlay.style.position = "absolute";
-                tombTextOverlay.style.zIndex = "110000";
-                tombTextOverlay.style.left = "45%";
-                tombTextOverlay.style.top = "3%";
-                tombTextOverlay.style.transform = "translate(-50%, -50%)";
-                tombTextOverlay.style.fontSize = "1em";
-                tombTextOverlay.style.color = "white";
-                tombTextOverlay.style.textShadow = `
-                    -2px -2px 4px black,  
-                    2px -2px 4px black,  
-                    -2px 2px 4px black,  
-                    2px 2px 4px black
-                `;
-            opponentTombBox.appendChild(tombTextOverlay);
-
-            opponentTombBox.addEventListener("mouseenter", () => {
-                tombTextOverlay.innerText = `${gameState[opponentName].Tomb.length}`;
-            });
-            opponentTombBox.addEventListener("mouseleave", () => {
-                tombTextOverlay.innerText = "Tomb";
-            });
         }
 
         function renderLatestOpponentVoidCard() {
-            const voidTop = gameState?.[opponentName]?.Void?.slice(-1)[0];
+            const voidCards = gameState?.[opponentName]?.Void || [];
+            const voidTop = voidCards[voidCards.length - 1];
+            opponentVoidBox.innerHTML = ""; // Always clear
+
+            // Void hover label (always "Void")
+            const voidTextOverlay = document.createElement("div");
+            voidTextOverlay.innerText = "Void";
+            Object.assign(voidTextOverlay.style, {
+                position: "absolute",
+                zIndex: "110000",
+                left: "45%",
+                top: "3%",
+                transform: "translate(-50%, -50%)",
+                fontSize: "1em",
+                color: "white",
+                textShadow: `
+                    -2px -2px 4px black,  
+                    2px -2px 4px black,  
+                    -2px  2px 4px black,  
+                    2px  2px 4px black`
+            });
+            opponentVoidBox.appendChild(voidTextOverlay);
+
+            opponentVoidBox.onmouseenter = () => {
+                voidTextOverlay.innerText = `${voidCards.length}`;
+            };
+            opponentVoidBox.onmouseleave = () => {
+                voidTextOverlay.innerText = "Void";
+            };
+
             if (!voidTop) return;
 
             const card = cards.find(c => String(c.id) === String(voidTop.id));
             if (!card) return;
 
-            opponentVoidBox.innerHTML = ""; // ✅ Always clear it first
-
-            // Render card scaled down
             const miniCard = renderCard(card);
-                miniCard.style.transform = "rotate(90deg) scale(0.3)";
-                miniCard.style.transformOrigin = "top left";
-                miniCard.style.marginTop = "140%";
-                miniCard.style.marginLeft = "95.5%";
-                miniCard.style.pointerEvents = "none"; // Prevent dragging
+            Object.assign(miniCard.style, {
+                transform: "rotate(90deg) scale(0.3)",
+                transformOrigin: "top left",
+                marginTop: "140%",
+                marginLeft: "95.5%",
+                pointerEvents: "none"
+            });
+
             opponentVoidBox.appendChild(miniCard);
-
-            // Void hover label (like Deck)
-            const voidTextOverlay = document.createElement("div");
-                voidTextOverlay.innerText = "Void";
-                voidTextOverlay.style.position = "absolute";
-                voidTextOverlay.style.zIndex = "110000";
-                voidTextOverlay.style.left = "45%";
-                voidTextOverlay.style.top = "3%";
-                voidTextOverlay.style.transform = "translate(-50%, -50%)";
-                voidTextOverlay.style.fontSize = "1em";
-                voidTextOverlay.style.color = "white";
-                voidTextOverlay.style.textShadow = `
-                    -2px -2px 4px black,  
-                    2px -2px 4px black,  
-                    -2px 2px 4px black,  
-                    2px 2px 4px black
-                `;
-            opponentVoidBox.appendChild(voidTextOverlay);
-
-            opponentVoidBox.addEventListener("mouseenter", () => {
-                voidTextOverlay.innerText = `${gameState[opponentName].Void.length}`;
-            });
-            opponentVoidBox.addEventListener("mouseleave", () => {
-                voidTextOverlay.innerText = "Void";
-            });
         }
 
         function getRandomBotSleeve() {
@@ -2546,6 +2561,8 @@
                         scaledCard.style.transformOrigin = "top left";
                         scaledCard.style.margin = "5px";
                         scaledCard.style.position = "relative";
+                    scaledCard.dataset.zone = "Tomb";
+                    attachHoverMenu(scaledCard, cardData);
 
                     const wrapper = document.createElement("div");
                         wrapper.style.width = `${260 * scale}px`;
@@ -2727,6 +2744,8 @@
                         scaledCard.style.transformOrigin = "top left";
                         scaledCard.style.margin = "5px";
                         scaledCard.style.position = "relative";
+                    scaledCard.dataset.zone = "Void";
+                    attachHoverMenu(scaledCard, cardData);
 
                     const wrapper = document.createElement("div");
                         wrapper.style.width = `${240 * scale}px`;
@@ -2918,6 +2937,8 @@
                         scaledCard.style.transformOrigin = "top left";
                         scaledCard.style.margin = "5px";
                         scaledCard.style.position = "relative";
+                    scaledCard.dataset.zone = "Tomb";
+                    attachHoverMenu(scaledCard, cardData);
 
                     const wrapper = document.createElement("div");
                         wrapper.style.width = `${260 * scale}px`;
@@ -3102,6 +3123,8 @@
                         scaledCard.style.transformOrigin = "top left";
                         scaledCard.style.margin = "5px";
                         scaledCard.style.position = "relative";
+                    scaledCard.dataset.zone = "Void";
+                    attachHoverMenu(scaledCard, cardData);
 
                     const wrapper = document.createElement("div");
                         wrapper.style.width = `${240 * scale}px`;
@@ -3858,8 +3881,10 @@
                 // 3) Persist change to server
                 await sendZoneUpdate([fromZone, toZoneKey]);
 
-                // 4) Re-render hand so spacing/layout updates
+                // 4) Re-render zones so spacing/layout updates
                 renderDrawnCards();
+                renderLatestTombCard();
+                renderLatestVoidCard();
             }
             // ────────────────────────────────────────────────────────────────────────────
 
@@ -3870,7 +3895,7 @@
                 position:       "absolute",
                 bottom:         "100%",
                 left:           "50%",
-                transform:      "translateX(-50%)",
+                transform:      "translateX(-50%) scale(1)",
                 marginBottom:   "0em",
                 backgroundColor:"#111",
                 color:          "white",
@@ -3887,6 +3912,7 @@
             // decide options based on current zone
             const zone = cardElement.dataset.zone;
             let opts = [];
+
             if (zone === "Hand") {
                 opts = [
                 "Reveal","Declare",
@@ -3905,14 +3931,19 @@
                 if (zone !== "Reserve")
                 opts.push("To Reserve");
                 opts.push("To Hand","To Tomb","To Void","To Top of Deck","To Bottom of Deck","Change Control");
-            }
-            else if (zone==="Tomb"||zone==="Void") {
+            } else if (zone === "Tomb" || zone === "Void") {
+                hoverMenu.style.fontSize = "3em";
                 opts = [
-                zone==="Tomb" ? "To Void" : "To Tomb",
-                "To Hand","To Reserve",
-                "To Champion (Face-Up)","To Champion (Face-Down)",
-                "To Arsenal (Face-Up)","To Arsenal (Face-Down)",
-                "To Top of Deck","To Bottom of Deck"
+                    zone === "Tomb" ? "To Void" : "To Tomb",
+                    "To Hand",
+                    "To Top of Deck",
+                    "To Bottom of Deck",
+                    "To Reserve",
+                    "To Champion (Face-Up)",
+                    "To Champion (Face-Down)",
+                    "To Arsenal (Face-Up)",
+                    "To Arsenal (Face-Down)",
+                    "Declare"
                 ];
             }
 
@@ -3940,17 +3971,26 @@
                     case "To Reserve":
                         await doMove("Hand", "Reserve", "playerReserveBox", false);
                         break;
+                    case "To Hand":
+                        await doMove(zone, "Hand", "drawn-cards", false);
+                        break;
                     case "To Tomb":
-                        await doMove("Hand", "Tomb", "playerTombBox", false);
+                        await doMove(zone, "Tomb", "playerTombBox", false);
                         break;
                     case "To Void":
-                        await doMove("Hand", "Void", "playerVoidBox", false);
+                        await doMove(zone, "Void", "playerVoidBox", false);
                         break;
                     case "To Top of Deck":
                         await doMove("Hand", "Deck", "playerDeckBox", false, true);
                         break;
                     case "To Bottom of Deck":
                         await doMove("Hand", "Deck", "playerDeckBox", false, false);
+                        break;
+                    case "Declare":
+                        addGameLogEntry(`${cardData.name}'s effect was declared from the ${zone}.`);
+                        break;
+                    case "Reveal":
+                        addGameLogEntry(`${cardData.name} was revealed from the ${zone}.`);
                         break;
                     default:
                         console.warn("Unhandled action:", text);
