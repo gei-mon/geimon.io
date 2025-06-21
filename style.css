@@ -835,7 +835,7 @@ background-color: #29c7bd;
 
 #playerFaceDownBox > div {
   flex-shrink: 0 !important;
-  margin-left: -120px !important;
+  margin-left: -145px !important;
 }
 
 #playerArsenalBox > div:not(:first-child) {
@@ -846,6 +846,9 @@ background-color: #29c7bd;
 #playerFaceDownArsenalBox > div {
   flex-shrink: 0 !important;
   margin-left: -195px !important;
+}
+#playerFaceDownArsenalBox .sleeve-overlay {
+  transform: none !important;
 }
 
 #playerReserveBox {
