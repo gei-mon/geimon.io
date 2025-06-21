@@ -734,7 +734,7 @@ export const tokens = [
     damageThreshold: "",
     abilities: [
       {
-        text: "No effect.",
+        text: "",
         keywords: ["blank"],
         effect1name: "",
         effect1type: "",

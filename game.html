@@ -455,7 +455,19 @@
             <div id="response-options" style="margin-top:10px; display:flex; flex-wrap:wrap; gap:10px;"></div>
             <button id="cancel-response" style="margin-top:10px;">Cancel</button>
         </div>
-
+        <div id="tool-buttons" style="
+            position: absolute;
+            left: 1730px;
+            top: 850px;
+            z-index: 100500;
+            display: flex;
+            gap: 12px;
+            opacity: 0;
+            ">
+            <img id="token-btn" src="/Public/Images/Site Assets/token.png" style="width: 40px; cursor: pointer;" title="Create Token">
+            <img id="dice-btn" src="/Public/Images/Site Assets/dice.png" style="width: 40px; cursor: pointer;" title="Roll 1d6">
+            <img id="coin-btn" src="/Public/Images/Site Assets/heads.png" style="width: 40px; cursor: pointer;" title="Flip Coin">
+        </div>
 
         <script type="module">
             import { cards } from "./data/cards.js";
@@ -738,7 +750,7 @@
                 overlay.style.top = "50%";
                 overlay.style.left = "50%";
                 overlay.style.transform = "translate(-50%, -50%)";
-                overlay.style.width = "400px";
+                overlay.style.width = "450px";
                 overlay.style.padding = "30px 20px";
                 overlay.style.backgroundColor = "rgba(0, 0, 0)";
                 overlay.style.zIndex = 200000;
@@ -1269,6 +1281,84 @@
                 }
             });
         });
+
+        // COIN FLIP
+        document.getElementById("coin-btn").onclick = () => {
+        const result = Math.random() < 0.5 ? "Heads" : "Tails";
+        addGameLogEntry(`${username} flipped a coin: ${result}`);
+        };
+
+        // DICE ROLL
+        document.getElementById("dice-btn").onclick = () => {
+        const roll = Math.floor(Math.random() * 6) + 1;
+        addGameLogEntry(`${username} rolled a d6: ${roll}`);
+        };
+
+        // TOKEN CREATION
+        document.getElementById("token-btn").onclick = () => {
+            const popup = document.createElement("div");
+            Object.assign(popup.style, {
+                position: "fixed",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                background: "#222",
+                color: "white",
+                padding: "20px",
+                borderRadius: "10px",
+                zIndex: 200000,
+                textAlign: "center"
+            });
+
+            popup.innerHTML = `
+                <label style="display:block; margin-bottom:5px;">Select Token Type:</label>
+                <select id="token-select" style="width: 200px; margin-bottom: 10px;">
+                    ${tokens
+                        .slice()
+                        .sort((a, b) => a.name.localeCompare(b.name))
+                        .map(t => `<option value="${t.id}">${t.name}</option>`)
+                        .join("")}
+                </select>
+                <br>
+                <label>Quantity: <input id="token-qty" type="number" value="1" min="1" style="width: 60px;"></label>
+                <br><br>
+                <button id="confirm-token" style="margin-right:10px;">Confirm</button>
+                <button id="cancel-token">Cancel</button>
+            `;
+
+            document.body.appendChild(popup);
+            document.getElementById("cancel-token").onclick = () => popup.remove();
+
+            document.getElementById("confirm-token").onclick = async () => {
+                const tokenId = document.getElementById("token-select").value;
+                const quantity = parseInt(document.getElementById("token-qty").value);
+                const tokenCard = tokens.find(t => String(t.id) === String(tokenId));
+                if (!tokenCard || isNaN(quantity) || quantity <= 0) return;
+
+                const zoneKey = "Zone (Champion)";
+                const renderTargetId = "playerChampionsBox";
+
+                if (!gameState[username][zoneKey]) {
+                    gameState[username][zoneKey] = [];
+                }
+
+                for (let i = 0; i < quantity; i++) {
+                    const tokenCopy = {
+                        ...tokenCard,
+                        id: `${tokenCard.id}`, // 👈 predictable and parseable
+                        boardState: "Zone (Champion)",
+                        lastBoardState: "TokenCreate",
+                        type: "Champion"
+                    };
+                    gameState[username]["Zone (Champion)"].push(tokenCopy);
+                }
+
+                await sendZoneUpdate(["Zone (Champion)"]);
+                renderCardZone(gameState[username][zoneKey], renderTargetId);
+                addGameLogEntry(`${username} created ${quantity} ${tokenCard.name} token${quantity > 1 ? "s" : ""} on their side.`);
+                popup.remove();
+            };
+        };
 
         function animateCardDraw(isOpponent = false) {
             const cardImg = document.createElement("img");
@@ -3244,13 +3334,15 @@
 
     document.body.appendChild(surrenderButton);
 
-        setTimeout(() => {
-            playerDeckBox.style.opacity = "1";
-            playerDeckBox.style.zIndex = "200000";
-            playerDeckBox.style.pointerEvents = "auto";
-            attachDeckHoverMenu();
-        }, 6500);
-        let deckCount = "Deck";
+    const toolButtons = document.getElementById("tool-buttons");
+    setTimeout(() => {
+        toolButtons.style.opacity = "1";
+        playerDeckBox.style.opacity = "1";
+        playerDeckBox.style.zIndex = "200000";
+        playerDeckBox.style.pointerEvents = "auto";
+        attachDeckHoverMenu();
+    }, 6500);
+    let deckCount = "Deck";
 
     // Ensure it exists before adding event listeners
     if (opponentDeckBox) {
@@ -4225,13 +4317,13 @@
                     return;
                 }
 
-                // Try to find a normal card first…
                 let card = cards.find(c => String(c.id) === String(cardData.id));
-                // …and if not found, fall back to tokens
+
                 if (!card) {
-                    card = tokens.find(t => String(t.id) === String(cardData.id));
-                    if (card) {
-                        console.debug(`🪙 renderCardZone: resolved token ID ${cardData.id}`);
+                    const baseToken = tokens.find(t => String(cardData.id).startsWith(String(t.id)));
+                    if (baseToken) {
+                        card = { ...baseToken, ...cardData }; // use token base with live data
+                        console.debug(`🪙 renderCardZone: resolved token ID ${cardData.id} using base ${baseToken.id}`);
                     }
                 }
 
@@ -4494,28 +4586,35 @@
                     wrapperDiv.appendChild(element);
                     container.appendChild(wrapperDiv);
                 } else {
-                    element = renderCard(card);
-                    //console.log("Trying to render:", card);
-                        element.style.transform = "scale(0.3)";
-                        element.style.marginLeft = "-19%";
-                        element.style.transformOrigin = "top center";
-                        element.style.position = "relative";
-                        element.style.pointerEvents = "auto";
+                    const enriched = { ...card, ...cardData };
+                    const rendered = renderCard(enriched);
 
-                    element.addEventListener("mouseenter", () => {
+                    const wrapper = document.createElement("div");
+                    wrapper.style.display = "inline-block";
+                    wrapper.style.position = "relative";
+                    wrapper.style.marginLeft = "-44px";
+                    wrapper.style.marginTop = "323px";
+                    wrapper.style.transformOrigin = "top center";
+                    wrapper.style.transform = "scale(0.3)";
+                    wrapper.style.pointerEvents = "auto";
+
+                    // Hover-to-preview logic
+                    wrapper.addEventListener("mouseenter", () => {
                         const scaled = document.querySelector("#viewing-window .scaled-card");
                         scaled.innerHTML = "";
 
-                        const preview = renderCard(card);
-                            preview.style.width = "240px";
-                            preview.style.height = "420px";
-                            preview.style.transform = "scale(1.2)";
-                            preview.style.marginLeft = "-15%";
-                            preview.style.marginTop = "7%";
+                        const preview = renderCard(enriched);
+                        preview.style.width = "240px";
+                        preview.style.height = "420px";
+                        preview.style.transform = "scale(1.2)";
+                        preview.style.marginLeft = "-15%";
+                        preview.style.marginTop = "7%";
 
                         scaled.appendChild(preview);
                     });
-                    container.appendChild(element);
+
+                    wrapper.appendChild(rendered);
+                    container.appendChild(wrapper);
                 }
             });
         }
