@@ -414,6 +414,22 @@
         </div>
         <div id="turn-indicator">Your Turn</div>
         <div id="turn-counter">Turn: 1</div>
+        <div id="end-turn-button" style="
+            display: none;
+            position: fixed;
+            top: 490px;
+            left: 1550px;
+            z-index: 100700;
+            background-color: gold;
+            color: black;
+            font-weight: bold;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 2px 2px 6px black;
+            ">
+            End Turn
+        </div>
         <div id="playerArsenalBox" class="card-zone"></div>
         <div id="playerChampionsBox" class="card-zone"></div>
         <div id="playerFaceDownBox" class="card-zone"></div>
@@ -1139,6 +1155,7 @@
                 if (phase === "End" && gameState.turn.currentPlayer === username) {
                     updatePhaseDisplay(phase);
                     triggerPhaseWaveEffect();
+                    showEndTurnButton();
 
                     const selectedTotem = params.get("totem");
                     const player1 = gameState.player1;
@@ -1252,6 +1269,27 @@
             });
 
             setTimeout(() => cardImg.remove(), 1000);
+        }
+
+        function showEndTurnButton() {
+            const button = document.getElementById("end-turn-button");
+            button.style.display = "block";
+            button.onclick = async () => {
+                const res = await fetch(`${serverUrl}/endTurn`, {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ gameId, username })
+                });
+
+                if (res.ok) {
+                const data = await res.json();
+                button.style.display = "none";
+                await fetchGameStateFromServer();
+                } else {
+                alert("Failed to end turn.");
+                }
+            };
         }
 
         function animateCardDiscard(fromHandBoxId, toTombBoxId, isOpponent = false) {

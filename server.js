@@ -969,79 +969,34 @@ app.post('/setPhase', (req, res) => {
 
   game.turn.currentPhase = phase;
 
-  // ✅ Draw logic — handled by server when user enters Draw phase
-  if (phase === "Draw") {
-    const player = game[username];
-    const numToDraw = game.drawExtraCard ? 2 : 1;
-
-    if (player.Deck.length < numToDraw) {
-      const loser = username;
-      const winner = (game.player1 === username) ? game.player2 : game.player1;
-
-      const reason = `Deck-out: Tried to draw ${numToDraw} card(s) with ${player.Deck.length} remaining`;
-
-      gameStates.delete(gameId);
-
-      return res.json({
-        success: true,
-        loser,
-        winner,
-        reason
-      });
-    }
-
-    const drawn = player.Deck.splice(0, numToDraw);
-    drawn.forEach(card => {
-      card.lastBoardState = "Deck";
-      card.boardState = "Hand";
-    });
-    player.Hand.push(...drawn);
-  }
-
   if (phase === "End") {
-    const player = game[username];
-    const hand = game[username]?.Hand || [];
-
-    // ✅ Proceed with turn change
-    game.turn.count++;
-    game.turn.currentPlayer = (game.turn.currentPlayer === game.player1)
-      ? game.player2
-      : game.player1;
-    game.turn.currentPhase = "Intermission";
-
-    // ✅ Trigger bot turn here if it's now the bot's turn
-    if (game.turn.currentPlayer === "Bot") {
-      setTimeout(() => performBotTurn(game, gameId), 300);
-    }
-
-    //If totem is Countdown Clocktower
-    if (game.turnLimit && game.turn.count >= 12) {
-      const opponentName = (game.player1 === username) ? game.player2 : game.player1;
-      const playerLife = game[username].life;
-      const opponentLife = game[opponentName].life;
-
-      let loser, reason;
-
-      if (playerLife > opponentLife) {
-        loser = opponentName;
-        reason = "You had more Life at the end of the 12th turn";
-      } else if (opponentLife > playerLife) {
-        loser = username;
-        reason = "Your Opponent had more Life at the end of the 12th turn";
-      } else {
-        // Optional: record draw in logs
-        //console.log("Game ended in a draw.");
-        return res.json({ success: true, draw: true, reason: "Both Players had the same Life at the end of the 12th turn" });
-      }
-
-      //console.log(`Game ${gameId} ended. Loser: ${loser}. Reason: ${reason}`);
-
-      gameStates.delete(gameId);
-      return res.json({ success: true, loser, reason });
-    }
+    return res.json({ success: true, currentPhase: phase, showEndTurnButton: true });
   }
   return res.json({ success: true, currentPhase: phase });
 });
+
+app.post('/endTurn', (req, res) => {
+  const { gameId, username } = req.body;
+  const game = gameStates.get(gameId);
+
+  if (!game || game.turn.currentPlayer !== username) {
+    return res.status(403).json({ message: "Not your turn" });
+  }
+
+  game.turn.count++;
+  game.turn.currentPlayer = (game.turn.currentPlayer === game.player1)
+    ? game.player2
+    : game.player1;
+  game.turn.currentPhase = "Intermission";
+
+  // ✅ Trigger bot if needed
+  if (game.turn.currentPlayer === "Bot") {
+    setTimeout(() => performBotTurn(game, gameId), 300);
+  }
+
+  return res.json({ success: true });
+});
+
 
 // GET /logout
 app.get('/logout', (req, res) => {
