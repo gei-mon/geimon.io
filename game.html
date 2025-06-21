@@ -390,6 +390,14 @@
                 <div class="player-name" style="font-size: 80%;">Life</div>
             </div>
         </div>
+        <div id="life-adjust-box">
+            <div class="life-adjust-buttons">
+                <button id="increase-life">Increase Life</button>
+                <button id="decrease-life" class="active">Decrease Life</button>
+            </div>
+            <input id="life-amount" type="number" placeholder="Amount" />
+            <button id="confirm-life-change">Confirm</button>
+        </div>
         <div id="opponent-profile-pic"></div>
         <div id="opponent-zone-art" style="position: absolute; top: 0; left: 0; width: 100%; height: 50%; z-index: 0; overflow: hidden; pointer-events: none;"></div>
         <div id="opponent-side"style="pointer-events: none;">
@@ -3877,6 +3885,106 @@
                 attachHoverMenu(el, cardData);
             });
         }
+
+        function changeLife(player, amount, gameState, username, gameId) {
+            if (!gameState[player]) return;
+
+            if (gameState.invertHealingAndDamage) {
+                amount = -amount;
+            }
+
+            const originalLife = gameState[player].life;
+            let newLife = originalLife + amount;
+            if (newLife < 0) newLife = 0;
+
+            gameState[player].life = newLife;
+
+            const isSelf = player === username;
+            const lifeElem = document.getElementById(isSelf ? "player-life" : "opponent-life");
+            const screenHalf = document.getElementById(isSelf ? "player-side" : "opponent-side");
+
+            if (lifeElem && screenHalf) {
+                animateLifeNumber(lifeElem, originalLife, newLife);
+
+                const flash = document.createElement("div");
+                flash.className = `life-flash ${amount > 0 ? "heal" : "damage"} ${isSelf ? "bottom" : "top"}`;
+                screenHalf.appendChild(flash);
+
+                setTimeout(() => flash.classList.add("active"), 10);
+                setTimeout(() => flash.remove(), 700);
+            }
+
+            sendLifeUpdate(gameId, gameState, player);
+
+            if (newLife <= 0) {
+                // Dispatch a custom event to trigger game loss
+                document.dispatchEvent(new CustomEvent("playerLifeReachedZero", {
+                    detail: { player }
+                }));
+            }
+
+            // Return true if this reduced the player's life to 0
+            return newLife <= 0;
+        }
+
+        function animateLifeNumber(element, start, end) {
+            const duration = 500;
+            const stepTime = 30;
+            const steps = Math.floor(duration / stepTime);
+            let currentStep = 0;
+
+            const step = () => {
+                currentStep++;
+                const progress = currentStep / steps;
+                const value = Math.round(start + (end - start) * progress);
+                element.textContent = value;
+
+                if (currentStep < steps) {
+                    setTimeout(step, stepTime);
+                } else {
+                    element.textContent = end;
+                }
+            };
+            step();
+        }
+
+        async function sendLifeUpdate(gameId, gameState, player) {
+            await fetch('https://geimon-app-833627ba44e0.herokuapp.com/updateGameState', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    gameId,
+                    updatedZones: {
+                        life: gameState[player].life
+                    },
+                    owner: player
+                })
+            });
+        }
+
+        document.getElementById('confirm-life-change').addEventListener('click', () => {
+            const amt = parseInt(document.getElementById('life-amount').value, 10);
+            if (isNaN(amt) || amt <= 0) return alert('Enter a positive number');
+            const increase = document.getElementById('increase-life').classList.contains('active');
+
+            changeLife(
+                username,
+                increase ? amt : -amt,
+                gameState,
+                username,
+                gameId
+            );
+
+            document.getElementById('life-amount').value = '';
+        });
+
+        document.querySelectorAll('#increase-life, #decrease-life').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.getElementById('increase-life').classList.remove('active');
+                document.getElementById('decrease-life').classList.remove('active');
+                btn.classList.add('active');
+            });
+        });
 
         async function attachDeckHoverMenu() {
             const deckBox = document.getElementById("playerDeckBox");

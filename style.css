@@ -867,3 +867,35 @@ background-color: #29c7bd;
 .hover-menu {
   z-index: 200000 !important;
 }
+
+#life-adjust-box {
+  position: fixed;
+  top: calc( (600px + 320px) / 2 ); /* halfway between your two life windows */
+  left: calc( (1960px + 1960px) / 2 ); /* or whatever x-coordinate fits between them */
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  z-index: 100500;
+  text-align: center;
+  font-family: sans-serif;
+}
+#life-adjust-box .life-adjust-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 8px;
+}
+#life-adjust-box input {
+  width: 80px;
+  margin-bottom: 8px;
+  text-align: center;
+}
+#life-adjust-box button {
+  cursor: pointer;
+}
+#life-adjust-box button.active {
+  background-color: #007acc;
+  color: white;
+}
