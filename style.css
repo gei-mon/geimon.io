@@ -880,6 +880,7 @@ background-color: #29c7bd;
   z-index: 100500;
   text-align: center;
   font-family: sans-serif;
+  transition: "opacity 1s ease-in-out";
 }
 #life-adjust-box .life-adjust-buttons {
   display: flex;

@@ -390,7 +390,7 @@
                 <div class="player-name" style="font-size: 80%;">Life</div>
             </div>
         </div>
-        <div id="life-adjust-box">
+        <div id="life-adjust-box" style="opacity: 0; transition: opacity 1s ease-in-out;">
             <div class="life-adjust-buttons">
                 <button id="increase-life">Increase Life</button>
                 <button id="decrease-life" class="active">Decrease Life</button>
@@ -3335,8 +3335,10 @@
     document.body.appendChild(surrenderButton);
 
     const toolButtons = document.getElementById("tool-buttons");
+    const lifeAdjustBox = document.getElementById("life-adjust-box");
     setTimeout(() => {
         toolButtons.style.opacity = "1";
+        lifeAdjustBox.style.opacity = "1";
         playerDeckBox.style.opacity = "1";
         playerDeckBox.style.zIndex = "200000";
         playerDeckBox.style.pointerEvents = "auto";
