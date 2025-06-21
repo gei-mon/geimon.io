@@ -6,8 +6,6 @@ export function renderCard(card, container) {
   const cardElement = document.createElement("div");
   cardElement.className = "card";
   cardElement.dataset.cardId = card.uid || card.id;
-  cardElement.dataset.zone = card.boardState || "Unknown";
-  cardElement.dataset.facedown = (card.boardState?.includes("FaceDown") || card.faceDown) ? "true" : "false";
 
   if (card.type === "Champion") {
     cardElement.classList.add("champion");
@@ -248,69 +246,6 @@ if (isReflexSpeedCard && (card.boardState === "Hand" || card.boardState?.include
 cardButton._originalHandler = cardButton.onclick;
 
 cardElement.appendChild(cardButton);
-// === Hover menu insertion ===
-const hoverMenu = document.createElement("div");
-hoverMenu.className = "hover-menu";
-hoverMenu.style.position = "absolute";
-hoverMenu.style.top = "-2.5em";
-hoverMenu.style.left = "0";
-hoverMenu.style.backgroundColor = "#111";
-hoverMenu.style.color = "white";
-hoverMenu.style.border = "1px solid #ccc";
-hoverMenu.style.padding = "4px";
-hoverMenu.style.display = "none";
-hoverMenu.style.zIndex = "9999";
-hoverMenu.style.flexDirection = "column";
-hoverMenu.style.fontSize = "0.85em";
-hoverMenu.style.whiteSpace = "nowrap";
-hoverMenu.style.boxShadow = "0 0 5px black";
-
-const zone = cardElement.dataset.zone;
-const isFaceDown = cardElement.dataset.facedown === "true";
-let options = [];
-
-if (zone === "Hand") {
-  options = ["Reveal", "Declare", "To Champion Zone (Face-Up)", "To Champion Zone (Face-Down)", "To Arsenal (Face-Up)", "To Arsenal (Face-Down)", "To Reserve", "To Tomb", "To Void", "To Top of Deck", "To Bottom of Deck"];
-} else if (zone === "Zone (Champion)" || zone === "Zone (Arsenal)" || zone === "Reserve" || zone === "FaceDownZone" || zone === "FaceDownArsenalZone") {
-  if (isFaceDown) {
-    options = ["Flip"];
-  } else {
-    options = ["Flip"];
-  }
-  if (!zone.includes("Champion")) options.push("To Champion Zone (Face-Up)", "To Champion Zone (Face-Down)");
-  if (!zone.includes("Arsenal")) options.push("To Arsenal (Face-Up)", "To Arsenal (Face-Down)");
-  if (zone !== "Reserve") options.push("To Reserve");
-  options.push("To Hand", "To Tomb", "To Void", "To Top of Deck", "To Bottom of Deck", "Change Control");
-} else if (zone === "Tomb" || zone === "Void") {
-  options = [zone === "Tomb" ? "To Void" : "To Tomb", "To Hand", "To Reserve", "To Champion Zone", "To Champion Zone Face-Down", "To Arsenal", "To Arsenal Face-Down", "To Top of Deck", "To Bottom of Deck"];
-}
-
-options.forEach(text => {
-  const btn = document.createElement("div");
-  btn.textContent = text;
-  btn.style.padding = "2px 5px";
-  btn.style.cursor = "pointer";
-  btn.addEventListener("click", (e) => {
-    e.stopPropagation();
-    e.preventDefault();
-    console.log(`🔀 Option selected on ${card.name}: ${text}`);
-    // Implement your routing logic here
-  });
-  btn.addEventListener("mouseenter", () => btn.style.background = "#333");
-  btn.addEventListener("mouseleave", () => btn.style.background = "transparent");
-  hoverMenu.appendChild(btn);
-});
-
-cardElement.appendChild(hoverMenu);
-
-// === Show/hide on hover ===
-cardElement.addEventListener("mouseenter", () => {
-  hoverMenu.style.display = "flex";
-});
-cardElement.addEventListener("mouseleave", () => {
-  hoverMenu.style.display = "none";
-});
-
 if (container) {
   container.appendChild(cardElement);
 }
