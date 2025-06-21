@@ -1017,14 +1017,6 @@ app.post('/setPhase', (req, res) => {
     const player = game[username];
     const hand = game[username]?.Hand || [];
 
-    // Prevent progressing turn if player still has over 6 cards
-    if (hand.length > 6) {
-      console.warn(`Player ${username} still has ${hand.length} cards in hand.`);
-      game.turn.currentPhase = "End";
-
-      return res.json({ success: true, currentPhase: "End" });
-    }
-
     // ✅ Proceed with turn change
     game.turn.count++;
     game.turn.currentPlayer = (game.turn.currentPlayer === game.player1)
