@@ -702,7 +702,7 @@
         }
 
         async function drawCards(deck, numCards = 5) {
-            console.log("🔍 drawCards() called, drawing", numCards, "card(s). Current deck:", deck.length);
+            //console.log("🔍 drawCards() called, drawing", numCards, "card(s). Current deck:", deck.length);
 
             const drawnCards = deck.splice(0, numCards);
             drawnCards.forEach(card => {
@@ -1837,18 +1837,20 @@
                 facedownArsenalBox.style.gap            = "0px";
                 facedownArsenalBox.style.flexWrap       = "nowrap";
 
-            const reserveBox = document.createElement("div");
-                reserveBox.id = "playerReserveBox";
+            const reserveBox = document.getElementById("playerReserveBox");
                 reserveBox.className = "card-zone";
                 reserveBox.style.position = "absolute";
-                reserveBox.style.left = "375px";
-                reserveBox.style.top = "525px";
+                reserveBox.style.left = "487px";
+                reserveBox.style.top = "376px";
                 reserveBox.style.width = "292px";
                 reserveBox.style.height = "275px";
-                reserveBox.style.zIndex = "1000";
+                reserveBox.style.zIndex = "100300";
                 reserveBox.style.pointerEvents = "none";
                 reserveBox.style.backgroundColor = "rgba(255, 0, 0, 0)";
-            document.body.appendChild(reserveBox);
+                reserveBox.style.display        = "flex";
+                reserveBox.style.justifyContent = "flex-start";
+                reserveBox.style.alignItems     = "center";
+                reserveBox.style.gap            = "0px";
 
             fetchUserData().then(userData => {
                 if (userData && userData.zoneArt) {
@@ -3638,7 +3640,7 @@
         async function sendZoneUpdate(zones) {
             const updatedZones = {};
             zones.forEach(z => updatedZones[z] = gameState[username][z]);
-            console.log("🔧 sendZoneUpdate ▶ payload:", updatedZones);
+            //console.log("🔧 sendZoneUpdate ▶ payload:", updatedZones);
 
             const res = await fetch(`${serverUrl}/updateGameState`, {
                 method: "POST",
@@ -3648,13 +3650,12 @@
             });
 
             const data = await res.json();
-            console.log("📜 sendZoneUpdate ◀ response:", data);
+            //console.log("📜 sendZoneUpdate ◀ response:", data);
 
             // merge server copy back into local
             if (data.updatedPlayerZone) {
                 gameState[username] = data.updatedPlayerZone;
-                console.log("🔄 state synced → Arsenal:", gameState[username]["Zone (Arsenal)"].map(c=>c.id),
-                            "Tomb:", gameState[username].Tomb.map(c=>c.id));
+                //console.log("🔄 state synced → Arsenal:", gameState[username]["Zone (Arsenal)"].map(c=>c.id), "Tomb:", gameState[username].Tomb.map(c=>c.id));
             }
 
             return data;
@@ -3667,7 +3668,7 @@
             cardElement.style.position = "relative";
 
             // ─── helper to move card in state + UI + server ───────────────────────────
-            async function doMove(fromZone, toZoneKey, containerId, faceDown) {
+            async function doMove(fromZone, toZoneKey, containerId, faceDown, placeOnTop = false) {
                 // 0) Update local gameState arrays
                 const zoneArr = gameState[username][fromZone];
                 const idx     = zoneArr.findIndex(c => String(c.id) === String(cardData.id));
@@ -3675,11 +3676,23 @@
                 const [moved] = zoneArr.splice(idx, 1);
                 moved.boardState = toZoneKey;
                 moved.faceDown   = faceDown;
-                gameState[username][toZoneKey].push(moved);
+                const targetArr = gameState[username][toZoneKey];
+                if (toZoneKey === "Deck" && placeOnTop) {
+                    targetArr.unshift(moved);
+                } else {
+                    targetArr.push(moved);
+                }
 
-                // 1) Move DOM node into new container
-                const target = document.getElementById(containerId);
-                target.appendChild(cardElement);
+                const container = document.getElementById(containerId);
+                if (toZoneKey !== "Deck") {
+                const container = document.getElementById(containerId);
+                if (toZoneKey === "Deck" && placeOnTop) {
+                    // never, because Deck is skipped
+                    container.prepend(cardElement);
+                } else {
+                    container.appendChild(cardElement);
+                }
+                }
                 cardElement.dataset.zone     = toZoneKey;
                 cardElement.dataset.facedown = faceDown ? "true" : "false";
 
@@ -3688,28 +3701,31 @@
                 const transforms = ["scale(0.3)"];
                 //    if facedown-champion, also rotate + sleeve overlay
                 if (containerId === "playerFaceDownBox") {
-                transforms.push("rotate(90deg)");
+                    transforms.push("rotate(90deg)");
 
-                // remove any previous sleeve overlay
-                const oldSleeve = cardElement.querySelector(".sleeve-overlay");
-                if (oldSleeve) oldSleeve.remove();
+                    // remove any previous sleeve overlay
+                    const oldSleeve = cardElement.querySelector(".sleeve-overlay");
+                    if (oldSleeve) oldSleeve.remove();
 
-                // add one sleeve overlay
-                const sleeve = document.createElement("img");
-                sleeve.src       = userSleeveURL;
-                sleeve.className = "sleeve-overlay";
-                Object.assign(sleeve.style, {
-                    position:        "absolute",
-                    top:             "0",
-                    left:            "0",
-                    width:           "260px",
-                    height:          "420px",
-                    transform:       "rotate(180deg)",
-                    transformOrigin: "center center",
-                    pointerEvents:   "none",
-                    zIndex:          "110000",
-                });
-                cardElement.appendChild(sleeve);
+                    // add one sleeve overlay
+                    const sleeve = document.createElement("img");
+                    sleeve.src       = userSleeveURL;
+                    sleeve.className = "sleeve-overlay";
+                    Object.assign(sleeve.style, {
+                        position:        "absolute",
+                        top:             "0",
+                        left:            "0",
+                        width:           "260px",
+                        height:          "420px",
+                        transform:       "rotate(180deg)",
+                        transformOrigin: "center center",
+                        pointerEvents:   "none",
+                        zIndex:          "110000",
+                    });
+                    cardElement.appendChild(sleeve);
+                }
+                if (containerId === "playerReserveBox") {
+                    transforms.push("scale(0.85)");
                 }
 
                 cardElement.style.transform       = transforms.join(" ");
@@ -3731,7 +3747,7 @@
                 bottom:         "100%",
                 left:           "50%",
                 transform:      "translateX(-50%)",
-                marginBottom:   "0.3em",
+                marginBottom:   "0em",
                 backgroundColor:"#111",
                 color:          "white",
                 border:         "1px solid #ccc",
@@ -3739,7 +3755,7 @@
                 display:        "none",
                 zIndex:         "150000",
                 flexDirection:  "column",
-                fontSize:       "1.2em",
+                fontSize:       "2em",
                 whiteSpace:     "nowrap",
                 boxShadow:      "0 0 5px black",
             });
@@ -3786,20 +3802,34 @@
                 hoverMenu.style.display = "none";
                 switch (text) {
                     case "To Champion (Face-Up)":
-                    await doMove("Hand",           "Zone (Champion)",         "playerChampionsBox",        false);
-                    break;
+                        await doMove("Hand",           "Zone (Champion)",         "playerChampionsBox",        false);
+                        break;
                     case "To Champion (Face-Down)":
-                    await doMove("Hand",           "FaceDownZone",            "playerFaceDownBox",         true);
-                    break;
+                        await doMove("Hand",           "FaceDownZone",            "playerFaceDownBox",         true);
+                        break;
                     case "To Arsenal (Face-Up)":
-                    await doMove("Hand",           "Zone (Arsenal)",          "playerArsenalBox",          false);
-                    break;
+                        await doMove("Hand",           "Zone (Arsenal)",          "playerArsenalBox",          false);
+                        break;
                     case "To Arsenal (Face-Down)":
-                    await doMove("Hand",           "FaceDownArsenalZone",     "playerFaceDownArsenalBox",  true);
-                    break;
-                    // …add other moves as needed…
+                        await doMove("Hand",           "FaceDownArsenalZone",     "playerFaceDownArsenalBox",  true);
+                        break;
+                    case "To Reserve":
+                        await doMove("Hand", "Reserve", "playerReserveBox", false);
+                        break;
+                    case "To Tomb":
+                        await doMove("Hand", "Tomb", "playerTombBox", false);
+                        break;
+                    case "To Void":
+                        await doMove("Hand", "Void", "playerVoidBox", false);
+                        break;
+                    case "To Top of Deck":
+                        await doMove("Hand", "Deck", "playerDeckBox", false, true);
+                        break;
+                    case "To Bottom of Deck":
+                        await doMove("Hand", "Deck", "playerDeckBox", false, false);
+                        break;
                     default:
-                    console.warn("Unhandled action:", text);
+                        console.warn("Unhandled action:", text);
                 }
                 });
                 btn.addEventListener("mouseenter", () => btn.style.background = "#333");
@@ -3975,7 +4005,7 @@
 
             deckBox.appendChild(menu);
 
-            console.log("deckText exists?", !!document.getElementById("deckText"));
+            //console.log("deckText exists?", !!document.getElementById("deckText"));
             deckBox.addEventListener("mouseenter", () => {
                 document.getElementById("deckText").textContent = `${remainingDeck.length}`;
                 const rect = deckBox.getBoundingClientRect();
