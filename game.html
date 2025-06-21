@@ -4083,6 +4083,31 @@
         if (playerDeckBox) {
             playerDeckBox.addEventListener("mouseenter", () => {
                 playerDeckBox.innerText = `${remainingDeck.length}`;
+
+                const deckMenu = document.createElement("div");
+                deckMenu.className = "hover-menu";
+                deckMenu.innerHTML = `
+                    <div>Shuffle</div>
+                    <div>Draw</div>
+                    <div>Mill</div>
+                    <div>Obliterate Mill</div>
+                    <div>View</div>
+                `;
+                Object.assign(deckMenu.style, {
+                    position: "absolute",
+                    top: "-3em",
+                    left: "0",
+                    backgroundColor: "#222",
+                    color: "white",
+                    padding: "4px",
+                    border: "1px solid #ccc",
+                    zIndex: "1000"
+                });
+
+                deckElement.appendChild(deckMenu);
+                deckElement.onmouseleave = () => {
+                    deckElement.removeChild(deckMenu);
+                };
             });
 
             playerDeckBox.addEventListener("mouseleave", () => {

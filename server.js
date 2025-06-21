@@ -13,7 +13,6 @@ const http = require('http');
 const { Server } = require('socket.io');
 const { TotemExecutor } = require('./utils/totemExecutor.cjs');
 const { cards } = require('./data/cards.js');
-const AbilityExecutor = require('./utils/abilityExecutor.js');
 
 // In-memory storage
 let sessions = {};
@@ -908,20 +907,6 @@ async function performBotTurn(game, gameId) {
         });
 
         const updateLocalFromGameState = () => {};
-        try {
-          await AbilityExecutor.handleBoardStateChange(
-            discardedCard,
-            "Tomb",
-            "Hand",
-            game,
-            "Bot",
-            gameId,
-            updateLocalFromGameState,
-            addGameLogEntry
-          );
-        } catch (err) {
-          console.error("Error handling board state change:", err);
-        }
 
         io.to(gameId).emit("update_zones", {
           player: "Bot",
