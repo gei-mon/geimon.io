@@ -816,7 +816,7 @@
                     }
                 });
 
-                socket.on('card_targeted', ({ cardId }) => toggleTargetRing(cardId));
+                socket.on('card_targeted', ({ cardId }) => flashTargetRing(cardId));
 
                 socket.on("phase_change", ({ phase, username: actingUser }) => {
                     // Update which phase is marked as active
@@ -1445,10 +1445,23 @@
             setTimeout(() => cardImg.remove(), 1000);
         }
 
-        function toggleTargetRing(cardId){
-            document
-            .querySelectorAll(`[data-card-id="${cardId}"]`)
-            .forEach(el => el.classList.toggle('target-highlight'));
+        // 🔴 show the red ring for N ms (default 5000)
+        const targetTimers = {};                 // cardId ➜ timeout handle
+
+        function flashTargetRing(cardId, duration = 2500){
+        // 1️⃣  add / refresh the visual
+        document.querySelectorAll(`[data-card-id="${cardId}"]`)
+                .forEach(el => el.classList.add('target-highlight'));
+
+        // 2️⃣  clear any existing timer for this card
+        clearTimeout(targetTimers[cardId]);
+
+        // 3️⃣  schedule automatic removal
+        targetTimers[cardId] = setTimeout(() => {
+            document.querySelectorAll(`[data-card-id="${cardId}"]`)
+                    .forEach(el => el.classList.remove('target-highlight'));
+            delete targetTimers[cardId];
+        }, duration);
         }
 
         function wrapCardButton(btn){
@@ -1464,10 +1477,26 @@
             const cardId = this.closest(".card")?.dataset.cardId;
             if (!cardId) return;
 
-            toggleTargetRing(cardId);               // instant local feedback
+            flashTargetRing(cardId);               // instant local feedback
             socket.emit("toggle_target", { gameId, cardId }); // sync to server
             };
         }
+
+        document.querySelectorAll(".card-button").forEach(wrapCardButton);
+
+        const observer = new MutationObserver(muts => {
+            muts.forEach(m => {
+            m.addedNodes.forEach(node => {
+                if (node.nodeType !== 1) return;
+                if (node.classList.contains("card-button")) {
+                wrapCardButton(node);
+                } else {
+                node.querySelectorAll?.(".card-button").forEach(wrapCardButton);
+                }
+            });
+            });
+        });
+        observer.observe(document.body, { childList: true, subtree: true });
 
         function renderOpponentHand() {
             const container = document.getElementById("opponent-hand");
