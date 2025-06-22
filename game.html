@@ -2419,28 +2419,28 @@
                 totemBox.style.boxShadow = "0 0 20px black";
                 totemBox.textContent = `Selected Totem: ${selectedTotem} - ${selectedTotemText}`;
 
-            // Add to document
-            document.body.appendChild(totemBox);
+                // Add to document
+                document.body.appendChild(totemBox);
 
-            // Trigger fade-in
-            setTimeout(() => {
-                totemBox.style.opacity = "1";
-            }, 1000); // Slight delay after result box
+                // Trigger fade-in
+                setTimeout(() => {
+                    totemBox.style.opacity = "1";
+                }, 1000); // Slight delay after result box
 
-            setTimeout(() => {
-                totemBox.style.opacity = "0";
-                totemBox.style.zIndex = "10";
-                window.totemFullyFaded = true;
-            }, 4000);
+                setTimeout(() => {
+                    totemBox.style.opacity = "0";
+                    totemBox.style.zIndex = "10";
+                    window.totemFullyFaded = true;
+                }, 4000);
 
-                const opponentName = isSinglePlayer ? "Bot" : otherPlayerName;
                 document.getElementById("player-name").textContent = username;
                 document.getElementById("player-life").textContent = gameState[username].life;
 
+                opponentName = isSinglePlayer ? "Bot" : opponentUsernameParam;
+                console.log("Creating game for", username, "vs", isSinglePlayer ? "Bot" : opponentUsernameParam);
                 document.getElementById("opponent-name").textContent = opponentName;
                 document.getElementById("opponent-life").textContent = gameState[opponentName].life;
 
-                //console.log("Creating game for", username, "vs", isSinglePlayer ? "Bot" : otherPlayerName);
                 if (!gameReady) {
                     await fetchGameStateFromServer();
                     gameReady = true;
