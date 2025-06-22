@@ -970,6 +970,31 @@ app.post('/setPhase', (req, res) => {
   game.turn.currentPhase = phase;
 
   if (phase === "End") {
+    //If totem is Countdown Clocktower
+    if (game.turnLimit && game.turn.count >= 12) {
+      const opponentName = (game.player1 === username) ? game.player2 : game.player1;
+      const playerLife = game[username].life;
+      const opponentLife = game[opponentName].life;
+
+      let loser, reason;
+
+      if (playerLife > opponentLife) {
+        loser = opponentName;
+        reason = "You had more Life at the end of the 12th turn";
+      } else if (opponentLife > playerLife) {
+        loser = username;
+        reason = "Your Opponent had more Life at the end of the 12th turn";
+      } else {
+        // Optional: record draw in logs
+        //console.log("Game ended in a draw.");
+        return res.json({ success: true, draw: true, reason: "Both Players had the same Life at the end of the 12th turn" });
+      }
+
+      //console.log(`Game ${gameId} ended. Loser: ${loser}. Reason: ${reason}`);
+
+      gameStates.delete(gameId);
+      return res.json({ success: true, loser, reason });
+    }
     return res.json({ success: true, currentPhase: phase, showEndTurnButton: true });
   }
   return res.json({ success: true, currentPhase: phase });
