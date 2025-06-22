@@ -19,5 +19,6 @@ export const rules = {
   Spin: "Shuffle card(s) into the Deck from a designated location.",
   Stack: "Place a designated card on top of the Deck.",
   Target: "Select a card to be the recipient of an effect.",
-  Unleash: "Rally from the Void (ignoring cost). You must still meet conditions."
+  Unleash: "Rally from the Void (ignoring cost). You must still meet conditions.",
+  "Cards Controlled": "The total number of cards between a Player's Champions and cards in their Arsenal."
 }

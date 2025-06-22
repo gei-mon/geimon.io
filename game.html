@@ -2032,7 +2032,7 @@
 
             const championBox = document.getElementById("playerChampionsBox");
                 championBox.style.position = "fixed";
-                championBox.style.left = "875px";
+                championBox.style.left = "695px";
                 championBox.style.top = "525px";
                 championBox.style.width = "525px";
                 championBox.style.height = "128px";
@@ -2047,8 +2047,8 @@
 
             const facedownBox = document.getElementById("playerFaceDownBox");
                 facedownBox.style.position = "fixed";
-                facedownBox.style.left = "1310px";
-                facedownBox.style.top = "525px";
+                facedownBox.style.left = "1225px";
+                facedownBox.style.top = "675px";
                 facedownBox.style.width = "492px";
                 facedownBox.style.height = "128px";
                 facedownBox.style.zIndex = "110000";
@@ -2062,8 +2062,8 @@
 
             const arsenalBox = document.getElementById("playerArsenalBox");
                 arsenalBox.style.position = "fixed";
-                arsenalBox.style.left = "875px";
-                arsenalBox.style.top = "675px";
+                arsenalBox.style.left = "695px";
+                arsenalBox.style.top = "674.5px";
                 arsenalBox.style.width = "525px";
                 arsenalBox.style.height = "128px";
                 arsenalBox.style.zIndex = "110010"; // ensure it's above the board
@@ -2077,8 +2077,8 @@
 
             const facedownArsenalBox = document.getElementById("playerFaceDownArsenalBox");
                 facedownArsenalBox.style.position = "fixed";
-                facedownArsenalBox.style.left = "1335px";
-                facedownArsenalBox.style.top = "675px";
+                facedownArsenalBox.style.left = "1320px";
+                facedownArsenalBox.style.top = "821.5px";
                 facedownArsenalBox.style.width = "492px";
                 facedownArsenalBox.style.height = "128px";
                 facedownArsenalBox.style.zIndex = "110010";
@@ -2093,9 +2093,9 @@
             const reserveBox = document.getElementById("playerReserveBox");
                 reserveBox.className = "card-zone";
                 reserveBox.style.position = "absolute";
-                reserveBox.style.left = "487px";
-                reserveBox.style.top = "376px";
-                reserveBox.style.width = "292px";
+                reserveBox.style.left = "523.5px";
+                reserveBox.style.top = "900px";
+                reserveBox.style.width = "310px";
                 reserveBox.style.height = "275px";
                 reserveBox.style.zIndex = "100900";
                 reserveBox.style.pointerEvents = "auto";
@@ -4155,7 +4155,7 @@
                     });
                     cardElement.appendChild(sleeve);
                 } if (containerId === "playerReserveBox") {
-                    transforms.push("scale(0.85)");
+                    transforms.push("scale(0.3)");
                 }
 
                 cardElement.style.transform       = transforms.join(" ");
@@ -4164,6 +4164,18 @@
 
                 // 3) Persist change to server
                 await sendZoneUpdate([fromZone, toZoneKey]);
+                const mainZones = [
+                  { name: "Zone (Champion)",         container: "playerChampionsBox"       },
+                  { name: "FaceDownZone",            container: "playerFaceDownBox"        },
+                  { name: "Zone (Arsenal)",          container: "playerArsenalBox"         },
+                  { name: "FaceDownArsenalZone",     container: "playerFaceDownArsenalBox" },
+                  { name: "Reserve",                 container: "playerReserveBox"         },
+                ];
+                mainZones.forEach(({ name, container }) => {
+                  if (fromZone === name || toZoneKey === name) {
+                    renderCardZone(gameState[username][name], container);
+                  }
+                });
 
                 // 4) Re-render zones so spacing/layout updates
                 renderDrawnCards();
@@ -5039,14 +5051,21 @@
                     attachHoverMenu(rendered, cardData);
 
                     const wrapper = document.createElement("div");
-                        wrapper.style.display = "inline-block";
-                        wrapper.style.position = "relative";
-                        wrapper.style.marginLeft = "-44px";
-                        wrapper.style.marginTop = "323px";
+                        wrapper.style.display        = "inline-block";
+                        wrapper.style.position       = "relative";
+                    if (containerId === "playerReserveBox") {
+                        wrapper.style.marginLeft  = "-210px";
+                        wrapper.style.marginTop   = "-350px";
+                        wrapper.style.transform       = "scale(0.3)";
                         wrapper.style.transformOrigin = "top center";
-                        wrapper.style.transform = "scale(0.3)";
-                        wrapper.style.pointerEvents = "auto";
-                        wrapper.style.zIndex           = "200000";
+                    } else {
+                        wrapper.style.marginLeft  = "-44px";
+                        wrapper.style.marginTop   = "323px";
+                        wrapper.style.transformOrigin = "top center";
+                        wrapper.style.transform       = "scale(0.3)";
+                    }
+                    wrapper.style.pointerEvents   = "auto";
+                    wrapper.style.zIndex          = "200000";
 
                     // Hover-to-preview logic
                     wrapper.addEventListener("mouseenter", () => {

@@ -877,8 +877,10 @@ background-color: #29c7bd;
 }
 #playerReserveBox > .card {
   flex-shrink: 0 !important;
-  margin-left: -205px !important;
-  margin-bottom: -330px !important;
+}
+#playerReserveBox > div {
+  transform: scale(0.25) !important;
+  transform-origin: top center !important;
 }
 
 .hover-menu {
