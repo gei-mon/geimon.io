@@ -175,16 +175,18 @@
                     return;
                 }
                 const winner = beats[myChoice] === otherChoice ? username : otherUser;
-                socket.emit('rpsResult', {
-                    winner,
-                    choices: { [username]: myChoice, [otherUser]: otherChoice }
-                });
+                if (winner === username) {
+                    socket.emit('rpsResult', {
+                        winner,
+                        choices: { [username]: myChoice, [otherUser]: otherChoice }
+                    });
+                }
             });
 
             // 3) Broadcast result:
             socket.on('rpsResult', ({ winner, choices }) => {
-                appendSystem(`🛎️ RPS outcome: you=${choices[username]}, them=${choices[otherUser]}.`);
-                appendSystem(`🏆 ${winner} wins RPS!`);
+                appendSystem(`You chose ${choices[username]}, and ${otherUser} chose ${choices[otherUser]}.`);
+                appendSystem(`${winner} wins RPS!`);
                 rpsContainer.style.display = 'none';
                 if (winner === username) turnChoiceContainer.style.display = 'flex';
             });
