@@ -222,8 +222,8 @@
                 window.location.href = `game.html?${params}`;
             });
 
-            socket.on('playerReady', ({ username: who, ready }) => {
-                console.log('Received playerReady ←', who, ready);
+            socket.on('playerReady', ({ username: who, ready, deck }) => {
+                console.log('Received playerReady ←', who, ready, deck);
                 appendSystem(`${who} is ${ready ? 'ready' : 'not ready'}.`);
                     if (who !== username) {
                         readyOther = ready;
