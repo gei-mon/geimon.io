@@ -73,6 +73,7 @@
             myChoice = null,
             otherChoice = null;
         let otherUser = null;
+        let otherDeck = null;
 
         const rpsContainer        = document.getElementById('rpsContainer'),
             turnChoiceContainer = document.getElementById('turnChoiceContainer');
@@ -153,12 +154,12 @@
 
             // 1) You pick:
             rpsContainer.addEventListener('click', e => {
-            const ch = e.target.dataset.choice;
-            if (!ch || myChoice) return;
-            myChoice = ch;
-            appendSystem(`You chose ${ch}. Waiting for opponent…`);
-            socket.emit('rpsChoice', { username, choice: ch });
-            rpsContainer.style.pointerEvents = 'none';
+                const ch = e.target.dataset.choice;
+                if (!ch || myChoice) return;
+                myChoice = ch;
+                appendSystem(`You chose ${ch}. Waiting for opponent…`);
+                socket.emit('rpsChoice', { username, choice: ch });
+                rpsContainer.style.pointerEvents = 'none';
             });
 
             // 2) They pick:
@@ -201,13 +202,33 @@
             // Broadcast to both:
             socket.on('turnOrderChoice', ({ chooser, turn }) => {
                 appendSystem(`${chooser} chose to go ${turn === 'first' ? 'First' : 'Second'}.`);
-                // ← hook your existing game‐start here
+                if (!deckSelectEl.value || !otherDeck) return;
+
+                // gather params
+                const params = new URLSearchParams({
+                    gameId:      localStorage.getItem('roomId'),  // same roomId you used to join
+                    playerDeck:  deckSelectEl.value,
+                    opponentDeck: otherDeck,
+                    gameType:    'single',
+                    totem,           // from server
+                    totemText,       // from server
+                    turnOrder:   turn,
+                    opponent:    otherUser,                       // for game.html’s “opponent” param
+                    playerUsername: username,
+                    isSinglePlayer: 'false'
+                });
+
+                // go!
+                window.location.href = `game.html?${params}`;
             });
 
             socket.on('playerReady', ({ username: who, ready }) => {
                 console.log('Received playerReady ←', who, ready);
                 appendSystem(`${who} is ${ready ? 'ready' : 'not ready'}.`);
-                if (who !== username) readyOther = ready;
+                    if (who !== username) {
+                        readyOther = ready;
+                        otherDeck   = deck;
+                    }
 
                 // both ready? show RPS
                 if (readyMe && readyOther) {
@@ -286,16 +307,18 @@
                     readyBtnEl.innerText           = 'Ready!';
                     readyBtnEl.style.backgroundColor = 'lightgreen';
                     deckSelectEl.disabled          = true;
-                    readyMe = isReady;
                     console.log('Emitting playerReady →', isReady);
-                    socket.emit('playerReady', { username, ready: isReady });
                 } else {
                     readyBtnEl.innerText           = 'Ready?';
                     readyBtnEl.style.backgroundColor = 'lightgray';
                     deckSelectEl.disabled          = false;
-                    readyMe = isReady;
-                    socket.emit('playerReady', { username, ready: isReady });
                 }
+                readyMe = isReady;
+                socket.emit('playerReady', {
+                    username,
+                    ready: isReady,
+                    deck: deckSelectEl.value
+                });
             };
         })();
     </script>

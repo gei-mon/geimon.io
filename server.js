@@ -13,6 +13,7 @@ const http = require('http');
 const { Server } = require('socket.io');
 const { TotemExecutor } = require('./utils/totemExecutor.cjs');
 const { cards } = require('./data/cards.js');
+const { totems } = require('./data/totems.js');
 
 // In-memory storage
 let sessions = {};
@@ -173,8 +174,19 @@ io.on('connection', (socket) => {
   socket.on('turnOrderChoice', ({ chooser, turn }) => {
     const user = userMap.get(socket.id);
     if (!user) return;
-    const { roomId } = user;
-    io.to(roomId).emit('turnOrderChoice', { chooser, turn });
+
+    const allTotems = Object.assign({}, ...totems);
+    const names     = Object.keys(allTotems);
+    const idx       = Math.floor(Math.random() * names.length);
+    const totem     = names[idx];
+    const totemText = allTotems[totem];
+
+    io.to(user.roomId).emit('turnOrderChoice', {
+      chooser,
+      turn,
+      totem,
+      totemText
+    });
   });
 
   socket.on('disconnect', () => {
