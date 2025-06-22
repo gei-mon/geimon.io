@@ -828,6 +828,12 @@ background-color: #29c7bd;
   100% { transform: scale(1); opacity: 0.9; }
 }
 
+#playerChampionsBox,
+#opponentChampionsBox {
+  pointer-events: auto !important;
+  z-index: 101000 !important;   /* beats the 100300 inline value */
+}
+
 #playerChampionsBox > div:not(:first-child) {
   flex-shrink: 0 !important;
   margin-left: -195px !important;
@@ -898,4 +904,8 @@ background-color: #29c7bd;
 #life-adjust-box button.active {
   background-color: #007acc;
   color: white;
+}
+
+#viewing-window .counter-overlay {
+  display: none !important;
 }

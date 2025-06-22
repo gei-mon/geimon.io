@@ -30,7 +30,7 @@
     display: flex;
     flex-direction: row; /* Aligns cards in a horizontal row */
     align-items: center;
-    z-index: 100350; /* Places it over (almost) everything */
+    z-index: 110020; /* Places it over (almost) everything */
     overflow: visible;
     pointer-events: none;
     max-height: 475px;
@@ -308,7 +308,7 @@
   align-items: center;
   gap: 0px;
   overflow: visible;
-  z-index: 100300;
+  z-index: 110000;
   position: relative;
 }
 .board-container {
@@ -506,9 +506,6 @@
             let discardSessionId = 0;
             let discardLock = false;
             let discardInstruction = null;
-
-            let sacrificeMode = false;
-            let sacrificeCallback = null;
 
             let intervalId = null;
             let isFetchingGameState = false;
@@ -1885,8 +1882,8 @@
                 championBox.style.top = "525px";
                 championBox.style.width = "525px";
                 championBox.style.height = "128px";
-                championBox.style.zIndex = "100300"; // ensure it's above the board
-                championBox.style.pointerEvents = "none";
+                championBox.style.zIndex = "110000"; // ensure it's above the board
+                championBox.style.pointerEvents = "auto";
                 championBox.style.backgroundColor = "rgba(255, 0, 0, 0)"; // debug transparent background
                 championBox.style.display        = "flex";
                 championBox.style.justifyContent = "flex-start";
@@ -1900,8 +1897,8 @@
                 facedownBox.style.top = "525px";
                 facedownBox.style.width = "492px";
                 facedownBox.style.height = "128px";
-                facedownBox.style.zIndex = "100300";
-                facedownBox.style.pointerEvents = "none";
+                facedownBox.style.zIndex = "110000";
+                facedownBox.style.pointerEvents = "auto";
                 facedownBox.style.backgroundColor = "rgba(0, 255, 0, 0)";
                 facedownBox.style.display        = "flex";
                 facedownBox.style.justifyContent = "flex-end";
@@ -1915,8 +1912,8 @@
                 arsenalBox.style.top = "675px";
                 arsenalBox.style.width = "525px";
                 arsenalBox.style.height = "128px";
-                arsenalBox.style.zIndex = "100300"; // ensure it's above the board
-                arsenalBox.style.pointerEvents = "none";
+                arsenalBox.style.zIndex = "110010"; // ensure it's above the board
+                arsenalBox.style.pointerEvents = "auto";
                 arsenalBox.style.backgroundColor = "rgba(255, 0, 0, 0)"; // debug transparent background
                 arsenalBox.style.display        = "flex";
                 arsenalBox.style.justifyContent = "flex-start";
@@ -1930,8 +1927,8 @@
                 facedownArsenalBox.style.top = "675px";
                 facedownArsenalBox.style.width = "492px";
                 facedownArsenalBox.style.height = "128px";
-                facedownArsenalBox.style.zIndex = "100300";
-                facedownArsenalBox.style.pointerEvents = "none";
+                facedownArsenalBox.style.zIndex = "110010";
+                facedownArsenalBox.style.pointerEvents = "auto";
                 facedownArsenalBox.style.backgroundColor = "rgba(0, 255, 0, 0)";
                 facedownArsenalBox.style.display        = "flex";
                 facedownArsenalBox.style.justifyContent = "flex-end";
@@ -1946,8 +1943,8 @@
                 reserveBox.style.top = "376px";
                 reserveBox.style.width = "292px";
                 reserveBox.style.height = "275px";
-                reserveBox.style.zIndex = "100300";
-                reserveBox.style.pointerEvents = "none";
+                reserveBox.style.zIndex = "100900";
+                reserveBox.style.pointerEvents = "auto";
                 reserveBox.style.backgroundColor = "rgba(255, 0, 0, 0)";
                 reserveBox.style.display        = "flex";
                 reserveBox.style.justifyContent = "flex-start";
@@ -3548,68 +3545,6 @@
                     cardButton.onclick = () => {
                         const parentCard = cardButton.closest(".card");
                         const cardId = parentCard?.dataset.cardId;
-                        
-                        if (window.sacrificeMode && window.validSacrificeIds?.has(cardId)) {
-                            const cardData = findCardByUidOrId(cardId);
-                            if (!cardData) return;
-
-                            const confirmBox = document.createElement("div");
-                            Object.assign(confirmBox.style, {
-                                position: "fixed",
-                                top: "50%",
-                                left: "50%",
-                                transform: "translate(-50%, -50%)",
-                                padding: "20px",
-                                backgroundColor: "#333",
-                                color: "white",
-                                border: "2px solid white",
-                                borderRadius: "10px",
-                                zIndex: "120001",
-                                textAlign: "center",
-                                boxShadow: "0 0 10px black"
-                            });
-
-                            confirmBox.innerHTML = `
-                                <p>Sacrifice <strong>${cardData.name}</strong>?</p>
-                                <button id="confirm-sacrifice">Confirm</button>
-                                <button id="cancel-sacrifice" style="margin-left: 10px;">Cancel</button>
-                            `;
-
-                            document.body.appendChild(confirmBox);
-
-                            document.getElementById("confirm-sacrifice").onclick = () => {
-                                document.body.removeChild(confirmBox);
-                                const matchingCard = validCards.find(c => String(c.id) === String(cardId) || String(c.id) === String(cardId));
-                                if (matchingCard) {
-                                    selected.push(matchingCard);
-                                    parentCard.classList.add("selected");
-
-                                    if (selected.length === amount) {
-                                        for (const c of validCards) {
-                                            const el2 = document.getElementById(`card-${c.id}`);
-                                            if (el2) {
-                                                el2.classList.remove("selectable", "selected");
-                                                el2.onclick = null;
-                                            }
-                                        }
-                                        document.body.removeChild(confirmBox);
-                                        document.body.removeChild(banner);
-                                        window.sacrificeMode = false;
-                                        window.validSacrificeIds = null;
-                                        resolve(selected);
-                                    }
-                                }
-                            };
-
-                            document.getElementById("cancel-sacrifice").onclick = () => {
-                                document.body.removeChild(confirmBox);
-                            };
-
-                            return; // ⛔ Block normal behavior
-                        }
-
-                        // Existing behavior follows below...
-                        //console.log("Card button clicked");
 
                         if (!cardId) {
                             console.warn("❌ No cardId found on clicked card");
@@ -3775,6 +3710,115 @@
             return data;
         }
 
+        function updateCounterOverlay(cardElement, cardData) {
+            // 1️⃣  normalise the backing number
+            if (typeof cardData.counters !== "number") cardData.counters = 0;
+
+            // 2️⃣  find or create the overlay badge
+            let badge = cardElement.querySelector(".counter-overlay");
+            if (!badge && cardData.counters > 0) {
+                badge = document.createElement("div");
+                badge.className = "counter-overlay";
+                Object.assign(badge.style, {
+                position:       "absolute",
+                top:            "50%",
+                left:           "50%",
+                transform:      "translate(-50%, -50%)",
+                width:          "64px",
+                height:         "64px",
+                borderRadius:   "50%",
+                background:     "#000",
+                color:          "#fff",
+                fontSize:       "2.6em",
+                fontWeight:     "600",
+                display:        "flex",
+                alignItems:     "center",
+                justifyContent: "center",
+                pointerEvents:  "none",
+                zIndex:         "125000"
+                });
+                cardElement.appendChild(badge);
+            }
+
+            // 3️⃣  update or remove it
+            if (badge) {
+                if (cardData.counters > 0) {
+                badge.textContent = cardData.counters;
+                } else {
+                badge.remove();
+                }
+            }
+        }
+
+        /* show a small modal, update cardData + DOM on “Save” */
+        function showChangeStatsPrompt(cardElement, cardData) {
+            // ── overlay ─────────────────────────────────────────────────
+            const overlay = document.createElement("div");
+            Object.assign(overlay.style, {
+                position: "fixed", inset: 0, background: "rgba(0,0,0,.6)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                zIndex: 200000
+            });
+
+            // ── popup panel ─────────────────────────────────────────────
+            const panel = document.createElement("div");
+            panel.style.cssText =
+                "background:#222;color:#fff;padding:20px 24px;border-radius:8px;" +
+                "box-shadow:0 0 10px #000;font-size:18px;width:260px;text-align:center";
+
+            panel.innerHTML = `
+                <h3 style="margin-top:0;font-size:1.1em">Change Stats</h3>
+                <label>Damage<br>
+                <input id="dmg" type="number" min="0" step="1"
+                        style="width:70px" value="${cardData.damage}">
+                </label><br><br>
+                <label>Life<br>
+                <input id="life" type="number" min="0" step="1"
+                        style="width:70px" value="${cardData.life}">
+                </label><br><br>
+                <label>Threshold<br>
+                <input id="th" type="number" min="0" step="1"
+                        style="width:70px" value="${cardData.damageThreshold}">
+                </label><br><br>
+                <button id="saveStats" style="margin-right:10px">Save</button>
+                <button id="cancelStats">Cancel</button>
+            `;
+            overlay.appendChild(panel);
+            document.body.appendChild(overlay);
+
+            // helper: refresh the numbers shown on the visible card
+            function refreshCardFace(cardEl, card) {
+                const dmg  = cardEl.querySelector(".damage");
+                const life = cardEl.querySelector(".life");
+                let  thr   = cardEl.querySelector(".damageThreshold");
+
+                if (!thr) {
+                    // card was rendered before the always-show change → build the cell now
+                    thr = document.createElement("div");
+                    thr.className = "damageThreshold";
+                    cardEl.querySelector(".bottom-bar").appendChild(thr);
+                }
+
+                if (dmg)  dmg.textContent  = card.damage;
+                if (life) life.textContent = card.life;
+                thr.textContent = card.damageThreshold;   // card.threshold if you renamed it
+            }
+
+            // ── button wiring ───────────────────────────────────────────
+            panel.querySelector("#saveStats").onclick = () => {
+                cardData.damage           = +panel.querySelector("#dmg").value || 0;
+                cardData.life             = +panel.querySelector("#life").value || 0;
+                cardData.damageThreshold  = +panel.querySelector("#th").value || 0;
+                refreshCardFace(cardElement, cardData);
+                addGameLogEntry(
+                `${cardData.name}'s stats set to ` +
+                `${cardData.damage}/${cardData.life} (${cardData.damageThreshold}).`);
+                overlay.remove();
+            };
+
+            panel.querySelector("#cancelStats").onclick = () => overlay.remove();
+        }
+
         async function attachHoverMenu(cardElement, cardData) {
             // don’t re-attach if already done
             if (cardElement.dataset.hoverMenuAttached) return;
@@ -3810,9 +3854,22 @@
                 cardElement.dataset.zone     = toZoneKey;
                 cardElement.dataset.facedown = faceDown ? "true" : "false";
 
+                const oldMenu = cardElement.querySelector(".hover-menu");
+                if (oldMenu) oldMenu.remove();               // throw away the Hand menu
+                delete cardElement.dataset.hoverMenuAttached; // let attachHoverMenu run again
+                attachHoverMenu(cardElement, moved);         // moved == card’s live data object
+
                 // 2) Apply visual transforms
                 //    always shrink
                 const transforms = ["scale(0.3)"];
+                if (
+                    !faceDown ||               // we’re no longer face-down
+                    (containerId !== "playerFaceDownBox" &&
+                    containerId !== "playerFaceDownArsenalBox")
+                ) {
+                    const straySleeve = cardElement.querySelector(".sleeve-overlay");
+                    if (straySleeve) straySleeve.remove();
+                }
                 //    if facedown-champion, also rotate + sleeve overlay
                 if (containerId === "playerFaceDownBox") {
                     transforms.push("rotate(90deg)");
@@ -3906,15 +3963,6 @@
                 "To Reserve","To Tomb","To Void",
                 "To Top of Deck","To Bottom of Deck"
                 ];
-            } else if (/Champion|Arsenal|Reserve|FaceDown/.test(zone)) {
-                opts.push("Flip");
-                if (!zone.includes("Champion"))
-                opts.push("To Champion (Face-Up)","To Champion (Face-Down)");
-                if (!zone.includes("Arsenal"))
-                opts.push("To Arsenal (Face-Up)","To Arsenal (Face-Down)");
-                if (zone !== "Reserve")
-                opts.push("To Reserve");
-                opts.push("To Hand","To Tomb","To Void","To Top of Deck","To Bottom of Deck","Change Control");
             } else if (zone === "Tomb" || zone === "Void") {
                 hoverMenu.style.fontSize = "3em";
                 opts = [
@@ -3942,6 +3990,88 @@
                     "To Champion (Face-Down)",
                     "To Arsenal (Face-Up)",
                     "To Arsenal (Face-Down)"
+                ];
+            } else if (zone === "Zone (Champion)") {
+                hoverMenu.style.fontSize = "3.5em";
+                opts = [
+                    "Add 1 Counter",
+                    "Add 5 Counters",
+                    "Remove 1 Counter",
+                    "Remove All Counters",
+                    "To Hand",
+                    "To Tomb",
+                    "To Void",
+                    "To Top of Deck",
+                    "To Bottom of Deck",
+                    "To Reserve",
+                    "To Champion (Face-Down)",
+                    "To Arsenal (Face-Up)",
+                    "To Arsenal (Face-Down)",
+                    "Change Stats",
+                    "Declare",
+                    "Attack"
+                ];
+            } else if (zone === "Zone (Arsenal)") {
+                hoverMenu.style.fontSize = "3.5em";
+                opts = [
+                    "Add 1 Counter",
+                    "Add 5 Counters",
+                    "Remove 1 Counter",
+                    "Remove All Counters",
+                    "To Hand",
+                    "To Tomb",
+                    "To Void",
+                    "To Top of Deck",
+                    "To Bottom of Deck",
+                    "To Reserve",
+                    "To Champion (Face-Up)",
+                    "To Champion (Face-Down)",
+                    "To Arsenal (Face-Down)",
+                    "Declare"
+                ];
+            } else if (zone === "Reserve") {
+                hoverMenu.style.fontSize = "3.5em";
+                opts = [
+                    "Add 1 Counter",
+                    "Add 5 Counters",
+                    "Remove 1 Counter",
+                    "Remove All Counters",
+                    "To Hand",
+                    "To Tomb",
+                    "To Void",
+                    "To Top of Deck",
+                    "To Bottom of Deck",
+                    "To Champion (Face-Up)",
+                    "To Champion (Face-Down)",
+                    "To Arsenal (Face-Up)",
+                    "To Arsenal (Face-Down)",
+                    "Declare"
+                ];
+            } else if (zone === "FaceDownZone") {
+                hoverMenu.style.fontSize = "3.5em";
+                opts = [
+                    "To Hand",
+                    "To Tomb",
+                    "To Void",
+                    "To Top of Deck",
+                    "To Bottom of Deck",
+                    "To Reserve",
+                    "To Champion (Face-Up)",
+                    "To Arsenal (Face-Up)",
+                    "To Arsenal (Face-Down)"
+                ];
+            } else if (zone === "FaceDownArsenalZone") {
+                hoverMenu.style.fontSize = "3.5em";
+                opts = [
+                    "To Hand",
+                    "To Tomb",
+                    "To Void",
+                    "To Top of Deck",
+                    "To Bottom of Deck",
+                    "To Reserve",
+                    "To Champion (Face-Up)",
+                    "To Champion (Face-Down)",
+                    "To Arsenal (Face-Up)"
                 ];
             }
 
@@ -3990,6 +4120,49 @@
                     case "Reveal":
                         addGameLogEntry(`${cardData.name} was revealed from the ${zone}.`);
                         break;
+                    case "Change Stats":
+                        showChangeStatsPrompt(cardElement, cardData);
+                        break;
+                    case "Attack": {
+                        // ⚔️  play the swing animation on the visible card element
+                        cardElement.classList.remove("swing-animation");   // reset if it was still on
+                        void cardElement.offsetWidth;                      // force reflow so restart works
+                        cardElement.classList.add("swing-animation");
+
+                        // when the half-second animation ends, remove the class
+                        const onEnd = () => {
+                            cardElement.classList.remove("swing-animation");
+                            cardElement.removeEventListener("animationend", onEnd);
+                        };
+                        cardElement.addEventListener("animationend", onEnd);
+
+                        addGameLogEntry(`${cardData.name} declared an attack.`);
+                        break;
+                    }
+                    case "Add 1 Counter": {
+                        cardData.counters = (cardData.counters || 0) + 1;
+                        updateCounterOverlay(cardElement, cardData);
+                        addGameLogEntry(`${cardData.name} gains 1 counter (now ${cardData.counters}).`);
+                        break;
+                    }
+                    case "Add 5 Counters": {
+                        cardData.counters = (cardData.counters || 0) + 5;
+                        updateCounterOverlay(cardElement, cardData);
+                        addGameLogEntry(`${cardData.name} gains 5 counters (now ${cardData.counters}).`);
+                        break;
+                    }
+                    case "Remove 1 Counter": {
+                        cardData.counters = Math.max(0, (cardData.counters || 0) - 1);
+                        updateCounterOverlay(cardElement, cardData);
+                        addGameLogEntry(`${cardData.name} loses 1 counter (now ${cardData.counters}).`);
+                        break;
+                    }
+                    case "Remove All Counters": {
+                        cardData.counters = 0;
+                        updateCounterOverlay(cardElement, cardData);
+                        addGameLogEntry(`${cardData.name} loses all counters.`);
+                        break;
+                    }
                     default:
                         console.warn("Unhandled action:", text);
                 }
@@ -4001,15 +4174,53 @@
 
             cardElement.appendChild(hoverMenu);
 
-            // show/hide on hover
-            cardElement.addEventListener("mouseenter", () => {
+            Object.assign(hoverMenu.style, {
+            /* start 10 px lower & invisible */
+            transform:  "translate(-50%, 10px)",
+            opacity:    "0",
+            transition: "transform 150ms ease, opacity 150ms ease"
+            });
+
+            let hideTimer;
+
+            function showMenu() {
+                clearTimeout(hideTimer);
                 cardElement.style.zIndex = "120000";
-                hoverMenu.style.display = "flex";
-            });
-            cardElement.addEventListener("mouseleave", () => {
-                hoverMenu.style.display = "none";
-                cardElement.style.zIndex  = "";
-            });
+
+                /* 1️⃣  Put the element back, *still* at start values            */
+                hoverMenu.style.display   = "flex";
+                hoverMenu.style.transform = "translate(-50%, 10px)";
+                hoverMenu.style.opacity   = "0";
+
+                /* 2️⃣  Force a paint so the browser recognises those values     */
+                /*     (reading a layout property does the trick)                */
+                void hoverMenu.offsetWidth;
+
+                /* 3️⃣  Now move to the end values; transition kicks in          */
+                hoverMenu.style.transform = "translate(-50%, 0)";
+                hoverMenu.style.opacity   = "1";
+            }
+
+            function startHideCountdown() { hideTimer = setTimeout(hideMenu, 150); }
+
+            function hideMenu() {
+                /* slide back down & fade out */
+                hoverMenu.style.transform = "translate(-50%, 10px)";
+                hoverMenu.style.opacity   = "0";
+
+                /* wait for the transition to finish, then fully hide */
+                setTimeout(() => {
+                    hoverMenu.style.display = "none";
+                    cardElement.style.zIndex = "";
+                }, 150);
+            }
+
+            /* ─── event wiring ────────────────────────────────────────── */
+            cardElement.addEventListener("mouseenter", showMenu);
+            cardElement.addEventListener("mouseleave", startHideCountdown);
+
+            hoverMenu.addEventListener("mouseenter", () => clearTimeout(hideTimer));
+            hoverMenu.addEventListener("mouseleave", hideMenu);
         }
 
         function applyHoverMenus() {
@@ -4458,77 +4669,6 @@
                         wrapperDiv.style.outline = "0px dashed red"; // visually show wrapperDiv box
                         wrapperDiv.style.cursor = "pointer";
 
-                    if (window.sacrificeMode && window.validSacrificeIds?.has(String(cardData.id))) {
-                        const button = document.createElement("div");
-                            button.className = "card-button";
-                            button.style.position = "absolute";
-                            button.style.top = "0";
-                            button.style.left = "0";
-                            button.style.width = "100%";
-                            button.style.height = "100%";
-                            button.style.backgroundColor = "rgba(255,0,0,0)";
-                            button.style.display = "flex";
-                            button.style.alignItems = "center";
-                            button.style.justifyContent = "center";
-                            button.style.fontWeight = "bold";
-                            button.style.cursor = "pointer";
-                            button.style.zIndex = "999";
-                        wrapperDiv.appendChild(button);
-
-                        button.onclick = (e) => {
-                            e.stopPropagation();
-                            e.preventDefault();
-                            //console.log("🔥 Sacrifice button clicked (facedown):", cardData.id);
-                            // Try to find the actual card object from gameState zones (not just from 'cards' array)
-                            const fullCard = (gameState[username]["Zone (Champion)"] || [])
-                                .concat(gameState[username]["FaceDownZone"] || [])
-                                .find(c => String(c.id) === String(cardData.id));
-
-                            if (!fullCard) {
-                                console.error("❌ Could not find full card in gameState for sacrifice.");
-                                return;
-                            }
-
-                            // Create confirmation popup
-                            const confirmBox = document.createElement("div");
-                            Object.assign(confirmBox.style, {
-                                position: "fixed",
-                                top: "50%",
-                                left: "50%",
-                                transform: "translate(-50%, -50%)",
-                                padding: "20px",
-                                backgroundColor: "#333",
-                                color: "white",
-                                border: "2px solid white",
-                                borderRadius: "10px",
-                                zIndex: "120001",
-                                textAlign: "center",
-                                boxShadow: "0 0 10px black"
-                            });
-
-                            confirmBox.innerHTML = `
-                                <p>Are you sure you want to sacrifice <strong>${fullCard.name}</strong>?</p>
-                                <button id="confirm-sacrifice">Confirm</button>
-                                <button id="cancel-sacrifice" style="margin-left: 10px;">Cancel</button>
-                            `;
-
-                            document.body.appendChild(confirmBox);
-
-                            // Confirm button handler
-                            document.getElementById("confirm-sacrifice").onclick = () => {
-                                document.body.removeChild(confirmBox);
-                                if (window.__pendingSacrificeSelection) {
-                                    window.__pendingSacrificeSelection(fullCard);
-                                }
-                            };
-
-                            // Cancel button handler
-                            document.getElementById("cancel-sacrifice").onclick = () => {
-                                document.body.removeChild(confirmBox);
-                            };
-                        };
-                    }
-
                     element = document.createElement("div");
                         element.style.width = "100%"; // fill wrapper
                         element.style.height = "100%";
@@ -4546,6 +4686,12 @@
 
                     wrapperDiv.addEventListener("mouseenter", () => {
                         //console.log("mouseenter fired on face-down card", cardData.id);
+                        if (containerId === "playerFaceDownBox"){
+                            rendered.dataset.zone = "Zone (Champion)";
+                        }
+                        if (containerId === "playerFaceDownArsenalBox"){
+                            rendered.dataset.zone = "Zone (Arsenal)";
+                        }
                         const realCard = cards.find(c => String(c.id) === String(cardData.id));
                         if (!realCard) {
                             console.error(`❌ Hover preview: No card found with ID '${cardData.id}'. Check if the card exists in 'cards' array.`);
@@ -4569,93 +4715,47 @@
 
                         scaled.appendChild(preview);
                     });
-
-                    const canFlip =
-                        gameState.turn.currentPlayer === username &&
-                        gameState.turn.count > cardData.setTurn &&
-                        (gameState.turn.currentPhase === "Main 1" || gameState.turn.currentPhase === "Main 2");
-
-                    if (canFlip) {
-                        wrapperDiv.style.outline = "4px solid yellow"; // ✨ glow
-                        wrapperDiv.style.boxShadow = "0 0 12px 4px yellow";
-                        wrapperDiv.style.cursor = "pointer";
-                        wrapperDiv.style.transition = "box-shadow 0.3s ease-in-out, outline 0.3s ease-in-out";
-
-                        wrapperDiv.onclick = () => {
-                            const fullCard = cards.find(c => String(c.id) === String(cardData.id));
-                            if (!fullCard) {
-                                fullCard = tokens.find(t => String(t.id) === String(cardData.id));
-                            }
-                            if (!fullCard) {
-                                console.error("❌ Could not find full card data for flip prompt.");
-                                return;
-                            }
-
-                            // Create popup
-                            const popup = document.createElement("div");
-                            Object.assign(popup.style, {
-                                position: "fixed",
-                                top: "50%",
-                                left: "50%",
-                                transform: "translate(-50%, -50%)",
-                                backgroundColor: "rgba(0, 0, 0, 0.9)",
-                                color: "white",
-                                padding: "20px 30px",
-                                border: "2px solid white",
-                                borderRadius: "10px",
-                                zIndex: "120000",
-                                textAlign: "center",
-                                boxShadow: "0 0 15px black",
-                            });
-
-                            popup.innerHTML = `
-                                <p style="font-size: 1.2em; margin-bottom: 10px;">Flip <strong>${fullCard.name}</strong> face-up?</p>
-                                <button id="confirm-flip" style="margin: 5px; padding: 6px 12px; font-size: 1em;">Flip</button>
-                                <button id="cancel-flip" style="margin: 5px; padding: 6px 12px; font-size: 1em;">Cancel</button>
-                            `;
-
-                            document.body.appendChild(popup);
-
-                            document.getElementById("confirm-flip").onclick = () => {
-                                popup.remove();
-                                flipCard(cardData.id);
-                            };
-
-                            document.getElementById("cancel-flip").onclick = () => {
-                                popup.remove();
-                            };
-                        };
-                    }
                     wrapperDiv.appendChild(element);
                     container.appendChild(wrapperDiv);
                 } else {
                     const enriched = { ...card, ...cardData };
                     const rendered = renderCard(enriched);
+                    if (containerId === "playerChampionsBox"){
+                        rendered.dataset.zone = "Zone (Champion)";
+                    }
+                    if (containerId === "playerArsenalBox"){
+                        rendered.dataset.zone = "Zone (Arsenal)";
+                    }
+                    if (containerId === "playerReserveBox"){
+                        rendered.dataset.zone = "Reserve";
+                    }
+                    rendered._card        = cardData;
+                    attachHoverMenu(rendered, cardData);
 
                     const wrapper = document.createElement("div");
-                    wrapper.style.display = "inline-block";
-                    wrapper.style.position = "relative";
-                    wrapper.style.marginLeft = "-44px";
-                    wrapper.style.marginTop = "323px";
-                    wrapper.style.transformOrigin = "top center";
-                    wrapper.style.transform = "scale(0.3)";
-                    wrapper.style.pointerEvents = "auto";
+                        wrapper.style.display = "inline-block";
+                        wrapper.style.position = "relative";
+                        wrapper.style.marginLeft = "-44px";
+                        wrapper.style.marginTop = "323px";
+                        wrapper.style.transformOrigin = "top center";
+                        wrapper.style.transform = "scale(0.3)";
+                        wrapper.style.pointerEvents = "auto";
+                        wrapper.style.zIndex           = "200000";
 
                     // Hover-to-preview logic
                     wrapper.addEventListener("mouseenter", () => {
                         const scaled = document.querySelector("#viewing-window .scaled-card");
-                        scaled.innerHTML = "";
+                            scaled.innerHTML = "";
 
                         const preview = renderCard(enriched);
-                        preview.style.width = "240px";
-                        preview.style.height = "420px";
-                        preview.style.transform = "scale(1.2)";
-                        preview.style.marginLeft = "-15%";
-                        preview.style.marginTop = "7%";
+                            preview.style.width = "240px";
+                            preview.style.height = "420px";
+                            preview.style.transform = "scale(1.2)";
+                            preview.style.marginLeft = "-15%";
+                            preview.style.marginTop = "7%";
 
                         scaled.appendChild(preview);
                     });
-
                     wrapper.appendChild(rendered);
                     container.appendChild(wrapper);
                 }
