@@ -200,9 +200,9 @@
             });
 
             // Broadcast to both:
-            socket.on('turnOrderChoice', ({ chooser, turn }) => {
-                appendSystem(`${chooser} chose to go ${turn === 'first' ? 'First' : 'Second'}.`);
-                if (!deckSelectEl.value || !otherDeck) return;
+            socket.on('turnOrderChoice', ({ chooser, turn, totem, totemText, otherUser }) => {
+                    appendSystem(`${chooser} chose to go ${turn === 'first' ? 'First' : 'Second'}.`);
+                    if (!deckSelectEl.value || !otherDeck) return;
 
                 // gather params
                 const params = new URLSearchParams({
