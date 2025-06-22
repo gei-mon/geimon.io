@@ -152,13 +152,10 @@ io.on('connection', (socket) => {
     socket.to(user.roomId).emit('typing', { username: user.username, isTyping });
   });
 
-  socket.on('playerReady', ({ username, ready }) => {
-    // look up this socket’s room
+  socket.on('playerReady', ({ username, ready, deck }) => {
     const user = userMap.get(socket.id);
     if (!user) return;
-    const { roomId } = user;
-    // broadcast to everyone in that room
-    io.to(roomId).emit('playerReady', { username, ready });
+    io.to(user.roomId).emit('playerReady', { username, ready, deck });
   });
 
   socket.on('rpsChoice', ({ username, choice }) => {
