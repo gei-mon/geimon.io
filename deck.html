@@ -565,76 +565,75 @@
     });
 
     function renderSearchResults(cardsToRender = sortedCards) {
-    searchResults.innerHTML = "";
-    const nameQuery = searchInput.value.trim().toLowerCase();
-    const textQuery = textSearchInput.value.trim().toLowerCase();
-    const tagQuery = (document.getElementById("tag-search-input").value || "").trim().toLowerCase();
-    const conditionQuery = conditionInput.value.trim().toLowerCase();
-    const costQuery = costInput.value.trim().toLowerCase();
+        searchResults.innerHTML = "";
+        const nameQuery = searchInput.value.trim().toLowerCase();
+        const textQuery = textSearchInput.value.trim().toLowerCase();
+        const tagQuery = (document.getElementById("tag-search-input").value || "").trim().toLowerCase();
+        const conditionQuery = conditionInput.value.trim().toLowerCase();
+        const costQuery = costInput.value.trim().toLowerCase();
 
-    const filteredCards = sortedCards.filter(card => {
-        const nameMatches = !nameQuery || card.name.toLowerCase().includes(nameQuery);
-        const textMatches = !textQuery || card.abilities.some(ability => ability.text.toLowerCase().includes(textQuery));
-        const tagMatches = !tagQuery || (card.tags && card.tags.some(tag => tag.toLowerCase().includes(tagQuery)));
-        const conditionMatches = !conditionQuery || (card.condition && card.condition.toLowerCase().includes(conditionQuery));
-        const costMatches = !costQuery || (String(card.cost || "").toLowerCase().includes(costQuery));
-        const typeMatches = !selectedCardType || card.type === selectedCardType;
-        const champMatches =
-            selectedCardType !== "Champion" || selectedChampionTier === "All" ||
-            (selectedChampionTier === "Basic" && card.cost === "Basic") ||
-            (selectedChampionTier === "Elite" && card.cost !== "Basic");
-        return nameMatches && textMatches && tagMatches && conditionMatches && costMatches && typeMatches && champMatches;
-    });
+        const filteredCards = sortedCards.filter(card => {
+            const nameMatches = !nameQuery || card.name.toLowerCase().includes(nameQuery);
+            const textMatches = !textQuery || card.abilities.some(ability => ability.text.toLowerCase().includes(textQuery));
+            const tagMatches = !tagQuery || (card.tags && card.tags.some(tag => tag.toLowerCase().includes(tagQuery)));
+            const conditionMatches = !conditionQuery || (card.condition && card.condition.toLowerCase().includes(conditionQuery));
+            const costMatches = !costQuery || (String(card.cost || "").toLowerCase().includes(costQuery));
+            const typeMatches = !selectedCardType || card.type === selectedCardType;
+            const champMatches =
+                selectedCardType !== "Champion" || selectedChampionTier === "All" ||
+                (selectedChampionTier === "Basic" && card.cost === "Basic") ||
+                (selectedChampionTier === "Elite" && card.cost !== "Basic");
+            return nameMatches && textMatches && tagMatches && conditionMatches && costMatches && typeMatches && champMatches;
+        });
 
+        const cardCountElement = document.getElementById("card-count");
+        cardCountElement.textContent = `Cards Displayed: ${filteredCards.length}`;
 
-    const cardCountElement = document.getElementById("card-count");
-    cardCountElement.textContent = `Cards Displayed: ${filteredCards.length}`;
+        filteredCards.forEach(card => {
+            const cardElement = renderCard(card, searchResults);
 
-    filteredCards.forEach(card => {
-        const cardElement = renderCard(card, searchResults);
+            if (cardElement) {
+                const button = cardElement.querySelector(".card-button"); // ✅ override existing one
 
-        if (cardElement) {
-            const button = cardElement.querySelector(".card-button"); // ✅ override existing one
+            if (button) {
+                const isInDeck = cardIds.some(id => String(id) === String(card.id));
 
-if (button) {
-    const isInDeck = cardIds.some(id => String(id) === String(card.id));
+                if (isInDeck) {
+                    button.disabled = true;
+                    button.style.cursor = "not-allowed";
+                    button.title = "Already in deck";
+                } else {
+                    button.disabled = false;
+                    button.style.cursor = "pointer";
+                    button.title = "Add card to deck";
+                    button.onclick = () => addCardToDeck(card.id); // ✅ override default handler
+                    button._originalHandler = button.onclick;      // optional, but preserves pattern
+                }
+            }
 
-    if (isInDeck) {
-        button.disabled = true;
-        button.style.cursor = "not-allowed";
-        button.title = "Already in deck";
-    } else {
-        button.disabled = false;
-        button.style.cursor = "pointer";
-        button.title = "Add card to deck";
-        button.onclick = () => addCardToDeck(card.id); // ✅ override default handler
-        button._originalHandler = button.onclick;      // optional, but preserves pattern
+                cardElement.appendChild(button);
+
+                cardElement.addEventListener("mouseenter", () => {
+                    scaledCardContainer.innerHTML = "";
+                    const clone = cardElement.cloneNode(true);
+                    clone.querySelectorAll(".card-button").forEach(btn => btn.remove());
+                    clone.classList.add("scaled-card");
+                    scaledCardContainer.appendChild(clone);
+                    setTimeout(() => {
+                        scaledCardContainer.querySelectorAll(".card-button").forEach(btn => btn.remove());
+                    }, 0);
+                    addTooltipListeners(clone);
+                    addTokenTooltipListeners(clone);
+                    lastHoveredCard = clone;
+                });
+
+                cardElement.addEventListener("mouseleave", () => {
+                    lastHoveredCard = null;
+                });
+            }
+        });
     }
-}
-
-            cardElement.appendChild(button);
-
-            cardElement.addEventListener("mouseenter", () => {
-                scaledCardContainer.innerHTML = "";
-                const clone = cardElement.cloneNode(true);
-                clone.querySelectorAll(".card-button").forEach(btn => btn.remove());
-                clone.classList.add("scaled-card");
-                scaledCardContainer.appendChild(clone);
-                setTimeout(() => {
-                    scaledCardContainer.querySelectorAll(".card-button").forEach(btn => btn.remove());
-                }, 0);
-                addTooltipListeners(clone);
-                addTokenTooltipListeners(clone);
-                lastHoveredCard = clone;
-            });
-
-            cardElement.addEventListener("mouseleave", () => {
-                lastHoveredCard = null;
-            });
-        }
-    });
-}
-      renderSearchResults();
+        renderSearchResults();
     });
 
     function adjustCardSpacing() {
