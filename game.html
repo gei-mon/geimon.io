@@ -2499,7 +2499,7 @@
                 popup.style.backgroundColor = "rgba(0, 0, 0, 0.85)";
                 popup.style.border = "3px solid white";
                 popup.style.borderRadius = "12px";
-                popup.style.zIndex = "100900";
+                popup.style.zIndex = "120900";
                 popup.style.display = "flex";
                 popup.style.flexDirection = "column";
                 popup.style.alignItems = "center";
@@ -2682,7 +2682,7 @@
                 popup.style.backgroundColor = "rgba(0, 0, 0, 0.85)";
                 popup.style.border = "3px solid white";
                 popup.style.borderRadius = "12px";
-                popup.style.zIndex = "100900";
+                popup.style.zIndex = "120900";
                 popup.style.display = "flex";
                 popup.style.flexDirection = "column";
                 popup.style.alignItems = "center";
@@ -2875,7 +2875,7 @@
                 popup.style.backgroundColor = "rgba(0, 0, 0, 0.85)";
                 popup.style.border = "3px solid white";
                 popup.style.borderRadius = "12px";
-                popup.style.zIndex = "100900";
+                popup.style.zIndex = "120900";
                 popup.style.display = "flex";
                 popup.style.flexDirection = "column";
                 popup.style.alignItems = "center";
@@ -3061,7 +3061,7 @@
                 popup.style.backgroundColor = "rgba(0, 0, 0, 0.85)";
                 popup.style.border = "3px solid white";
                 popup.style.borderRadius = "12px";
-                popup.style.zIndex = "100900";
+                popup.style.zIndex = "120900";
                 popup.style.display = "flex";
                 popup.style.flexDirection = "column";
                 popup.style.alignItems = "center";
@@ -3819,6 +3819,10 @@
             panel.querySelector("#cancelStats").onclick = () => overlay.remove();
         }
 
+        function getOpponentUsername(username, gameState) {
+            return Object.keys(gameState).find(name => name !== username);
+        }
+
         async function attachHoverMenu(cardElement, cardData) {
             // don’t re-attach if already done
             if (cardElement.dataset.hoverMenuAttached) return;
@@ -3957,7 +3961,7 @@
 
             if (zone === "Hand") {
                 opts = [
-                "Reveal","Declare",
+                "Change Control","Reveal","Declare",
                 "To Champion (Face-Up)","To Champion (Face-Down)",
                 "To Arsenal (Face-Up)","To Arsenal (Face-Down)",
                 "To Reserve","To Tomb","To Void",
@@ -3994,6 +3998,7 @@
             } else if (zone === "Zone (Champion)") {
                 hoverMenu.style.fontSize = "3.5em";
                 opts = [
+                    "Change Control",
                     "Add 1 Counter",
                     "Add 5 Counters",
                     "Remove 1 Counter",
@@ -4014,6 +4019,7 @@
             } else if (zone === "Zone (Arsenal)") {
                 hoverMenu.style.fontSize = "3.5em";
                 opts = [
+                    "Change Control",
                     "Add 1 Counter",
                     "Add 5 Counters",
                     "Remove 1 Counter",
@@ -4032,6 +4038,7 @@
             } else if (zone === "Reserve") {
                 hoverMenu.style.fontSize = "3.5em";
                 opts = [
+                    "Change Control",
                     "Add 1 Counter",
                     "Add 5 Counters",
                     "Remove 1 Counter",
@@ -4050,6 +4057,7 @@
             } else if (zone === "FaceDownZone") {
                 hoverMenu.style.fontSize = "3.5em";
                 opts = [
+                    "Change Control",
                     "To Hand",
                     "To Tomb",
                     "To Void",
@@ -4063,6 +4071,7 @@
             } else if (zone === "FaceDownArsenalZone") {
                 hoverMenu.style.fontSize = "3.5em";
                 opts = [
+                    "Change Control",
                     "To Hand",
                     "To Tomb",
                     "To Void",
@@ -4123,6 +4132,53 @@
                     case "Change Stats":
                         showChangeStatsPrompt(cardElement, cardData);
                         break;
+                    case "Change Control": {
+                        const owner      = username;
+                        const opponent   = getOpponentUsername(username, gameState);
+                        const srcZone    = zone;                 // where the card is now
+                        const destZone   = srcZone;              // same zone name on opp. side
+
+                        /* 1️⃣  Move the data object between player arrays */
+                        const srcArr  = gameState[owner][srcZone];
+                        const idx     = srcArr.findIndex(c => String(c.id) === String(cardData.id));
+                        if (idx === -1) { console.warn("Card not found in source zone"); break; }
+                        const [moved] = srcArr.splice(idx, 1);
+                        gameState[opponent][destZone].push(moved);
+
+                        /* 2️⃣  Figure out the proper container ID on the opponent’s board */
+                        const containerMap = {
+                            "Zone (Champion)":         "opponentChampionsBox",
+                            "Zone (Arsenal)":          "opponentArsenalBox",
+                            "Reserve":                 "opponentReserveBox",
+                            "FaceDownZone":            "opponentFaceDownBox",
+                            "FaceDownArsenalZone":     "opponentFaceDownArsenalBox",
+                            "Tomb":                    "opponentTombBox",
+                            "Void":                    "opponentVoidBox",
+                            "Deck":                    "opponentDeckBox"       // rare but legal
+                        };
+                        const oppContainerId = containerMap[srcZone];
+                        if (!oppContainerId) {
+                            console.warn("No opponent container mapped for", srcZone);
+                            break;
+                        }
+
+                        /* 3️⃣  Park the DOM element in that container */
+                        const oppContainer = document.getElementById(oppContainerId);
+                        if (oppContainer) oppContainer.appendChild(cardElement);
+
+                        /* 4️⃣  Clean old menu + attach a fresh one for the new controller */
+                        const oldMenu = cardElement.querySelector(".hover-menu");
+                        if (oldMenu) oldMenu.remove();
+                        delete cardElement.dataset.hoverMenuAttached;
+                        cardElement.dataset.zone = destZone;
+                        attachHoverMenu(cardElement, moved);     // menu now shows *their* options
+
+                        /* 5️⃣  Persist & log */
+                        await sendZoneUpdate([srcZone, destZone]);
+                        addGameLogEntry(`${cardData.name} changes control to the opponent.`);
+
+                        break;
+                    }
                     case "Attack": {
                         // ⚔️  play the swing animation on the visible card element
                         cardElement.classList.remove("swing-animation");   // reset if it was still on
