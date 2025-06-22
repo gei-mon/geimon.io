@@ -200,18 +200,18 @@
 
             // Broadcast to both:
             socket.on('turnOrderChoice', ({ chooser, turn }) => {
-                appendSystem(`🎴 ${chooser} chooses to go ${turn === 'first' ? 'First' : 'Second'}.`);
+                appendSystem(`🎴 ${chooser} chose to go ${turn === 'first' ? 'First' : 'Second'}.`);
                 // ← hook your existing game‐start here
             });
 
             socket.on('playerReady', ({ username: who, ready }) => {
                 console.log('Received playerReady ←', who, ready);
-                appendSystem(`🚩 ${who} is ${ready ? 'ready' : 'not ready'}.`);
+                appendSystem(`${who} is ${ready ? 'ready' : 'not ready'}.`);
                 if (who !== username) readyOther = ready;
 
                 // both ready? show RPS
                 if (readyMe && readyOther) {
-                    appendSystem('🎲 Both ready! Choose Rock, Paper, or Scissors.');
+                    appendSystem('Both ready! Choose Rock, Paper, or Scissors.');
                     rpsContainer.style.display = 'flex';
                 } else {
                     // someone unreadied mid‐flow → hide RPS & reset

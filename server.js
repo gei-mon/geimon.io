@@ -173,6 +173,13 @@ io.on('connection', (socket) => {
     io.to(user.roomId).emit('rpsResult', { winner, choices });
   });
 
+  socket.on('turnOrderChoice', ({ chooser, turn }) => {
+    const user = userMap.get(socket.id);
+    if (!user) return;
+    const { roomId } = user;
+    io.to(roomId).emit('turnOrderChoice', { chooser, turn });
+  });
+
   socket.on('disconnect', () => {
     const user = userMap.get(socket.id);
     if (!user) return;
