@@ -35,34 +35,31 @@
             <p style="font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: -8px;"><game-title>Geimon!</game-title></p>
             <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: -28px;">Single-Game Placeholder, Temp Chat Space</h2>
         </div>
-        <!-- <button class="button buttonEvenSmaller" onclick="window.close()">Close</button>-->
-    <div style="max-width: 600px;">
-    <div id="roomId">Connecting…</div>
-    <div id="chatWith" style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Roomed with: …</div>
-    <div id="readyContainer">
-      <select id="deckSelect">
-        <option value="" disabled selected>Select Deck</option>
-      </select>
-      <button id="readyBtn">Ready?</button>
-    </div>
-    <div id="messages"></div>
-    <div id="typing"></div>
-    <input id="input" style="font-size: 1em; border: 4px solid #000000;" autocomplete="off" placeholder="Type your message…" />
-    <button class="button buttonEvenSmallerCrimped" id="send">Send</button>
-    <div id="rpsContainer" style="display:none; gap:12px; margin-top:16px;">
-    <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/rock.png"
-        alt="Rock" data-choice="rock" style="width:80px;height:80px;cursor:pointer;">
-    <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/paper.png"
-        alt="Paper" data-choice="paper" style="width:80px;height:80px;cursor:pointer;">
-    <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/scissors.png"
-        alt="Scissors" data-choice="scissors" style="width:80px;height:80px;cursor:pointer;">
-    </div>
-
-    <div id="turnChoiceContainer" style="display:none; gap:12px; margin-top:16px;">
-        <button data-turn="first" style="padding:8px 16px;cursor:pointer;">Go First</button>
-        <button data-turn="second" style="padding:8px 16px;cursor:pointer;">Go Second</button>
-    </div>
-
+        <div style="max-width: 600px;">
+        <div id="roomId">Connecting…</div>
+        <div id="chatWith" style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Roomed with: …</div>
+        <div id="readyContainer">
+        <select id="deckSelect">
+            <option value="" disabled selected>Select Deck</option>
+        </select>
+        <button id="readyBtn">Ready?</button>
+        </div>
+        <div id="messages"></div>
+        <div id="typing"></div>
+        <input id="input" style="font-size: 1em; border: 4px solid #000000;" autocomplete="off" placeholder="Type your message…" />
+        <button class="button buttonEvenSmallerCrimped" id="send">Send</button>
+        <div id="rpsContainer" style="display:none; gap:12px; margin-top:16px;">
+            <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/rock.png"
+                alt="Rock" data-choice="rock" style="width:80px;height:80px;cursor:pointer;">
+            <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/paper.png"
+                alt="Paper" data-choice="paper" style="width:80px;height:80px;cursor:pointer;">
+            <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/scissors.png"
+                alt="Scissors" data-choice="scissors" style="width:80px;height:80px;cursor:pointer;">
+        </div>
+        <div id="turnChoiceContainer" style="display:none; gap:12px; margin-top:16px;">
+            <button data-turn="first" style="padding:8px 16px;cursor:pointer;">Go First</button>
+            <button data-turn="second" style="padding:8px 16px;cursor:pointer;">Go Second</button>
+        </div>
 
     <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
     <script>
@@ -206,6 +203,7 @@
             });
 
             socket.on('playerReady', ({ username: who, ready }) => {
+                console.log('Received playerReady ←', who, ready);
                 appendSystem(`🚩 ${who} is ${ready ? 'ready' : 'not ready'}.`);
                 if (who !== username) readyOther = ready;
 
@@ -287,6 +285,7 @@
                     readyBtnEl.style.backgroundColor = 'lightgreen';
                     deckSelectEl.disabled          = true;
                     readyMe = isReady;
+                    console.log('Emitting playerReady →', isReady);
                     socket.emit('playerReady', { username, ready: isReady });
                 } else {
                     readyBtnEl.innerText           = 'Ready?';

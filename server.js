@@ -152,6 +152,10 @@ io.on('connection', (socket) => {
     socket.to(user.roomId).emit('typing', { username: user.username, isTyping });
   });
 
+  socket.on('playerReady', ({ username, ready }) => {
+    io.to(roomId).emit('playerReady', { username, ready });
+  });
+
   socket.on('disconnect', () => {
     const user = userMap.get(socket.id);
     if (!user) return;
