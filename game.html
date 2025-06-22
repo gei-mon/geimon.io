@@ -4010,7 +4010,7 @@
          * Turn the TOP of the card to face the viewport center,
          * move it straight in, then return—while preserving ANY existing transforms.
          */
-        async function animateAttackToCenter(cardEl, duration = 800) {
+        function animateAttackToCenter(cardEl, duration = 800) {
             // 1) Remember any inline transform you’d set before
             const origInline = cardEl.style.transform || '';
 
