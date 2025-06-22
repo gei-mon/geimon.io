@@ -909,3 +909,8 @@ background-color: #29c7bd;
 #viewing-window .counter-overlay {
   display: none !important;
 }
+
+.target-highlight{
+    outline: 4px solid red !important;      /* hard red ring            */
+    box-shadow: 0 0 12px red !important;    /* soft glow for visibility */
+}

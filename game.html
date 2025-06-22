@@ -816,6 +816,8 @@
                     }
                 });
 
+                socket.on('card_targeted', ({ cardId }) => toggleTargetRing(cardId));
+
                 socket.on("phase_change", ({ phase, username: actingUser }) => {
                     // Update which phase is marked as active
                     updatePhaseDisplay(phase);
@@ -1441,6 +1443,30 @@
             });
 
             setTimeout(() => cardImg.remove(), 1000);
+        }
+
+        function toggleTargetRing(cardId){
+            document
+            .querySelectorAll(`[data-card-id="${cardId}"]`)
+            .forEach(el => el.classList.toggle('target-highlight'));
+        }
+
+        function wrapCardButton(btn){
+            if (btn.dataset.targetWrapperAttached) return; // already done
+            btn.dataset.targetWrapperAttached = "true";
+
+            const original = btn._originalHandler || btn.onclick;   // keep whatever was there
+            btn._originalHandler = original;                       // (defensive)
+
+            btn.onclick = function(e){
+            if (typeof original === "function") original.call(this, e); // old behaviour first
+
+            const cardId = this.closest(".card")?.dataset.cardId;
+            if (!cardId) return;
+
+            toggleTargetRing(cardId);               // instant local feedback
+            socket.emit("toggle_target", { gameId, cardId }); // sync to server
+            };
         }
 
         function renderOpponentHand() {

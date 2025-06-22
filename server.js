@@ -134,6 +134,11 @@ io.on('connection', (socket) => {
       }
   });
 
+  socket.on('toggle_target', ({ gameId, cardId }) => {
+    // simply rebroadcast to everyone in the same game room
+    io.to(gameId).emit('card_targeted', { cardId });
+  });
+
   socket.on('message', (text) => {
     const user = userMap.get(socket.id);
     if (!user) return;
