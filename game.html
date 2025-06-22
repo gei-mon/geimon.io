@@ -2363,11 +2363,11 @@
                     body: JSON.stringify({
                         gameId,
                         playerUsername: username,
-                        opponentUsername: isSinglePlayer ? "Bot" : otherPlayerName,
+                        opponentUsername: isSinglePlayerParam ? "Bot" : opponentUsernameParam,
                         playerDeck,
                         opponentDeck,
-                        isSinglePlayer: true,
-                        goesFirst: choice === "first" ? username : (isSinglePlayer ? "Bot" : otherPlayerName),
+                        isSinglePlayer: isSinglePlayerParam,
+                        goesFirst: choice === "first" ? username : (isSinglePlayerParam ? "Bot" : opponentUsernameParam),
                         totem: selectedTotem
                     })
                 });
@@ -2439,7 +2439,9 @@
                 opponentName = isSinglePlayer ? "Bot" : opponentUsernameParam;
                 console.log("Creating game for", username, "vs", isSinglePlayer ? "Bot" : opponentUsernameParam);
                 document.getElementById("opponent-name").textContent = opponentUsernameParam;
+                console.log("Opponent Name: ", opponentUsernameParam);
                 document.getElementById("opponent-life").textContent = gameState[opponentUsernameParam].life;
+                console.log("Opponent Life: ", gameState[opponentUsernameParam].life);
 
                 if (!gameReady) {
                     await fetchGameStateFromServer();
