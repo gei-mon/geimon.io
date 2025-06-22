@@ -479,6 +479,7 @@
             import { addTooltipListeners, addTokenTooltipListeners } from "./utils/cardRenderer.js";
             import { keywords } from "./data/keywords.js";
             import { rules } from "./data/rules.js";
+            import { animateCardMove } from "./utils/animationUtils.js";
 
             const allCards = [...cards, ...tokens];
 
@@ -2021,7 +2022,7 @@
 
             const championBox = document.getElementById("playerChampionsBox");
                 championBox.style.position = "fixed";
-                championBox.style.left = "875px";
+                championBox.style.left = "700px";
                 championBox.style.top = "525px";
                 championBox.style.width = "525px";
                 championBox.style.height = "128px";
@@ -2051,7 +2052,7 @@
 
             const arsenalBox = document.getElementById("playerArsenalBox");
                 arsenalBox.style.position = "fixed";
-                arsenalBox.style.left = "875px";
+                arsenalBox.style.left = "700px";
                 arsenalBox.style.top = "675px";
                 arsenalBox.style.width = "525px";
                 arsenalBox.style.height = "128px";
@@ -4066,10 +4067,20 @@
 
                 cardElement.style.transform       = transforms.join(" ");
                 cardElement.style.transformOrigin = "center center";
-                cardElement.style.marginLeft = "";
+                //cardElement.style.marginLeft = "";
 
                 // 3) Persist change to server
+                animateCardMove(
+                    cardData.id,    // the card’s id
+                    fromZone,       // e.g. "Zone (Champion)"
+                    toZoneKey,      // e.g. "Tomb"
+                    {
+                        isOpponent: false,  // set true if moving an opponent’s card
+                        duration: 500       // match your other animations
+                    }
+                );
                 await sendZoneUpdate([fromZone, toZoneKey]);
+                await updateLocalFromGameState();
 
                 // 4) Re-render zones so spacing/layout updates
                 renderDrawnCards();
