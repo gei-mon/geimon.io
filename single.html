@@ -200,7 +200,7 @@
 
             // Broadcast to both:
             socket.on('turnOrderChoice', ({ chooser, turn }) => {
-                appendSystem(`🎴 ${chooser} chose to go ${turn === 'first' ? 'First' : 'Second'}.`);
+                appendSystem(`${chooser} chose to go ${turn === 'first' ? 'First' : 'Second'}.`);
                 // ← hook your existing game‐start here
             });
 
