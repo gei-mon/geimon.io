@@ -2991,8 +2991,8 @@
         }, 6500);
 
         function updateOpponentTombText() {
-            if (gameState && gameState[opponentUsernameParam]) {
-                const count = gameState[opponentUsernameParam].Tomb.length;
+            if (gameState && gameState[opponentName]) {
+                const count = gameState[opponentName].Tomb.length;
                 opponentTombText.innerText = `${count}`;
                 opponentTombText.style.position = "absolute";
                 opponentTombText.style.zIndex = "110000";
@@ -3055,7 +3055,7 @@
                 title.style.textAlign = "center";
             popup.appendChild(title);
 
-            const tombCards = gameState?.[opponentUsernameParam]?.Tomb || [];
+            const tombCards = gameState?.[opponentName]?.Tomb || [];
 
             if (tombCards.length === 0) {
                 const none = document.createElement("div");
@@ -3185,8 +3185,8 @@
         }, 6500);
 
         function updateOpponentVoidText() {
-            if (gameState && gameState[opponentUsernameParam]) {
-                const count = gameState[opponentUsernameParam].Void.length;
+            if (gameState && gameState[opponentName]) {
+                const count = gameState[opponentName].Void.length;
                 opponentVoidText.innerText = `${count}`;
                 opponentVoidText.style.zIndex = "110000";
             }
@@ -3554,7 +3554,7 @@
 
             opponentDeckBox.addEventListener("mouseenter", () => {
                 const opponentName = gameState.player1 === username ? gameState.player2 : gameState.player1;
-                const opponentDeck = gameState?.[opponentUsernameParam]?.Deck || [];
+                const opponentDeck = gameState?.[opponentName]?.Deck || [];
                 textSpan.innerText = `${opponentDeck.length}`;
             });
 
