@@ -2225,6 +2225,7 @@
                         board.appendChild(opponentProfilePic);
                     });
                 } else {
+                    const opponentData = await fetchOpponentData(otherPlayerName);
                     const opponentProfilePic = document.createElement("div");
                     Object.assign(opponentProfilePic.style, {
                         position:"absolute", left:"1960px", top:"70px",
