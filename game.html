@@ -479,7 +479,6 @@
             import { addTooltipListeners, addTokenTooltipListeners } from "./utils/cardRenderer.js";
             import { keywords } from "./data/keywords.js";
             import { rules } from "./data/rules.js";
-            import { animateCardMove } from "./utils/animationUtils.js";
 
             const allCards = [...cards, ...tokens];
 
@@ -1409,6 +1408,17 @@
             };
         };
 
+        function animateDeckShuffle(isOpponent = false) {
+            // Determine which deck box to animate
+            const deckBox = isOpponent ? opponentDeckBox : playerDeckBox;
+            // Add the shuffle-animation class to trigger the CSS keyframes
+            deckBox.classList.add('shuffle-animation');
+            // Remove the class once the animation completes
+            deckBox.addEventListener('animationend', () => {
+                deckBox.classList.remove('shuffle-animation');
+            }, { once: true });
+        }
+
         function animateCardDraw(isOpponent = false) {
             const cardImg = document.createElement("img");
             const sleeveUrl = isOpponent
@@ -2022,7 +2032,7 @@
 
             const championBox = document.getElementById("playerChampionsBox");
                 championBox.style.position = "fixed";
-                championBox.style.left = "700px";
+                championBox.style.left = "875px";
                 championBox.style.top = "525px";
                 championBox.style.width = "525px";
                 championBox.style.height = "128px";
@@ -2052,7 +2062,7 @@
 
             const arsenalBox = document.getElementById("playerArsenalBox");
                 arsenalBox.style.position = "fixed";
-                arsenalBox.style.left = "700px";
+                arsenalBox.style.left = "875px";
                 arsenalBox.style.top = "675px";
                 arsenalBox.style.width = "525px";
                 arsenalBox.style.height = "128px";
@@ -3967,6 +3977,89 @@
             return Object.keys(gameState).find(name => name !== username);
         }
 
+        async function animateBlock(cardElement, isFaceDown = false) {
+            // Capture original transform (style or computed)
+            const computedStyle = window.getComputedStyle(cardElement);
+            const originalTransform = computedStyle.transform === 'none' ? '' : computedStyle.transform;
+
+            // Calculate deltas to move card to center
+            const rect = cardElement.getBoundingClientRect();
+            const deltaX = window.innerWidth/2 - (rect.left + rect.width/2);
+            const deltaY = window.innerHeight/2 - (rect.top + rect.height/2);
+
+            // Build the transform strings
+            const move = isFaceDown ? `translate(${deltaX*0.9}px, ${-deltaY*20}px)` : `translate(${deltaX*5}px, ${deltaY*3}px)`;
+            const rotate = isFaceDown ? `` : ` rotate(90deg)`;
+            const targetTransform = `${originalTransform} ${move}${rotate}`.trim();
+
+            // Animate to center (and rotate if not face-down)
+            cardElement.style.transition = 'transform 0.3s ease-in-out';
+            cardElement.style.transform = targetTransform;
+            await new Promise(res => setTimeout(res, 400));
+
+            // Animate back to original
+            cardElement.style.transition = 'transform 0.3s ease-in-out';
+            cardElement.style.transform = originalTransform;
+            await new Promise(res => setTimeout(res, 400));
+
+            // Cleanup transition property
+            cardElement.style.transition = '';
+        }
+
+        /**
+         * Turn the TOP of the card to face the viewport center,
+         * move it straight in, then return—while preserving ANY existing transforms.
+         */
+        async function animateAttackToCenter(cardEl, duration = 800) {
+            // 1) Remember any inline transform you’d set before
+            const origInline = cardEl.style.transform || '';
+
+            // 2) Grab the true “start” matrix (including CSS rules, scale, etc.)
+            const cs = getComputedStyle(cardEl).transform;
+            const startMatrix = (cs === 'none') ? '' : cs;
+
+            // 3) Figure out where “center of viewport” is relative to the card’s center
+            const r  = cardEl.getBoundingClientRect();
+            const cx = r.left + r.width  / 2;
+            const cy = r.top  + r.height / 2;
+            const vx = window.innerWidth  / 2;
+            const vy = window.innerHeight / 2;
+            const dx = vx - cx;
+            const dy = vy - cy;
+
+            // 4) Compute the angle so the TOP edge points at (dx,dy)
+            //    atan2(dy,dx) = angle of that vector; +90° makes the top face it
+            const angle = Math.atan2(dy, dx) * 180/Math.PI + 90;
+
+            // 5) Build our “pivot” translations
+            const px = r.width  / 2;  // bottom-center X in local coords
+            const py = r.height;      // bottom-center Y
+            const toPivot   = `translate(${ px * 20 }px, ${ -px * 10 }px)`;
+            const fromPivot = `translate(${-px }px, ${-py }px)`;
+
+            // 6) Keyframes: start → tilt only → tilt+move → back
+            const kf = [
+                { transform: startMatrix },
+                { transform: `${startMatrix} ${toPivot} rotate(${angle}deg) ${fromPivot}` },
+                { transform: `${startMatrix} ${toPivot} rotate(${angle}deg) ${fromPivot} translate(${dx}px, ${dy}px)` },
+                { transform: startMatrix }
+            ];
+
+            // 7) Fire it with the Web Animations API
+            const anim = cardEl.animate(kf, {
+                duration,
+                easing:   'ease-in-out',
+                fill:     'forwards'
+            });
+
+            // 8) When done, restore your original inline transform
+            anim.finished.then(() => {
+                cardEl.style.transform = origInline;
+            });
+
+            return anim;
+        }
+
         async function attachHoverMenu(cardElement, cardData) {
             // don’t re-attach if already done
             if (cardElement.dataset.hoverMenuAttached) return;
@@ -4067,20 +4160,10 @@
 
                 cardElement.style.transform       = transforms.join(" ");
                 cardElement.style.transformOrigin = "center center";
-                //cardElement.style.marginLeft = "";
+                cardElement.style.marginLeft = "";
 
                 // 3) Persist change to server
-                animateCardMove(
-                    cardData.id,    // the card’s id
-                    fromZone,       // e.g. "Zone (Champion)"
-                    toZoneKey,      // e.g. "Tomb"
-                    {
-                        isOpponent: false,  // set true if moving an opponent’s card
-                        duration: 500       // match your other animations
-                    }
-                );
                 await sendZoneUpdate([fromZone, toZoneKey]);
-                await updateLocalFromGameState();
 
                 // 4) Re-render zones so spacing/layout updates
                 renderDrawnCards();
@@ -4088,6 +4171,9 @@
                 renderLatestVoidCard();
             }
             // ────────────────────────────────────────────────────────────────────────────
+
+            const zone = cardElement.dataset.zone;
+            const isFaceDown = (zone === "FaceDownZone");
 
             // build the hover menu
             const hoverMenu = document.createElement("div");
@@ -4108,10 +4194,19 @@
                 fontSize:       "2em",
                 whiteSpace:     "nowrap",
                 boxShadow:      "0 0 5px black",
+
+                // position + transform: choose based on face-down
+                bottom:   isFaceDown ? ""       : "100%",
+                left:     isFaceDown ? ""       : "50%",
+                top:      isFaceDown ? "50%"    : "",
+                right:    isFaceDown ? "100%"   : "",
+                transform: isFaceDown
+                    ? "translateY(-50%) scale(1) rotate(-90deg)"
+                    : "translateX(-50%) scale(1)",
+                marginBottom:   "0em",
             });
 
             // decide options based on current zone
-            const zone = cardElement.dataset.zone;
             let opts = [];
 
             if (zone === "Hand") {
@@ -4169,7 +4264,8 @@
                     "To Arsenal (Face-Down)",
                     "Change Stats",
                     "Declare",
-                    "Attack"
+                    "Attack",
+                    "Block"
                 ];
             } else if (zone === "Zone (Arsenal)") {
                 hoverMenu.style.fontSize = "3.5em";
@@ -4221,7 +4317,8 @@
                     "To Reserve",
                     "To Champion (Face-Up)",
                     "To Arsenal (Face-Up)",
-                    "To Arsenal (Face-Down)"
+                    "To Arsenal (Face-Down)",
+                    "Block"
                 ];
             } else if (zone === "FaceDownArsenalZone") {
                 hoverMenu.style.fontSize = "3.5em";
@@ -4335,19 +4432,18 @@
                         break;
                     }
                     case "Attack": {
-                        // ⚔️  play the swing animation on the visible card element
-                        cardElement.classList.remove("swing-animation");   // reset if it was still on
-                        void cardElement.offsetWidth;                      // force reflow so restart works
-                        cardElement.classList.add("swing-animation");
+                        animateAttackToCenter(cardElement, 800)
+                            .finished.then(() => {
+                            addGameLogEntry(`${cardData.name} declared an attack.`);
+                            });
+                        break;
+                    }
+                    case "Block": {
+                        // Determine if blocking from face-down zone
+                        const isFaceDown = cardData.boardState === 'FaceDownZone';
+                        await animateBlock(cardElement, isFaceDown);
 
-                        // when the half-second animation ends, remove the class
-                        const onEnd = () => {
-                            cardElement.classList.remove("swing-animation");
-                            cardElement.removeEventListener("animationend", onEnd);
-                        };
-                        cardElement.addEventListener("animationend", onEnd);
-
-                        addGameLogEntry(`${cardData.name} declared an attack.`);
+                        addGameLogEntry(`${cardData.name} was declared as a blocker.`);
                         break;
                     }
                     case "Add 1 Counter": {
@@ -4386,10 +4482,11 @@
             cardElement.appendChild(hoverMenu);
 
             Object.assign(hoverMenu.style, {
-            /* start 10 px lower & invisible */
-            transform:  "translate(-50%, 10px)",
-            opacity:    "0",
-            transition: "transform 150ms ease, opacity 150ms ease"
+                transform:  isFaceDown
+                    ? "translateX(10px) translateY(-50%) rotate(-90deg)"
+                    : "translate(-50%, 10px)",
+                opacity:    "0",
+                transition: "transform 150ms ease, opacity 150ms ease"
             });
 
             let hideTimer;
@@ -4397,39 +4494,36 @@
             function showMenu() {
                 clearTimeout(hideTimer);
                 cardElement.style.zIndex = "120000";
+                hoverMenu.style.display = "flex";
 
-                /* 1️⃣  Put the element back, *still* at start values            */
-                hoverMenu.style.display   = "flex";
-                hoverMenu.style.transform = "translate(-50%, 10px)";
-                hoverMenu.style.opacity   = "0";
-
-                /* 2️⃣  Force a paint so the browser recognises those values     */
-                /*     (reading a layout property does the trick)                */
+                // force initial state
                 void hoverMenu.offsetWidth;
-
-                /* 3️⃣  Now move to the end values; transition kicks in          */
-                hoverMenu.style.transform = "translate(-50%, 0)";
-                hoverMenu.style.opacity   = "1";
+                if (isFaceDown) {
+                    hoverMenu.style.transform = "translateX(0) translateY(-50%) rotate(-90deg)";
+                    hoverMenu.style.opacity   = "1";
+                } else {
+                    hoverMenu.style.transform = "translate(-50%, 0)";
+                    hoverMenu.style.opacity   = "1";
+                }
             }
 
-            function startHideCountdown() { hideTimer = setTimeout(hideMenu, 150); }
-
+            // 5) hide menu
             function hideMenu() {
-                /* slide back down & fade out */
-                hoverMenu.style.transform = "translate(-50%, 10px)";
-                hoverMenu.style.opacity   = "0";
-
-                /* wait for the transition to finish, then fully hide */
+                if (isFaceDown) {
+                    hoverMenu.style.transform = "translateX(10px) translateY(-50%) rotate(-90deg)";
+                } else {
+                    hoverMenu.style.transform = "translate(-50%, 10px)";
+                }
+                hoverMenu.style.opacity = "0";
                 setTimeout(() => {
-                    hoverMenu.style.display = "none";
-                    cardElement.style.zIndex = "";
+                    hoverMenu.style.display   = "none";
+                    cardElement.style.zIndex  = "";
                 }, 150);
             }
 
-            /* ─── event wiring ────────────────────────────────────────── */
+            // 6) event wiring
             cardElement.addEventListener("mouseenter", showMenu);
-            cardElement.addEventListener("mouseleave", startHideCountdown);
-
+            cardElement.addEventListener("mouseleave", () => hideTimer = setTimeout(hideMenu, 150));
             hoverMenu.addEventListener("mouseenter", () => clearTimeout(hideTimer));
             hoverMenu.addEventListener("mouseleave", hideMenu);
         }
@@ -4595,17 +4689,18 @@
 
                 switch (text) {
                     case "Shuffle":
-                    // Fisher–Yates shuffle (exists in your code)
-                    shuffleDeck(gameState[username].Deck);
-                    await sendZoneUpdate(["Deck"]);       // persist new deck order
-                    updateDeckText();                     // update count display
-                    addGameLogEntry(`${username} shuffled their deck.`);
-                    break;
+                        animateDeckShuffle();
+                        // Fisher–Yates shuffle (exists in your code)
+                        shuffleDeck(gameState[username].Deck);
+                        await sendZoneUpdate(["Deck"]);       // persist new deck order
+                        updateDeckText();                     // update count display
+                        addGameLogEntry(`${username} shuffled their deck.`);
+                        break;
 
                     case "Draw":
-                    // use your drawCards helper :contentReference[oaicite:2]{index=2}
-                    await drawCards(gameState[username].Deck, 1);
-                    break;
+                        // use your drawCards helper :contentReference[oaicite:2]{index=2}
+                        await drawCards(gameState[username].Deck, 1);
+                        break;
 
                     case "Mill":
                     if (gameState[username].Deck.length === 0) return;

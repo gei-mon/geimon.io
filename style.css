@@ -816,7 +816,7 @@ background-color: #29c7bd;
 }
 
 .swing-animation {
-  animation: swingOut 0.5s ease-in-out forwards;
+  animation: swingOut 1s ease-in-out forwards;
 }
 
 @keyframes swingOut {
@@ -924,4 +924,15 @@ background-color: #29c7bd;
 .target-highlight{
     outline: 8px solid red !important;      /* hard red ring            */
     box-shadow: 0 0 12px red !important;    /* soft glow for visibility */
+}
+
+@keyframes deckShuffle {
+  0%   { transform: translateX(0) rotate(0deg); }
+  25%  { transform: translateX(-8px) rotate(-2deg); }
+  50%  { transform: translateX(8px)  rotate(2deg); }
+  75%  { transform: translateX(-8px) rotate(-2deg); }
+  100% { transform: translateX(0) rotate(0deg); }
+}
+.shuffle-animation {
+  animation: deckShuffle 0.6s ease-in-out;
 }
