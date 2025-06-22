@@ -200,7 +200,7 @@
             });
 
             // Broadcast to both:
-            socket.on('turnOrderChoice', ({ chooser, turn, totem, totemText, otherUser }) => {
+            socket.on('turnOrderChoice', ({ chooser, turn, totem, totemText }) => {
                     appendSystem(`${chooser} chose to go ${turn === 'first' ? 'First' : 'Second'}.`);
                     if (!deckSelectEl.value || !otherDeck) return;
 
