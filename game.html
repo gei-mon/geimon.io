@@ -466,9 +466,9 @@
             opacity: 0;
             transition: opacity 1s ease-in-out;
             ">
-            <img id="token-btn" src="/Public/Images/Site Assets/token.png" style="width: 40px; cursor: pointer;" title="Create Token">
-            <img id="dice-btn" src="/Public/Images/Site Assets/dice.png" style="width: 40px; cursor: pointer;" title="Roll 1d6">
-            <img id="coin-btn" src="/Public/Images/Site Assets/heads.png" style="width: 40px; cursor: pointer;" title="Flip Coin">
+            <img id="token-btn" src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/token.png" style="width: 40px; cursor: pointer;" title="Create Token">
+            <img id="dice-btn" src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/dice.png" style="width: 40px; cursor: pointer;" title="Roll 1d6">
+            <img id="coin-btn" src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/heads.png" style="width: 40px; cursor: pointer;" title="Flip Coin">
         </div>
 
         <script type="module">
@@ -2311,6 +2311,11 @@
                 }
             }
 
+            const playerUsernameParam   = params.get("playerUsername")     || "You";
+            const opponentUsernameParam = params.get("opponent")           || (params.get("isSinglePlayer")==="true" ? "Bot" : "Opponent");
+            const gameTypeParam         = params.get("gameType")           || "single";
+            const isSinglePlayerParam   = params.get("isSinglePlayer")==="true";
+            const turnOrderParam        = params.get("turnOrder")          || "first";
             // Fetch deck and start game
             const playerDeckName = new URLSearchParams(window.location.search).get("playerDeck");
             const opponentDeckName = new URLSearchParams(window.location.search).get("opponentDeck");
@@ -2341,9 +2346,14 @@
             document.getElementById("game-log-placeholder").appendChild(totemTextElement);
 
             await getUsername();
+            document.getElementById("player-name")  .textContent = playerUsernameParam;
+            document.getElementById("opponent-name").textContent = opponentUsernameParam;
+            //const totemSpan = document.getElementById("totem");
+            //if (totemSpan) {
+                //totemSpan.textContent = `${selectedTotem}: ${selectedTotemText}`;
+            //}
 
-            const otherPlayerName = params.get("opponent") || "Unknown_Opponent";
-            opponentName = isSinglePlayer ? "Bot" : otherPlayerName;
+            opponentName = opponentUsernameParam;
 
             if (playerDeckResult.success && opponentDeckResult.success) {
                 await fetch('https://geimon-app-833627ba44e0.herokuapp.com/startGame', {
