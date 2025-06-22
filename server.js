@@ -647,38 +647,36 @@ app.get("/getDeck", async (req, res) => {
 });
 
 app.post('/getDeckCards', async (req, res) => {
-    const sessionId = req.cookies.session;
-    const username = sessions[sessionId];
-    const { deck_name } = req.body;
+  try {
+    const sessionId    = req.cookies.session;
+    const sessionUser  = sessions[sessionId];
+    const { deck_name, owner } = req.body;
 
-    if (!username) {
-        return res.status(401).json({ success: false, message: 'User not authenticated' });
+    // if no explicit owner is given, fall back to the logged-in user
+    const lookupUser = owner || sessionUser;
+
+    // fetch the deck for whichever user we’re looking up
+    const { data: deck, error } = await supabase
+      .from('decks')
+      .select('card_ids')
+      .eq('user_name', lookupUser)
+      .eq('deck_name', deck_name)
+      .single();
+
+    if (error) throw error;
+    if (!deck) {
+      return res.status(404).json({ success: false, message: 'Deck not found' });
     }
 
-    if (!deck_name) {
-        return res.status(400).json({ success: false, message: 'Deck name is required' });
-    }
-
-    try {
-        const { data: deck, error } = await supabase
-            .from('decks')
-            .select('card_ids')
-            .eq('user_name', username)
-            .eq('deck_name', deck_name)
-            .single();
-
-        if (error) throw error;
-
-        if (!deck) {
-            return res.status(404).json({ success: false, message: 'Deck not found' });
-        }
-
-        res.status(200).json({ success: true, card_ids: deck.card_ids });
-    } catch (err) {
-        console.error('Error fetching deck cards:', err);
-        res.status(500).json({ success: false, message: 'Error fetching deck cards', error: err.message });
-    }
+    return res.json({ success: true, card_ids: deck.card_ids });
+  } catch (err) {
+    console.error('Error fetching deck cards:', err);
+    return res
+      .status(500)
+      .json({ success: false, message: 'Error fetching deck cards', error: err.message });
+  }
 });
+
 
 app.post('/renameDeck', async (req, res) => {
   const sessionId = req.cookies.session;

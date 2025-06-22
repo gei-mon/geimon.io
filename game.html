@@ -2316,12 +2316,13 @@
             const gameTypeParam         = params.get("gameType")           || "single";
             const isSinglePlayerParam   = params.get("isSinglePlayer")==="true";
             const turnOrderParam        = params.get("turnOrder")          || "first";
+            const opponentOwner         = opponentUsernameParam;
             // Fetch deck and start game
             const playerDeckName = new URLSearchParams(window.location.search).get("playerDeck");
             const opponentDeckName = new URLSearchParams(window.location.search).get("opponentDeck");
 
             const playerDeckResult = await fetchDeckCards(playerDeckName);
-            const opponentDeckResult = await fetchDeckCards(opponentDeckName);
+            const opponentDeckResult = await fetchDeckCards(opponentDeckName, opponentOwner);
 
             if (!playerDeckResult.success || !opponentDeckResult.success) {
                 console.error("Deck fetch failed");
@@ -2437,11 +2438,11 @@
                 document.getElementById("player-life").textContent = gameState[username].life;
 
                 opponentName = isSinglePlayer ? "Bot" : opponentUsernameParam;
-                console.log("Creating game for", username, "vs", isSinglePlayer ? "Bot" : opponentUsernameParam);
+                //console.log("Creating game for", username, "vs", isSinglePlayer ? "Bot" : opponentUsernameParam);
                 document.getElementById("opponent-name").textContent = opponentUsernameParam;
-                console.log("Opponent Name: ", opponentUsernameParam);
+                //console.log("Opponent Name: ", opponentUsernameParam);
                 document.getElementById("opponent-life").textContent = gameState[opponentUsernameParam].life;
-                console.log("Opponent Life: ", gameState[opponentUsernameParam].life);
+                //console.log("Opponent Life: ", gameState[opponentUsernameParam].life);
 
                 if (!gameReady) {
                     await fetchGameStateFromServer();
@@ -2456,50 +2457,50 @@
             }
         }
 
-        async function fetchDeckCards(deckName) {
-        if (deckName === "Random") {
-            // Generate a random deck locally
-            const cardPool = cards.map(card => card.id); // Extract all IDs
-            const deckSize = Math.floor(Math.random() * 41) + 60; // Random between 60–100
-            const shuffled = cardPool.sort(() => 0.5 - Math.random());
-            const card_ids = shuffled.slice(0, deckSize);
+        async function fetchDeckCards(deckName, ownerUsername) {
+            if (deckName === "Random") {
+                // Generate a random deck locally
+                const cardPool = cards.map(card => card.id); // Extract all IDs
+                const deckSize = Math.floor(Math.random() * 41) + 60; // Random between 60–100
+                const shuffled = cardPool.sort(() => 0.5 - Math.random());
+                const card_ids = shuffled.slice(0, deckSize);
 
-            deckCount = `${card_ids.length}`;
-            if (playerDeckBox) {
-                //playerDeckBox.innerText = "Deck";
-            }
-
-            return { success: true, card_ids };
-        }
-
-        // Fallback to real server call for named decks
-        try {
-            const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/getDeckCards", {
-                method: "POST",
-                credentials: 'include',
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ deck_name: deckName })
-            });
-
-            const data = await response.json();
-
-            if (data.success) {
-                deckCount = `${data.card_ids.length}`;
+                deckCount = `${card_ids.length}`;
                 if (playerDeckBox) {
                     //playerDeckBox.innerText = "Deck";
                 }
-            } else {
-                deckCount = data.message;
+
+                return { success: true, card_ids };
             }
 
-            return data;
-        } catch (error) {
-            console.error("Error fetching deck cards:", error);
-            return { success: false, message: 'Fetch error' };
+            // Fallback to real server call for named decks
+            try {
+                const response = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/getDeckCards", {
+                    method: "POST",
+                    credentials: 'include',
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ deck_name: deckName, owner: ownerUsername })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    deckCount = `${data.card_ids.length}`;
+                    if (playerDeckBox) {
+                        //playerDeckBox.innerText = "Deck";
+                    }
+                } else {
+                    deckCount = data.message;
+                }
+
+                return data;
+            } catch (error) {
+                console.error("Error fetching deck cards:", error);
+                return { success: false, message: 'Fetch error' };
+            }
         }
-    }
 
     // Select the existing Player Deck box after it's created
     const playerDeckBox = document.createElement("div");
