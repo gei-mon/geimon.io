@@ -688,21 +688,6 @@
             for (const [zoneKey, domSuffix] of Object.entries(zoneMappings)) {
                 await renderCardZone( opponent[zoneKey], `opponent${domSuffix}Box` );
             }
-
-            if (gameState.turn.currentPlayer === username && gameState.turn.currentPhase === "Battle") {
-                const championZone = document.getElementById("playerChampionsBox");
-                championZone.querySelectorAll(".card-button").forEach(button => {
-                    button.onclick = async (event) => {
-                        event.stopPropagation();
-                        event.preventDefault();
-
-                        const parentCard = button.closest(".card");
-                        const cardId = parentCard?.dataset.cardId;
-                        if (!cardId) return;
-                        if (!cardData) return;
-                    };
-                });
-            }
         }
 
         async function getUsername() {
@@ -3921,8 +3906,7 @@
                 "To Reserve","To Tomb","To Void",
                 "To Top of Deck","To Bottom of Deck"
                 ];
-            }
-            else if (/Champion|Arsenal|Reserve|FaceDown/.test(zone)) {
+            } else if (/Champion|Arsenal|Reserve|FaceDown/.test(zone)) {
                 opts.push("Flip");
                 if (!zone.includes("Champion"))
                 opts.push("To Champion (Face-Up)","To Champion (Face-Down)");
@@ -3945,6 +3929,20 @@
                     "To Arsenal (Face-Down)",
                     "Declare"
                 ];
+            } else if (zone === "Deck") {
+                hoverMenu.style.fontSize = "3.5em";
+                opts = [
+                    "To Hand",
+                    "To Tomb",
+                    "To Void",
+                    "To Top of Deck",
+                    "To Bottom of Deck",
+                    "To Reserve",
+                    "To Champion (Face-Up)",
+                    "To Champion (Face-Down)",
+                    "To Arsenal (Face-Up)",
+                    "To Arsenal (Face-Down)"
+                ];
             }
 
             // populate buttons
@@ -3957,19 +3955,19 @@
                 hoverMenu.style.display = "none";
                 switch (text) {
                     case "To Champion (Face-Up)":
-                        await doMove("Hand",           "Zone (Champion)",         "playerChampionsBox",        false);
+                        await doMove(zone,           "Zone (Champion)",         "playerChampionsBox",        false);
                         break;
                     case "To Champion (Face-Down)":
-                        await doMove("Hand",           "FaceDownZone",            "playerFaceDownBox",         true);
+                        await doMove(zone,           "FaceDownZone",            "playerFaceDownBox",         true);
                         break;
                     case "To Arsenal (Face-Up)":
-                        await doMove("Hand",           "Zone (Arsenal)",          "playerArsenalBox",          false);
+                        await doMove(zone,           "Zone (Arsenal)",          "playerArsenalBox",          false);
                         break;
                     case "To Arsenal (Face-Down)":
-                        await doMove("Hand",           "FaceDownArsenalZone",     "playerFaceDownArsenalBox",  true);
+                        await doMove(zone,           "FaceDownArsenalZone",     "playerFaceDownArsenalBox",  true);
                         break;
                     case "To Reserve":
-                        await doMove("Hand", "Reserve", "playerReserveBox", false);
+                        await doMove(zone, "Reserve", "playerReserveBox", false);
                         break;
                     case "To Hand":
                         await doMove(zone, "Hand", "drawn-cards", false);
@@ -3981,10 +3979,10 @@
                         await doMove(zone, "Void", "playerVoidBox", false);
                         break;
                     case "To Top of Deck":
-                        await doMove("Hand", "Deck", "playerDeckBox", false, true);
+                        await doMove(zone, "Deck", "playerDeckBox", false, true);
                         break;
                     case "To Bottom of Deck":
-                        await doMove("Hand", "Deck", "playerDeckBox", false, false);
+                        await doMove(zone, "Deck", "playerDeckBox", false, false);
                         break;
                     case "Declare":
                         addGameLogEntry(`${cardData.name}'s effect was declared from the ${zone}.`);
@@ -4218,17 +4216,17 @@
                     const overlay = document.createElement("div");
                     Object.assign(overlay.style, {
                         position:        "fixed",
-                        top:             "50%",
+                        top:             "45%",
                         left:            "50%",
                         transform:       "translate(-50%, -50%)",
-                        width:           "55vw",
-                        height:          "70vh",
+                        width:           "60vw",
+                        height:          "80vh",
                         padding:         "0px 0px 0px",
                         backgroundColor: "rgba(0, 0, 0, 0.85)",
                         border:          "3px solid white",
                         borderRadius:    "12px",
                         zIndex:          "300000",
-                        overflow:        "hidden"
+                        overflow:        "visible"
                     });
 
                     const scrollArea = document.createElement("div");
@@ -4238,25 +4236,27 @@
                         left:           "0",
                         width:          "100%",
                         height:         "calc(100% - 60px)",
-                        overflowY:     "auto",
+                        overflowY:     "visible",
                         display:       "grid",
-                        gridTemplateColumns: "repeat(auto-fill, minmax(90px, 1fr))",
-                        gridAutoRows:        "150px",
+                        gridTemplateColumns: "repeat(auto-fill, minmax(85px, 1fr))",
+                        gridAutoRows:        "135px",
                         rowGap:              "4px",
                         columnGap:     "4px",
                         justifyContent:"start",
                         alignItems:    "start",
-                        padding:       "24px",
+                        padding:       "16px",
                     });
                     // add each deck card at 1/3 scale
                     gameState[username].Deck.forEach(cardObj => {
                         const card = cards.find(c => String(c.id) === String(cardObj.id));
                         const el = renderCard(card);
-                        el.style.transform = "scale(0.28)";
-                        el.style.transformOrigin  = "top left";
-                        el.style.margin = "0px";
-                        el.style.padding = "0";
-                        el.style.pointerEvents = "auto";
+                            el.style.transform = "scale(0.28)";
+                            el.style.transformOrigin  = "top left";
+                            el.style.margin = "0px";
+                            el.style.padding = "0";
+                            el.style.pointerEvents = "auto";
+                        el.dataset.zone = "Deck";
+                        attachHoverMenu(el, card);
                         // highlight on hover
                         el.addEventListener("mouseenter", () => {
                             // clear out previous preview
@@ -4265,11 +4265,11 @@
 
                             // render full-size clone
                             const big = renderCard(card);
-                            big.style.marginLeft = "-62px";
-                            big.style.marginTop = "-27px";
-                            big.style.transform     = "scale(1.2)";
-                            big.style.transformOrigin = "top left";
-                            big.style.pointerEvents = "none";
+                                big.style.marginLeft = "-62px";
+                                big.style.marginTop = "-27px";
+                                big.style.transform     = "scale(1.2)";
+                                big.style.transformOrigin = "top left";
+                                big.style.pointerEvents = "none";
 
                             scaled.appendChild(big);
                         });
