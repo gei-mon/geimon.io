@@ -822,7 +822,7 @@ app.post('/endGame', (req, res) => {
     }
 
     const winner = [game.player1, game.player2].find(name => name !== loser);
-    console.log(`Game ${gameId} ended. Loser: ${loser}. Winner: ${winner}. Reason: ${reason}`);
+    //console.log(`Game ${gameId} ended. Loser: ${loser}. Winner: ${winner}. Reason: ${reason}`);
 
     // Emit to clients
     io.to(gameId).emit("game_over", { loser, winner, reason });
@@ -867,7 +867,7 @@ async function performBotTurn(game, gameId) {
     if (game.turn.count === 1 && (phase === "Battle" || phase === "Main 2")) continue;
 
     game.turn.currentPhase = phase;
-    console.log(`🤖 Bot now in phase: ${phase}`);
+    //console.log(`🤖 Bot now in phase: ${phase}`);
     io.to(gameId).emit("phase_change", {
       phase,
       username: "Bot"
@@ -924,14 +924,14 @@ async function performBotTurn(game, gameId) {
           count: 1
         });
         let discardedCard = bot.Hand.splice(discardIndex, 1)[0];
-        console.log("📦 Discarding card:", discardedCard);
+        //console.log("📦 Discarding card:", discardedCard);
 
         if (!discardedCard.name) {
           console.warn("🔍 Discarded card missing name, trying to enrich with ID:", discardedCard.id);
           const fullData = cards.find(c => c.id === String(discardedCard.id));
           if (fullData) {
             discardedCard = { ...fullData, ...discardedCard };
-            console.log("✅ Enriched discarded card:", discardedCard);
+            //console.log("✅ Enriched discarded card:", discardedCard);
           } else {
             console.error("❌ No matching full card data found for ID:", discardedCard.id);
           }
@@ -969,7 +969,7 @@ async function performBotTurn(game, gameId) {
       ? game.player2
       : game.player1;
     game.turn.currentPhase = "Intermission";
-    console.log(`🤖 Bot ended turn. Next player: ${game.turn.currentPlayer}`);
+    //console.log(`🤖 Bot ended turn. Next player: ${game.turn.currentPlayer}`);
   }
 
   if (game.turn.currentPlayer === "Bot") {
@@ -1085,7 +1085,7 @@ app.get('/logout', (req, res) => {
 // GET /me
 app.get('/me', async (req, res) => {
   const sessionId = req.cookies.session;
-  console.log('Session ID:', sessionId);  // Log the session ID
+  //console.log('Session ID:', sessionId);  // Log the session ID
 
   if (!sessionId || !sessions[sessionId]) {
     return res.status(401).json({ loggedIn: false });
@@ -1099,8 +1099,8 @@ app.get('/me', async (req, res) => {
       .eq('username', username)
       .single();
 
-    console.log('Username from session:', username);
-    console.log('User from Supabase:', user);
+    //console.log('Username from session:', username);
+    //console.log('User from Supabase:', user);
 
     if (user) {
       const profilePic = user.profile_pic || 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/Sharpshooter-Square.png';
@@ -1113,6 +1113,28 @@ app.get('/me', async (req, res) => {
   }
 });
 
+app.get('/user-cosmetics/:username', async (req, res) => {
+  const { username } = req.params;
+  try {
+    const { data: user, error } = await supabase
+      .from('users')
+      .select('profile_pic, deck_sleeve, zone_art')
+      .eq('username', username)
+      .single();
+
+    if (error || !user) return res.status(404).json({ error: 'User not found' });
+
+    res.json({
+      profilePic : user.profile_pic,
+      deckSleeve : user.deck_sleeve,
+      zoneArt    : user.zone_art
+    });
+  } catch (err) {
+    console.error('Error fetching cosmetics:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({ message: 'Not Found' });
@@ -1121,5 +1143,5 @@ app.use((req, res) => {
 // Start server
 const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  //console.log(`Server is running on http://localhost:${PORT}`);
 });

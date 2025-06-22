@@ -1519,6 +1519,17 @@
             setTimeout(() => cardImg.remove(), 1000);
         }
 
+        async function fetchOpponentData(opName) {
+            try {
+                const res = await fetch(`${serverUrl}/user-cosmetics/${opName}`, { credentials:'include' });
+                if (!res.ok) throw new Error('bad response');
+                return await res.json();     // { profilePic, deckSleeve, zoneArt }
+            } catch (err) {
+                console.warn('Failed to get opponent cosmetics:', err);
+                return null;
+            }
+        }
+
         // 🔴 show the red ring for N ms (default 5000)
         const targetTimers = {};                 // cardId ➜ timeout handle
 
@@ -2105,7 +2116,7 @@
                 reserveBox.style.alignItems     = "center";
                 reserveBox.style.gap            = "0px";
 
-            fetchUserData().then(userData => {
+            fetchUserData().then(async userData => {
                 if (userData && userData.zoneArt) {
                     const zoneArtContainer = document.createElement("div");
                         zoneArtContainer.style.position = "absolute";
@@ -2157,9 +2168,10 @@
                         board.appendChild(opponentZoneArtContainer);
                     });
                 } else {
-                    const opponentData = null; // TODO: Replace with actual opponent profile fetch
+                    const opponentData = isSinglePlayer ? null : await fetchOpponentData(otherPlayerName);
                     if (opponentData?.zoneArt) {
-                        opponentZoneArtImage.src = `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Zones/${opponentData.zoneArt}`;
+                        opponentZoneArtImage.src =
+                            `${serverUrl}/Public/Images/Zones/${opponentData.zoneArt}`;
                         opponentZoneArtContainer.appendChild(opponentZoneArtImage);
                         board.appendChild(opponentZoneArtContainer);
                     }
@@ -2212,11 +2224,25 @@
                         opponentProfilePic.appendChild(profilePicImage);
                         board.appendChild(opponentProfilePic);
                     });
+                } else {
+                    const opponentProfilePic = document.createElement("div");
+                    Object.assign(opponentProfilePic.style, {
+                        position:"absolute", left:"1960px", top:"70px",
+                        width:"100px", height:"100px", zIndex:"100", overflow:"hidden"
+                    });
+                    const img = document.createElement("img");
+                    img.src = `${serverUrl}/Public/Images/Profile Pictures/${opponentData.profilePic}`;
+                    Object.assign(img.style, {
+                        width:"100%", height:"100%", border:"6px solid black",
+                        boxSizing:"border-box", objectFit:"cover"
+                    });
+                    opponentProfilePic.appendChild(img);
+                    board.appendChild(opponentProfilePic);
                 }
             });
 
             // After all elements like playerDeckBox and deckText are added
-            fetchUserData().then(userData => {
+            fetchUserData().then(async userData => {
                 if (userData && userData.deckSleeve) {
                     playerDeckBox.style.backgroundImage = `url(https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Sleeves/${userData.deckSleeve})`;
                     playerDeckBox.style.backgroundSize = "cover";
@@ -2230,10 +2256,14 @@
                         opponentDeckBox.style.backgroundPosition = "center";
                         opponentDeckBox.style.backgroundRepeat = "no-repeat";
                     });
-                    } else {
-                    const opponentData = null; // if you implement this OPPONENT SLEEVE DATA
+                } else {
+                    const opponentData = await fetchOpponentData(otherPlayerName);
                     if (opponentData?.deckSleeve) {
-                        opponentDeckBox.style.backgroundImage = `url(https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Sleeves/${opponentData.deckSleeve})`;
+                        opponentDeckBox.style.backgroundImage =
+                        `url(${serverUrl}/Public/Images/Sleeves/${opponentData.deckSleeve})`;
+                        opponentDeckBox.style.backgroundSize = "cover";
+                        opponentDeckBox.style.backgroundPosition = "center";
+                        opponentDeckBox.style.backgroundRepeat = "no-repeat";
                     }
                 }
             });
@@ -3567,32 +3597,42 @@
     // Fetch deck count dynamically
     setTimeout(async () => {
         const urlParams = new URLSearchParams(window.location.search);
+        const playerUsernameParam   = urlParams.get("playerUsername") || "";
+        const opponentUsernameParam = urlParams.get("opponent")       || "";
 
         async function getDeckFromParam(paramName) {
             const paramValue = urlParams.get(paramName);
+
+            // 1) If the param is already a JSON array of IDs, use it directly
             try {
-                const parsed = JSON.parse(paramValue);
-                if (Array.isArray(parsed)) {
-                    return parsed; // Already a full random deck
-                }
+            const parsed = JSON.parse(paramValue);
+            if (Array.isArray(parsed)) {
+                return parsed;
+            }
             } catch (e) {
-                const result = await fetchDeckCards(paramValue);
-                if (result.success) return result.card_ids;
-                console.error(`Failed to load deck '${paramName}':`, result.message);
-                return [];
+            // not JSON → continue to fetch by name
+            }
+
+            // 2) Decide whose deck we’re fetching
+            const isOpponent = paramName === "opponentDeck";
+            const owner      = isOpponent ? opponentUsernameParam : username || playerUsernameParam;
+
+            // 3) Fetch from the server, passing the owner
+            try {
+            return await fetchDeckCards(paramValue, owner);
+            } catch (err) {
+            console.error(`Failed to load deck '${paramName}':`, err.message);
+            return [];
             }
         }
 
-        const playerDeckCardIds = await getDeckFromParam("playerDeck");
+        // 4) Load both decks
+        const playerDeckCardIds   = await getDeckFromParam("playerDeck");
         const opponentDeckCardIds = await getDeckFromParam("opponentDeck");
 
-        // You can now use these arrays:
-        //console.log("Player Deck:", playerDeckCardIds);
-        //console.log("Opponent Deck:", opponentDeckCardIds);
-
-        // Optionally continue setup:
+        // 5) Now you can continue your setup, e.g.:
         // startGameWithDecks(playerDeckCardIds, opponentDeckCardIds);
-    }, 200);
+        }, 200);
 
 
         let remainingDeck = []; // Store shuffled deck globally
@@ -3659,7 +3699,7 @@
                 drawnCardsContainer.innerHTML = ""; // Clear previous renders
 
                 if (drawnCardsArray.length === 0) {
-                    console.log("No cards have been drawn yet.");
+                    //console.log("No cards have been drawn yet.");
                     return;
                 }
                 //console.log("drawnCardsArray length:", drawnCardsArray.length);
