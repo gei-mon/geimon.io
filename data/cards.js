@@ -14,9 +14,11 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Deathward <br><br> If Sent to Tomb: Retrieve 1 other Undead Champion.",
+        text: `Deathward <br><br> If Sent to Tomb: Retrieve 1 other Undead Champion.`,
         keywords: ["Deathward"],
         effect1name: "If Sent to Tomb",
+        effect2name: "",
+        effect3name: "",
       }
     ]
   },
@@ -33,9 +35,11 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Bloodrage, Deathward <br> If Sent to Tomb: Resurrect this card, but Obliterate it when it leaves the Zone.",
+        text: `Bloodrage, Deathward <br><br> If Sent to Tomb: Resurrect this card, but Obliterate it when it leaves the Zone.`,
         keywords: ["Deathward", "Bloodrage"],
         effect1name: "If Sent to Tomb",
+        effect2name: "",
+        effect3name: "",
       }
     ]
   },
@@ -52,9 +56,9 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Deathward, Warded <br> On Rally: Excavate 3; Add 1 revealed, Obliterate the other 2. <br> Mind Augus (Exhaustion): Excavate 5 from your Opponent&apos;s Deck; Obliterate 1, return the rest in the same order. <br> Shattered Connection (Reflex): If this card would be destroyed: Discard 1 or Sacrifice 1; it is not destroyed.",
+        text: `Deathward, Warded <br><span class="line-gap"></span> On Rally: Excavate 3; Add 1 revealed, Obliterate the other 2. <span class="line-gap"></span> Mind Augus (Exhaustion): Excavate 5 from your Opponent&apos;s Deck; Obliterate 1, return the rest in the same order. <span class="line-gap"></span> Shattered Connection (Reflex): If this card would be destroyed: Discard 1 or Sacrifice 1; it is not destroyed.`,
         keywords: ["Deathward", "Warded"],
-        effect1name: "",
+        effect1name: "On Rally",
         effect2name: "Mind Augus",
         effect3name: "Shattered Connection",
       }
@@ -73,7 +77,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Bloodrage, Deathward <br> Soulburn (Exhaustion): Offer up to a total of 3 Life from Champions you control; Destroy cards on the Zone up to the Life offered.",
+        text: `Bloodrage, Deathward <br><span class="line-gap"></span> Soulburn (Exhaustion): Offer up to a total of 3 Life from Champions you control; Destroy cards on the Zone up to the Life offered.`,
         keywords: ["Bloodrage", "Deathward"],
         effect1name: "Soulburn",
         effect2name: "",
@@ -94,9 +98,9 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Deathpower, Deathtouch <br> On Rally: Obliterate all cards in both Players' Tombs. <br> Break the Seal: Resurrect or Unleash 1 Undead. Destroy all Champions Resurrected this way if this card leaves the Zone. <br> Fateseal (Reflex, Exhaustion): Obliterate the top 10 cards of your Deck; Reduce the Life of all other Champions to 1.",
+        text: `Deathpower, Deathtouch <br><span class="line-gap"></span> On Rally: Obliterate all cards in both Players' Tombs. <span class="line-gap"></span> Break the Seal: Resurrect or Unleash 1 Undead. Destroy all Champions Resurrected this way if this card leaves the Zone. <span class="line-gap"></span> Fateseal (Reflex, Exhaustion): Obliterate the top 10 cards of your Deck; Reduce the Life of all other Champions to 1.`,
         keywords: ["Deathpower", "Deathtouch"],
-        effect1name: "",
+        effect1name: "On Rally",
         effect2name: "Break the Seal",
         effect3name: "Fateseal",
       }
@@ -115,11 +119,11 @@ export const cards = [
     damageThreshold: 4,
     abilities: [
       {
-        text: "Deathtouch, Deathward <br> On Rally: Bury 1. <br> Rend Soul (Exhaustion): Obliterate 1 card you control; Obliterate 1 card on the Zone. <br> If Obliterated: During the next Intermission Phase, Unleash 1 Undead.",
+        text: `Deathtouch, Deathward <br><span class="line-gap"></span> On Rally: Bury 1. <span class="line-gap"></span> Rend Soul (Exhaustion): Obliterate 1 card you control; Obliterate 1 card on the Zone. <span class="line-gap"></span> If Obliterated: During the next Intermission Phase, Unleash 1 Undead.`,
         keywords: ["Deathtouch","Deathward"],
-        effect1name: "",
+        effect1name: "On Rally",
         effect2name: "Rend Soul",
-        effect3name: "",
+        effect3name: "If Obliterated",
       }
     ]
   },
@@ -136,9 +140,9 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Deathward, Necrocharge <br> On Rally (Mandatory): Mill 3.",
+        text: "Deathward, Necrocharge <br><br> On Rally (Mandatory): Mill 3.",
         keywords: ["Deathward","Necrocharge"],
-        effect1name: "",
+        effect1name: "On Rally",
         effect2name: "",
         effect3name: "",
       }
@@ -157,7 +161,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Library Assistant: Excavate 3; Add 1 revealed Undead or Helper, or a card that mentions an Undead or Helper. <br> Powerful Core: Sacrifice this card and Target 1 other Undead in your Tomb; Resurrect Target. The resurrected Champion gains Warded. <br> Helping Hand: If card is in your Tomb: Obliterate this card and Target 1 Undead or Helper in your Tomb; Resurrect Target.",
+        text: `Library Assistant: Excavate 3; Add 1 revealed Undead or Helper, or a card that mentions an Undead or Helper. <span class="line-gap"></span> Powerful Core: Sacrifice this card and Target 1 other Undead in your Tomb; Resurrect Target. The resurrected Champion gains Warded. <span class="line-gap"></span> Helping Hand: If card is in your Tomb: Obliterate this card and Target 1 Undead or Helper in your Tomb; Resurrect Target.`,
         keywords: ["Warded"],
         effect1name: "Library Assistant",
         effect2name: "Powerful Core",
@@ -199,7 +203,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Resurrect Target Champion and attach this card to it. If this card leaves the zone, destroy the attached Champion.",
+        text: "Resurrect Target Champion and attach this card to it. If this card leaves the Zone, Destroy the attached Champion.",
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -220,9 +224,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Offer 3 Life; then Excavate 3, and add 1 revealed. <br> If this card is in your Tomb: Obliterate this card; Resurrect 1 Undead from either Tomb.",
+        text: `Offer 3 Life; then Excavate 3, and add 1 revealed. <br><span class="line-gap"></span> If this card is in your Tomb: Obliterate this card; Resurrect 1 Undead from either Tomb.`,
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "If this card is in your Tomb",
         effect2name: "",
         effect3name: "",
       }
@@ -283,9 +287,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Gain Life equal to those Champions’ remaining Life. <br><br> If this card is in your Tomb (Reflex): Obliterate this card and Sacrifice 1 Champion you control; Gain double that Champion's remaining Life.",
+        text: `Gain Life equal to those Champions’ remaining Life. <br><span class="line-gap"></span> If this card is in your Tomb (Reflex): Obliterate this card and Sacrifice 1 Champion you control; Gain double that Champion's remaining Life.`,
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "If this card is in your Tomb",
         effect2name: "",
         effect3name: "",
       }
@@ -367,7 +371,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Resurrect the first Target and attach this card to it, and if you do, Obliterate the other 3 Targets. If this card leaves the zone, destroy the attached Champion.",
+        text: "Resurrect the first Target and attach this card to it, and if you do, Obliterate the other 3 Targets. If this card leaves the Zone, Destroy the attached Champion.",
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -430,7 +434,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Priority <br> Continue the Fight: If this card is in your Tomb: Mill 6; Resurrect this card.",
+        text: `Priority <br><span class="line-gap"></span> Continue the Fight: If this card is in your Tomb: Mill 6; Resurrect this card.`,
         keywords: ["Priority"],
         effect1name: "Continue the Fight",
         effect2name: "",
@@ -493,7 +497,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Twitchy <br> Frantic Hoarding: Sacrifice 1; Bury up to 2 Reflex.",
+        text: "Twitchy <br><br> Frantic Hoarding: Sacrifice 1; Bury up to 2 Reflex.",
         keywords: ["Twitchy"],
         effect1name: "Frantic Hoarding",
         effect2name: "",
@@ -556,7 +560,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Bloodrage, Deathward, Lifesteal, Undertaker <br> Behold my Subjects: Offer 5 Life and Target 1 Undead in either Tomb; Resurrect Target. <br> Crafted Brilliance (Exhaustion): Sacrifice 1; Destroy 1 Champion your Opponent controls. <br> Rise Again!: If this card is in your Tomb while you control \"Markerion, Magus Supreme\" (Reflex): Resurrect this card.",
+        text: `Bloodrage, Deathward, Lifesteal, Undertaker <br><span class="line-gap"></span> Behold my Subjects: Offer 5 Life and Target 1 Undead in either Tomb; Resurrect Target. <span class="line-gap"></span> Crafted Brilliance (Exhaustion): Sacrifice 1; Destroy 1 Champion your Opponent controls. <span class="line-gap"></span> Rise Again!: If this card is in your Tomb while you control \"Markerion, Magus Supreme\" (Reflex): Resurrect this card.`,
         keywords: ["Bloodrage","Deathward","Lifesteal","Undertaker"],
         effect1name: "Behold my Subjects",
         effect2name: "Crafted Brilliance",
@@ -579,7 +583,7 @@ export const cards = [
       {
         text: "If Destroyed: Both Players take 2 Damage.",
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "If Destroyed",
         effect2name: "",
         effect3name: "",
       }
@@ -598,7 +602,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Deathward <br> Gentle Caress (Flip): If flipped face-up by battle: Instead of being Destroyed, move this card to your Arsenal and attach it to the attacking Champion. The attached Champion can no longer declare attacks, and takes 1 Damage during each End Phase.",
+        text: `Deathward <span class="line-gap"></span> Gentle Caress (Flip): If flipped face-up by battle: Instead of being Destroyed, move this card to your Arsenal and attach it to the attacking Champion. The attached Champion can no longer declare attacks, and takes 1 Damage during each End Phase.`,
         keywords: ["Deathward"],
         effect1name: "Gentle Caress",
         effect2name: "",
@@ -619,9 +623,9 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Deathward <br> On Rally (Mandatory): Target 1 Champion; Target takes 2 Damage.",
+        text: "Deathward <br><br> On Rally (Mandatory): Target 1 Champion; Target takes 2 Damage.",
         keywords: ["Deathward"],
-        effect1name: "",
+        effect1name: "On Rally",
         effect2name: "",
         effect3name: "",
       }
@@ -642,7 +646,7 @@ export const cards = [
       {
         text: "Seance: Target 1 Champion in either Tomb; Rally 1 Ghost Token of Target. Destroy all Tokens Rallied this way if this card leaves the Zone.",
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "Seance",
         effect2name: "",
         effect3name: "",
       }
@@ -661,9 +665,12 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "On Rally: This card's Damage and Life become equal to the amount of Life Offered to Rally it. <br> Thrice-Burned (Exhaustion): Offer Life equal to this card's Damage; Draw 3, then discard 2.",
+text: `
+On Rally: This card's Damage and Life become equal to the amount of Life Offered to Rally it.
+<span class="line-gap"></span>
+Thrice-Burned (Exhaustion): Offer Life equal to this card's Damage; Draw 3, then discard 2.`,
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "On Rally",
         effect2name: "Thrice-Burned",
         effect3name: "",
       }
@@ -684,7 +691,7 @@ export const cards = [
       {
         text: "Dredgin' Time (Exhaustion): Target 1 card in your Void; Recover Target.",
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "Dredgin' Time",
         effect2name: "",
         effect3name: "",
       }
@@ -703,7 +710,7 @@ export const cards = [
     damageThreshold: "6",
     abilities: [
       {
-        text: "Deathtouch, Warded <br> Unlimited Power: Offer X (Maximum of 3): This card can make X attacks during your next Battle Phase. <br> Everlasting life: Mill 12; Gain 6 Life. <br> Riches Beyond Your Imagination (Exhaustion): Offer 6; Draw 2.",
+        text: `Deathtouch, Warded <br><span class="line-gap"></span> Unlimited Power: Offer X (Maximum of 3): This card can make X attacks during your next Battle Phase. <span class="line-gap"></span> Everlasting life: Mill 12; Gain 6 Life. <span class="line-gap"></span> Riches Beyond Your Imagination (Exhaustion): Offer 6; Draw 2.`,
         keywords: ["Deathtouch","Warded"],
         effect1name: "Unlimited Power",
         effect2name: "Everlasting Life",
@@ -745,7 +752,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Siren's Shriek: If your Opponent Rallies a Champion(s) while your Life is lower than theirs: Reduce the Damage of the Rallied Champion(s) by 2. If this effect reduces a Champion's Damage to 0, they are Destroyed. <br><br>&nbsp;",
+        text: `Siren's Shriek: If your Opponent Rallies a Champion(s) while your Life is lower than theirs: Reduce the Damage of the Rallied Champion(s) by 2. If this effect reduces a Champion's Damage to 0, they are Destroyed.`,
         keywords: ["blank"],
         effect1name: "Siren's Shriek",
         effect2name: "",
@@ -808,7 +815,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Recruit, Resurrect, or Unleash 1 Hellfire (ignoring their conditions). <br><br> Obliterate it at the end of your 6th turn after activating this card. <br><br> When it leaves the Zone, you lose the game.",
+        text: `Recruit, Resurrect, or Unleash 1 Hellfire (ignoring their conditions). <br><span class="line-gap"></span> Obliterate it at the end of your 6th turn after activating this card. <span class="line-gap"></span><span class="line-gap"></span> When it leaves the Zone, you lose the game.`,
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -934,7 +941,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attached Champion cannot attack or activate its effects. <br><br> So long as this card and its attached Champion remain face-up on the Zone, your Life cannot be reduced. Your Offer effects are always counted as fulfilled.",
+        text: `The attached Champion cannot attack or activate its effects. <br><span class="line-gap"></span> So long as this card and its attached Champion remain face-up on the Zone, your Life cannot be reduced. Your Offer effects are always counted as fulfilled.`,
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -1123,9 +1130,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Resurrect Target. <br><br> During each End Phase that the Target remains on the Zone: Discard 1 or Destroy the Target.",
+        text: `Resurrect Target. <br><span class="line-gap"></span> During each End Phase that the Target remains on the Zone: Discard 1 or Destroy the Target.`,
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "During each End Phase that the Target remains on the Zone",
         effect2name: "",
         effect3name: "",
       }
@@ -1144,7 +1151,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "All Champion(s) Rallied take 5 Damage. <br><br> You cannot Rally during your next turn.",
+        text: `All Champion(s) Rallied take 5 Damage. <br><span class="line-gap"></span> You cannot Rally during your next turn.`,
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -1291,9 +1298,9 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Heavy Hands <br> On Rally: Draw 2. <br> Deadeye (Reflex): Discard 1 and Target 1 card on the Zone; Destroy Target.",
+        text: `Heavy Hands <br> On Rally: Draw 2. <span class="line-gap"></span> Deadeye (Reflex): Discard 1 and Target 1 card on the Zone; Destroy Target.`,
         keywords: ["Heavy Hands"],
-        effect1name: "",
+        effect1name: "On Rally",
         effect2name: "Deadeye",
         effect3name: "",
       }
@@ -1312,10 +1319,10 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: "Priority <br> On Rally: Draw 1. <br> If Discarded: Add 1 Equipment or Rush.",
+        text: `Priority <br> On Rally: Draw 1. <span class="line-gap"></span> If Discarded: Add 1 Equipment or Rush.`,
         keywords: ["Priority"],
-        effect1name: "",
-        effect2name: "",
+        effect1name: "On Rally",
+        effect2name: "If Discarded",
         effect3name: "",
       }
     ]
@@ -1333,10 +1340,10 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The turn this card is activated: Only the attached Champion can attack (this effect remains even if this card leaves the zone). <br> The attached Champion's attacks cannot be blocked. <br> If this card is in your Tomb: Obliterate this card and Target 1 Marksman in your Tomb; Resurrect Target.",
+        text: `The turn this card is activated: Only the attached Champion can attack (this effect remains even if this card leaves the zone). <br> The attached Champion's attacks cannot be blocked. <span class="line-gap"></span> If this card is in your Tomb: Obliterate this card and Target 1 Marksman in your Tomb; Resurrect Target.`,
         keywords: ["blank"],
-        effect1name: "",
-        effect2name: "",
+        effect1name: "The turn this card is activated",
+        effect2name: "If this card is in your Tomb",
         effect3name: "",
       }
     ]
@@ -1354,10 +1361,10 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "This card gains 6 Bullet Counters. Increase the attached Champion's Damage by 1 per Bullet Counter this card has. After each time the attached Champion battles, remove 1 Bullet Counter from this card. <br> If this card has no Bullet Counters (Reflex): Destroy this card; Deal 6 Damage to 1 Champion or Player.",
+        text: "This card gains 6 Bullet Counters. Increase the attached Champion's Damage by 1 per Bullet Counter this card has. <br><br> After each time the attached Champion battles: Remove 1 Bullet Counter from this card. <br><br> If this card has no Bullet Counters (Reflex): Destroy this card; Deal 6 Damage to 1 Champion or Player.",
         keywords: ["blank"],
-        effect1name: "",
-        effect2name: "",
+        effect1name: "If this card has no Bullet Counters",
+        effect2name: "After each time the attached Champion battles",
         effect3name: "",
       }
     ]
@@ -1375,7 +1382,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Call the type of card on top of your Deck: Excavate 1, and if its card type matches what you called you can Destroy 1 Champion on the Zone. Otherwise, Destroy the attached Champion.",
+        text: "Call the type of card on top of your Deck. Excavate 1, and if its card type matches what you called you can Destroy 1 Champion on the Zone. Otherwise, Destroy the attached Champion.",
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -1396,7 +1403,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Sniffer Sense: Target 1 face-down Champion; Flip the target face-up (Flip effects are not activated). <br> Take the Bullet (Reflex): If your Opponent declares an attack or activates an effect that Destroys a card: Sacrifice this card; Negate the attack or effect, and if you do, destroy the triggering card. <br> Helping Hand: If this card is in your Tomb: Obliterate this card and Target 1 Frontier or Helper in your Tomb; Resurrect Target.",
+        text: `Sniffer Sense: Target 1 face-down Champion; Flip the target face-up (Flip effects are not activated). <br> Take the Bullet (Reflex): If your Opponent declares an attack or activates an effect that Destroys a card: Sacrifice this card; Negate the attack or effect, and if you do, destroy the triggering card. <span class="line-gap"></span> Helping Hand: If this card is in your Tomb: Obliterate this card and Target 1 Frontier or Helper in your Tomb; Resurrect Target.`,
         keywords: ["blank"],
         effect1name: "Sniffer Sense",
         effect2name: "Take the Bullet",
@@ -1417,10 +1424,10 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Deathward <br> Gotcha! (Flip): If flipped face-up by battle: Increase this Champion's Damage by half the Damage of the Champion that it is battling (rounded up). <br> If Discarded: Deal 3 Damage to 1 Champion or Player.",
+        text: `Deathward <br> Gotcha! (Flip): If flipped face-up by battle: Increase this Champion's Damage by half the Damage of the Champion that it is battling (rounded up). <span class="line-gap"></span> If Discarded: Deal 3 Damage to 1 Champion or Player.`,
         keywords: ["Deathward"],
         effect1name: "Gotcha",
-        effect2name: "",
+        effect2name: "If Discarded",
         effect3name: "",
       }
     ]
@@ -1440,7 +1447,7 @@ export const cards = [
       {
         text: "Deathward <br> Surrender Now! (Flip): If flipped face-up by battle: Reduce the attacking Champion's Damage to 0.",
         keywords: ["Deathward"],
-        effect1name: "Surrender Now!",
+        effect1name: "Surrender Now",
         effect2name: "",
         effect3name: "",
       }
@@ -1459,7 +1466,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Raider, Reach <br> Train Sniffer (Exhaustion): Your Opponent can activate 1 Commander Obelisk from their Deck (ignoring its cost); Your Opponent chooses whether: You Draw 2 for every Commander Obelisk your Opponent controls, or Your Opponent discards 1 for every Commander Obelisk they control. <br><br>&nbsp;",
+        text: `Raider, Reach <br> Train Sniffer (Exhaustion): Your Opponent can activate 1 Commander Obelisk from their Deck (ignoring its cost); Your Opponent chooses whether: You Draw 2 for every Commander Obelisk your Opponent controls, or Your Opponent discards 1 for every Commander Obelisk they control.`,
         keywords: ["Raider","Reach"],
         effect1name: "Train Sniffer",
         effect2name: "",
@@ -1501,7 +1508,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: "Defender, Lifebalance, Priority, Warded <br> Foretell my Fate: Excavate 2; return the cards in an order of your choice. <br> Decisive Plan (Exhaustion): Mill 1; Draw 1.",
+        text: `Defender, Lifebalance, Priority, Warded <br> Foretell my Fate: Excavate 2; return the cards in an order of your choice. <span class="line-gap"></span> Decisive Plan (Exhaustion): Mill 1; Draw 1.`,
         keywords: ["Defender","Lifebalance","Priority","Warded"],
         effect1name: "Foretell my Fate",
         effect2name: "Decisive Plan",
@@ -1522,11 +1529,11 @@ export const cards = [
     damageThreshold: "5",
     abilities: [
       {
-        text: "Bulletproof, Warded <br> Good Morning (Flip): If flipped face-up by battle: Flip face-down the attacking Champion. <br> Goodnight: Flip this card face-down. <br> If Destroyed: Draw 1.",
+        text: `Bulletproof, Warded <br> Good Morning (Flip): If flipped face-up by battle: Flip face-down the attacking Champion. <span class="line-gap"></span> Goodnight: Flip this card face-down. <span class="line-gap"></span> If Destroyed: Draw 1.`,
         keywords: ["Bulletproof","Warded"],
         effect1name: "Good Morning",
         effect2name: "Goodnight",
-        effect3name: "",
+        effect3name: "If Destroyed",
       }
     ]
   },
@@ -1543,10 +1550,10 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: "Might of the Small, Priority, Solitary <br> Roam Around: If there are at least 1 Champion and 1 Equipment in your Tomb: Retrieve 1 Equipment. <br> If Destroyed: Recruit 1 Frontier Marksman.",
+        text: `Might of the Small, Priority, Solitary <br> Roam Around: If there are at least 1 Champion and 1 Equipment in your Tomb: Retrieve 1 Equipment. <span class="line-gap"></span> If Destroyed: Recruit 1 Frontier Marksman.`,
         keywords: ["Might of the Small","Priority","Solitary"],
         effect1name: "Roam Around",
-        effect2name: "",
+        effect2name: "If Destroyed",
         effect3name: "",
       }
     ]
@@ -1566,7 +1573,7 @@ export const cards = [
       {
         text: "On Rally (Mandatory): Declare 1 card type; Excavate cards until you reveal a card of the declared type, add that card and Obliterate the rest.",
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "On Rally",
         effect2name: "",
         effect3name: "",
       }
@@ -1648,7 +1655,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Rally 1 Tumbleweed Token to your Zone. <br><br> During each End Phase, switch control of the Token.",
+        text: `Rally 1 Tumbleweed Token to your Zone. <br><span class="line-gap"></span> During each End Phase, switch control of the Token.`,
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -1669,10 +1676,10 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Hostile Negotiations (Reflex): If this card is Targeted by an attack or effect (Mandatory): Destroy this card and the card that Targeted it, and if you do, the Player who Targeted this card draws 2. <br><br> If Destroyed: Target 1 Equipment in your Tomb; Retrieve Target. <br>&nbsp;",
+        text: `Hostile Negotiations (Reflex): If this card is Targeted by an attack or effect (Mandatory): Destroy this card and the card that Targeted it, and if you do, the Player who Targeted this card draws 2. <br><span class="line-gap"></span> If Destroyed: Target 1 Equipment in your Tomb; Retrieve Target.`,
         keywords: ["blank"],
         effect1name: "Hostile Negotiations",
-        effect2name: "",
+        effect2name: "If Destroyed",
         effect3name: "",
       }
     ]
@@ -1963,7 +1970,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Champion: Destroy 1 card on the Zone. <br> Action: Draw 1. <br> Equipment: Retrieve 1. <br> Obelisk: Activate 1 card from your Reserve (ignoring its cost). <br> Rush: Draw 3, then discard 2. <br> Reflex: Destroy 1 card in either Player's Arsenal.",
+        text: `Champion: Destroy 1 card on the Zone. <br> Action: Draw 1. <span class="line-gap"></span> Equipment: Retrieve 1. <span class="line-gap"></span> Obelisk: Activate 1 card from your Reserve (ignoring its cost). <span class="line-gap"></span> Rush: Draw 3, then discard 2. <span class="line-gap"></span> Reflex: Destroy 1 card in either Player's Arsenal.`,
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -2005,9 +2012,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attached Champion can make an additional attack each Battle Phase. <br><br> If Destroyed: Offer 2 Life; Stack this card.",
+        text: `The attached Champion can make an additional attack each Battle Phase. <br><span class="line-gap"></span> If Destroyed: Offer 2 Life; Stack this card.`,
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "If Destroyed",
         effect2name: "",
         effect3name: "",
       }
@@ -2047,7 +2054,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "In order to attack with the attached Champion, you must discard 1. <br><br> The attached Champion's Damage is increased by 2.",
+        text: `In order to attack with the attached Champion, you must discard 1. <br><span class="line-gap"></span> The attached Champion's Damage is increased by 2.`,
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -2068,10 +2075,10 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attached Champion gains Deathtouch. <br><br> During your End Phase, if the attached Champion did not attack this turn: Destroy both this card and its attached Champion. <br><br> If Destroyed: The controller of this card takes 5 Damage.",
+        text: `The attached Champion gains Deathtouch. <br><span class="line-gap"></span> During your End Phase, if the attached Champion did not attack this turn: Destroy both this card and its attached Champion. <span class="line-gap"></span><span class="line-gap"></span> If Destroyed: The controller of this card takes 5 Damage.`,
         keywords: ["Deathtouch"],
-        effect1name: "",
-        effect2name: "",
+        effect1name: "During your End Phase, if the attached Champion did not attack this turn",
+        effect2name: "If Destroyed",
         effect3name: "",
       }
     ]
@@ -2089,9 +2096,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "An Opponent declares an attack with a Champion that has at least 1 attached Equipment; After that attack resolves, the attacking Champion takes this card's attached Champion's Damage plus 2.",
+        text: "If an Opponent declares an attack with a Champion that has at least 1 attached Equipment: After that attack resolves, the attacking Champion takes this card's attached Champion's Damage plus 2.",
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "If an Opponent declares an attack with a Champion that has at least 1 attached Equipment",
         effect2name: "",
         effect3name: "",
       }
@@ -2110,7 +2117,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "All Champions on the Zone gain Priority. Champions cannot declare an attack against a Player unless that Player controls no Champions.",
+        text: "All Champions on the Zone gain Priority. <br><br> Champions cannot declare an attack against a Player unless that Player controls no Champions.",
         keywords: ["Priority"],
         effect1name: "",
         effect2name: "",
@@ -2131,11 +2138,11 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Mount <br> Only an Outlaw can be designated as this card's Commander. <br> Shielded <br> Mounted: This card's Commander gains Greedy and Reach. <br> If this card is in your Tomb while you control an Outlaw (Reflex): Discard 2; Activate this card.",
+        text: `Mount <span class="line-gap"></span> Only an Outlaw can be designated as this card's Commander. <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted: This card's Commander gains Greedy and Reach. <span class="line-gap"></span> If this card is in your Tomb while you control an Outlaw (Reflex): Discard 2; Activate this card.`,
         keywords: ["Greedy","Reach","Mount","Shielded"],
-        effect1name: "",
-        effect2name: "",
-        effect3name: "",
+        effect1name: "Mounted",
+        effect2name: "If this card is in your Tomb",
+        effect3name: "while you control an Outlaw",
       }
     ]
   },
@@ -2152,9 +2159,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Mount <br> Shielded <br> Mounted: Mill 2; Draw 2.",
+        text: `Mount <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted: Mill 2; Draw 2.`,
         keywords: ["Mount","Shielded"],
-        effect1name: "",
+        effect1name: "Mounted",
         effect2name: "",
         effect3name: "",
       }
@@ -2173,7 +2180,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Discard 1; Draw an extra card during your next Draw Phase.",
+        text: "Either Player can Discard 1; that Player then Draws an extra card during their next Draw Phase.",
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -2194,9 +2201,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "During each Player's End Phase, that Player's Champions each take 2 Damage.",
+        text: "During each Player's End Phase: That Player's Champions each take 2 Damage.",
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "During each Player's End Phase",
         effect2name: "",
         effect3name: "",
       }
@@ -2215,9 +2222,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Stack 1 card from your Deck. <br><br> During each Draw Phase, after you draw, Mill 10.",
+        text: `Stack 1 card from your Deck. <br><span class="line-gap"></span> During each Draw Phase, after you draw: Mill 10.`,
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "During each Draw Phase, after you draw",
         effect2name: "",
         effect3name: "",
       }
@@ -2236,9 +2243,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Mount <br> Mounted: This card's Commander gains Priority, also increase their Damage by 1.",
+        text: `Mount <span class="line-gap"></span> Mounted: This card's Commander gains Priority, also increase their Damage by 1.`,
         keywords: ["Mount","Priority"],
-        effect1name: "",
+        effect1name: "Mounted",
         effect2name: "",
         effect3name: "",
       }
@@ -2257,7 +2264,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Recruit 1 Frontier, it cannot attack. <br><br> Destroy it during the End Phase of this turn.",
+        text: `Recruit 1 Frontier, it cannot attack. <br><span class="line-gap"></span> Destroy it during the End Phase of this turn.`,
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -2299,7 +2306,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Target can attack an additional time. <br><br> That Champion cannot attack during your next Battle Phase.",
+        text: `Target can attack an additional time. <br><span class="line-gap"></span> That Champion cannot attack during your next Battle Phase.`,
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -2341,7 +2348,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Reduce the triggering Damage to 0. <br><br> The protected Champion cannot attack, or use its effects, for the remainder of the turn.",
+        text: `Reduce the triggering Damage to 0. <br><span class="line-gap"></span> The protected Champion cannot attack, or use its effects, for the remainder of the turn.`,
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -2467,9 +2474,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Destroy the Rallied Champion, and if you do, Obliterate it. <br><br> If Discarded: Set this card face-down in your Arsenal.",
+        text: `Destroy the Rallied Champion, and if you do, Obliterate it. <br><span class="line-gap"></span> If Discarded: Set this card face-down in your Arsenal.`,
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "If Discarded",
         effect2name: "",
         effect3name: "",
       }
@@ -2530,9 +2537,9 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Repair Specialist <br> On Rally: Activate 1 Equipment or Obelisk from your Hand, Deck, or Tomb (ignoring its cost). <br> Upgrade: Rally 1 Blocker Token to your Opponent's Zone; Add 1 Equipment. <br> Emergency Transport (Reflex): If this card is currently not a Commander: Obliterate the top 6 cards of your Deck; Activate 1 Commander Obelisk from your Hand, Deck, or Tomb (ignoring its cost).",
+        text: `Repair Specialist <span class="line-gap"></span> On Rally: Activate 1 Equipment or Obelisk from your Hand, Deck, or Tomb (ignoring its cost). <span class="line-gap"></span> Upgrade: Rally 1 Blocker Token to your Opponent's Zone; Add 1 Equipment. <span class="line-gap"></span> Emergency Transport (Reflex): If this card isn't a Commander: Obliterate the top 6 cards of your Deck; Activate 1 Commander Obelisk from your Hand, Deck, or Tomb (ignoring its cost).`,
         keywords: ["Repair Specialist"],
-        effect1name: "",
+        effect1name: "On Rally",
         effect2name: "Upgrade",
         effect3name: "Emergency Transport",
       }
@@ -2551,7 +2558,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Lightbulb: Excavate 1; Return it to either the top or the bottom of your Deck. <br> Wake-Up Jolt: Sacrifice this card and Target 1 Champion or Obelisk in your Reserve; Activate Target (ignoring its cost). <br> Helping Hand: If this card is in your Tomb: Obliterate this card and Target 1 Clockwork or Helper in your Tomb; Resurrect Target, it gains Deathtouch and its Life is reduced to 1.",
+        text: `Lightbulb: Excavate 1; Return it to either the top or the bottom of your Deck. <span class="line-gap"></span> Wake-Up Jolt: Sacrifice this card and Target 1 Champion or Obelisk in your Reserve; Activate Target (ignoring its cost). <span class="line-gap"></span> Helping Hand: If this card is in your Tomb: Obliterate this card and Target 1 Clockwork or Helper in your Tomb; Resurrect Target, it gains Deathtouch and its Life is reduced to 1.`,
         keywords: ["blank"],
         effect1name: "Lightbulb",
         effect2name: "Wake-Up Jolt",
@@ -2572,9 +2579,9 @@ export const cards = [
     damageThreshold: 2,
     abilities: [
       {
-        text: "Repair Specialist <br> On Rally: Place 1 Commander Obelisk from your Deck into your Reserve. That Obelisk gains \"Reserve (Reflex): Discard 1; Activate this card (ignoring its cost)\". <br> Garage Baby: Attach 1 appropriate Equipment from your Hand, Deck, or Tomb to an Obelisk in your Reserve (ignoring its cost). <br> Secret Weapon (Exhaustion): Destroy 1 Obelisk you control; Destroy up to 2 cards on the Zone.",
+        text: `Repair Specialist <span class="line-gap"></span> On Rally: Place 1 Obelisk from your Deck into your Reserve. That Obelisk gains \"Reserve (Reflex): Discard 1; Activate this card\". <span class="line-gap"></span> Garage Baby: Attach 1 appropriate Equipment from your Hand or Deck to an Obelisk in your Reserve (ignoring its cost). <span class="line-gap"></span> Secret Weapon (Exhaustion): Destroy 1 Obelisk you control; Destroy up to 2 cards on the Zone.`,
         keywords: ["Repair Specialist"],
-        effect1name: "",
+        effect1name: "On Rally",
         effect2name: "Garage Baby",
         effect3name: "Secret Weapon",
       }
@@ -2614,7 +2621,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Bloodrage, Priority <br> Ride: Target 1 Equipment or Obelisk in your Tomb; Retrieve Target. <br> Or Die (Mandatory): If it is your End Phase and this Champion is not designated as a Commander: Destroy this card.",
+        text: `Bloodrage, Priority <br><span class="line-gap"></span> Ride: Target 1 Equipment or Obelisk in your Tomb; Retrieve Target. <span class="line-gap"></span> Or Die (Mandatory): If it is your End Phase and this Champion is not designated as a Commander: Destroy this card.`,
         keywords: ["Bloodrage","Priority"],
         effect1name: "Ride",
         effect2name: "Or Die",
@@ -2635,11 +2642,11 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Might of the Small <br> Garbage Lord: Bury 1. <br> Trash Picker: Retrieve 1, and if you do, Obliterate the rest of the cards in your Tomb. <br> On Resurrection: Target 1 Champion in your Tomb; Resurrect Target, but reduce its Life to 1, also it is Obliterated when it leaves the Zone. <br>&nbsp;",
+        text: `Might of the Small <br><span class="line-gap"></span> Garbage Lord: Bury 1. <span class="line-gap"></span> Trash Picker: Retrieve 1, and if you do, Obliterate the rest of the cards in your Tomb. <span class="line-gap"></span> On Resurrection: Target 1 Champion in your Tomb; Resurrect Target, but reduce its Life to 1, also it is Obliterated when it leaves the Zone.`,
         keywords: ["Might of the Small"],
         effect1name: "Garbage Lord",
         effect2name: "Trash Picker",
-        effect3name: "",
+        effect3name: "On Resurrection",
       }
     ]
   },
@@ -2679,7 +2686,7 @@ export const cards = [
       {
         text: "The attached Obelisk gains the effect: \"This card's Commander can make an additional attack during each of your Battle Phases.\"",
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "The attached Obelisk gains the effect",
         effect2name: "",
         effect3name: "",
       }
@@ -2700,7 +2707,7 @@ export const cards = [
       {
         text: "The attached Obelisk gains the effect: \"This card's Commander's Damage Threshold increases by 2.\"",
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "The attached Obelisk gains the effect",
         effect2name: "",
         effect3name: "",
       }
@@ -2740,7 +2747,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Mount <br> Shielded <br> Mounted: Destroy 1 card in your Arsenal; Destroy up to 2 cards in either Arsenal. <br> Mounted (Reflex): Increase this card's Commander's Damage by 5 until the End Phase.",
+        text: `Mount <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted: Destroy 1 card in your Arsenal; Destroy up to 2 cards in either Arsenal. <span class="line-gap"></span> Mounted (Reflex): Increase this card's Commander's Damage by 5 until the End Phase.`,
         keywords: ["Shielded","Mount"],
         effect1name: "",
         effect2name: "Mounted",
@@ -2761,7 +2768,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Mount <br> Mounted: Rally 1 Greed Token, Rage Token, or Sloth Token to your Opponent's Zone, but Destroy it during their next End Phase. <br> Mounted: If your Opponent controls 5 or more Tokens: Sacrifice 1 of your Opponent's Champions; Destroy 1 card on the Zone.",
+        text: `Mount <span class="line-gap"></span> Mounted: Rally 1 Greed Token, Rage Token, or Sloth Token to your Opponent's Zone, but Destroy it during their next End Phase. <span class="line-gap"></span> Mounted: If your Opponent controls 5 or more Tokens: Sacrifice 1 of your Opponent's Champions; Destroy 1 card on the Zone.`,
         keywords: ["Mount"],
         effect1name: "",
         effect2name: "Mounted",
@@ -2782,7 +2789,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Mount <br> Mounted: Destroy this card and Target 1 Champion you control; Target Champion cannot be blocked this turn.",
+        text: `Mount <span class="line-gap"></span> Mounted: Destroy this card and Target 1 Champion you control; Target Champion cannot be blocked this turn.`,
         keywords: ["Mount"],
         effect1name: "",
         effect2name: "Mounted",
@@ -2803,11 +2810,11 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Mount <br> Mounted (Reflex): Give control of 1 face-up Champion to your Opponent; take control of 1 face-up Champion from your Opponent. Return control of the affected Champions during the End Phase. <br><br> If this card is in your Reserve while you control at least 1 Champion: You can activate this card.",
+        text: `Mount <span class="line-gap"></span> Mounted (Reflex): Give control of 1 face-up Champion to your Opponent; take control of 1 face-up Champion from your Opponent. Return control of the affected Champions during the End Phase. <span class="line-gap"></span><span class="line-gap"></span> If this card is in your Reserve while you control at least 1 Champion: You can activate this card.`,
         keywords: ["Mount"],
         effect1name: "",
         effect2name: "Mounted",
-        effect3name: "",
+        effect3name: "If this card is in your Reserve while you control at least 1 Champion",
       }
     ]
   },
@@ -2824,7 +2831,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Mount <br> Mounted: Target 1 card in your Opponent's Arsenal; Your Opponent then chooses: send the Targeted card to the Tomb, or to send 2 other cards of their choice from their Arsenal to the Tomb.",
+        text: `Mount <span class="line-gap"></span> Mounted: Target 1 card in your Opponent's Arsenal; Your Opponent then chooses: send the Targeted card to the Tomb, or to send 2 other cards of their choice from their Arsenal to the Tomb.`,
         keywords: ["Mount"],
         effect1name: "",
         effect2name: "Mounted",
@@ -2887,7 +2894,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Mount <br> Mounted: This card's Commander cannot attack. <br> Mounted: Draw 1 for every Obelisk you control, then discard the same number of cards.",
+        text: `Mount <span class="line-gap"></span> Mounted: This card's Commander cannot attack. <span class="line-gap"></span> Mounted: Draw 1 for every Obelisk you control, then discard the same number of cards.`,
         keywords: ["Mount"],
         effect1name: "",
         effect2name: "Mounted",
@@ -2908,10 +2915,10 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Mount <br> If this card does not have a Commander (Reflex): Discard your entire Hand (minimum of 1 card); Resurrect 1 Champion, it becomes this card's commander. Obliterate that Champion when it leaves the Zone. <br> Mounted: Sacrifice this card; Restore the use of 1 non-Exhaustion effect that a Champion used this turn.",
+        text: `Mount <span class="line-gap"></span> If this card does not have a Commander (Reflex): Discard your entire Hand (minimum of 1 card); Resurrect 1 Champion, it becomes this card's commander. Obliterate that Champion when it leaves the Zone. <span class="line-gap"></span> Mounted: Sacrifice this card; Restore the use of 1 non-Exhaustion effect that a Champion used this turn.`,
         keywords: ["Mount"],
-        effect1name: "",
-        effect2name: "",
+        effect1name: "If this card does not have a Commander",
+        effect2name: "Mounted",
         effect3name: "",
       }
     ]
@@ -2929,10 +2936,10 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Mount <br> Mounted: Add 1 Equipment, but you cannot activate it this turn. <br><br> Reserve: Obliterate the top 5 cards of your Deck; Activate this card.",
+        text: `Mount <span class="line-gap"></span> Mounted: Add 1 Equipment, but you cannot activate it this turn. <span class="line-gap"></span><span class="line-gap"></span> If this card is in your Reserve: Obliterate the top 5 cards of your Deck; Activate this card.`,
         keywords: ["Mount"],
-        effect1name: "",
-        effect2name: "",
+        effect1name: "Mounted",
+        effect2name: "If this card is in your Reserve",
         effect3name: "",
       }
     ]
@@ -2950,9 +2957,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Maintenance, Mount <br> Mounted: Excavate 5; Return the cards in an order of your choice.",
+        text: `Maintenance <span class="line-gap"></span> Mount <span class="line-gap"></span> Mounted: Excavate 5; Return the cards in an order of your choice.`,
         keywords: ["Maintenance","Mount"],
-        effect1name: "",
+        effect1name: "Mounted",
         effect2name: "",
         effect3name: "",
       }
@@ -2971,9 +2978,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Mount <br> Mounted: This card's Commander gains Unstoppable. <br> Mounted: If this card's Commander is Targeted by an attack or effect (Reflex): Sacrifice this card; Move this card's Commander into the Reserve, and if you do, draw 2. The moved Commander gains the effect: Reserve: Discard 2; activate this card.",
+        text: `Mount <span class="line-gap"></span> Mounted: This card's Commander gains Unstoppable. <span class="line-gap"></span> Mounted: If this card's Commander is Targeted by an attack or effect (Reflex): Sacrifice this card; Move this card's Commander into the Reserve, and if you do, draw 2. The moved Commander gains the effect: Reserve: Discard 2; activate this card.`,
         keywords: ["Mount","Unstoppable"],
-        effect1name: "",
+        effect1name: "Mounted",
         effect2name: "",
         effect3name: "",
       }
@@ -2992,9 +2999,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Maintenance <br> Mount <br> Shielded <br> Mounted: This card's Commander gains Bulletproof and Priority. <br> Mounted: Discard 1 and Target 1 card on the Zone; Destroy Target.",
+        text: `Maintenance <span class="line-gap"></span> Mount <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted: This card's Commander gains Bulletproof and Priority. <span class="line-gap"></span> Mounted: Discard 1 and Target 1 card on the Zone; Destroy Target.`,
         keywords: ["Mount","Maintenance","Shielded","Bulletproof","Priority"],
-        effect1name: "",
+        effect1name: "Mounted",
         effect2name: "",
         effect3name: "",
       }
@@ -3013,9 +3020,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Mount <br> Mounted: If this card's Commander battles (Reflex): Sacrifice this card; This card's Commander takes no Damage from that battle, also deal 5 Damage to the Champion that they battled.",
+        text: `Mount <span class="line-gap"></span> Mounted: If this card's Commander battles (Reflex): Sacrifice this card; This card's Commander takes no Damage from that battle, also deal 5 Damage to the Champion that they battled.`,
         keywords: ["Mount"],
-        effect1name: "",
+        effect1name: "Mounted",
         effect2name: "",
         effect3name: "",
       }
@@ -3055,9 +3062,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Move the blocking Champion into the Reserve. <br><br> If this card is in your Tomb and an Opponent declares an attack: Obliterate this card; Move 1 Champion or Obelisk from your Tomb into your Reserve.",
+        text: `Move the blocking Champion into the Reserve. <br><span class="line-gap"></span> If this card is in your Tomb and an Opponent declares an attack: Obliterate this card; Move 1 Champion or Obelisk from your Tomb into your Reserve.`,
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "If this card is in your Tomb and an Opponent declares an attack",
         effect2name: "",
         effect3name: "",
       }
@@ -3076,7 +3083,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Deathtouch <br> Mulching Overdrive (Mandatory): If this card Destroys a Champion with its Deathtouch: Rally 1 Mulch Token to the controller of that Champion's Zone.",
+        text: `Deathtouch <br><span class="line-gap"></span> Mulching Overdrive (Mandatory): If this card Destroys a Champion with its Deathtouch: Rally 1 Mulch Token to the controller of that Champion's Zone.`,
         keywords: ["Deathtouch"],
         effect1name: "Mulching Overdrive",
         effect2name: "",
@@ -3097,10 +3104,10 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Brake Slam (Reflex): If this card declares an attack: Negate that attack; Draw 1. <br> If Destroyed: Add 1 Commander Obelisk.",
+        text: `Brake Slam (Reflex): If this card declares an attack: Negate that attack; Draw 1. <br><span class="line-gap"></span> If Destroyed: Add 1 Commander Obelisk.`,
         keywords: ["blank"],
         effect1name: "Brake Slam",
-        effect2name: "",
+        effect2name: "If Destroyed",
         effect3name: "",
       }
     ]
@@ -3118,7 +3125,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Choose 1 of the following effects to activate: <br> • Draw 2. <br> • Take control of 1 of your Opponent's Champions until the End Phase of this turn. <br> • Look at your Opponent's Hand, and if you do, shuffle 1 card of your choice from their Hand back into their Deck.",
+        text: `Choose 1 of the following effects to activate: <br> • Draw 2. <span class="line-gap"></span> • Take control of 1 of your Opponent's Champions until the End Phase of this turn. <span class="line-gap"></span> • Look at your Opponent's Hand, and if you do, shuffle 1 card of your choice from their Hand back into their Deck.`,
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -3141,7 +3148,7 @@ export const cards = [
       {
         text: "The attached Obelisk gains the effect: \"This card's Commander gains Menace.\"",
         keywords: ["Menace"],
-        effect1name: "",
+        effect1name: "The attached Obelisk gains the effect",
         effect2name: "",
         effect3name: "",
       }
@@ -3181,7 +3188,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Fortified <br> Raise the Gates (Exhaustion): Rally 1 Blocker Token to your Opponent's Zone; Activate 1 Obelisk from your Hand, Deck, Reserve, or Tomb (Ignoring its cost).",
+        text: `Fortified <br><span class="line-gap"></span> Raise the Gates (Exhaustion): Rally 1 Blocker Token to your Opponent's Zone; Activate 1 Obelisk from your Hand, Deck, Reserve, or Tomb (Ignoring its cost).`,
         keywords: ["Fortified"],
         effect1name: "Raise the Gates",
         effect2name: "",
@@ -3202,7 +3209,7 @@ export const cards = [
     damageThreshold: "4",
     abilities: [
       {
-        text: "Bloodrage, Duelist, Priority <br> Fan the Hammer (Exhaustion): Discard any number of cards, and send the same number of cards from your Zone to the Tomb, then Target that many cards on the Zone; Destroy Targets.",
+        text: `Bloodrage, Duelist, Priority <br><span class="line-gap"></span> Fan the Hammer (Exhaustion): Discard any number of cards, and send the same number of cards from your Zone to the Tomb, then Target that many cards on the Zone; Destroy Targets.`,
         keywords: ["Bloodrage","Duelist","Priority"],
         effect1name: "Fan the Hammer",
         effect2name: "",
@@ -3223,7 +3230,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: "Greedy, Lifesteal, Reach <br> Rich Get Richer: Sacrifice 1; Add 1 Commander Obelisk, and if you do, this card gains 3 Life.",
+        text: `Greedy, Lifesteal, Reach <br><span class="line-gap"></span> Rich Get Richer: Sacrifice 1; Add 1 Commander Obelisk, and if you do, this card gains 3 Life.`,
         keywords: ["Greedy","Lifesteal","Reach"],
         effect1name: "Rich Get Richer",
         effect2name: "",
@@ -3286,9 +3293,9 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "On Rally: Attach 1 Equipment to this card from your Hand, Deck, or Tomb (ignoring its cost). <br><br> Backup Contingent (Reflex): If this card would be reduced to 0 Life: Rally 1 Dust Token to your Opponent's Zone; Move this card to your Reserve. <br><br> Triumphant Return: If this card is in your Reserve: Sacrifice 1 Token controlled by either Player; Rally this card (ignoring its cost).",
+        text: `On Rally: Attach 1 Equipment to this card from your Hand, Deck, or Tomb (ignoring its cost). <br><span class="line-gap"></span> Backup Contingent (Reflex): If this card would be reduced to 0 Life: Rally 1 Dust Token to your Opponent's Zone; Move this card to your Reserve. <span class="line-gap"></span><span class="line-gap"></span> Triumphant Return: If this card is in your Reserve: Sacrifice 1 Token controlled by either Player; Rally this card (ignoring its cost).`,
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "On Rally",
         effect2name: "Backup Contingent",
         effect3name: "Triumphant Return",
       }
@@ -3456,7 +3463,7 @@ export const cards = [
       {
         text: "The attached Obelisk gains the effect: \"Increase this card's Commander's Damage by 4, but they cannot declare more than one attack per Battle Phase.\"",
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "The attached Obelisk gains the effect",
         effect2name: "",
         effect3name: "",
       }
@@ -3496,9 +3503,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "If the attached Champion is the Commander of an Obelisk: Increase their Damage by 5. <br><br> If Destroyed: Deal 3 Damage to both Players.",
+        text: `If the attached Champion is the Commander of an Obelisk: Increase their Damage by 5. <br><span class="line-gap"></span> If Destroyed: Deal 3 Damage to both Players.`,
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "If the attached Champion is the Commander of an Obelisk",
         effect2name: "",
         effect3name: "",
       }
@@ -3580,7 +3587,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Mount <br> Shielded <br> Mounted (Reflex): Discard 1; Move this card and its Commander to your Reserve. Return both to your Zone during the next Intermission.",
+        text: `Mount <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted (Reflex): Discard 1; Move this card and its Commander to your Reserve. Return both to your Zone during the next Intermission.`,
         keywords: ["Shielded","Mount"],
         effect1name: "",
         effect2name: "Mounted",
@@ -3601,10 +3608,10 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "On Activation: Recruit 1 Clockwork, that Champion becomes this card's Commander.<br> Mount <br> Shielded <br> Mounted: This card's Commander cannot attack. <br> Mounted: Target 1 Champion on the Zone; Target takes 5 Damage.",
+        text: `On Activation: Recruit 1 Clockwork, that Champion becomes this card's Commander. <span class="line-gap"></span> Mount <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted: This card's Commander cannot attack. <span class="line-gap"></span> Mounted: Target 1 Champion on the Zone; Target takes 5 Damage.`,
         keywords: ["Shielded","Mount"],
         effect1name: "On Activation",
-        effect2name: "",
+        effect2name: "Mounted",
         effect3name: "",
       }
     ]
@@ -3685,9 +3692,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Negate the activation, and if you do, destroy the card. <br><br> If this card is in your Tomb, and a Reflex card is activated: Rally 1 Jumper Token to your Opponent's Zone; Set this card to your Zone.",
+        text: `Negate the activation, and if you do, destroy the card. <br><span class="line-gap"></span> If this card is in your Tomb, and a Reflex card is activated: Rally 1 Jumper Token to your Opponent's Zone; Set this card to your Zone.`,
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "If this card is in your Tomb, and a Reflex card is activated",
         effect2name: "",
         effect3name: "",
       }
@@ -3790,9 +3797,9 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Priority, Veilbind <br> On Rally: Attach up to 3 Equipments to this Champion (ignoring costs), but only one each from your Hand, Deck, and Tomb. <br> Sacrificial Blade: Bury 1 Equipment and Target 1 card on the Zone; Destroy Target. <br> Reforged: If this Champion has no attached Equipments: Attach 1 Equipment to this Champion from your Hand, Deck, Tomb, or Void (ignoring its cost).",
+        text: `Priority, Veilbind <span class="line-gap"></span> On Rally: Attach up to 3 Equipments to this Champion (ignoring costs), but only one each from your Hand, Deck, and Tomb. <span class="line-gap"></span> Sacrificial Blade: Bury 1 Equipment and Target 1 card on the Zone; Destroy Target. <span class="line-gap"></span> Reforged: If this card has no attached Equipments: Attach 1 Equipment to this card from your Tomb or Void (ignoring its cost).`,
         keywords: ["Priority","Veilbind"],
-        effect1name: "",
+        effect1name: "On Rally",
         effect2name: "Sacrificial Blade",
         effect3name: "Reforged",
       }
@@ -3811,9 +3818,9 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Arm Thy Knight: If you control a Knight: Activate 1 Equipment from your Hand, Deck, or Tomb (ignoring its cost), attaching the card to a Knight you control. <br> Awaken Allies: If this is the only Champion you control: Sacrifice this card; Recruit 2 Nobles. <br> Helping Hand: If this card is in your Tomb: Obliterate this card and Target 1 Noble or Helper in your Tomb; Resurrect Target.",
+        text: `Arm Thy Knight: If you control a Knight: Activate 1 Equipment from your Hand, Deck, or Tomb (ignoring its cost), attaching the card to a Knight you control. <span class="line-gap"></span> Awaken Allies: If this is the only Champion you control: Sacrifice this card; Recruit 2 Nobles. <span class="line-gap"></span> Helping Hand: If this card is in your Tomb: Obliterate this card and Target 1 Noble or Helper in your Tomb; Resurrect Target.`,
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "Arm Thy Knight",
         effect2name: "Awaken Allies",
         effect3name: "Helping Hand",
       }
@@ -3832,9 +3839,9 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Conscript, Deathward <br> On Resurrection: Your Opponent draws 1.",
+        text: "Conscript, Deathward <br><br> On Resurrection (Mandatory): Your Opponent draws 1.",
         keywords: ["Conscript","Deathward"],
-        effect1name: "",
+        effect1name: "On Resurrection",
         effect2name: "",
         effect3name: "",
       }
@@ -3895,9 +3902,9 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Defender, Naive <br> While Equipped: This Champion is unaffected by its Passives. <br> Hail Mary: Destroy 1 of this Champion's attached Equipments and Target 1 Champion on the Zone; Deal 3 Damage to Target.",
+        text: `Defender, Naive <span class="line-gap"></span> While Equipped: This Champion is unaffected by its Passives. <span class="line-gap"></span> Hail Mary: Destroy 1 of this Champion's attached Equipments and Target 1 Champion on the Zone; Deal 3 Damage to Target.`,
         keywords: ["Defender","Naive"],
-        effect1name: "",
+        effect1name: "While Equipped",
         effect2name: "Hail Mary",
         effect3name: "",
       }
@@ -3916,11 +3923,11 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: "Bulletproof <br> On Rally: Attach up to 2 Equipments from your Tomb to this card (ignoring their costs). <br> Rotting Flesh (Mandatory): During your End Phase: This card takes 3 Damage. <br> If Destroyed: Obliterate this card and Target 1 Knight in your Tomb; Resurrect Target, and if you do, you can attach to it 1 Equipment from your Hand, Deck, or Tomb (ignoring its cost).",
+        text: `Bulletproof <span class="line-gap"></span> On Rally: Attach up to 2 Equipments from your Tomb to this card (ignoring their costs). <span class="line-gap"></span> Rotting Flesh (Mandatory): During your End Phase: This card takes 3 Damage. <span class="line-gap"></span> If Destroyed: Obliterate this card and Target 1 Knight in your Tomb; Resurrect Target, and if you do, you can attach to it 1 Equipment from your Hand, Deck, or Tomb (ignoring its cost).`,
         keywords: ["Bulletproof"],
-        effect1name: "",
+        effect1name: "On Rally",
         effect2name: "Rotting Flesh",
-        effect3name: "",
+        effect3name: "If Destroyed",
       }
     ]
   },
@@ -3937,7 +3944,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Non-Believer <br> You're Not Real!: Undead deal no battle Damage to this card, and you take no battle Damage from battles involving this card and an Undead. <br> Eat That Rock! (Exhaustion): Discard 1 and Target 1 Obelisk; Destroy Target.",
+        text: `Non-Believer <span class="line-gap"></span> You're Not Real!: Undead deal no battle Damage to this card, and you take no battle Damage from battles involving this card and an Undead. <span class="line-gap"></span> Eat That Rock! (Exhaustion): Discard 1 and Target 1 Obelisk; Destroy Target.`,
         keywords: ["Non-Believer"],
         effect1name: "You're Not Real",
         effect2name: "Eat That Rock",
@@ -3950,7 +3957,7 @@ export const cards = [
     name: "Castle Forge",
     image: `${cardArtFolder}/Obelisks/CastleForge.png`,
     type: "Obelisk",
-    condition: "This card must be set for a turn before you can activate it, this card can be flipped and/or activated by another card's effect",
+    condition: "This card must be set for a turn before you can activate it, this card can be flipped or activated by another card's effect",
     cost: "",
     tags: ["Obelisk"],
     damage: "",
@@ -3958,10 +3965,10 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Maintenance <br> Mill 1; Place 1 \"Castle\" Obelisk from your Deck or Tomb into your Reserve. <br> If you control at least 1 other face-up \"Castle\" Obelisk: Discard 2; Add 1 \"Castle\" Obelisk. <br> If Destroyed: Activate up to 3 \"Castle\" Obelisks in your Reserve.",
+        text: `Maintenance <span class="line-gap"></span> Mill 1; Place 1 \"Castle\" Obelisk from your Deck or Tomb into your Reserve. <span class="line-gap"></span> If you control at least 1 other face-up \"Castle\" Obelisk: Discard 2; Add 1 \"Castle\" Obelisk. <span class="line-gap"></span> If Destroyed: Activate up to 3 \"Castle\" Obelisks in your Reserve.`,
         keywords: ["Maintenance"],
-        effect1name: "",
-        effect2name: "",
+        effect1name: "If you control at least 1 other face-up \"Castle\" Obelisk",
+        effect2name: "If Destroyed",
         effect3name: "",
       }
     ]
@@ -3971,7 +3978,7 @@ export const cards = [
     name: "Castle Garrison",
     image: `${cardArtFolder}/Obelisks/CastleGarrison.png`,
     type: "Obelisk",
-    condition: "This card must be set for a turn before you can activate it, this card can be flipped and/or activated by another card's effect",
+    condition: "This card must be set for a turn before you can activate it, this card can be flipped or activated by another card's effect",
     cost: "",
     tags: ["Obelisk"],
     damage: "",
@@ -3979,10 +3986,10 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Maintenance <br> Target 1 Champion you control; Attach 1 Equipment to Target from your Hand or Deck (ignoring its cost). <br> If this card is in your Reserve while you control at least 1 other \"Castle\" Obelisk: Destroy 1 face-up card you control; Activate this card. <br> While you control at least 2 other face-up \"Castle\" Obelisks: Increase the Damage Threshold of your Champions by 1 for every face-up \"Castle\" Obelisk you control.",
+        text: `Maintenance <span class="line-gap"></span> Target 1 Champion you control; Attach 1 Equipment to Target from your Hand or Deck (ignoring its cost). <span class="line-gap"></span> While you control at least 1 face-up \"Castle\" Obelisk and this card is in you Reserve: Destroy 1 face-up card you control; Activate this card (ignoring its cost). <span class="line-gap"></span> While you control at least 2 other face-up \"Castle\" Obelisks: Increase the Damage Threshold of your Champions by 1 for every face-up \"Castle\" Obelisk you control.`,
         keywords: ["Maintenance"],
-        effect1name: "",
-        effect2name: "",
+        effect1name: "While you control at least 1 face-up \"Castle\" Obelisk and this card is in you Reserve",
+        effect2name: "While you control at least 2 other face-up \"Castle\" Obelisks",
         effect3name: "",
       }
     ]
@@ -3992,7 +3999,7 @@ export const cards = [
     name: "Castle Walls",
     image: `${cardArtFolder}/Obelisks/CastleWalls.png`,
     type: "Obelisk",
-    condition: "This card must be set for a turn before you can activate it, this card can be flipped and/or activated by another card's effect",
+    condition: "This card must be set for a turn before you can activate it, this card can be flipped or activated by another card's effect",
     cost: "",
     tags: ["Obelisk"],
     damage: "",
@@ -4000,10 +4007,10 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Maintenance <br> Increase the Damage Threshold of your Champions by 1 for every face-up \"Castle\" Obelisk you control. <br> If an Opponent declares an attack while you control at least 1 other face-up \"Castle\" Obelisk (Reflex): Negate that attack, and if you do, deal 1 Damage to the attacking Champion. <br> While you control at least 2 other face-up \"Castle\" Obelisks: Your Champions gain Warded.",
+        text: `Maintenance <span class="line-gap"></span> Increase the Damage Threshold of your Champions by 1 for every face-up \"Castle\" Obelisk you control. <span class="line-gap"></span> If an Opponent declares an attack while you control at least 1 other face-up \"Castle\" Obelisk (Reflex): Negate that attack, and if you do, deal 1 Damage to the attacking Champion. <span class="line-gap"></span> While you control at least 2 other face-up \"Castle\" Obelisks: Your Champions gain Warded.`,
         keywords: ["Maintenance","Warded"],
-        effect1name: "",
-        effect2name: "",
+        effect1name: "If an Opponent declares an attack while you control at least 1 other face-up \"Castle\" Obelisk",
+        effect2name: "While you control at least 2 other face-up \"Castle\" Obelisks",
         effect3name: "",
       }
     ]
@@ -4013,7 +4020,7 @@ export const cards = [
     name: "Castle Moat",
     image: `${cardArtFolder}/Obelisks/CastleMoat.png`,
     type: "Obelisk",
-    condition: "This card must be set for a turn before you can activate it, this card can be flipped and/or activated by another card's effect",
+    condition: "This card must be set for a turn before you can activate it, this card can be flipped or activated by another card's effect",
     cost: "",
     tags: ["Obelisk"],
     damage: "",
@@ -4021,10 +4028,10 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Maintenance <br> Your Champions gain Invisible and Veilbind. <br> If an Opponent declares an attack while you control at least 1 other face-up \"Castle\" Obelisk (Reflex): Destroy this card; Destroy all of that Opponent's face-up Champions. <br> While you control at least 3 other face-up \"Castle\" Obelisks: Your Champions gain Unstoppable.",
+        text: `Maintenance <span class="line-gap"></span> Your Champions gain Invisible and Veilbind. <span class="line-gap"></span> If an Opponent declares an attack while you control at least 1 other face-up \"Castle\" Obelisk (Reflex): Destroy this card; Destroy all of that Opponent's face-up Champions. <span class="line-gap"></span> While you control at least 3 other face-up \"Castle\" Obelisks: Your Champions gain Unstoppable.`,
         keywords: ["Maintenance","Invisible","Veilbind","Unstoppable"],
-        effect1name: "",
-        effect2name: "",
+        effect1name: "If an Opponent declares an attack while you control at least 1 other face-up \"Castle\" Obelisk",
+        effect2name: "While you control at least 3 other face-up \"Castle\" Obelisks",
         effect3name: "",
       }
     ]
@@ -4034,7 +4041,7 @@ export const cards = [
     name: "Castle Tower",
     image: `${cardArtFolder}/Obelisks/CastleTower.png`,
     type: "Obelisk",
-    condition: "This card must be set for a turn before you can activate it, this card can be flipped and/or activated by another card's effect",
+    condition: "This card must be set for a turn before you can activate it, this card can be flipped or activated by another card's effect",
     cost: "",
     tags: ["Obelisk"],
     damage: "",
@@ -4042,10 +4049,10 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Maintenance <br> Your Champions gain Reach. <br> While you control at least 1 other face-up \"Castle\" Obelisk: \"Castle\" Obelisks no longer need to be placed face-down before they can be activated. <br> While you control at least 3 other face-up \"Castle\" Obelisks (Reflex): Target 1 card on the Zone; Destroy Target.",
+        text: `Maintenance <span class="line-gap"></span> Your Champions gain Reach. <span class="line-gap"></span> While you control at least 1 other face-up \"Castle\" Obelisk: \"Castle\" Obelisks no longer need to be placed face-down before they can be activated. <span class="line-gap"></span> While you control at least 3 other face-up \"Castle\" Obelisks (Reflex): Target 1 card on the Zone; Destroy Target.`,
         keywords: ["Maintenance","Reach"],
-        effect1name: "",
-        effect2name: "",
+        effect1name: "While you control at least 1 other face-up \"Castle\" Obelisk",
+        effect2name: "While you control at least 3 other face-up \"Castle\" Obelisks",
         effect3name: "",
       }
     ]
@@ -4055,7 +4062,7 @@ export const cards = [
     name: "Castle Kitchen",
     image: `${cardArtFolder}/Obelisks/CastleKitchen.png`,
     type: "Obelisk",
-    condition: "This card must be set for a turn before you can activate it, this card can be flipped and/or activated by another card's effect",
+    condition: "This card must be set for a turn before you can activate it, this card can be flipped or activated by another card's effect",
     cost: "",
     tags: ["Obelisk"],
     damage: "",
@@ -4063,11 +4070,11 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Maintenance <br> Offer 1 Life and Target 1 Champion you control; Target gains 3 Life. <br> If a Champion(s) you control is Destroyed while you control at least 1 other face-up \"Castle\" Obelisk (Reflex): Flip this card face-down; Resurrect 1 of the Destroyed Champions. <br> While you control at least 2 other face-up \"Castle\" Obelisks: Your Champions gain Greedy.",
+        text: `Maintenance <span class="line-gap"></span> Offer 1 Life and Target 1 Champion you control; Target gains 3 Life. <span class="line-gap"></span> If a Champion(s) you control is Destroyed while you control at least 1 other face-up \"Castle\" Obelisk (Reflex): Flip this card face-down; Resurrect 1 of the Destroyed Champions. <span class="line-gap"></span> While you control at least 2 other face-up \"Castle\" Obelisks: Your Champions gain Greedy.`,
         keywords: ["Maintenance","Greedy"],
-        effect1name: "",
-        effect2name: "",
-        effect3name: "",
+        effect1name: "While you control at least 1 other face-up \"Castle\" Obelisk",
+        effect2name: "While you control at least 2 other face-up \"Castle\" Obelisks",
+        effect3name: "If a Champion(s) you control is Destroyed",
       }
     ]
   },
@@ -4076,7 +4083,7 @@ export const cards = [
     name: "Castle Dungeon",
     image: `${cardArtFolder}/Obelisks/CastleDungeon.png`,
     type: "Obelisk",
-    condition: "This card must be set for a turn before you can activate it, this card can be flipped and/or activated by another card's effect",
+    condition: "This card must be set for a turn before you can activate it, this card can be flipped or activated by another card's effect",
     cost: "",
     tags: ["Obelisk"],
     damage: "",
@@ -4084,10 +4091,10 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Maintenance <br> Champions you Destroy by battle are sent to your Opponent's Reserve, instead of their Tomb. <br> While you control at least 2 other face-up \"Castle\" Obelisks: Target 1 Champion in your Opponent's Reserve; Rally Target to your Zone. <br> While you control at least 4 other face-up \"Castle\" Obelisks: Target 1 Obelisk in your Tomb; Activate Target (ignoring its cost).",
+        text: `Maintenance <span class="line-gap"></span> Champions you Destroy by battle are sent to your Opponent's Reserve, instead of their Tomb. <span class="line-gap"></span> While you control at least 2 other face-up \"Castle\" Obelisks: Target 1 Champion in your Opponent's Reserve; Rally Target to your Zone. <span class="line-gap"></span> While you control at least 4 other face-up \"Castle\" Obelisks: Target 1 Obelisk in your Tomb; Activate Target (ignoring its cost).`,
         keywords: ["Maintenance"],
-        effect1name: "",
-        effect2name: "",
+        effect1name: "While you control at least 2 other face-up \"Castle\" Obelisks",
+        effect2name: "While you control at least 4 other face-up \"Castle\" Obelisks",
         effect3name: "",
       }
     ]
@@ -4105,10 +4112,10 @@ export const cards = [
     damageThreshold: "4",
     abilities: [
       {
-        text: "Deathward, Defender, Menace <br> On Rally: Attach 1 Equipment to this card from your Hand, Reserve, or Tomb (ignoring its cost). <br> If Destroyed: Add 1 Knight, and if you do, Add or Retrieve 1 Equipment.",
+        text: `Deathward, Defender, Menace <span class="line-gap"></span> On Rally: Attach 1 Equipment to this card from your Hand, Reserve, or Tomb (ignoring its cost). <span class="line-gap"></span> If Destroyed: Add 1 Knight, and if you do, Add or Retrieve 1 Equipment.`,
         keywords: ["Deathward","Defender","Menace"],
-        effect1name: "",
-        effect2name: "",
+        effect1name: "On Rally",
+        effect2name: "If Destroyed",
         effect3name: "",
       }
     ]
@@ -4126,7 +4133,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Maintenance <br> Honest Work: Mill 4; Activate from your Deck, Reserve, or face-down Arsenal, 1 \"Castle\" Obelisk.",
+        text: `Maintenance <br><span class="line-gap"></span> Honest Work: Mill 4; Activate from your Deck, Reserve, or face-down Arsenal, 1 \"Castle\" Obelisk.`,
         keywords: ["Maintenance"],
         effect1name: "Honest Work",
         effect2name: "",
@@ -4147,9 +4154,9 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Fortified <br> If Sent to Tomb: Add 1 Obelisk.",
+        text: "Fortified <br><br> If Sent to Tomb: Add 1 Obelisk.",
         keywords: ["Fortified"],
-        effect1name: "",
+        effect1name: "If Sent to Tomb",
         effect2name: "",
         effect3name: "",
       }
@@ -4168,9 +4175,9 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Fortified <br> On Rally: Recruit or Resurrect 1 Knight. <br> Royal Guard: This card gains Invisible and Non-Believer while you control a Knight. <br> Royal Support: Your Knight's Damage Thresholds increase by 2, and the first time they would be Destroyed each turn, they are not Destroyed.",
+        text: `Fortified <span class="line-gap"></span> On Rally: Recruit or Resurrect 1 Knight. <span class="line-gap"></span> Royal Guard: This card gains Invisible and Non-Believer while you control a Knight. <span class="line-gap"></span> Royal Support: Your Knight's Damage Thresholds increase by 2, and the first time they would be Destroyed each turn, they are not Destroyed.`,
         keywords: ["Fortified","Non-Believer","Invisible"],
-        effect1name: "",
+        effect1name: "On Rally",
         effect2name: "Royal Guard",
         effect3name: "Royal Support",
       }
@@ -4189,17 +4196,17 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: "Bloodrage, Greedy <br> Knightsbane: Knights, and their controllers, take no Damage from battles with this card. Knights deal triple battle Damage to this card. <br> Furious Fire Breath (Exhaustion): Offer 6 Life and Target up to 3 Champions your Opponent controls; Destroy Targets, and if you do, draw 1 for each Champion destroyed by this effect. <br> If Destroyed by Battle: Recruit 1 Royal.",
+        text: `Bloodrage, Greedy <span class="line-gap"></span> Knightsbane: Knights, and their controllers, take no Damage from battles with this card. Knights deal triple battle Damage to this card. <span class="line-gap"></span> Furious Fire Breath (Exhaustion): Offer 6 Life and Target up to 3 Champions your Opponent controls; Destroy Targets, and if you do, draw 1 for each Champion destroyed by this effect. <span class="line-gap"></span> If Destroyed by Battle: Recruit 1 Royal.`,
         keywords: ["Bloodrage","Greedy"],
         effect1name: "Knightsbane",
         effect2name: "Furious Fire Breath",
-        effect3name: "",
+        effect3name: "If Destroyed by Battle",
       }
     ]
   },
   {
     id: "201",
-    name: "Portable Prarie Dog",
+    name: "Portable Prairie Dog",
     image: `${cardArtFolder}/Champions/PortablePrarieDog.png`,
     type: "Champion",
     condition: "",
@@ -4210,7 +4217,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Deathward <br> Emergency Tunnel (Reflex): If your Opponent declares an attack: Flip this card face-down, and if you do, Rally 2 Burrow Token. This card's face-down display then becomes a Burrow Token.",
+        text: `Deathward <span class="line-gap"></span> Emergency Tunnel (Reflex): If your Opponent declares an attack: Flip this card face-down, and if you do, Rally 2 Burrow Token.`,
         keywords: ["Deathward"],
         effect1name: "Emergency Tunnel",
         effect2name: "",
@@ -4233,7 +4240,7 @@ export const cards = [
       {
         text: "On Rally: If this card has the highest Damage on the Zone: Draw 1.",
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "On Rally",
         effect2name: "",
         effect3name: "",
       }
@@ -4252,11 +4259,11 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Forged <br> If this card has 1 attached Equipment: This card gains Warded. <br> If this card has 2 attached Equipments: This card gains Priority. <br> If this card has 3 attached Equipments: This card gains Bulletproof. <br><br>&nbsp;",
+        text: `Forged <br><span class="line-gap"></span> If this card has 1 attached Equipment: This card gains Warded. <span class="line-gap"></span> If this card has 2 attached Equipments: This card gains Priority. <span class="line-gap"></span> If this card has 3 attached Equipments: This card gains Bulletproof.`,
         keywords: ["Forged","Warded","Priority","Bulletproof"],
-        effect1name: "",
-        effect2name: "",
-        effect3name: "",
+        effect1name: "If this card has 1 attached Equipment",
+        effect2name: "If this card has 2 attached Equipments",
+        effect3name: "If this card has 3 attached Equipments",
       }
     ]
   },
@@ -4275,7 +4282,7 @@ export const cards = [
       {
         text: "If Sent to Tomb: Add or Retrieve 1 Dragon.",
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "If Sent to Tomb",
         effect2name: "",
         effect3name: "",
       }
@@ -4294,7 +4301,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Draw 2. <br> During your Opponent's next Draw Phase: Your Opponent draws 2 additional cards.",
+        text: "Draw 2. <br><br> During your Opponent's next Draw Phase: Your Opponent draws 2 additional cards.",
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -4315,9 +4322,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Maintenance <br> Mount <br> Mounted: This card's Commander gains Priority and Reach.",
+        text: `Maintenance <span class="line-gap"></span> Mount <span class="line-gap"></span> Mounted: This card's Commander gains Priority and Reach.`,
         keywords: ["Maintenance","Mount","Priority","Reach"],
-        effect1name: "",
+        effect1name: "Mounted",
         effect2name: "",
         effect3name: "",
       }
@@ -4336,9 +4343,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Increase the attached Champion's Damage by 5. <br><br> If Sent to Tomb: You can stack this card.",
+        text: `Increase the attached Champion's Damage by 5. <br><span class="line-gap"></span> If Sent to Tomb: You can stack this card.`,
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "If Sent to Tomb",
         effect2name: "",
         effect3name: "",
       }
@@ -4420,9 +4427,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Your opponent Obliterates cards from their Zone so they control the same number of cards as you do. <br><br> If you control no cards: You can activate this card from your Hand.",
+        text: `Your opponent Obliterates cards from their Zone so they control the same number of cards as you do. <br><span class="line-gap"></span> If you control no cards: You can activate this card from your Hand.`,
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "If you control no cards",
         effect2name: "",
         effect3name: "",
       }
@@ -4525,7 +4532,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Attach 1 Equipment from your Hand, Deck, or Tomb to each Champion you control with a Damage of 2 or less (ignoring their costs). <br><br> Destroy all Equipments attached this way during the End Phase.",
+        text: `Attach 1 Equipment from your Hand, Deck, or Tomb to each Champion you control with a Damage of 2 or less (ignoring their costs). <br><span class="line-gap"></span> Destroy all Equipments attached this way during the End Phase.`,
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -4714,7 +4721,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Double the Damage of all Knights you currently control. <br><br> Destroy all affected Champions during the End Phase.",
+        text: `Double the Damage of all Knights you currently control. <br><span class="line-gap"></span> Destroy all affected Champions during the End Phase.`,
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -4756,9 +4763,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attached Champion can no longer declare attacks. <br><br> The Champion’s controller draws 1 card during each of their Intermissions while this card is attached.",
+        text: `The attached Champion can no longer declare attacks. <br><span class="line-gap"></span> During each of their Intermissions while this card is attached: The Champion’s controller draws 1.`,
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "During each of their Intermissions while this card is attached",
         effect2name: "",
         effect3name: "",
       }
@@ -4777,7 +4784,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attached Champion gains Priority. <br><br> The attached Champion's Damage Threshold is also reduced to 1.",
+        text: `The attached Champion gains Priority. <br><span class="line-gap"></span> The attached Champion's Damage Threshold is also reduced to 1.`,
         keywords: ["Priority"],
         effect1name: "",
         effect2name: "",
@@ -4798,9 +4805,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Increase the attached Champion's Damage by 3. <br><br> Each time the attached Champion declares an attack, your Opponent draws 1.",
+        text: `Increase the attached Champion's Damage by 5. <br><span class="line-gap"></span> Each time the attached Champion declares an attack: Your Opponent draws 1.`,
         keywords: ["Priority"],
-        effect1name: "",
+        effect1name: "Each time the attached Champion declares an attack",
         effect2name: "",
         effect3name: "",
       }
@@ -4819,9 +4826,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attached Champion gains Warded. <br><br> If Destroyed: Your Opponent can Recruit 1 with Damage 1 or less.",
+        text: `The attached Champion gains Warded. <br><span class="line-gap"></span> If Destroyed: Your Opponent can Recruit 1 with Damage 1 or less.`,
         keywords: ["Warded"],
-        effect1name: "",
+        effect1name: "If Destroyed",
         effect2name: "",
         effect3name: "",
       }
@@ -4840,9 +4847,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attached Champion gains Bulletproof. <br><br> If Destroyed: Retrieve this card, and if you do, discard 1.",
+        text: `The attached Champion gains Bulletproof. <br><span class="line-gap"></span> If Destroyed: Retrieve this card, and if you do, discard 1.`,
         keywords: ["Bulletproof"],
-        effect1name: "",
+        effect1name: "If Destroyed",
         effect2name: "",
         effect3name: "",
       }
@@ -4861,7 +4868,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attached Champion gains Non-Believer. <br><br> You take 4 Damage during each of your End Phases",
+        text: `The attached Champion gains Non-Believer. <br><span class="line-gap"></span> During each of your End Phases: You take 4 Damage.`,
         keywords: ["Non-Believer"],
         effect1name: "",
         effect2name: "",
@@ -4882,9 +4889,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attached Champion gains Invisible. <br><br> During each of your End Phases (Mandatory): Discard 1.",
+        text: `The attached Champion gains Invisible. <br><span class="line-gap"></span> During each of your End Phases (Mandatory): Discard 1.`,
         keywords: ["Invisible"],
-        effect1name: "",
+        effect1name: "During each of your End Phases",
         effect2name: "",
         effect3name: "",
       }
@@ -4905,7 +4912,7 @@ export const cards = [
       {
         text: "If the attached Champion deals battle Damage: Target 1 Champion on the Zone; Deal 2 Damage to Target.",
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "If the attached Champion deals battle Damage",
         effect2name: "",
         effect3name: "",
       }
@@ -4924,9 +4931,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attached Champion's Damage Threshold is increased by 2. <br><br> Each time the attached Champion battles, your Opponent draws 1.",
+        text: `The attached Champion's Damage Threshold is increased by 2. <br><span class="line-gap"></span> Each time the attached Champion battles: Your Opponent draws 1.`,
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "Each time the attached Champion battles",
         effect2name: "",
         effect3name: "",
       }
@@ -4989,7 +4996,7 @@ export const cards = [
       {
         text: "At the end of a battle in which the attached Champion dealt damage: Target 1 Equipment on the Zone; Destroy Target.",
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "At the end of a battle in which the attached Champion dealt damage",
         effect2name: "",
         effect3name: "",
       }
@@ -5008,9 +5015,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The first time each turn the attached Champion would be Damaged or Destroyed (Mandatory): Your Opponent draws 2; The attached Champion is not Damaged or Destroyed.",
+        text: "Once per turn when the attached Champion would be Damaged or Destroyed (Mandatory): Your Opponent draws 2; The attached Champion is not Damaged or Destroyed.",
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "Once per turn when the attached Champion would be Damaged or Destroyed",
         effect2name: "",
         effect3name: "",
       }
@@ -5050,7 +5057,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Lifebalance <br> Healing Hands (Exhaustion): Your Opponent gains 5 Life; Obliterate the top 8 cards of their Deck. <br> Bestow Life (Exhaustion): Target 1 Construct or Helper in your Tomb; Resurrect Target Champion, but Destroy all Champions Resurrected this way if this card leaves the Zone. <br><br>&nbsp;",
+        text: `Lifebalance <span class="line-gap"></span> Healing Hands (Exhaustion): Your Opponent gains 5 Life; Obliterate the top 8 cards of their Deck. <span class="line-gap"></span> Bestow Life (Exhaustion): Target 1 Construct or Helper in your Tomb; Resurrect Target Champion, but Destroy all Champions Resurrected this way if this card leaves the Zone.`,
         keywords: ["Lifebalance"],
         effect1name: "Healing Hands",
         effect2name: "Bestow Life",
@@ -5071,7 +5078,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Rescind Anasthesia: Target 1 other Champion you control; Target can use its non-Exhaustion abilities an additional time this turn. <br> Defibrillate: Sacrifice this card and Target 1 other Champion in your Tomb; Resurrect Target, but reduce its Life to 1. <br> Helping Hand: If this card is in your Tomb: Obliterate this card and Target up to 2 cards in your Tomb; Retrieve Targets.",
+        text: `Rescind Anasthesia: Target 1 other Champion you control; Target can use its non-Exhaustion abilities an additional time this turn. <span class="line-gap"></span> Defibrillate: Sacrifice this card and Target 1 other Champion in your Tomb; Resurrect Target, but reduce its Life to 1. <span class="line-gap"></span> Helping Hand: If this card is in your Tomb: Obliterate this card and Target up to 2 cards in your Tomb; Retrieve Targets.`,
         keywords: ["blank"],
         effect1name: "Rescind Anasthesia",
         effect2name: "Defibrillate",
@@ -5134,7 +5141,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Duelist <br> Construct Fodder: Sacrifice 1; Destroy 1 card on the Zone.",
+        text: `Duelist <span class="line-gap"></span> Construct Fodder: Sacrifice 1; Destroy 1 card on the Zone.`,
         keywords: ["Duelist"],
         effect1name: "Construct Fodder",
         effect2name: "",
@@ -5155,7 +5162,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Might of the Small <br> Precise Strike: This card cannot be blocked this turn. It is Destroyed during the End Phase.",
+        text: `Might of the Small <span class="line-gap"></span> Precise Strike: This card cannot be blocked this turn. It is Destroyed during the End Phase.`,
         keywords: ["Might of the Small"],
         effect1name: "Precise Strike",
         effect2name: "",
@@ -5197,9 +5204,9 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Deathward <br> On Rally: Target 1 of your Opponent's Champions; This card's Damage and Life become equal to that Champion's current Damage and Life.",
+        text: `Deathward <span class="line-gap"></span> On Rally: Target 1 of your Opponent's Champions; This card's Damage and Life become equal to that Champion's current Damage and Life.`,
         keywords: ["Deathward"],
-        effect1name: "",
+        effect1name: "On Rally",
         effect2name: "",
         effect3name: "",
       }
@@ -5260,7 +5267,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: "Bloodrage, Taskmaster <br> Miraculous Revival: Both Players Target 1 Champion in their respective Tombs; Resurrect Targets.",
+        text: `Bloodrage, Taskmaster <span class="line-gap"></span> Miraculous Revival: Both Players Target 1 Champion in their respective Tombs; Resurrect Targets.`,
         keywords: ["Bloodrage","Taskmaster"],
         effect1name: "Miraculous Revival",
         effect2name: "",
@@ -5283,7 +5290,7 @@ export const cards = [
       {
         text: "On Rally: Increase this card's Damage and Life by the remaining Damage and Life of all Champions sacrificed for its Rally.",
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "On Rally",
         effect2name: "",
         effect3name: "",
       }
@@ -5304,7 +5311,7 @@ export const cards = [
       {
         text: "If Destroyed By Battle: You can choose any multiple (X) of 5 Life for your Opponent to gain; Add X Reflex.",
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "If Destroyed By Battle",
         effect2name: "",
         effect3name: "",
       }
@@ -5325,7 +5332,7 @@ export const cards = [
       {
         text: "Duelist, Priority <br> If this Champion battles (Reflex): Your Opponent gains X Life; Increase this card's Damage by X until the end of Damage Calculation.",
         keywords: ["Duelist","Priority"],
-        effect1name: "",
+        effect1name: "If this Champion battles",
         effect2name: "",
         effect3name: "",
       }
@@ -5659,9 +5666,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attached Champion cannot be Destroyed by card effects. <br><br> If Sent to Tomb: Retrieve 1 Action.",
+        text: `The attached Champion cannot be Destroyed by card effects. <br><span class="line-gap"></span> If Sent to Tomb: Retrieve 1 Action.`,
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "If Sent to Tomb",
         effect2name: "",
         effect3name: "",
       }
@@ -5703,7 +5710,7 @@ export const cards = [
       {
         text: "If Destroyed: Set 1 Reflex face-down into your Arsenal from your Deck.",
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "If Destroyed",
         effect2name: "",
         effect3name: "",
       }
@@ -5756,15 +5763,15 @@ export const cards = [
     name: "Advantageous Knowledge",
     image: `${cardArtFolder}/Obelisks/AdvantageousKnowledge.png`,
     type: "Obelisk",
-    condition: "There are at least 3 Champions on the Zone, and your Opponent controls at least 1 Champion",
-    cost: "Declare 3 Champion Tags",
+    condition: "There are at least 2 Champions on the Zone, and your Opponent controls at least 1 Champion",
+    cost: "Declare 2 Champion Tags",
     tags: ["Obelisk"],
     damage: "",
     life: "",
     damageThreshold: "",
     abilities: [
       {
-        text: "Champions with the first declared tag deal double battle Damage against the second declared, which deals double battle Damage against the third which deals double battle Damage against the first. And then in reverse, second deals half battle Damage (rounded down) against the first, which deals half battle Damage (rounded down) against the third, which deals half battle Damage (rounded down) against the second.",
+        text: "Champions with the first declared tag deal double battle Damage against the second, and Champions with the second tag deal half battle Damage (rounded down) against the first.",
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -5787,7 +5794,7 @@ export const cards = [
       {
         text: "If your Opponent activates a Champion effect: Your Opponent gains 3 Life; Negate the effect, and if you do, stack the triggering Champion.",
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "If your Opponent activates a Champion effect",
         effect2name: "",
         effect3name: "",
       }
@@ -5808,7 +5815,7 @@ export const cards = [
       {
         text: "If a Champion(s) is Destroyed: Mill 1, if it is a Rush or Reflex, you can set it face-down in your Arsenal.",
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "If a Champion(s) is Destroyed",
         effect2name: "",
         effect3name: "",
       }
@@ -5827,9 +5834,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Mount <br> Mounted (Mandatory): If this card, or its Commander, moves Zones: Move this card, or its Commander, to the same location. <br> Mounted: If this card's Commander Destroys a Champion by Battle: This card's Commander gains 5 Life.",
+        text: `Mount <span class="line-gap"></span> Mounted (Mandatory): If this card, or its Commander, moves Zones: Move this card, or its Commander, to the same location. <span class="line-gap"></span> Mounted: If this card's Commander Destroys a Champion by Battle: This card's Commander gains 5 Life.`,
         keywords: ["Mount"],
-        effect1name: "",
+        effect1name: "Mounted",
         effect2name: "",
         effect3name: "",
       }
@@ -6100,7 +6107,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Negate the Rally, and if you do, Destroy those Champions. <br><br> After resolving successfully, set this card face-down to your Opponent's Arsenal.",
+        text: `Negate the Rally, and if you do, Destroy those Champions. <br><span class="line-gap"></span> After resolving successfully, set this card face-down to your Opponent's Arsenal.`,
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -6331,7 +6338,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "<br> Obliterate your Opponent’s Hand, Deck, Tomb, Reserve, and all cards your Opponent controls, and if you do, both Players can Unleash 1 (ignoring their conditions). <br><br> If either Champion leaves the Zone, that player loses. If both leave the Zone at the same time, it is a draw. Players cannot lose by failing to draw a card at the start of their turn.",
+        text: `Obliterate your Opponent’s Hand, Deck, Tomb, Reserve, and all cards your Opponent controls, and if you do, both Players can Unleash 1 (ignoring their conditions). <span class="line-gap"></span><span class="line-gap"></span> If either Champion leaves the Zone, that player loses. If both leave the Zone at the same time, it is a draw. Players cannot lose by failing to draw a card at the start of their turn.`,
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",

@@ -104,7 +104,7 @@ export function renderCard(card, container) {
     ${card.condition ? `<div class="card-condition"><strong>Condition:</strong> ${card.condition}</div>` : ""}
     ${card.cost && card.cost !== "Basic" ? 
       `<div class="card-cost"><strong>Cost:</strong> ${renderTextWithTokens(card.cost)}</div>` : ""}
-    <div class="card-text" style="padding: 0;">${abilitiesHTML}</div>
+    <div class="card-text">${abilitiesHTML}</div>
     ${card.type === "Champion" ? `
     <div class="bottom-bar">
       <div class="damage">${card.damage}</div>
