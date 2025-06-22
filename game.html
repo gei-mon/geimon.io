@@ -413,6 +413,7 @@
         </div>
         <div id="phase-tracker">
             <div class="phase-box" id="phase-Intermission">Intermission</div>
+            <div class="phase-box" id="phase-Dummy"></div>
             <div class="phase-box" id="phase-Draw">Draw</div>
             <div class="phase-box" id="phase-Main 1">Main 1</div>
             <div class="phase-box" id="phase-Battle">Battle</div>
@@ -568,6 +569,68 @@
                 ];
                 return zones.find(c => String(c.id) === String(id) || String(c.id) === String(id));
             }
+
+            function detachDrawBox() {
+                const draw    = document.getElementById('phase-Draw');      // the Draw square
+                const tracker = document.getElementById('phase-tracker');   // row of phase boxes
+                if (!draw || !tracker || draw.dataset.detached) return;     // already done?
+
+                    const gapPx   = parseFloat(getComputedStyle(tracker).gap) || 0;
+
+                    /* remember Draw’s offset *inside* the tracker plus one-box shift */
+                    draw.dataset.offsetX = draw.offsetLeft - draw.offsetWidth - gapPx;
+                draw.dataset.offsetY = draw.offsetTop;    // px from tracker’s top edge
+
+                /* 2. move it out of the tracker’s stacking context (z-index 100 600) */
+                tracker.removeChild(draw);
+                document.body.appendChild(draw);
+                draw.dataset.detached = 'true';
+
+                /* 3. give it root-level positioning & a higher stacking order */
+                Object.assign(draw.style, {
+                position: 'fixed',
+                zIndex:   '100950',      // now above playerReserveBox (100 900)
+                opacity: '0',
+                transition: 'opacity 0.6s ease-in-out'
+                });
+
+                repositionDrawBox();      // place it once for the current size
+                syncOpacityWithTracker();     // **immediately match the current opacity**
+                observeTrackerOpacity();      // **start watching for future changes**
+            }
+
+            /** Put the box back over the tracker using stored offsets */
+            function repositionDrawBox() {
+                const draw    = document.getElementById('phase-Draw');
+                const tracker = document.getElementById('phase-tracker');
+                if (!draw || !tracker || !draw.dataset.detached) return;
+
+                const rect = tracker.getBoundingClientRect();   // new screen coords
+                const dx   = parseFloat(draw.dataset.offsetX);
+                const dy   = parseFloat(draw.dataset.offsetY);
+
+                draw.style.left = `${rect.left + dx}px`;
+                draw.style.top  = `${rect.top  + dy}px`;
+            }
+
+            function syncOpacityWithTracker() {
+                const draw    = document.getElementById('phase-Draw');
+                const tracker = document.getElementById('phase-tracker');
+                if (!draw || !tracker) return;
+                draw.style.opacity = getComputedStyle(tracker).opacity;
+            }
+
+
+            function observeTrackerOpacity() {
+                const tracker = document.getElementById('phase-tracker');
+                if (!tracker) return;
+
+                new MutationObserver(syncOpacityWithTracker)
+                .observe(tracker, { attributes: true, attributeFilter: ['style'] });
+            }
+
+            window.addEventListener('DOMContentLoaded', detachDrawBox); // run once
+            window.addEventListener('resize',      repositionDrawBox);  // realign on scale
 
         function handsAreEqual(currentHand) {
         return (
@@ -1958,7 +2021,7 @@
 
             const championBox = document.getElementById("playerChampionsBox");
                 championBox.style.position = "fixed";
-                championBox.style.left = "693px";
+                championBox.style.left = "875px";
                 championBox.style.top = "525px";
                 championBox.style.width = "525px";
                 championBox.style.height = "128px";
@@ -1988,7 +2051,7 @@
 
             const arsenalBox = document.getElementById("playerArsenalBox");
                 arsenalBox.style.position = "fixed";
-                arsenalBox.style.left = "693px";
+                arsenalBox.style.left = "875px";
                 arsenalBox.style.top = "675px";
                 arsenalBox.style.width = "525px";
                 arsenalBox.style.height = "128px";
@@ -2788,7 +2851,7 @@
                     cardContainer.style.flexWrap = "wrap";
                     cardContainer.style.justifyContent = "center";
                     cardContainer.style.gap = "10px";
-                    cardContainer.style.marginRight = "10px";
+                    cardContainer.style.marginRight = "19px";
                     cardContainer.style.maxWidth = "100%";
                     cardContainer.style.overflow = "visible";
 
@@ -4003,6 +4066,7 @@
 
                 cardElement.style.transform       = transforms.join(" ");
                 cardElement.style.transformOrigin = "center center";
+                cardElement.style.marginLeft = "";
 
                 // 3) Persist change to server
                 await sendZoneUpdate([fromZone, toZoneKey]);
