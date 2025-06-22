@@ -161,6 +161,18 @@ io.on('connection', (socket) => {
     io.to(roomId).emit('playerReady', { username, ready });
   });
 
+  socket.on('rpsChoice', ({ username, choice }) => {
+    const user = userMap.get(socket.id);
+    if (!user) return;
+    io.to(user.roomId).emit('rpsChoice', { username, choice });
+  });
+
+  socket.on('rpsResult', ({ winner, choices }) => {
+    const user = userMap.get(socket.id);
+    if (!user) return;
+    io.to(user.roomId).emit('rpsResult', { winner, choices });
+  });
+
   socket.on('disconnect', () => {
     const user = userMap.get(socket.id);
     if (!user) return;
