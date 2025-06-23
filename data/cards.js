@@ -91,14 +91,14 @@ export const cards = [
     image: `${cardArtFolder}/Champions/NavarielLordOblivion.png`,
     type: "Champion",
     condition: "",
-    cost: "Mill 10",
+    cost: "Mill 6",
     tags: ["Cryptbound", "Hellfire", "Undead", "Lord"],
     damage: 20,
     life: 10,
     damageThreshold: "2",
     abilities: [
       {
-        text: `Deathpower, Deathtouch <br><span class="line-gap"></span> On Rally: Obliterate all cards in both Players' Tombs. <span class="line-gap"></span> Break the Seal: Resurrect or Unleash 1 Undead. Destroy all Champions Resurrected this way if this card leaves the Zone. <span class="line-gap"></span> Fateseal (Reflex, Exhaustion): Obliterate the top 10 cards of your Deck; Reduce the Life of all other Champions to 1.`,
+        text: `Deathpower, Deathtouch <br><span class="line-gap"></span> On Rally (Mandatory): Obliterate all cards in both Players' Tombs. <span class="line-gap"></span> Break the Seal: Resurrect or Unleash 1 Undead. Destroy all Champions Resurrected this way if this card leaves the Zone. <span class="line-gap"></span> Fateseal (Reflex, Exhaustion): Obliterate the top 10 cards of your Deck; Reduce the Life of all other Champions to 1.`,
         keywords: ["Deathpower", "Deathtouch"],
         effect1name: "On Rally",
         effect2name: "Break the Seal",

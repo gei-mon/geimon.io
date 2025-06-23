@@ -135,6 +135,10 @@ io.on('connection', (socket) => {
       }
   });
 
+  socket.on('signal_icon', ({ gameId, icon }) => {
+    io.to(gameId).emit('signal_icon', { icon });
+  });
+
   socket.on('toggle_target', ({ gameId, cardId }) => {
     // simply rebroadcast to everyone in the same game room
     io.to(gameId).emit('card_targeted', { cardId });

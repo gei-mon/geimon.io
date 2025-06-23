@@ -1431,6 +1431,55 @@
             };
         };
 
+        const ICON_PATH = 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/';
+        const ICONS = [
+        { file:'good.png',      title:'Thumbs-up'   },
+        { file:'bad.png',       title:'Thumbs-down' },
+        { file:'thinking.png',  title:'…'           },
+        { file:'response.png',  title:'!'           },
+        ];
+
+        // 1) container – tweak left/top if you reposition the opponent pic
+        const reactBar = document.createElement('div');
+        Object.assign(reactBar.style, {
+        position:'absolute', left:'1960px', top:'0px',
+        width:'100px', height:'100px',        // same footprint as profile pic
+        display:'grid', gridTemplateColumns:'1fr 1fr', gap:'4px',
+        zIndex:'1010',
+        });
+        document.body.appendChild(reactBar);
+
+        // 2) helper to show (and auto-remove) the big icon
+        function flashIcon(src) {
+        const img = document.createElement('img');
+        Object.assign(img.style, {
+            position:'fixed', left:'50%', top:'50%', transform:'translate(-50%,-50%)',
+            width:'200px', pointerEvents:'none', zIndex:'200000', opacity:'0',
+            transition:'opacity .2s',
+        });
+        img.src = src;
+        document.body.appendChild(img);
+        requestAnimationFrame(() => (img.style.opacity = '1'));   // fade in
+        setTimeout(() => img.remove(), 2000);                     // remove in 2 s
+        }
+
+        // 3) build the four buttons
+        ICONS.forEach(({ file, title }) => {
+        const btn = document.createElement('img');
+        btn.src   = ICON_PATH + file;
+        btn.title = title;
+        Object.assign(btn.style, { width:'46px', height:'46px', cursor:'pointer' });
+        btn.onclick = () => {
+            const src = ICON_PATH + file;
+            flashIcon(src);                                   // show on *my* screen
+            socket.emit('signal_icon', { gameId, icon: src }); // broadcast to room
+        };
+        reactBar.appendChild(btn);
+        });
+
+        // 4) echo from the server → show on *their* screen
+        socket.on('signal_icon', ({ icon }) => flashIcon(icon));
+
         function animateDeckShuffle(isOpponent = false) {
             // Determine which deck box to animate
             const deckBox = isOpponent ? opponentDeckBox : playerDeckBox;
