@@ -544,11 +544,6 @@
 
             const socket = window.socket;                // 1️⃣ make an alias everyone can use
 
-            socket.on('connect', () => {                 // 2️⃣ register with the chat system
-                const roomId = localStorage.getItem('roomId') || gameId;  // same value you used earlier
-                socket.emit('init', { username, roomId });                // now server knows who you are
-            });
-
             function addGameLogEntry(message, broadcast = true) {
                 const gameLog = document.getElementById("game-log-placeholder");
                 if (!gameLog) return;
@@ -779,6 +774,8 @@
                 alert("Could not retrieve username.");
                 return; // ✅ This is now valid
             }
+            const roomId = localStorage.getItem('roomId') || gameId;
+            socket.emit('init', { username, roomId });
         }
 
         async function drawCards(deck, numCards = 5, { log = true } = {}) {
