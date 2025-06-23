@@ -898,18 +898,35 @@
                     if (from !== username) addGameLogEntry(message, /*broadcast*/ false);
                 });
 
-                socket.on('sync_zone', ({ owner, zone }) => {
-                    const boxMap = {
-                        "Void":                    owner === username ? "playerVoidBox"            : "opponentVoidBox",
-                        "Tomb":                    owner === username ? "playerTombBox"            : "opponentTombBox",
-                        "Hand":                    owner === username ? "drawn-cards"              : "opponent-hand",
-                        "Zone (Champion)":         owner === username ? "playerChampionsBox"       : "opponentChampionsBox",
-                        "Zone (Arsenal)":          owner === username ? "playerArsenalBox"         : "opponentArsenalBox",
-                        "Reserve":                 owner === username ? "playerReserveBox"         : "opponentReserveBox",
-                        "FaceDownZone":            owner === username ? "playerFaceDownBox"        : "opponentFaceDownBox",
-                        "FaceDownArsenalZone":     owner === username ? "playerFaceDownArsenalBox" : "opponentFaceDownArsenalBox"
-                    };
-                    renderCardZone(gameState[owner][zone], boxMap[zone]);
+                socket.on('sync_zone', ({ owner, zone, cards }) => {
+                    /* 1️⃣  trust the server – replace our copy of that zone */
+                    if (cards) gameState[owner][zone] = cards;
+
+                    /* 2️⃣  figure out which DOM box to repaint                */
+                    const boxId = {
+                        "Hand":                   owner === username ? "drawn-cards"              : "opponent-hand",
+                        "Zone (Champion)":        owner === username ? "playerChampionsBox"       : "opponentChampionsBox",
+                        "Zone (Arsenal)":         owner === username ? "playerArsenalBox"         : "opponentArsenalBox",
+                        "Reserve":                owner === username ? "playerReserveBox"         : "opponentReserveBox",
+                        "FaceDownZone":           owner === username ? "playerFaceDownBox"        : "opponentFaceDownBox",
+                        "FaceDownArsenalZone":    owner === username ? "playerFaceDownArsenalBox" : "opponentFaceDownArsenalBox",
+                        "Tomb":                   owner === username ? "playerTombBox"            : "opponentTombBox",
+                        "Void":                   owner === username ? "playerVoidBox"            : "opponentVoidBox",
+                        "Deck":                   owner === username ? "playerDeckBox"            : "opponentDeckBox"
+                    }[zone];
+
+                    /* 3️⃣  repaint that box (or the hand helpers)              */
+                    if (!boxId) return;
+                    if (zone === "Hand") {
+                        if (owner === username) {
+                        drawnCardsArray = cards;        // for renderDrawnCards()
+                        renderDrawnCards();
+                        } else {
+                        renderOpponentHand();
+                        }
+                    } else {
+                        renderCardZone(cards, boxId);
+                    }
                 });
 
                 socket.on('life_change', ({ player, life, from }) => {

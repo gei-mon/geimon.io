@@ -169,8 +169,8 @@ io.on('connection', (socket) => {
     // add to new owner (same zone name)
     gs[to][zone].push(card);
 
-    io.to(gameId).emit('sync_zone', { owner: from, zone });
-    io.to(gameId).emit('sync_zone', { owner: to,   zone });
+    io.to(gameId).emit('sync_zone', { owner: from, zone, cards: gs[from][zone] });
+    io.to(gameId).emit('sync_zone', { owner: to,   zone, cards: gs[to][zone]   });
   });
 
   socket.on('message', (text) => {
