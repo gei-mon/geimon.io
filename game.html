@@ -532,7 +532,7 @@
 
             let opponentName;
 
-            function addGameLogEntry(message) {
+            function addGameLogEntry(message, broadcast = true) {
                 const gameLog = document.getElementById("game-log-placeholder");
                 if (!gameLog) return;
 
