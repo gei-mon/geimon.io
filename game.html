@@ -544,6 +544,13 @@ html, body {
             let gameNumber = 1; // You could increment this between games in Match mode
             const serverUrl = "https://geimon-app-833627ba44e0.herokuapp.com";
 
+            const _origRenderCard = renderCard;
+                renderCard = (cardData) => {
+                const el = _origRenderCard(cardData);
+                el.dataset.cardId = cardData.id;
+                return el;
+            };
+
             //console.log("Gametype:", gameType, "SinglePlayer:", isSinglePlayer);
 
             const otherPlayerName = params.get("opponent") || "Unknown_Opponent"; // if multiplayer later
@@ -792,6 +799,10 @@ html, body {
             }
             const roomId = localStorage.getItem('roomId') || gameId;
             socket.emit('init', { username, roomId });
+            socket.on('room_joined', ({ roomId: joined }) => {
+                //console.log("⚡ joined lobby room", joined);
+                socket.emit('join_game_room', { gameId });
+            });
         }
 
         async function drawCards(deck, numCards = 5, { log = true } = {}) {
@@ -1735,6 +1746,38 @@ html, body {
                 }
             };
         }
+
+        function flashDeclareEffect(cardEl) {
+            // ensure we can position inside it
+            cardEl.style.position = cardEl.style.position || 'relative';
+
+            const flash = document.createElement('div');
+            Object.assign(flash.style, {
+                position:        'absolute',
+                top:             '50%',
+                left:            '50%',
+                width:           '100%',
+                height:          '100%',
+                pointerEvents:   'none',
+                borderRadius:    '8px',
+                background:      'radial-gradient(circle, rgba(255,255,0,0.8) 0%, rgba(255,255,0,0) 80%)',
+                transform:       'translate(-50%,-50%) scale(0)',
+                opacity:         '0',
+                zIndex:          '9999'
+            });
+            cardEl.appendChild(flash);
+
+            flash.animate([
+                { opacity: 0,   transform: 'translate(-50%,-50%) scale(0)' },
+                { opacity: 1,   transform: 'translate(-50%,-50%) scale(1.5)' },
+                { opacity: 0,   transform: 'translate(-50%,-50%) scale(2)' }
+            ], {
+                duration: 1000,
+                easing:   'ease-out',
+                fill:     'forwards'
+            }).finished.then(() => flash.remove());
+        }
+
 
         function animateCardDiscard(fromHandBoxId, toTombBoxId, isOpponent = false) {
             const handBox = document.getElementById(fromHandBoxId);
@@ -4704,7 +4747,12 @@ html, body {
                         await doMove(zone, "Deck", "playerDeckBox", false, false);
                         break;
                     case "Declare":
+                        // play the glow‐flash locally
+                        flashDeclareEffect(cardElement);
+
+                        // log & broadcast so your opponent sees it too
                         addGameLogEntry(`${cardData.name}'s effect was declared from the ${zone}.`);
+                        socket.emit('declare_event', { gameId, cardId: cardData.id });
                         if (zone === "Hand") {
                             socket.emit('temp_reveal_card', { gameId, from: username, cardId: cardData.id });
                         }
@@ -5582,7 +5630,6 @@ html, body {
         }
         window.appendSystem = appendSystem;
 
-        // ─── Attack replay, but skip the hover‐preview ──────────────────────────────
         socket.on('attack_event', ({ cardId }) => {
             const preview = document.querySelector('#viewing-window .scaled-card');
             document.querySelectorAll(`[data-card-id="${cardId}"]`).forEach(el => {
@@ -5591,7 +5638,6 @@ html, body {
             });
         });
 
-        // ─── Block replay, but skip the hover‐preview ───────────────────────────────
         socket.on('block_event', ({ cardId, isFaceDown }) => {
             const preview = document.querySelector('#viewing-window .scaled-card');
             document.querySelectorAll(`[data-card-id="${cardId}"]`).forEach(el => {
@@ -5600,26 +5646,14 @@ html, body {
             });
         });
 
-        // ─── Opponent attacks ─────────────────────────────────────────────────────
-        socket.on('attack_event', ({ cardId }) => {
-            // find the opponent's champion wrapper by data-card-id
-            const oppWrapper = document.querySelector(
-                `#opponentChampionsBox [data-card-id="${cardId}"]`
-            );
-            if (oppWrapper) {
-                animateAttackToCenter(oppWrapper, 800);
-            }
+
+        // replay Declare flash for opponent
+        socket.on('declare_event', ({ cardId }) => {
+            document.querySelectorAll(`[data-card-id="${cardId}"]`).forEach(el => {
+                flashDeclareEffect(el);
+            });
         });
 
-        // ─── Opponent blocks ──────────────────────────────────────────────────────
-        socket.on('block_event', ({ cardId, isFaceDown }) => {
-            const oppWrapper = document.querySelector(
-                `#opponentChampionsBox [data-card-id="${cardId}"]`
-            );
-            if (oppWrapper) {
-                animateBlock(oppWrapper, isFaceDown);
-            }
-        });
 
         socket.on('temp_reveal_card', ({ from, cardId }) => {
             if (from === username) return;          // ignore the echo of our own message

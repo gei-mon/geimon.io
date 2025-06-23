@@ -164,6 +164,10 @@ io.on('connection', (socket) => {
     socket.to(gameId).emit('block_event', { cardId, isFaceDown });
   });
 
+  socket.on('declare_event', ({ gameId, cardId }) => {
+    socket.to(gameId).emit('declare_event', { cardId });
+  });
+
   socket.on('change_control', ({ gameId, cardId, from, to, zone }) => {
     const gs = gameStates.get(gameId);
     if (!gs) return;
