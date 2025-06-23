@@ -4302,7 +4302,7 @@ html, body {
             const deltaY = window.innerHeight/2 - (rect.top + rect.height/2);
 
             // Build the transform strings
-            const move = isFaceDown ? `translate(${deltaX*0.9}px, ${-deltaY*20}px)` : `translate(${deltaX*5}px, ${deltaY*3}px)`;
+            const move = isFaceDown ? `translate(${-deltaY}px, ${2*deltaX}px)` : `translate(${deltaX*5}px, ${deltaY*3}px)`;
             const rotate = isFaceDown ? `` : ` rotate(90deg)`;
             const targetTransform = `${originalTransform} ${move}${rotate}`.trim();
 
@@ -5582,16 +5582,43 @@ html, body {
         }
         window.appendSystem = appendSystem;
 
-        // When anyone attacks, replay the attack anim on their card
+        // ─── Attack replay, but skip the hover‐preview ──────────────────────────────
         socket.on('attack_event', ({ cardId }) => {
-            const el = document.querySelector(`[data-card-id="${cardId}"]`);
-            if (el) animateAttackToCenter(el, 800);
+            const preview = document.querySelector('#viewing-window .scaled-card');
+            document.querySelectorAll(`[data-card-id="${cardId}"]`).forEach(el => {
+                if (preview && preview.contains(el)) return;
+                animateAttackToCenter(el, 800);
+            });
         });
 
-        // When anyone blocks, replay the block anim on their card
+        // ─── Block replay, but skip the hover‐preview ───────────────────────────────
         socket.on('block_event', ({ cardId, isFaceDown }) => {
-            const el = document.querySelector(`[data-card-id="${cardId}"]`);
-            if (el) animateBlock(el, isFaceDown);
+            const preview = document.querySelector('#viewing-window .scaled-card');
+            document.querySelectorAll(`[data-card-id="${cardId}"]`).forEach(el => {
+                if (preview && preview.contains(el)) return;
+                animateBlock(el, isFaceDown);
+            });
+        });
+
+        // ─── Opponent attacks ─────────────────────────────────────────────────────
+        socket.on('attack_event', ({ cardId }) => {
+            // find the opponent's champion wrapper by data-card-id
+            const oppWrapper = document.querySelector(
+                `#opponentChampionsBox [data-card-id="${cardId}"]`
+            );
+            if (oppWrapper) {
+                animateAttackToCenter(oppWrapper, 800);
+            }
+        });
+
+        // ─── Opponent blocks ──────────────────────────────────────────────────────
+        socket.on('block_event', ({ cardId, isFaceDown }) => {
+            const oppWrapper = document.querySelector(
+                `#opponentChampionsBox [data-card-id="${cardId}"]`
+            );
+            if (oppWrapper) {
+                animateBlock(oppWrapper, isFaceDown);
+            }
         });
 
         socket.on('temp_reveal_card', ({ from, cardId }) => {

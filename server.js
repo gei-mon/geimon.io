@@ -157,11 +157,11 @@ io.on('connection', (socket) => {
     io.to(gameId).emit('temp_reveal_card', { from, cardId }) );
 
   socket.on('attack_event', ({ gameId, cardId }) => {
-    io.to(gameId).emit('attack_event', { cardId });
+    socket.to(gameId).emit('attack_event', { cardId });
   });
 
   socket.on('block_event', ({ gameId, cardId, isFaceDown }) => {
-    io.to(gameId).emit('block_event', { cardId, isFaceDown });
+    socket.to(gameId).emit('block_event', { cardId, isFaceDown });
   });
 
   socket.on('change_control', ({ gameId, cardId, from, to, zone }) => {
