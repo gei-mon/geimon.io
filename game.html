@@ -560,194 +560,6 @@ html, body {
 
             const socket = window.socket;                // 1️⃣ make an alias everyone can use
 
-            let winner, loser, gameResult;
-            let matchUsedTotems = [];  // at top‐level
-
-            async function prepareTotemSelectionForNextGame() {
-                const params   = new URLSearchParams(window.location.search);
-                const gameType = params.get("gameType");
-                const allTotems = Object.assign({}, ...totems);
-
-                // ── NON-MATCH MODE: legacy “lost a single game” flow ─────────────────────────
-                if (gameType !== "match") {
-                    const usedTotem     = params.get("totem");
-                    const unusedTotems  = Object.keys(allTotems).filter(name => name !== usedTotem);
-                    const randomChoices = unusedTotems.sort(() => 0.5 - Math.random()).slice(0, 3);
-
-                    const overlay = document.createElement("div");
-                    Object.assign(overlay.style, {
-                    position:      "fixed",
-                    top:           "50%",
-                    left:          "50%",
-                    transform:     "translate(-50%, -50%)",
-                    padding:       "30px",
-                    backgroundColor:"#333",
-                    color:         "white",
-                    border:        "2px solid white",
-                    borderRadius:  "10px",
-                    zIndex:        "130001",
-                    textAlign:     "center",
-                    boxShadow:     "0 0 10px black"
-                    });
-                    overlay.innerHTML = `
-                    <p style="font-size: 1.2em;">
-                        You lost the last game.<br>
-                        <strong>First, choose who goes first:</strong>
-                    </p>
-                    `;
-
-                    const goFirstBtn = document.createElement("button");
-                    goFirstBtn.textContent = "Go First";
-                    goFirstBtn.style.margin = "10px";
-                    goFirstBtn.onclick = () => showTotemOptions("first");
-
-                    const goSecondBtn = document.createElement("button");
-                    goSecondBtn.textContent = "Go Second";
-                    goSecondBtn.style.margin = "10px";
-                    goSecondBtn.onclick = () => showTotemOptions("second");
-
-                    overlay.appendChild(goFirstBtn);
-                    overlay.appendChild(goSecondBtn);
-
-                    function showTotemOptions(turnOrder) {
-                    overlay.innerHTML = `
-                        <p style="font-size: 1.2em;">
-                        Now choose a Totem for Game ${gameNumber + 1}:
-                        </p>
-                    `;
-                    randomChoices.forEach(totem => {
-                        const btn = document.createElement("button");
-                        btn.textContent = totem;
-                        btn.style.margin = "10px";
-                        btn.onclick = async () => {
-                        const newGameId = Math.random().toString(36).substr(2, 9);
-                        const settings = {
-                            gameId:          newGameId,
-                            playerDeck:      params.get("playerDeck"),
-                            opponentDeck:    params.get("opponentDeck"),
-                            gameType:        "match",   // switch into match if desired
-                            totem,
-                            totemText:       allTotems[totem],
-                            turnOrder,
-                            isSinglePlayer:  params.get("isSinglePlayer") === "true",
-                            playerUsername:  username,
-                            opponentUsername: opponentUsername,
-                            goesFirst:       turnOrder
-                        };
-                        await fetch("https://geimon-app-833627ba44e0.herokuapp.com/startGame", {
-                            method:      "POST",
-                            credentials: "include",
-                            headers:     { "Content-Type": "application/json" },
-                            body:        JSON.stringify(settings)
-                        });
-                        const urlParams = new URLSearchParams(settings).toString();
-                        window.location.href = `game.html?${urlParams}`;
-                        };
-                        overlay.appendChild(btn);
-                    });
-                    }
-
-                    document.body.appendChild(overlay);
-                    return;
-                }
-
-                // ── MATCH MODE: draw or loser-choice handshake ───────────────────────────────
-                const remaining = Object.keys(allTotems).filter(t => !matchUsedTotems.includes(t));
-
-                // 1) Draw → auto‐pick & notify
-                if (gameResult === "Draw") {
-                    const pick = remaining[Math.floor(Math.random() * remaining.length)];
-                    socket.emit("totemChoice", { gameId, totem: pick });
-                    return;
-                }
-
-                // 2) Loss → loser picks from 3 random
-                const loser = (winner === username) ? opponentUsername : username;
-                if (username === loser) {
-                    const choices = remaining.sort(() => 0.5 - Math.random()).slice(0, 3);
-                    const ov = document.createElement("div");
-                    ov.id = "match-totem-overlay";
-                    ov.innerHTML = `<h2>Pick a totem for Game ${gameNumber + 1}</h2>`;
-                    choices.forEach(t => {
-                    const btn = document.createElement("button");
-                    btn.textContent = t;
-                    btn.style.margin = "0 10px";
-                    btn.onclick = () => {
-                        socket.emit("totemChoice", { gameId, totem: t });
-                    };
-                    ov.appendChild(btn);
-                    });
-                    document.body.appendChild(ov);
-                } else {
-                    const ov = document.createElement("div");
-                    ov.id = "match-totem-overlay";
-                    ov.innerHTML = `<h2>Waiting for opponent to choose totem…</h2>`;
-                    document.body.appendChild(ov);
-                }
-
-                // 3) Server confirms totem → prompt order
-                socket.once("totemChosen", ({ totem, totemText }) => {
-                    matchUsedTotems.push(totem);
-                    document.getElementById("match-totem-overlay")?.remove();
-
-                    // now ask go-first/second
-                    const ov2 = document.createElement("div");
-                    ov2.id = "match-order-overlay";
-                    ov2.innerHTML = `<h2>Choose to go first or second</h2>`;
-                    ["first", "second"].forEach(turn => {
-                    const btn = document.createElement("button");
-                    btn.textContent = turn.charAt(0).toUpperCase() + turn.slice(1);
-                    btn.style.margin = "0 10px";
-                    btn.onclick = () => {
-                        socket.emit("orderChoice", {
-                        gameId,
-                        chooser: username,
-                        turn,
-                        totem,
-                        totemText
-                        });
-                    };
-                    ov2.appendChild(btn);
-                    });
-                    document.body.appendChild(ov2);
-                });
-
-                // 4) Server finalizes handshake → reload for next game
-                socket.once("turnOrderChoice", async ({ chooser, turn, totem, totemText }) => {
-                    // 1) Tear down the overlay
-                    document.getElementById("match-order-overlay")?.remove();
-
-                    // 2) Build the new-game settings (just like on first load)
-                    const params = new URLSearchParams(window.location.search);
-                    const newGameId   = Math.random().toString(36).substring(2, 9);
-                    const settings = {
-                        gameId:          newGameId,
-                        playerDeck:      params.get("playerDeck"),
-                        opponentDeck:    params.get("opponentDeck"),
-                        gameType:        "match",
-                        totem,
-                        totemText,
-                        turnOrder:       turn,
-                        isSinglePlayer:  params.get("isSinglePlayer") === "true",
-                        playerUsername:  username,
-                        opponentUsername: opponentUsernameParam,
-                        goesFirst:       turn
-                    };
-
-                    // 3) Tell the server to create the new state
-                    await fetch("https://geimon-app-833627ba44e0.herokuapp.com/startGame", {
-                        method:      "POST",
-                        credentials: "include",
-                        headers:     { "Content-Type": "application/json" },
-                        body:        JSON.stringify(settings)
-                    });
-
-                    // 4) Finally navigate into the new game
-                    const urlParams = new URLSearchParams(settings).toString();
-                    window.location.href = `game.html?${urlParams}`;
-                });
-            }
-
             // ─ Preload image URLs ───────────────────────────────────────────
             const headsImgUrl = "https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/heads.png";
             const tailsImgUrl = "https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/tails.png";
@@ -1258,17 +1070,10 @@ html, body {
                 });
 
 
-                socket.on("game_over", ({ winner: win, loser: loss, reason }) => {
-                    winner    = win;
-                    loser     = loss;
-                    gameResult = (win === loss || reason.toLowerCase().includes("draw")) 
-                                ? "Draw" 
-                                : "Loss";
-
-                    const mainText = (win === username) ? "You Win" : "You Lose";
+                socket.on("game_over", ({ winner, loser, reason }) => {
+                    const mainText = (winner === username) ? "You Win" : "You Lose";
                     showBanner(mainText, reason);
                 });
-
 
                 if (!username) {
                     console.warn("Username not set after init.");
@@ -1479,6 +1284,83 @@ html, body {
                     prepareTotemSelectionForNextGame(); // Remove winner check
                 }, 3000);
             }
+        }
+
+        function prepareTotemSelectionForNextGame() {
+            const allTotems = Object.assign({}, ...totems); // Assuming `totems` is an array of objects
+            const usedTotem = params.get("totem");
+            const unusedTotems = Object.keys(allTotems).filter(name => name !== usedTotem);
+            const randomChoices = unusedTotems.sort(() => 0.5 - Math.random()).slice(0, 3);
+
+            const overlay = document.createElement("div");
+            Object.assign(overlay.style, {
+                position: "fixed",
+                top: "50%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                padding: "30px",
+                backgroundColor: "#333",
+                color: "white",
+                border: "2px solid white",
+                borderRadius: "10px",
+                zIndex: 130001,
+                textAlign: "center",
+                boxShadow: "0 0 10px black"
+            });
+
+            overlay.innerHTML = `<p style="font-size: 1.2em;">You lost the last game.<br><strong>First, choose who goes first:</strong></p>`;
+
+            const goFirstBtn = document.createElement("button");
+            goFirstBtn.textContent = "Go First";
+            goFirstBtn.style.margin = "10px";
+            goFirstBtn.onclick = () => showTotemOptions("first");
+
+            const goSecondBtn = document.createElement("button");
+            goSecondBtn.textContent = "Go Second";
+            goSecondBtn.style.margin = "10px";
+            goSecondBtn.onclick = () => showTotemOptions("second");
+
+            overlay.appendChild(goFirstBtn);
+            overlay.appendChild(goSecondBtn);
+
+            function showTotemOptions(turnOrder) {
+                overlay.innerHTML = `<p style="font-size: 1.2em;">Now choose a Totem for Game ${gameNumber + 1}:</p>`;
+
+                randomChoices.forEach(totem => {
+                    const button = document.createElement("button");
+                    button.textContent = totem;
+                    button.style.margin = "10px";
+                    button.onclick = async () => {
+                        const newGameId = Math.random().toString(36).substr(2, 9);
+                        const settings = {
+                            gameId: newGameId,
+                            playerDeck: params.get("playerDeck"),
+                            opponentDeck: params.get("opponentDeck"),
+                            gameType: "match",
+                            totem,
+                            totemText: allTotems[totem],
+                            turnOrder,
+                            isSinglePlayer: params.get("isSinglePlayer") === "true",
+                            playerUsername: username,
+                            opponentUsername: "Bot",
+                            goesFirst: turnOrder
+                        };
+
+                        await fetch("https://geimon-app-833627ba44e0.herokuapp.com/startGame", {
+                            method: "POST",
+                            credentials: "include",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(settings)
+                        });
+
+                        const urlParams = new URLSearchParams(settings).toString();
+                        window.location.href = `game.html?${urlParams}`;
+                    };
+                    overlay.appendChild(button);
+                });
+            }
+
+            document.body.appendChild(overlay);
         }
 
         function updateTurnDisplay(turnData) {

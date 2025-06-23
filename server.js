@@ -176,19 +176,6 @@ io.on('connection', (socket) => {
     socket.to(gameId).emit('declare_event', { cardId });
   });
 
-  // 1) Loser’s totem pick
-  socket.on('totemChoice', ({ gameId, totem }) => {
-    // look up the text
-    const text = Object.assign({}, ...totems)[totem];
-    io.to(gameId).emit('totemChosen', { totem, totemText: text });
-  });
-
-  // 2) Loser’s turn‐order pick (after totem)
-  socket.on('orderChoice', ({ gameId, chooser, turn, totem }) => {
-    const text = Object.assign({}, ...totems)[totem];
-    io.to(gameId).emit('turnOrderChoice', { chooser, turn, totem, totemText: text });
-  });
-
   socket.on('change_control', ({ gameId, cardId, from, to, zone }) => {
     const gs = gameStates.get(gameId);
     if (!gs) return;
