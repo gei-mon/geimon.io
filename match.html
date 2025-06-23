@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang=""en">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv=""X-UA-Compatible" content="IE=edge">
@@ -8,13 +8,324 @@
     <link rel="icon" href="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/favicon.png" type="image/png">
     <link rel="stylesheet" href="style.css">
     <title>MATCH GAME PAGE</title>
+    <style>
+        body { font-family: sans-serif; }
+        #roomId { margin-bottom: 1em; font-weight: bold; }
+        #chatWith { margin-bottom: 1em; color: white; font-weight: bold; }
+        #messages { border: 4px solid #000000; padding: 4px; height: 400px; width: 300px; overflow-y: auto; background-color: lightgray; }
+        #input { width: 40.5%; }
+        #send { width: 10%; }
+        #typing { font-style: italic; color: lime; height: 1.5em; margin-top: 8px; }
+        .system-message { color: blue; font-style: italic; }
+        #readyContainer {
+            position: absolute;
+            top: 165px;
+            left: 370px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #deckSelect { font-size: 1.5em; padding: 4px; }
+        #readyBtn { font-size: 1.1em; background-color: lightgray; border: none; padding: 8px 16px; margin-left: 8px; cursor: pointer; }
+    </style>
 </head>
 <body style="background-color:rgb(78, 78, 78);">
   <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
         <div class="container">
-            <p style="font-size: 200%; font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;"><game-title>Geimon!</game-title></p>
-            <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: -28px;">Match-Game Placeholder</h2>
+            <p style="font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: -8px;"><game-title>Geimon!</game-title></p>
+            <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: -28px;">Match-Game Placeholder, Temp Chat Space</h2>
         </div>
-        <button class="button buttonEvenSmaller" onclick="window.close()">Close</button>
+        <div style="max-width: 600px;">
+        <div id="roomId">Connecting…</div>
+        <div id="chatWith" style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Roomed with: …</div>
+        <div id="readyContainer">
+        <select id="deckSelect">
+            <option value="" disabled selected>Select Deck</option>
+        </select>
+        <button id="readyBtn">Ready?</button>
+        </div>
+        <div id="messages"></div>
+        <div id="typing"></div>
+        <input id="input" style="font-size: 1em; border: 4px solid #000000;" autocomplete="off" placeholder="Type your message…" />
+        <button class="button buttonEvenSmallerCrimped" id="send">Send</button>
+        <div id="rpsContainer" style="display:none; gap:12px; margin-top:16px;">
+            <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/rock.png"
+                alt="Rock" data-choice="rock" style="width:80px;height:80px;cursor:pointer;">
+            <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/paper.png"
+                alt="Paper" data-choice="paper" style="width:80px;height:80px;cursor:pointer;">
+            <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/scissors.png"
+                alt="Scissors" data-choice="scissors" style="width:80px;height:80px;cursor:pointer;">
+        </div>
+        <div id="turnChoiceContainer" style="display:none; gap:12px; margin-top:16px;">
+            <button data-turn="first" style="padding:8px 16px;cursor:pointer;">Go First</button>
+            <button data-turn="second" style="padding:8px 16px;cursor:pointer;">Go Second</button>
+        </div>
+
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+    <script>
+        const inputEl = document.getElementById('input');
+        const messagesEl = document.getElementById('messages');
+        const roomIdEl = document.getElementById('roomId');
+        const typingEl = document.getElementById('typing');
+        const chatWithEl = document.getElementById('chatWith');
+        let readyMe = false,
+            readyOther = false,
+            myChoice = null,
+            otherChoice = null;
+        let otherUser = null;
+        let otherDeck = null;
+
+        const rpsContainer        = document.getElementById('rpsContainer'),
+            turnChoiceContainer = document.getElementById('turnChoiceContainer');
+
+        // helper to append a blue system message
+        function appendSystem(msg) {
+            const d = document.createElement('div');
+            d.className   = 'system-message';
+            d.innerText   = msg;
+            messagesEl.appendChild(d);
+            messagesEl.scrollTop = messagesEl.scrollHeight;
+        }
+
+        (async () => {
+            const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
+                credentials: 'include',
+            });
+            if (!res.ok) {
+                console.error('Failed to fetch /me endpoint');
+                return;
+            }
+            const data = await res.json();
+
+            if (!data.loggedIn) {
+                console.log('Not logged in, redirecting...');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const username = data.username;
+            console.log(username);
+
+            const socket = io('https://geimon-app-833627ba44e0.herokuapp.com', {
+                withCredentials: true
+            });
+
+            socket.on('connect', () => {
+                console.log('Connected to socket:', socket.id);
+                socket.emit('init', { username });
+            });
+
+            let roomId = localStorage.getItem('roomId');
+            socket.on('room_joined', (data) => {
+                roomId = data.roomId;
+                localStorage.setItem('roomId', roomId);
+                    if (roomId === 'Connecting…') {
+                        roomIdEl.innerText = `${roomId}`;
+                    } else {
+                        roomIdEl.style.display = 'none';
+                    }
+                //chatWithEl.innerText = `Roomed with: ${data.otherUser?.username || 'Waiting for opponent...'}`;
+                otherUser = data.otherUser?.username || null;
+                chatWithEl.innerText = `Roomed with: ${otherUser || 'Waiting for opponent...'}`;
+            });
+
+            socket.on('user_joined', ({ otherUser: ou }) => {
+                otherUser = ou;
+                chatWithEl.innerText = `Roomed with: ${ou}`;
+                appendSystem(`${ou} has joined.`);
+            });
+
+            socket.on('user_left', ({ otherUser: ou }) => {
+                appendSystem(`${ou} has left.`);
+                otherUser = null;
+                chatWithEl.innerText = 'Waiting for opponent...';
+            });
+
+            socket.on('message', ({ username: from, text }) => {
+                const msg = document.createElement('div');
+                msg.innerText = `${from}: ${text}`;
+                messagesEl.appendChild(msg);
+                messagesEl.scrollTop = messagesEl.scrollHeight;
+            });
+
+            socket.on('typing', ({ username: from, isTyping }) => {
+                typingEl.innerText = isTyping ? `${from} is typing...` : '';
+            });
+
+            // 1) You pick:
+            rpsContainer.addEventListener('click', e => {
+                const ch = e.target.dataset.choice;
+                if (!ch || myChoice) return;
+                myChoice = ch;
+                appendSystem(`You chose ${ch}. Waiting for opponent…`);
+                socket.emit('rpsChoice', { username, choice: ch });
+                rpsContainer.style.pointerEvents = 'none';
+            });
+
+            // 2) They pick:
+            socket.on('rpsChoice', ({ username: who, choice }) => {
+                if (who !== username) otherChoice = choice;
+                if (!(myChoice && otherChoice)) return;
+
+                // decide
+                const beats = { rock:'scissors', paper:'rock', scissors:'paper' };
+                if (myChoice === otherChoice) {
+                    appendSystem(`Draw! Both picked ${myChoice}. Play again.`);
+                    myChoice = otherChoice = null;
+                    rpsContainer.style.pointerEvents = '';
+                    return;
+                }
+                const winner = beats[myChoice] === otherChoice ? username : otherUser;
+                if (winner === username) {
+                    socket.emit('rpsResult', {
+                        winner,
+                        choices: { [username]: myChoice, [otherUser]: otherChoice }
+                    });
+                }
+            });
+
+            // 3) Broadcast result:
+            socket.on('rpsResult', ({ winner, choices }) => {
+                appendSystem(`You chose ${choices[username]}, and ${otherUser} chose ${choices[otherUser]}.`);
+                appendSystem(`${winner} wins RPS!`);
+                rpsContainer.style.display = 'none';
+                if (winner === username) turnChoiceContainer.style.display = 'flex';
+            });
+
+            turnChoiceContainer.addEventListener('click', e => {
+                const turn = e.target.dataset.turn;
+                if (!turn) return;
+                socket.emit('turnOrderChoice', { chooser: username, turn });
+                turnChoiceContainer.style.pointerEvents = 'none';
+            });
+
+            // Broadcast to both:
+            socket.on('turnOrderChoice', ({ chooser, turn, totem, totemText }) => {
+                    appendSystem(`${chooser} chose to go ${turn === 'first' ? 'First' : 'Second'}.`);
+                    if (!deckSelectEl.value || !otherDeck) return;
+
+                // gather params
+                const params = new URLSearchParams({
+                    gameId:      localStorage.getItem('roomId'),  // same roomId you used to join
+                    playerDeck:  deckSelectEl.value,
+                    opponentDeck: otherDeck,
+                    gameType:    'match',
+                    totem,           // from server
+                    totemText,       // from server
+                    turnOrder:   turn,
+                    opponent:    otherUser,                       // for game.html’s “opponent” param
+                    playerUsername: username,
+                    isSinglePlayer: 'false'
+                });
+
+                // go!
+                window.location.href = `game.html?${params}`;
+            });
+
+            socket.on('playerReady', ({ username: who, ready, deck }) => {
+                console.log('Received playerReady ←', who, ready, deck);
+                appendSystem(`${who} is ${ready ? 'ready' : 'not ready'}.`);
+                    if (who !== username) {
+                        readyOther = ready;
+                        otherDeck   = deck;
+                    }
+
+                // both ready? show RPS
+                if (readyMe && readyOther) {
+                    appendSystem('Both ready! Choose Rock, Paper, or Scissors.');
+                    rpsContainer.style.display = 'flex';
+                } else {
+                    // someone unreadied mid‐flow → hide RPS & reset
+                    rpsContainer.style.display        = 'none';
+                    turnChoiceContainer.style.display = 'none';
+                    myChoice = otherChoice = null;
+                    rpsContainer.style.pointerEvents = '';
+                }
+            });
+
+            function sendMsg() {
+                const text = inputEl.value.trim();
+                if (!text) return;
+                socket.emit('message', text);
+                inputEl.value = '';
+            }
+
+            document.getElementById('send').onclick = sendMsg;
+            inputEl.addEventListener('keypress', e => {
+                if (e.key === 'Enter') sendMsg();
+                socket.emit('typing', true);
+            });
+
+            inputEl.addEventListener('input', () => {
+                if (inputEl.value === '') socket.emit('typing', false);
+            });
+
+            let typingTimeout;
+            inputEl.addEventListener('keyup', () => {
+                clearTimeout(typingTimeout);
+                typingTimeout = setTimeout(() => {
+                    socket.emit('typing', false);
+                }, 1000);
+            });
+
+            // Populate decks and handle ready button
+            const deckSelectEl = document.getElementById('deckSelect');
+            const readyBtnEl   = document.getElementById('readyBtn');
+            (async () => {
+                try {
+                    const deckRes = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/getUserDecks', {
+                        credentials: 'include'
+                    });
+                    const deckData = await deckRes.json();
+                    if (deckData.success && Array.isArray(deckData.decks)) {
+                        const names = deckData.decks
+                            .map(d => d.deck_name)
+                            .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+                        deckSelectEl.innerHTML = '<option value="" disabled selected>Select Deck</option>';
+                        names.forEach(name => {
+                            const opt = document.createElement('option');
+                            opt.value       = name;
+                            opt.textContent = name;
+                            deckSelectEl.appendChild(opt);
+                        });
+                        const randomOpt = document.createElement('option');
+                        randomOpt.value       = 'Random';
+                        randomOpt.textContent = 'Random';
+                        deckSelectEl.appendChild(randomOpt);
+                    } else {
+                        console.error('Failed to fetch decks:', deckData);
+                    }
+                } catch (err) {
+                    console.error('Error fetching decks:', err);
+                }
+            })();
+
+            let isReady = false;
+            readyBtnEl.onclick = () => {
+                if (!deckSelectEl.value) {
+                    alert('Please select a deck.');
+                    return;
+                }
+                isReady = !isReady;
+                if (isReady) {
+                    readyBtnEl.innerText           = 'Ready!';
+                    readyBtnEl.style.backgroundColor = 'lightgreen';
+                    deckSelectEl.disabled          = true;
+                    console.log('Emitting playerReady →', isReady);
+                } else {
+                    readyBtnEl.innerText           = 'Ready?';
+                    readyBtnEl.style.backgroundColor = 'lightgray';
+                    deckSelectEl.disabled          = false;
+                }
+                readyMe = isReady;
+                socket.emit('playerReady', {
+                    username,
+                    ready: isReady,
+                    deck: deckSelectEl.value
+                });
+            };
+        })();
+    </script>
+  </div>
 </body>
 </html>
