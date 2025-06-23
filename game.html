@@ -713,23 +713,40 @@ html, body {
                 });
 
                 // 4) Server finalizes handshake → reload for next game
-                socket.once("turnOrderChoice", ({ chooser, turn, totem, totemText }) => {
+                socket.once("turnOrderChoice", async ({ chooser, turn, totem, totemText }) => {
+                    // 1) Tear down the overlay
                     document.getElementById("match-order-overlay")?.remove();
-                    const newParams = new URLSearchParams({
-                    playerDeck:      params.get("playerDeck"),
-                    opponentDeck:    params.get("opponentDeck"),
-                    gameType:        "match",
-                    gameNumber:      String(gameNumber + 1),
-                    totem,
-                    totemText,
-                    turnOrder:       turn,
-                    isSinglePlayer:  String(params.get("isSinglePlayer")),
-                    playerUsername:  username,
-                    opponentUsername: opponentUsername
+
+                    // 2) Build the new-game settings (just like on first load)
+                    const params = new URLSearchParams(window.location.search);
+                    const newGameId   = Math.random().toString(36).substring(2, 9);
+                    const settings = {
+                        gameId:          newGameId,
+                        playerDeck:      params.get("playerDeck"),
+                        opponentDeck:    params.get("opponentDeck"),
+                        gameType:        "match",
+                        totem,
+                        totemText,
+                        turnOrder:       turn,
+                        isSinglePlayer:  params.get("isSinglePlayer") === "true",
+                        playerUsername:  username,
+                        opponentUsername: opponentUsernameParam,
+                        goesFirst:       turn
+                    };
+
+                    // 3) Tell the server to create the new state
+                    await fetch("https://geimon-app-833627ba44e0.herokuapp.com/startGame", {
+                        method:      "POST",
+                        credentials: "include",
+                        headers:     { "Content-Type": "application/json" },
+                        body:        JSON.stringify(settings)
                     });
-                    window.location.search = newParams.toString();
+
+                    // 4) Finally navigate into the new game
+                    const urlParams = new URLSearchParams(settings).toString();
+                    window.location.href = `game.html?${urlParams}`;
                 });
-                }
+            }
 
             // ─ Preload image URLs ───────────────────────────────────────────
             const headsImgUrl = "https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/heads.png";
