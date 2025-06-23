@@ -156,6 +156,14 @@ io.on('connection', (socket) => {
   socket.on('temp_reveal_card', ({ gameId, from, cardId }) =>
     io.to(gameId).emit('temp_reveal_card', { from, cardId }) );
 
+  socket.on('attack_event', ({ gameId, cardId }) => {
+    io.to(gameId).emit('attack_event', { cardId });
+  });
+
+  socket.on('block_event', ({ gameId, cardId, isFaceDown }) => {
+    io.to(gameId).emit('block_event', { cardId, isFaceDown });
+  });
+
   socket.on('change_control', ({ gameId, cardId, from, to, zone }) => {
     const gs = gameStates.get(gameId);
     if (!gs) return;

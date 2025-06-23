@@ -2809,8 +2809,8 @@ html, body {
     const playerDeckBox = document.createElement("div");
         playerDeckBox.id = "playerDeckBox";
         playerDeckBox.style.position = "absolute";
-        playerDeckBox.style.left = "1751px";
-        playerDeckBox.style.top = "667px";
+        playerDeckBox.style.left = "1759px";
+        playerDeckBox.style.top = "676px";
         playerDeckBox.style.width = "82px";
         playerDeckBox.style.height = "126px";
         //playerDeckBox.style.backgroundColor = "lightblue";
@@ -4674,6 +4674,7 @@ html, body {
                 switch (text) {
                     case "To Champion (Face-Up)":
                         await doMove(zone,           "Zone (Champion)",         "playerChampionsBox",        false);
+                        //addGameLogEntry(`${username} rallied ${cardData.name}.`);
                         break;
                     case "To Champion (Face-Down)":
                         await doMove(zone,           "FaceDownZone",            "playerFaceDownBox",         true);
@@ -4730,22 +4731,25 @@ html, body {
                         });
 
                         /* 2️⃣  Log immediately; the re-render comes back via sync event */
-                        addGameLogEntry(`${cardData.name} changes control to the opponent.`);
+                        addGameLogEntry(`${cardData.name} changed control to the opponent.`);
                         break;
                     }
                     case "Attack": {
                         animateAttackToCenter(cardElement, 800)
                             .finished.then(() => {
+                            // 1) Log locally and broadcast to room
                             addGameLogEntry(`${cardData.name} declared an attack.`);
+                            socket.emit('attack_event', { gameId, cardId: cardData.id });
                             });
                         break;
                     }
                     case "Block": {
-                        // Determine if blocking from face-down zone
                         const isFaceDown = cardData.boardState === 'FaceDownZone';
-                        await animateBlock(cardElement, isFaceDown);
-
-                        addGameLogEntry(`${cardData.name} was declared as a blocker.`);
+                        animateBlock(cardElement, isFaceDown)
+                            .then(() => {
+                            addGameLogEntry(`${cardData.name} was declared as a blocker.`);
+                            socket.emit('block_event', { gameId, cardId: cardData.id, isFaceDown });
+                            });
                         break;
                     }
                     case "Add 1 Counter": {
@@ -5577,6 +5581,18 @@ html, body {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
         window.appendSystem = appendSystem;
+
+        // When anyone attacks, replay the attack anim on their card
+        socket.on('attack_event', ({ cardId }) => {
+            const el = document.querySelector(`[data-card-id="${cardId}"]`);
+            if (el) animateAttackToCenter(el, 800);
+        });
+
+        // When anyone blocks, replay the block anim on their card
+        socket.on('block_event', ({ cardId, isFaceDown }) => {
+            const el = document.querySelector(`[data-card-id="${cardId}"]`);
+            if (el) animateBlock(el, isFaceDown);
+        });
 
         socket.on('temp_reveal_card', ({ from, cardId }) => {
             if (from === username) return;          // ignore the echo of our own message
