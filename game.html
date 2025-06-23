@@ -1535,7 +1535,7 @@
         const ok = await confirmModal('Offer a Draw', 'Send a draw offer to your opponent?');
         if (!ok) return;
         socket.emit('draw_offer', { gameId, from: username });
-        appendSystem('You offered a draw. Awaiting response…');
+        window.appendSystem('You offered a draw. Awaiting response…');
         };
 
         /* ─── 2) incoming draw offer ─────────────────────────────────────────────── */
@@ -1553,7 +1553,7 @@
         const txt = response === 'accept'
             ? `${from} accepted the draw. The game is a draw.`
             : `${from} rejected the draw. Play continues.`;
-        appendSystem(txt);
+        window.appendSystem(txt);
 
         /* show the end-game banner if accepted */
         if (response === 'accept') showBanner('Draw', 'Players agreed to a draw');
@@ -5458,6 +5458,7 @@
             chatMessages.appendChild(d);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
+        window.appendSystem = appendSystem;
 
         // incoming chat
         socket.on('message', ({ username: from, text }) => {      // :contentReference[oaicite:1]{index=1}
