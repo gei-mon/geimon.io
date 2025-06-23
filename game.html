@@ -1840,6 +1840,8 @@
             container.style.flexWrap = "nowrap";
 
             opponentHand.forEach(cardData => {
+                const isFaceUp = opponentHandRevealed ||
+                    tempRevealedIds.has(String(cardData.id));
                 const cardEl = document.createElement("div");
                 cardEl.classList.add("card");
                 cardEl.style.width = "260px";
@@ -1854,7 +1856,7 @@
                 cardEl.style.outline = "none";
                 cardEl.style.boxShadow = "0 30px 40px rgba(0, 0, 0, 0.5)";
 
-                if (opponentHandRevealed || tempRevealedIds.has(String(cardData.id))) {
+                if (isFaceUp) {
                     const fullCard = cards.find(c => String(c.id) === String(cardData.id));
                     if (fullCard) {
                         const renderedCard = renderCard(fullCard);
@@ -1862,7 +1864,21 @@
                         renderedCard.style.transform = "rotate(180deg)";
                         renderedCard.style.marginLeft = "25px";
                         renderedCard.style.marginTop = "100px";
+                        renderedCard.dataset.cardId       = String(cardData.id);
                         cardEl.appendChild(renderedCard);
+
+                        cardEl.addEventListener("mouseenter", () => {
+                            const scaled = document.querySelector("#viewing-window .scaled-card");
+                            if (!scaled) return;
+                            scaled.innerHTML = "";                           // clear old card
+                            const preview = renderCard(fullCard);            // new big card
+                            preview.style.width  = "240px";
+                            preview.style.height = "420px";
+                            preview.style.transform = "scale(1.2)";
+                            preview.style.marginLeft = "-15%";
+                            preview.style.marginTop  = "7%";
+                            scaled.appendChild(preview);
+                        });
 
                         addTooltipListeners(cardEl);
                         addTokenTooltipListeners(cardEl);
@@ -1893,23 +1909,22 @@
                 const btn = document.createElement("button");
                 btn.className = "card-button";
                 Object.assign(btn.style, {
-                position: "absolute",
-                top:      "0",
-                left:     "0",
-                width:    "100%",
-                height:   "100%",
-                border:   "none",
-                background:"transparent",
-                opacity:  "0",
-                cursor:   "pointer",
-                pointerEvents: "auto",
-                zIndex:   100100
+                    position: "absolute",
+                    top:      "0",
+                    left:     "0",
+                    width:    "100%",
+                    height:   "100%",
+                    border:   "none",
+                    background:"transparent",
+                    opacity:  "0",
+                    cursor:   "pointer",
+                    pointerEvents: isFaceUp ? "none" : "auto",
+                    zIndex:   100100
                 });
-                cardEl.appendChild(btn);
-
-                /* 🔴 3 – (optionally) wrap it right away so the ring appears instantly;  
-                        otherwise the existing MutationObserver will pick it up next tick. */
-                if (typeof wrapCardButton === "function") wrapCardButton(btn);
+                if (!isFaceUp) {
+                    cardEl.appendChild(btn);
+                    if (typeof wrapCardButton === "function") wrapCardButton(btn);
+                }
 
                 container.appendChild(cardEl);
             });
