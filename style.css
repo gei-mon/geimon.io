@@ -979,3 +979,5 @@ background-color: #29c7bd;
 .shuffle-animation {
   animation: deckShuffle 0.6s ease-in-out;
 }
+
+.revealed-card{ outline:3px solid yellow !important; }

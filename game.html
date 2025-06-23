@@ -476,6 +476,8 @@
             top: 850px;
             z-index: 200500;
             display: flex;
+            grid-template-columns:repeat(3,50px);
+            grid-auto-rows:50px;
             gap: 12px;
             opacity: 0;
             transition: opacity 1s ease-in-out;
@@ -483,6 +485,10 @@
             <img id="token-btn" src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/token.png" style="width: 40px; cursor: pointer;" title="Create Token">
             <img id="dice-btn" src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/dice.png" style="width: 40px; cursor: pointer;" title="Roll 1d6">
             <img id="coin-btn" src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/heads.png" style="width: 40px; cursor: pointer;" title="Flip Coin">
+
+            <img id="shuffle-hand-btn" src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/shuffle.png"  title="Shuffle Hand" style="width:40px;cursor:pointer;">
+            <img id="sort-hand-btn"    src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/sort.png"     title="Sort Hand"    style="width:40px;cursor:pointer;">
+            <img id="reveal-hand-btn"  src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/eye.png"      title="Reveal Hand"  style="width:40px;cursor:pointer;">
         </div>
 
         <script type="module">
@@ -1353,6 +1359,65 @@
             });
         });
 
+        /* ───────────────────── HAND UTILITIES  ───────────────────── */
+        let handRevealed   = false;          // my hand currently shown?
+        let savedHandOrder = [];             // stores original DOM order for “Sort”
+
+        // helper – apply or remove outline
+        function updateHandOutline(){
+        document.querySelectorAll('#drawn-cards .card')
+                .forEach(el => el.classList.toggle('revealed-card', handRevealed));
+        }
+
+        /* -------- SHUFFLE ------------ */
+        document.getElementById('shuffle-hand-btn').onclick = () => {
+        const hand = document.getElementById('drawn-cards');
+        if (!hand) return;
+        const cards = [...hand.children];
+        savedHandOrder = cards.map(c => c);                // remember current order
+        cards.sort(()=>Math.random() - 0.5);
+        cards.forEach(c => hand.appendChild(c));
+        addGameLogEntry(`${username} shuffled their hand.`);
+        };
+
+        /* -------- SORT --------------- */
+        document.getElementById('sort-hand-btn').onclick = () => {
+        const hand = document.getElementById('drawn-cards');
+        if (!hand || savedHandOrder.length === 0) return;
+        savedHandOrder.forEach(c => hand.appendChild(c));  // restore original order
+        savedHandOrder = [];
+        addGameLogEntry(`${username} sorted their hand.`);
+        };
+
+        /* -------- REVEAL / HIDE ------ */
+        const revealBtn = document.getElementById('reveal-hand-btn');
+        revealBtn.onclick = () => {
+        handRevealed = !handRevealed;
+        updateHandOutline();
+        revealBtn.title = handRevealed ? 'Hide Hand' : 'Reveal Hand';
+        revealBtn.src   = handRevealed
+                            ? '/Public/Images/Site Assets/eye-closed.png'
+                            : '/Public/Images/Site Assets/eye.png';
+        socket.emit('hand_reveal', { gameId, from:username, reveal:handRevealed });
+        addGameLogEntry(`${username} ${handRevealed ? 'revealed' : 'hid'} their hand.`);
+        };
+
+        /* receive opponent reveal */
+        socket.on('hand_reveal', ({ from, reveal }) => {
+        if (from === username) return;       // ignore our echo
+        opponentHandRevealed = reveal;       // this var already used in renderOpponentHand()
+        renderOpponentHand();
+        const msg = `${from} ${reveal ? 'revealed' : 'hid'} their hand.`;
+        addGameLogEntry(msg, false);
+        });
+
+        /* make sure outlines appear whenever we (re)render our hand */
+        const origRenderDrawnCards = renderDrawnCards;
+        renderDrawnCards = async function(...args){
+        await origRenderDrawnCards.apply(this,args);
+        updateHandOutline();
+        };
+
         // COIN FLIP
         document.getElementById("coin-btn").onclick = () => {
         const result = Math.random() < 0.5 ? "Heads" : "Tails";
@@ -1559,7 +1624,6 @@
         if (response === 'accept') showBanner('Draw', 'Players agreed to a draw');
         });
         /* ─────────────────────────────────────────────────────────────────────────── */
-
 
         function animateDeckShuffle(isOpponent = false) {
             // Determine which deck box to animate

@@ -150,6 +150,9 @@ io.on('connection', (socket) => {
   socket.on('draw_response',({ gameId, from, response }) =>
     io.to(gameId).emit('draw_result',  { from, response }) );
 
+  socket.on('hand_reveal', ({ gameId, from, reveal }) =>
+    io.to(gameId).emit('hand_reveal', { from, reveal }) );
+
   socket.on('message', (text) => {
     const user = userMap.get(socket.id);
     if (!user) return;
