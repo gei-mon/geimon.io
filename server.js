@@ -144,6 +144,12 @@ io.on('connection', (socket) => {
     io.to(gameId).emit('card_targeted', { cardId });
   });
 
+  socket.on('draw_offer',   ({ gameId, from }) =>
+    io.to(gameId).emit('draw_offer',   { from }) );
+
+  socket.on('draw_response',({ gameId, from, response }) =>
+    io.to(gameId).emit('draw_result',  { from, response }) );
+
   socket.on('message', (text) => {
     const user = userMap.get(socket.id);
     if (!user) return;

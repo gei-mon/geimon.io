@@ -474,7 +474,7 @@
             position: absolute;
             left: 1730px;
             top: 850px;
-            z-index: 100500;
+            z-index: 200500;
             display: flex;
             gap: 12px;
             opacity: 0;
@@ -1442,12 +1442,15 @@
         // 1) container – tweak left/top if you reposition the opponent pic
         const reactBar = document.createElement('div');
         Object.assign(reactBar.style, {
-        position:'absolute', left:'1960px', top:'0px',
-        width:'100px', height:'100px',        // same footprint as profile pic
-        display:'grid', gridTemplateColumns:'1fr 1fr', gap:'4px',
-        zIndex:'1010',
+            position:'absolute', left:'1910px', top:'30px',
+            width:'100px', height:'100px',        // same footprint as profile pic
+            display:'grid', gridTemplateColumns:'1fr 1fr', gap:'4px',
+            zIndex:'1010', opacity: '0', transition:'opacity 1s ease',
         });
         document.body.appendChild(reactBar);
+        setTimeout(() => {
+            reactBar.style.opacity = "1";
+        }, 6500);
 
         // 2) helper to show (and auto-remove) the big icon
         function flashIcon(src) {
@@ -1455,12 +1458,17 @@
         Object.assign(img.style, {
             position:'fixed', left:'50%', top:'50%', transform:'translate(-50%,-50%)',
             width:'200px', pointerEvents:'none', zIndex:'200000', opacity:'0',
-            transition:'opacity .2s',
+            transition:'opacity .5s ease',
         });
         img.src = src;
         document.body.appendChild(img);
         requestAnimationFrame(() => (img.style.opacity = '1'));   // fade in
-        setTimeout(() => img.remove(), 2000);                     // remove in 2 s
+        setTimeout(() => {
+            img.style.opacity = '0';
+
+            /* 3) when fade-out completes, remove the element */
+            img.addEventListener('transitionend', () => img.remove(), { once: true });
+        }, 1500);
         }
 
         // 3) build the four buttons
@@ -1479,6 +1487,79 @@
 
         // 4) echo from the server → show on *their* screen
         socket.on('signal_icon', ({ icon }) => flashIcon(icon));
+
+        /* ────────────────────────────  OFFER DRAW  ──────────────────────────────── */
+        /* CSS for the modal overlay & box (inject once) */
+        const styleTag = document.createElement('style');
+        styleTag.textContent = `
+        .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;
+                        align-items:center;justify-content:center;z-index:200000;}
+        .modal-box    {background:#fff;padding:20px 28px;border-radius:10px;
+                        box-shadow:0 4px 18px rgba(0,0,0,.36);text-align:center;}
+        .modal-box h3 {margin-top:0;}
+        .modal-box button{margin:8px 12px;min-width:80px;font-weight:bold;}
+        .modal-box button:first-of-type{background:#4caf50;color:#fff;}
+        .modal-box button:last-of-type{background:#d32f2f;color:#fff;}
+        `;
+        document.head.appendChild(styleTag);
+
+        /* helper – returns Promise<boolean> */
+        function confirmModal(title, msg, yesTxt = 'Yes', noTxt = 'No') {
+        return new Promise(resolve => {
+            const ov  = Object.assign(document.createElement('div'), { className:'modal-overlay' });
+            const box = Object.assign(document.createElement('div'), { className:'modal-box' });
+            box.innerHTML = `<h3>${title}</h3><p>${msg}</p>`;
+            const ok  = Object.assign(document.createElement('button'), { textContent: yesTxt  });
+            const no  = Object.assign(document.createElement('button'), { textContent: noTxt  });
+            ok.onclick = () => { ov.remove(); resolve(true);  };
+            no.onclick = () => { ov.remove(); resolve(false); };
+            box.append(ok, no); ov.append(box); document.body.append(ov);
+        });
+        }
+
+        /* button positioned just above opponent portrait (tweak coords if needed) */
+        const drawBtn = document.createElement('button');
+        drawBtn.textContent = 'Offer Draw';
+        Object.assign(drawBtn.style, {
+        position:'absolute', left:'1921px', top:'790px', zIndex:'1010',
+        padding:'6px 10px', cursor:'pointer', fontWeight: 'bold',
+        opacity: '0', transition:'opacity 1s ease',
+        });
+        document.body.appendChild(drawBtn);
+        setTimeout(() => {
+            drawBtn.style.opacity = "1";
+        }, 6500);
+
+        /* ─── 1) you click the button ────────────────────────────────────────────── */
+        drawBtn.onclick = async () => {
+        const ok = await confirmModal('Offer a Draw', 'Send a draw offer to your opponent?');
+        if (!ok) return;
+        socket.emit('draw_offer', { gameId, from: username });
+        appendSystem('You offered a draw. Awaiting response…');
+        };
+
+        /* ─── 2) incoming draw offer ─────────────────────────────────────────────── */
+        socket.on('draw_offer', async ({ from }) => {
+        if (from === username) return;                            // ignore our echo
+        const accept = await confirmModal('Draw Offer',
+            `${from} offers a draw. Accept?`, 'Accept', 'Reject');
+        socket.emit('draw_response', {
+            gameId, from: username, response: accept ? 'accept' : 'reject'
+        });
+        });
+
+        /* ─── 3) final result for both players ───────────────────────────────────── */
+        socket.on('draw_result', ({ from, response }) => {
+        const txt = response === 'accept'
+            ? `${from} accepted the draw. The game is a draw.`
+            : `${from} rejected the draw. Play continues.`;
+        appendSystem(txt);
+
+        /* show the end-game banner if accepted */
+        if (response === 'accept') showBanner('Draw', 'Players agreed to a draw');
+        });
+        /* ─────────────────────────────────────────────────────────────────────────── */
+
 
         function animateDeckShuffle(isOpponent = false) {
             // Determine which deck box to animate
