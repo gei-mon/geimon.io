@@ -4486,9 +4486,9 @@
                 bottom:   isFaceDown ? ""       : "100%",
                 left:     isFaceDown ? ""       : "50%",
                 top:      isFaceDown ? "50%"    : "",
-                right:    isFaceDown ? "100%"   : "",
+                right:    isFaceDown ? "-200%"   : "",
                 transform: isFaceDown
-                    ? "translateY(-50%) scale(1) rotate(-90deg)"
+                    ? "translateY(-50%) scale(1) rotate(90deg)"
                     : "translateX(-50%) scale(1)",
                 marginBottom:   "0em",
             });
@@ -4776,7 +4776,7 @@
 
             Object.assign(hoverMenu.style, {
                 transform:  isFaceDown
-                    ? "translateX(10px) translateY(-50%) rotate(-90deg)"
+                    ? "translateX(10px) translateY(-50%) rotate(90deg)"
                     : "translate(-50%, 10px)",
                 opacity:    "0",
                 transition: "transform 150ms ease, opacity 150ms ease"
@@ -4792,7 +4792,7 @@
                 // force initial state
                 void hoverMenu.offsetWidth;
                 if (isFaceDown) {
-                    hoverMenu.style.transform = "translateX(0) translateY(-50%) rotate(-90deg)";
+                    hoverMenu.style.transform = "translateX(0) translateY(-50%) rotate(90deg)";
                     hoverMenu.style.opacity   = "1";
                 } else {
                     hoverMenu.style.transform = "translate(-50%, 0)";
@@ -4803,7 +4803,7 @@
             // 5) hide menu
             function hideMenu() {
                 if (isFaceDown) {
-                    hoverMenu.style.transform = "translateX(10px) translateY(-50%) rotate(-90deg)";
+                    hoverMenu.style.transform = "translateX(-10px) translateY(-50%) rotate(90deg)";
                 } else {
                     hoverMenu.style.transform = "translate(-50%, 10px)";
                 }
@@ -5233,21 +5233,24 @@
                     /* only PLAYER’S own face-down arsenal previews */
                     if (!isOppSide) {
                         btn.addEventListener("mouseenter", () => {
-                        const full = cards.find(c => String(c.id) === String(cardData.id));
-                        if (!full) return;
-                        const scaled = document.querySelector("#viewing-window .scaled-card");
-                        if (!scaled) return;
-                        scaled.innerHTML = "";
-                        const preview = renderCard(full);
-                        Object.assign(preview.style,{
-                            width:"240px", height:"420px", transform:"scale(1.2)",
-                            marginLeft:"-15%", marginTop:"7%"
-                        });
-                        scaled.appendChild(preview);
+                            const full = cards.find(c => String(c.id) === String(cardData.id));
+                            if (!full) return;
+                            const scaled = document.querySelector("#viewing-window .scaled-card");
+                            if (!scaled) return;
+                            scaled.innerHTML = "";
+                            const preview = renderCard(full);
+                            Object.assign(preview.style,{
+                                width:"240px", height:"420px", transform:"scale(1.2)",
+                                marginLeft:"-15%", marginTop:"7%"
+                            });
+                            scaled.appendChild(preview);
                         });
                     }
 
                     wrap.dataset.cardId = String(cardData.id);
+                    wrap.dataset.zone   = "FaceDownArsenalZone";
+                    wrap._card          = cardData;
+                    if (!isOppSide) attachHoverMenu(wrap, cardData);
                     container.appendChild(wrap);
                     return;       // done with this card
                 }
@@ -5308,7 +5311,14 @@
                     }
                     wrap.appendChild(btn);
                     if (typeof wrapCardButton === "function") wrapCardButton(btn);
+                    if (!isOppSide) {
+                        attachHoverMenu(btn, cardData);      /* ← NEW */
+                    }
                     wrap.dataset.cardId = String(cardData.id);
+                    wrap.dataset.zone = "FaceDownZone";
+                    wrap._card        = cardData;
+
+                    if (!isOppSide) attachHoverMenu(wrap, cardData);
 
                     container.appendChild(wrap);
                     return;          // finished this card
