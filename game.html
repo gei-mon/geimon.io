@@ -343,6 +343,12 @@
   animation: phaseWave 1s ease-out forwards;
   border-radius: 10px;
 }
+#chat-messages       { border: 4px solid #000; height: 310px; overflow-y: auto;
+                       background: #d3d3d3; padding: 4px; }
+#chat-input          { width: 75%;  border: 4px solid #000; }
+#chat-send           { width: 18%;  }
+#chat-typing         { font-style: italic; color: lime; height: 1.4em; }
+.system-message      { color: blue; font-style: italic; }
 </style>
 <body style="background-color:rgb(78, 78, 78);">
   <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
@@ -369,10 +375,14 @@
                 <button class="tab-button" data-tab="dictionary">Dictionary</button>
             </div>
             <div class="tab-content-container">
-                <div class="tab-content" id="chat">
-                    <p>This is a Solo Game, and we here at Geimon! do not believe that AI should be allowed to speak.</p>
+                <div class="tab-content active" id="chat">
+                    <div id="chat-messages"></div>
+                    <div id="chat-typing"></div>
+                    <input id="chat-input" autocomplete="off" placeholder="Type your message…" />
+                    <button id="chat-send">Send</button>
                 </div>
-                <div class="tab-content active" id="game-log">
+
+                <div class="tab-content" id="game-log">
                     <p><span id="totem" style="color: goldenrod;"></span></p>
                     <div id="game-log-placeholder"></div>
                 </div>
@@ -5297,6 +5307,53 @@
 
         const tabs = document.querySelectorAll(".tab-button");
         const contents = document.querySelectorAll(".tab-content");
+
+        const chatMessages = document.getElementById('chat-messages');
+        const chatTyping   = document.getElementById('chat-typing');
+        const chatInput    = document.getElementById('chat-input');
+        const chatSend     = document.getElementById('chat-send');
+
+        function appendSystem(msg) {                  // copied from single.html
+            const d = document.createElement('div');
+            d.className = 'system-message';
+            d.textContent = msg;
+            chatMessages.appendChild(d);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // incoming chat
+        socket.on('message', ({ username: from, text }) => {      // :contentReference[oaicite:1]{index=1}
+            const div = document.createElement('div');
+            div.textContent = `${from}: ${text}`;
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        });
+
+        // incoming typing indicator
+            socket.on('typing', ({ username: from, isTyping }) => {
+            chatTyping.textContent = isTyping ? `${from} is typing…` : '';
+        });
+
+        // send chat
+        function sendChat () {
+            const txt = chatInput.value.trim();
+            if (!txt) return;
+                socket.emit('message', txt);                 // same event you already use :contentReference[oaicite:2]{index=2}
+                chatInput.value = '';
+        }
+        chatSend.onclick = sendChat;
+        chatInput.addEventListener('keypress', e => {
+        if (e.key === 'Enter') sendChat();
+            socket.emit('typing', true);
+        });
+        chatInput.addEventListener('input', () => {
+            if (chatInput.value === '') socket.emit('typing', false);
+        });
+        let typingTimeout;
+        chatInput.addEventListener('keyup', () => {
+            clearTimeout(typingTimeout);
+            typingTimeout = setTimeout(() => socket.emit('typing', false), 1000);
+        });
 
         tabs.forEach(tab => {
             tab.addEventListener("click", () => {
