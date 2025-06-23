@@ -74,22 +74,14 @@
 
     <div class="container">
         <div class="column left">
-            <button class="button button" onclick="location.href='selector.html'" id="deckButton" style="display: none;">Deck Editor</button>
-            <br>
-            <button class="button button" id="dynamicButton">Loading...</button>
-            <br>
             <button class="button button" onclick="window.open('rules.html', '_blank')" id="rulesButton" style="display: none;">How To Play</button>
             <br>
-            <button class="button button" onclick="location.href='settings.html'" id="settingsButton" style="display: none;">Settings</button>
+            <button class="button button" id="dynamicButton">Loading...</button>
         </div>
         <div class="column right">
-            <button class="button button" onclick="window.open('solo.html', '_blank')" id="soloButton" style="display: none;">Solo Game</button>
+            <button class="button button" onclick="location.href='selector.html'" id="deckButton" style="display: none;">Deck Editor</button>
             <br>
-            <button class="button button" onclick="window.open('single.html', '_blank')" id="singleButton" style="display: none;">Single Game</button>
-            <br>
-            <button class="button button" onclick="window.open('match.html', '_blank')" id="matchButton" style="display: none;">Match Game</button>
-            <br>
-            <button class="button button" onclick="location.href='minigame.html'" id="minigameButton" style="display: none;">Mini-Games!</button>
+            <button class="button button" onclick="location.href='multiplayer.html'" id="multiplayerButton" style="display: none;">Multiplayer</button>
         </div>
     </div>
     <div style="text-align: center; margin-top: 0px;">
@@ -102,13 +94,14 @@
         const button = document.getElementById('dynamicButton');
         const logoutBtn = document.getElementById('logoutButton');
         const deckBtn = document.getElementById('deckButton');
-        const soloBtn = document.getElementById('soloButton');
-        const singleBtn = document.getElementById('singleButton');
-        const matchBtn = document.getElementById('matchButton');
+        //const soloBtn = document.getElementById('soloButton');
+        //const singleBtn = document.getElementById('singleButton');
+        //const matchBtn = document.getElementById('matchButton');
         //const minigameBtn = document.getElementById('minigameButton');
         const profilePic = document.getElementById('profilePic');
         const rulesBtn = document.getElementById('rulesButton');
         //const settingsBtn = document.getElementById('settingsButton');
+        const multiplayerBtn = document.getElementById('multiplayerButton');
 
         try {
             const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/me', {
@@ -122,13 +115,14 @@
                 button.onclick = () => window.location.href = 'profile.html';
 
                 logoutBtn.style.display = 'inline-block';
-                soloBtn.style.display = 'inline-block';
-                singleBtn.style.display = 'inline-block';
+                //soloBtn.style.display = 'inline-block';
+                //singleBtn.style.display = 'inline-block';
                 deckBtn.style.display = 'inline-block';
-                matchBtn.style.display = 'inline-block';
+                //matchBtn.style.display = 'inline-block';
                 rulesBtn.style.display = 'inline-block';
                 //minigameBtn.style.display = 'inline-block';
                 //settingsBtn.style.display = 'inline-block';
+                multiplayerBtn.style.display = 'inline-block';
 
                 logoutBtn.onclick = async () => {
                     await fetch('https://geimon-app-833627ba44e0.herokuapp.com/logout', {
