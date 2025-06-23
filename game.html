@@ -4661,6 +4661,7 @@ html, body {
                     "To Arsenal (Face-Up)"
                 ];
             }
+            if (cardData.tags?.includes("Token")) opts.push("Remove");
 
             // populate buttons
             opts.forEach(text => {
@@ -4771,9 +4772,32 @@ html, body {
                         addGameLogEntry(`${cardData.name} loses all counters.`);
                         break;
                     }
-                    case "Remove":
-                        addGameLogEntry(`Removed ${cardData.name}.`);
+                    case "Remove": {
+                        /* remove the Token from its current zone and refresh that zone */
+
+                        const zoneArr = gameState[username][zone] || [];
+                        const idx     = zoneArr.findIndex(c => String(c.id) === String(cardData.id));
+                        if (idx > -1) zoneArr.splice(idx, 1);        // take it out of state
+
+                        /* map the zone name to its DOM box so we can re-render it */
+                        const boxId = {
+                            "Hand":                   "drawn-cards",
+                            "Zone (Champion)":        "playerChampionsBox",
+                            "Zone (Arsenal)":         "playerArsenalBox",
+                            "Reserve":                "playerReserveBox",
+                            "FaceDownZone":           "playerFaceDownBox",
+                            "FaceDownArsenalZone":    "playerFaceDownArsenalBox",
+                            "Tomb":                   "playerTombBox",
+                            "Void":                   "playerVoidBox"
+                        }[zone];
+
+                        /* tell the server, then update the UI */
+                        await sendZoneUpdate([zone]);
+                        if (boxId) renderCardZone(zoneArr, boxId);
+
+                        addGameLogEntry(`${cardData.name} was removed from ${zone}.`);
                         break;
+                    }
                     default:
                         console.warn("Unhandled action:", text);
                 }
