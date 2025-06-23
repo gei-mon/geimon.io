@@ -871,17 +871,19 @@ background-color: #29c7bd;
 #opponentFaceDownBox > div {
   flex-shrink: 0 !important;
   margin-left: -125px !important;
+  transform: rotate(90deg) scale(0.3) !important;
 }
 #opponentFaceDownBox .sleeve-overlay {
-  transform: none !important;
+  transform: rotate(180deg) !important;
 }
 
 #opponentFaceDownArsenalBox > div {
   flex-shrink: 0 !important;
   margin-left: -175px !important;
+  transform: rotate(180deg) scale(0.3) !important;
 }
 #opponentFaceDownArsenalBox .sleeve-overlay {
-  transform: none !important;
+  transform: rotate(180deg) !important;
 }
 
 #playerReserveBox {
