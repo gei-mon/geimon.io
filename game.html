@@ -385,7 +385,6 @@
                     <input id="chat-input" autocomplete="off" placeholder="Type your message…" />
                     <button id="chat-send">Send</button>
                 </div>
-
                 <div class="tab-content" id="game-log">
                     <p><span id="totem" style="color: goldenrod;"></span></p>
                     <div id="game-log-placeholder"></div>
@@ -5146,232 +5145,219 @@
             });
         }
 
+        /**
+         * Renders every card in one zone (hand, board, reserve, face-down piles …)
+         * – Works for both players.
+         * – Opponent face-down cards show THEIR sleeve and never preview.
+         * – Player face-down cards keep the hover preview.
+         */
         async function renderCardZone(cardsArray, containerId) {
             const container = document.getElementById(containerId);
-                container.style.gap = containerId === "playerFaceDownBox" ? "75px" : "4px";
-                container.style.gap = containerId === "playerFaceDownArsenalBox" ? "25px" : "4px";
             if (!container) return;
 
-            container.innerHTML = ""; // Clear previous
+            /* gap tweaks for the player’s two face-down rows */
+            container.style.gap = containerId === "playerFaceDownBox"        ? "75px"
+                                : containerId === "playerFaceDownArsenalBox"  ? "25px"
+                                : "4px";
 
+            /* true when we are drawing a zone that belongs to the opponent */
+            const isOppSide = containerId.startsWith("opponent");
+
+            container.innerHTML = "";            // wipe old cards
             if (!cardsArray || cardsArray.length === 0) return;
 
-            const half = Math.floor(cardsArray.length / 2);
+            /* keep the nice ‘snake’ ordering you already had */
+            const half    = Math.floor(cardsArray.length / 2);
             const ordered = [];
-
             for (let i = 0; i < cardsArray.length; i++) {
                 const offset = i % 2 === 0 ? i / 2 : -(Math.ceil(i / 2));
                 ordered.push(cardsArray[half + offset] || cardsArray[half - offset]);
             }
 
-            if (!userSleeveURL) {
-                userSleeveURL = await fetchUserData();
-            }
+            /* fetch the player’s sleeve once (opponent sleeve comes from their deck-box) */
+            if (!userSleeveURL) userSleeveURL = await fetchUserData();
 
             ordered.forEach(cardData => {
-                if (!cardData || !cardData.id) {
-                    console.warn("❗ Skipping cardData due to missing ID:", cardData);
-                    return;
-                }
+                if (!cardData?.id) return;
 
+                /* full card or token */
                 let card = cards.find(c => String(c.id) === String(cardData.id));
-
                 if (!card) {
-                    const baseToken = tokens.find(t => String(cardData.id).startsWith(String(t.id)));
-                    if (baseToken) {
-                        card = { ...baseToken, ...cardData }; // use token base with live data
-                        console.debug(`🪙 renderCardZone: resolved token ID ${cardData.id} using base ${baseToken.id}`);
-                    }
+                const baseToken = tokens.find(t => String(cardData.id).startsWith(String(t.id)));
+                if (baseToken) card = { ...baseToken, ...cardData };
                 }
 
-                const isFaceDownArsenal = cardData.boardState === "FaceDownArsenalZone";
-                const isFaceDown        = !!cardData.faceDown;
+                /* ---------------- face-down checks ---------------- */
+                const isFaceDownArsenal  = cardData.boardState === "FaceDownArsenalZone";
+                const isFaceDownChampion = cardData.boardState === "FaceDownZone";
+                const isFaceDown         = isFaceDownArsenal || isFaceDownChampion;
 
-                // If neither a real card nor a token (and not face-down), skip it
-                if (!card && !isFaceDown) return;
-
-                let element;
-
+                /* --------- FACE-DOWN ARSENAL CARD (both players) --------- */
                 if (isFaceDownArsenal) {
-                    const arsenalWrapper = document.createElement("div");
-                        arsenalWrapper.style.display = "inline-block";
-                        arsenalWrapper.style.position = "relative";
-                        arsenalWrapper.style.marginLeft = "-33.8%";
-                        arsenalWrapper.style.transformOrigin = "top center";
-                        arsenalWrapper.style.marginTop = "-16px";
-                        arsenalWrapper.style.pointerEvents = "auto";
-                        arsenalWrapper.style.backgroundColor = "rgba(255,0,0,0)";
-                        arsenalWrapper.style.width = "260px";
-                        arsenalWrapper.style.height = "400px";
-                        arsenalWrapper.style.transform = "scale(0.3)";
-                        arsenalWrapper.style.outline = "0px dashed red";
-                        arsenalWrapper.style.cursor = "pointer";
+                    const wrap = document.createElement("div");
+                    wrap.classList.add("card");
+                    Object.assign(wrap.style, {
+                        display:"inline-block", position:"relative",
+                        marginLeft:"-33.8%", marginTop:"-16px",
+                        width:"260px", height:"400px",
+                        transform:"scale(0.3)", transformOrigin:"top center",
+                        pointerEvents:"auto", cursor:"pointer"
+                    });
 
-                    const arsenalCard = document.createElement("div");
-                        arsenalCard.style.width = "100%";
-                        arsenalCard.style.height = "100%";
-                        arsenalCard.style.backgroundImage = `url(${userSleeveURL || 'default-sleeve.png'})`;
-                        arsenalCard.style.backgroundSize = "cover";
-                        arsenalCard.style.backgroundPosition = "center";
-                        arsenalCard.style.border = "2px solid white";
-                        arsenalCard.style.position = "relative";
-                        arsenalCard.style.zIndex = "110";
-                        arsenalCard.style.pointerEvents = "none";
-                        arsenalCard.style.opacity = "1";
-                        arsenalCard.style.transition = "opacity 1s ease-in-out";
+                    const sleeve = isOppSide
+                        ? (opponentDeckBox?.style.backgroundImage || '').slice(5,-2)
+                        : userSleeveURL;
 
-                    // Hover logic for scaled preview
-                    arsenalWrapper.addEventListener("mouseenter", () => {
+                    const cardBack = document.createElement("div");
+                    Object.assign(cardBack.style, {
+                        width:"100%", height:"100%",
+                        backgroundImage:`url(${sleeve || 'default-sleeve.png'})`,
+                        backgroundSize:"cover", backgroundPosition:"center",
+                        border:"2px solid white", pointerEvents:"none"
+                    });
+                    wrap.appendChild(cardBack);
+
+                    /* ── overlay button restores targeting/highlight ─────────── */
+                    const btn = document.createElement("button");              /* ‹NEW› */
+                    btn.className = "card-button";                             /* ‹NEW› */
+                    btn.dataset.cardId = String(cardData.id);                  /* ‹NEW› */
+                    Object.assign(btn.style,{                                  /* ‹NEW› */
+                        position:"absolute", top:"0", left:"0",                  /* ‹NEW› */
+                        width:"100%", height:"100%",                             /* ‹NEW› */
+                        border:"none", background:"transparent", opacity:"0",    /* ‹NEW› */
+                        cursor:"pointer", pointerEvents:"auto", zIndex:100100    /* ‹NEW› */
+                    });                                                        /* ‹NEW› */
+                    wrap.appendChild(btn);                                     /* ‹NEW› */
+                    if (typeof wrapCardButton === "function") wrapCardButton(btn); /* ‹NEW› */
+
+                    /* only PLAYER’S own face-down arsenal previews */
+                    if (!isOppSide) {
+                        btn.addEventListener("mouseenter", () => {
                         const full = cards.find(c => String(c.id) === String(cardData.id));
-                        if (!full) {
-                            console.error(`❌ No card found with ID '${cardData.id}' for preview.`);
-                            return;
-                        }
-
+                        if (!full) return;
                         const scaled = document.querySelector("#viewing-window .scaled-card");
-                        if (!scaled) {
-                            console.warn("⚠️ #viewing-window .scaled-card not found.");
-                            return;
-                        }
-
+                        if (!scaled) return;
                         scaled.innerHTML = "";
-
                         const preview = renderCard(full);
-                        preview.style.width = "240px";
-                        preview.style.height = "420px";
-                        preview.style.transform = "scale(1.2)";
-                        preview.style.marginLeft = "-15%";
-                        preview.style.marginTop = "7%";
-
+                        Object.assign(preview.style,{
+                            width:"240px", height:"420px", transform:"scale(1.2)",
+                            marginLeft:"-15%", marginTop:"7%"
+                        });
                         scaled.appendChild(preview);
-                    });
-
-                    arsenalWrapper.appendChild(arsenalCard);
-                    container.appendChild(arsenalWrapper);
-                    const fullCard = cards.find(c => String(c.id) === String(cardData.id));
-                    if (!fullCard) {
-                        console.error(`No card with ID ${cardData.id} found`);
-                        return;
+                        });
                     }
-                    return;
+
+                    wrap.dataset.cardId = String(cardData.id);
+                    container.appendChild(wrap);
+                    return;       // done with this card
                 }
 
+                /* --------- OTHER FACE-DOWN CARDS (champions etc.) --------- */
                 if (isFaceDown) {
-                    const wrapperDiv = document.createElement("div");
-                    wrapperDiv.id = `card-${cardData.id}`;
-                        wrapperDiv.style.display = "inline-block";
-                        wrapperDiv.style.position = "relative";
-                        wrapperDiv.style.marginLeft = "-39.3%";
-                        wrapperDiv.style.transformOrigin = "top center";
-                        wrapperDiv.style.marginTop = "16px";
-                        wrapperDiv.style.pointerEvents = "auto";
-                        wrapperDiv.style.backgroundColor = "rgba(255,0,0,0)";
-                        wrapperDiv.style.width = "260px";
-                        wrapperDiv.style.height = "400px";
-                        wrapperDiv.style.transform = "translateY(11%) rotate(270deg) scale(0.33)";
-                        wrapperDiv.style.outline = "0px dashed red"; // visually show wrapperDiv box
-                        wrapperDiv.style.cursor = "pointer";
+                    const wrap = document.createElement("div");
+                    wrap.classList.add("card");
+                    Object.assign(wrap.style,{
+                        display:"inline-block", position:"relative",
+                        marginLeft:"-39.3%", marginTop:"16px",
+                        width:"260px", height:"400px",
+                        transform:"translateY(11%) rotate(270deg) scale(0.33)",
+                        transformOrigin:"top center"
+                    });
 
-                    element = document.createElement("div");
-                        element.style.width = "100%"; // fill wrapper
-                        element.style.height = "100%";
-                        element.style.backgroundImage = `url(${userSleeveURL || 'default-sleeve.png'})`;
-                        element.style.backgroundSize = "cover";
-                        element.style.backgroundPosition = "center";
-                        element.style.transform = ""; // reset transform
-                        element.style.marginTop = "0px";
-                        element.style.position = "relative";
-                        element.style.zIndex = "110";
-                        element.style.border = "2px solid white";
-                        element.style.pointerEvents = "none";
-                        element.style.opacity = "1";
-                        element.style.transition = "opacity 1s ease-in-out";
+                    /* correct sleeve for each side */
+                    const sleeve = isOppSide
+                        ? (opponentDeckBox?.style.backgroundImage || '').slice(5,-2)
+                        : userSleeveURL;
 
-                    wrapperDiv.addEventListener("mouseenter", () => {
-                        //console.log("mouseenter fired on face-down card", cardData.id);
-                        if (containerId === "playerFaceDownBox"){
-                            rendered.dataset.zone = "Zone (Champion)";
-                        }
-                        if (containerId === "playerFaceDownArsenalBox"){
-                            rendered.dataset.zone = "Zone (Arsenal)";
-                        }
-                        const realCard = cards.find(c => String(c.id) === String(cardData.id));
-                        if (!realCard) {
-                            console.error(`❌ Hover preview: No card found with ID '${cardData.id}'. Check if the card exists in 'cards' array.`);
-                            return;
-                        }
+                    const cardBack = document.createElement("div");
+                    Object.assign(cardBack.style,{
+                        width:"100%", height:"100%",
+                        backgroundImage:`url(${sleeve || 'default-sleeve.png'})`,
+                        backgroundSize:"cover", backgroundPosition:"center",
+                        border:"2px solid white", pointerEvents:"none"
+                    });
+                    wrap.appendChild(cardBack);
 
+                    /* ── overlay button restores targeting/highlight ─────────── */
+                    const btn = document.createElement("button");
+                    btn.className = "card-button";
+                    btn.dataset.cardId = String(cardData.id);
+                    Object.assign(btn.style,{
+                        position:"absolute", top:"0", left:"0",
+                        width:"100%", height:"100%",
+                        border:"none", background:"transparent",
+                        opacity:"0", cursor:"pointer", pointerEvents:"auto",
+                        zIndex:100100
+                    });
+
+                    /* player’s own face-down cards still preview on hover */
+                    if (!isOppSide) {
+                        btn.addEventListener("mouseenter", () => {
+                        const real = cards.find(c => String(c.id) === String(cardData.id));
+                        if (!real) return;
                         const scaled = document.querySelector("#viewing-window .scaled-card");
-                        if (!scaled) {
-                            console.warn("⚠️ #viewing-window .scaled-card not found!");
-                            return;
-                        }
-
+                        if (!scaled) return;
                         scaled.innerHTML = "";
-
-                        const preview = renderCard(realCard);
-                        preview.style.width = "240px";
-                        preview.style.height = "420px";
-                        preview.style.transform = "scale(1.2)";
-                        preview.style.marginLeft = "-15%";
-                        preview.style.marginTop = "7%";
-
+                        const preview = renderCard(real);
+                        Object.assign(preview.style,{
+                            width:"240px", height:"420px", transform:"scale(1.2)",
+                            marginLeft:"-15%", marginTop:"7%"
+                        });
                         scaled.appendChild(preview);
-                    });
-                    wrapperDiv.appendChild(element);
-                    container.appendChild(wrapperDiv);
-                } else {
-                    const enriched = { ...card, ...cardData };
-                    const rendered = renderCard(enriched);
-                    if (containerId === "playerChampionsBox"){
-                        rendered.dataset.zone = "Zone (Champion)";
+                        });
                     }
-                    if (containerId === "playerArsenalBox"){
-                        rendered.dataset.zone = "Zone (Arsenal)";
-                    }
-                    if (containerId === "playerReserveBox"){
-                        rendered.dataset.zone = "Reserve";
-                    }
-                    rendered._card        = cardData;
-                    attachHoverMenu(rendered, cardData);
+                    wrap.appendChild(btn);
+                    if (typeof wrapCardButton === "function") wrapCardButton(btn);
+                    wrap.dataset.cardId = String(cardData.id);
 
-                    const wrapper = document.createElement("div");
-                        wrapper.style.display        = "inline-block";
-                        wrapper.style.position       = "relative";
-                    if (containerId === "playerReserveBox") {
-                        wrapper.style.marginLeft  = "-210px";
-                        wrapper.style.marginTop   = "-350px";
-                        wrapper.style.transform       = "scale(0.3)";
-                        wrapper.style.transformOrigin = "top center";
-                    } else if (containerId === "opponentReserveBox") {
-                        wrapper.style.marginLeft  = "-210px";
-                        wrapper.style.marginTop   = "-350px";
-                    } else {
-                        wrapper.style.marginLeft  = "-44px";
-                        wrapper.style.marginTop   = "323px";
-                        wrapper.style.transformOrigin = "top center";
-                        wrapper.style.transform       = "scale(0.3)";
-                    }
-                    wrapper.style.pointerEvents   = "auto";
-                    wrapper.style.zIndex          = "200000";
-
-                    // Hover-to-preview logic
-                    wrapper.addEventListener("mouseenter", () => {
-                        const scaled = document.querySelector("#viewing-window .scaled-card");
-                            scaled.innerHTML = "";
-
-                        const preview = renderCard(enriched);
-                            preview.style.width = "240px";
-                            preview.style.height = "420px";
-                            preview.style.transform = "scale(1.2)";
-                            preview.style.marginLeft = "-15%";
-                            preview.style.marginTop = "7%";
-
-                        scaled.appendChild(preview);
-                    });
-                    wrapper.appendChild(rendered);
-                    container.appendChild(wrapper);
+                    container.appendChild(wrap);
+                    return;          // finished this card
                 }
+
+                /* ---------------- FACE-UP cards (normal path) ---------------- */
+                const enriched = { ...card, ...cardData };     // keep your live stats
+                const rendered = renderCard(enriched);
+                rendered._card = cardData;                     // keep your quick ref
+
+                if (containerId === "playerChampionsBox") rendered.dataset.zone = "Zone (Champion)";
+                if (containerId === "playerArsenalBox")   rendered.dataset.zone = "Zone (Arsenal)";
+                if (containerId === "playerReserveBox")   rendered.dataset.zone = "Reserve";
+
+                attachHoverMenu(rendered, cardData);
+
+                /* wrapper controls scale / offset for various zones */
+                const wrap = document.createElement("div");
+                Object.assign(wrap.style,{ display:"inline-block", position:"relative",
+                                        pointerEvents:"auto", zIndex:"200000" });
+                if (containerId === "playerReserveBox") {
+                Object.assign(wrap.style,{
+                    marginLeft:"-210px", marginTop:"-350px",
+                    transform:"scale(0.3)", transformOrigin:"top center"
+                });
+                } else if (containerId === "opponentReserveBox") {
+                Object.assign(wrap.style,{ marginLeft:"-210px", marginTop:"-350px" });
+                } else {
+                Object.assign(wrap.style,{
+                    marginLeft:"-44px", marginTop:"323px",
+                    transform:"scale(0.3)", transformOrigin:"top center"
+                });
+                }
+
+                /* hover to show big card */
+                wrap.addEventListener("mouseenter", () => {
+                const scaled = document.querySelector("#viewing-window .scaled-card");
+                if (!scaled) return;
+                scaled.innerHTML = "";
+                const preview = renderCard(enriched);
+                Object.assign(preview.style,{
+                    width:"240px", height:"420px", transform:"scale(1.2)",
+                    marginLeft:"-15%", marginTop:"7%"
+                });
+                scaled.appendChild(preview);
+                });
+
+                wrap.appendChild(rendered);
+                container.appendChild(wrap);
             });
         }
     applyHoverMenus();
