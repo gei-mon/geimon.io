@@ -873,6 +873,17 @@
                     if (from !== username) addGameLogEntry(message, /*broadcast*/ false);
                 });
 
+                window.socket.on('life_change', ({ player, life, from }) => {
+                    if (from === username) return;
+
+                    const original = gameState[player]?.life ?? life;
+                    gameState[player].life = life;
+
+                    const elem  = document.getElementById(
+                                    player === username ? 'player-life' : 'opponent-life');
+                    if (elem) animateLifeNumber(elem, original, life);
+                });
+
                 socket.on('card_targeted', ({ cardId }) => flashTargetRing(cardId));
 
                 socket.on("phase_change", ({ phase, username: actingUser }) => {
@@ -2532,7 +2543,7 @@
         playerDeckBox.id = "playerDeckBox";
         playerDeckBox.style.position = "absolute";
         playerDeckBox.style.left = "1751px";
-        playerDeckBox.style.top = "649px";
+        playerDeckBox.style.top = "667px";
         playerDeckBox.style.width = "82px";
         playerDeckBox.style.height = "126px";
         //playerDeckBox.style.backgroundColor = "lightblue";
@@ -4612,6 +4623,9 @@
             }
 
             sendLifeUpdate(gameId, gameState, player);
+            window.socket?.emit('life_change', {
+                gameId, player, life: newLife, from: username
+            });
 
             if (newLife <= 0) {
                 // Dispatch a custom event to trigger game loss

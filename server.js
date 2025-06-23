@@ -158,6 +158,13 @@ io.on('connection', (socket) => {
     io.to(gameId).emit('game_log', { username, message });
   });
 
+  socket.on('life_change', ({ gameId, player, life, from }) => {
+    const game = gameStates.get(gameId);
+    if (!game || !game[player]) return;            // bad gameId or bad player
+    game[player].life = life;                      // update authoritative state
+    io.to(gameId).emit('life_change', { player, life, from }); // broadcast
+  });
+
   socket.on('playerReady', ({ username, ready, deck }) => {
     const user = userMap.get(socket.id);
     if (!user) return;
