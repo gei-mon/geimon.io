@@ -648,17 +648,17 @@
             const opponentDeck = opponent?.Deck || [];
             const deckBox = document.getElementById("opponentDeckBox");
 
-            if (deckBox) {
-                deckBox.innerHTML = ""; // Clear old content
+            //if (deckBox) {
+                //deckBox.innerHTML = ""; // Clear old content
 
-                const overlay = document.createElement("div");
-                overlay.innerText = `${opponentDeck.length}`;
-                overlay.style.color = "white";
-                overlay.style.fontSize = "1em";
-                overlay.style.textAlign = "center";
-                overlay.style.textShadow = "2px 2px 4px black";
-                deckBox.appendChild(overlay);
-            }
+                //const overlay = document.createElement("div");
+                //overlay.innerText = `${opponentDeck.length}`;
+                //overlay.style.color = "white";
+                //overlay.style.fontSize = "1em";
+                //overlay.style.textAlign = "center";
+                //overlay.style.textShadow = "2px 2px 4px black";
+                //deckBox.appendChild(overlay);
+            //}
         }
 
         async function updateLocalFromGameState() {
@@ -2431,7 +2431,7 @@
                     } finally {
                         isFetchingGameState = false;
                     }
-                }, 1500);
+                }, 2500);
             }
 
             const totemBox = document.createElement("div");
@@ -3365,7 +3365,7 @@
     // Opponent zones
     const oppChampionBox = document.getElementById("opponentChampionsBox");
         oppChampionBox.style.position       = "fixed";
-        oppChampionBox.style.left           = "1090px";
+        oppChampionBox.style.left           = "1033px";
         oppChampionBox.style.top            = "255px";
         oppChampionBox.style.width          = "525px";
         oppChampionBox.style.height         = "128px";
@@ -3383,17 +3383,18 @@
         overlapCSS.innerHTML = `
         #opponentChampionsBox .card {
             flex-shrink: 0 !important;
-            margin-left: -195px !important;
-            transform: rotate(180deg) scale(0.3) !important;
+            margin-left: -152.5px !important;
+            transform: rotate(180deg) scale(1) !important;
             transform-origin: center center !important;
         }
         `;
     document.head.appendChild(overlapCSS);
 
     const oppFaceDownBox = document.getElementById("opponentFaceDownBox");
+        oppFaceDownBox.className = "card-zone";
         oppFaceDownBox.style.position = "fixed";
-        oppFaceDownBox.style.left     = "1235px";
-        oppFaceDownBox.style.top      = "200px";     // same top as oppChampionBox
+        oppFaceDownBox.style.left     = "490px";
+        oppFaceDownBox.style.top      = "405px";
         oppFaceDownBox.style.width    = "470px";
         oppFaceDownBox.style.height   = "128px";
         oppFaceDownBox.style.zIndex   = "100300";
@@ -3406,26 +3407,15 @@
         oppFaceDownBox.style.gap            = "0px";
         oppFaceDownBox.style.flexWrap       = "nowrap";
 
-    const overlapOppFacedownCSS = document.createElement('style');
-        overlapOppFacedownCSS.innerHTML = `
-        #opponentFaceDownBox .card {
-            flex-shrink: 0 !important;
-            margin-left: -195px !important;
-            transform: rotate(180deg) scale(0.3) !important;
-            transform-origin: center center !important;
-        }
-        `;
-    document.head.appendChild(overlapOppFacedownCSS);
-
     const oppArsenalBox = document.getElementById("opponentArsenalBox");
         oppArsenalBox.style.position = "fixed";
-        oppArsenalBox.style.left     = "710px";
-        oppArsenalBox.style.top      = "350px";     // mirror player’s arsenal top (825px → ~350px)
+        oppArsenalBox.style.left     = "1033px";
+        oppArsenalBox.style.top      = "107px";
         oppArsenalBox.style.width    = "525px";
         oppArsenalBox.style.height   = "128px";
         oppArsenalBox.style.zIndex   = "100300";
         oppArsenalBox.style.pointerEvents = "none";
-        oppArsenalBox.style.backgroundColor = "rgba(255,0,0,0)";
+        oppArsenalBox.style.backgroundColor = "rgba(0,0,255,0)";
         oppArsenalBox.style.display        = "flex";
         oppArsenalBox.style.justifyContent = "flex-end";
         oppArsenalBox.style.alignItems     = "center";
@@ -3437,22 +3427,23 @@
         overlapArsenalCSS.innerHTML = `
         #opponentArsenalBox .card {
             flex-shrink: 0 !important;
-            margin-left: -195px !important;
-            transform: rotate(180deg) scale(0.3) !important;
+            margin-left: -150px !important;
+            transform: rotate(180deg) scale(1) !important;
             transform-origin: center center !important;
         }
         `;
     document.head.appendChild(overlapArsenalCSS);
 
     const oppFaceDownArsenalBox = document.getElementById("opponentFaceDownArsenalBox");
+        oppFaceDownArsenalBox.className = "card-zone";
         oppFaceDownArsenalBox.style.position = "fixed";
-        oppFaceDownArsenalBox.style.left     = "1235px";
-        oppFaceDownArsenalBox.style.top      = "347.5px"; // mirror facedownArsenal top :contentReference[oaicite:1]{index=1}
+        oppFaceDownArsenalBox.style.left     = "582.5px";
+        oppFaceDownArsenalBox.style.top      = "255px";
         oppFaceDownArsenalBox.style.width    = "565px";
         oppFaceDownArsenalBox.style.height   = "128px";
         oppFaceDownArsenalBox.style.zIndex   = "100300";
         oppFaceDownArsenalBox.style.pointerEvents = "none";
-        oppFaceDownArsenalBox.style.backgroundColor = "rgba(255,0,0,0)";
+        oppFaceDownArsenalBox.style.backgroundColor = "rgba(255,255,0,0)";
         oppFaceDownArsenalBox.style.display        = "flex";
         oppFaceDownArsenalBox.style.justifyContent = "flex-start";
         oppFaceDownArsenalBox.style.alignItems     = "center";
@@ -3460,16 +3451,20 @@
         oppFaceDownArsenalBox.style.gap            = "0px";
         oppFaceDownArsenalBox.style.flexWrap       = "nowrap";
 
-    const overlapFacedownArsenalCSS = document.createElement('style');
-        overlapFacedownArsenalCSS.innerHTML = `
-        #opponentFaceDownArsenalBox .card {
-            flex-shrink: 0 !important;
-            margin-left: -195px !important;
-            transform: rotate(180deg) scale(0.3) !important;
-            transform-origin: center center !important;
-        }
-        `;
-    document.head.appendChild(overlapFacedownArsenalCSS);
+    const oppReserveBox = document.getElementById("opponentReserveBox");
+        oppReserveBox.className = "card-zone";
+        oppReserveBox.style.position = "absolute";
+        oppReserveBox.style.left = "1593.5px";
+        oppReserveBox.style.top = "-30px";
+        oppReserveBox.style.width = "310px";
+        oppReserveBox.style.height = "275px";
+        oppReserveBox.style.zIndex = "100900";
+        oppReserveBox.style.pointerEvents = "auto";
+        oppReserveBox.style.backgroundColor = "rgba(255, 0, 0, 0)";
+        oppReserveBox.style.display        = "flex";
+        oppReserveBox.style.justifyContent = "flex-end";
+        oppReserveBox.style.alignItems     = "center";
+        oppReserveBox.style.gap            = "0px";
     // End of opponent field stuff
 
     // Create Surrender Button Overlay
@@ -3556,12 +3551,6 @@
         opponentDeckBox.style.outline = "1px solid white";
         //opponentDeckBox.style.position = "relative"; // ensure positioning context
 
-        // Create and append a rotated inner span
-        if (opponentDeckBox) {
-            opponentDeckBox.style.display = "block";
-            opponentDeckBox.style.outline = "1px solid white";
-            //opponentDeckBox.style.position = "relative"; // makes positioning work
-
             // Create or reuse the inner rotated span
             let textSpan = opponentDeckBox.querySelector(".rotated-text");
             if (!textSpan) {
@@ -3592,7 +3581,6 @@
             opponentDeckBox.addEventListener("mouseleave", () => {
                 textSpan.innerText = "Deck";
             });
-        }
     }
 
     // Fetch deck count dynamically
@@ -3928,22 +3916,22 @@
                 badge = document.createElement("div");
                 badge.className = "counter-overlay";
                 Object.assign(badge.style, {
-                position:       "absolute",
-                top:            "50%",
-                left:           "50%",
-                transform:      "translate(-50%, -50%)",
-                width:          "64px",
-                height:         "64px",
-                borderRadius:   "50%",
-                background:     "#000",
-                color:          "#fff",
-                fontSize:       "2.6em",
-                fontWeight:     "600",
-                display:        "flex",
-                alignItems:     "center",
-                justifyContent: "center",
-                pointerEvents:  "none",
-                zIndex:         "125000"
+                    position:       "absolute",
+                    top:            "50%",
+                    left:           "50%",
+                    transform:      "translate(-50%, -50%)",
+                    width:          "64px",
+                    height:         "64px",
+                    borderRadius:   "50%",
+                    background:     "#000",
+                    color:          "#fff",
+                    fontSize:       "2.6em",
+                    fontWeight:     "600",
+                    display:        "flex",
+                    alignItems:     "center",
+                    justifyContent: "center",
+                    pointerEvents:  "none",
+                    zIndex:         "125000"
                 });
                 cardElement.appendChild(badge);
             }
@@ -3951,9 +3939,9 @@
             // 3️⃣  update or remove it
             if (badge) {
                 if (cardData.counters > 0) {
-                badge.textContent = cardData.counters;
+                    badge.textContent = cardData.counters;
                 } else {
-                badge.remove();
+                    badge.remove();
                 }
             }
         }
@@ -5112,6 +5100,9 @@
                         wrapper.style.marginTop   = "-350px";
                         wrapper.style.transform       = "scale(0.3)";
                         wrapper.style.transformOrigin = "top center";
+                    } else if (containerId === "opponentReserveBox") {
+                        wrapper.style.marginLeft  = "-210px";
+                        wrapper.style.marginTop   = "-350px";
                     } else {
                         wrapper.style.marginLeft  = "-44px";
                         wrapper.style.marginTop   = "323px";
@@ -5198,7 +5189,7 @@
         });
         setTimeout(async () => {
             await updateLocalFromGameState();
-        }, 100); // adjust if needed
+        }, 1500); // adjust if needed
     }
 
     // Fetch and shuffle deck, then update count

@@ -288,6 +288,10 @@
                             opt.textContent = name;
                             deckSelectEl.appendChild(opt);
                         });
+                        const randomOpt = document.createElement('option');
+                        randomOpt.value       = 'Random';
+                        randomOpt.textContent = 'Random';
+                        deckSelectEl.appendChild(randomOpt);
                     } else {
                         console.error('Failed to fetch decks:', deckData);
                     }
