@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://fonts.googleapis.com/css?family=Racing Sans One' rel='stylesheet'>
+    <link rel="icon" href="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/favicon.png" type="image/png">
+    <link rel="stylesheet" href="style.css">
+    <title>PACK OPENER PAGE</title>
+</head>
+<style>
+  #packName        { margin:18px 0 0; font-size:1.8rem; color:#fff;
+                      text-shadow:2px 2px 4px #000,-2px -2px 4px #000;
+                      text-align:left; }
+
+  .open-pack-btn   { display:block; width:180px; padding:8px 0; margin-top:12px;
+                      font-size:1rem; font-weight:bold; cursor:pointer;
+                      background:#222; color:#fff; border:2px solid #444;
+                      box-shadow:2px 2px 4px #000; }
+  .open-pack-btn:hover{ background:#333; }
+  .rarity-badge{
+        position:absolute;           /* sit over the card */
+        top:-24px; right:-16px;
+        min-width:32px;              /* room for “Superior” */
+        padding:2px 4px;
+        font-size:32px;
+        font-family:'Racing Sans One', cursive;
+        color:#fff;  text-align:center; line-height:1;
+        border-radius:4px; pointer-events:none;
+        text-shadow:1px 1px 2px #000;
+    }
+    .rarity-common    { background:#ff4444; }
+    .rarity-rare  { background:#ff52ee; }
+    .rarity-superior      { background:#d6ec10; }
+    .rarity-legendary  { background:#9b27ff; }
+   #packResults{
+    position:absolute; top:90px; left:350px;            /* anchored right-hand side */
+    max-width:75vw; max-height:88vh; overflow:auto;
+    display:flex; flex-wrap:wrap; gap:12px;
+    padding:6px;
+  }
+  #packResults .pack-card{
+    opacity:0; transform:translateX(50px) scale(.9);
+    transition:opacity .5s ease, transform .5s ease;
+  }
+  #packResults .pack-card.show{ opacity:1; transform:translateX(0) scale(.6); }
+</style>
+<body style="background-color:rgb(78, 78, 78);">
+  <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
+        <div class="container">
+            <p style="font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;"><game-title>Geimon!</game-title></p>
+            <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: -28px;">Pack Opener Page Placeholder</h2>
+        </div>
+        <button class="button buttonEvenSmaller" onclick="location.href='packShop.html'">Back</button>
+        <h2 id="packName"></h2>
+
+        <button class="open-pack-btn" id="open1">Open 1 Pack</button>
+        <button class="open-pack-btn" id="open10">Open 10 Packs</button>
+        <button id="addToCollectionBtn"
+                class="button buttonEvenSmaller"
+                style="margin-top:12px; display:none;">
+            Add to Collection
+        </button>
+        <div id="packResults"></div>
+                <div id="collectionModal" style="display:none; position:fixed; inset:0;
+            background:rgba(0,0,0,.65); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:#222; color:#fff; padding:20px; border-radius:10px;
+                    width:320px; box-shadow:0 0 10px #000;">
+            <h3 style="margin-top:0;">Add cards to…</h3>
+            <!-- New deck name -->
+            <input type="text" id="newDeckInput" placeholder="New deck name"
+                style="width:100%; padding:6px; margin-bottom:14px;">
+            <p style="margin:6px 0 8px;">…or choose an existing deck:</p>
+            <div id="existingDeckList"
+                style="max-height:160px; overflow:auto; display:flex; flex-direction:column; gap:6px; margin-bottom:16px;">
+            <!-- JS populates buttons here -->
+            </div>
+            <div style="display:flex; justify-content:space-between;">
+            <button id="cancelAddBtn">Cancel</button>
+            <button id="confirmAddBtn">Add</button>
+            </div>
+        </div>
+        </div>
+
+        <script type="module">
+            import { cards }    from './data/cards.js';            // adjust path!
+            import { renderCard } from './utils/cardRenderer.js';    // adjust path!
+        /* ── 1) get the pack from the URL ───────────────────────── */
+        const params   = new URLSearchParams(location.search);
+        const rawName  = params.get('pack') || 'Unknown Pack';
+        const packName = decodeURIComponent((params.get('pack')||'Game On!').replace(/\+/g,' '));
+        document.getElementById('packName').textContent = packName;
+
+        document.getElementById('packName').textContent = packName;
+
+        const btn1     = document.getElementById('open1');
+        const btn10    = document.getElementById('open10');
+        const results  = document.getElementById('packResults');
+        const toggleBtn= document.getElementById('toggleRarityBtn');
+
+        btn1 .onclick = () => openNPacks(1,  packName);
+        btn10.onclick = () => openNPacks(10, packName); // 10 packs × 5 cards = 50
+
+        function appendRarityBadge(cardEl, rarity){
+            if(!rarity) return;
+            if(cardEl.querySelector('.rarity-badge')) return;
+            cardEl.style.position = cardEl.style.position || 'relative';
+
+            const span = document.createElement('span');
+            span.className = `rarity-badge rarity-${rarity.toLowerCase()}`;
+            span.textContent = rarity[0].toUpperCase();
+            cardEl.appendChild(span);
+        }
+
+        /* ─── helper: get card pool for selected pack ─────────── */
+        function poolForPack(packName){
+            const id = c => Number(c.id);
+            switch (packName){
+            case 'Ancient Scholar':      return cards.filter(c=>id(c)>=1   && id(c)<=60 );
+            case 'Brilliant Scientist':  return cards.filter(c=>id(c)>=121  && id(c)<=180);
+            case 'Sunset Sharpshooter':  return cards.filter(c=>id(c)>=61 && id(c)<=120);
+            case 'Shining Knight':       return cards.filter(c=>id(c)>=181 && id(c)<=240);
+            case 'Mad Doctor':           return cards.filter(c=>id(c)>=241 && id(c)<=300);
+            default:                     return cards; // “Game On!” or unknown → full pool
+            }
+        }
+
+        /* ─── helper: pick one card of a given rarity from pool ─ */
+        function randomCard(pool, rarity){
+            const subset = pool.filter(c => c.rarity === rarity);
+            return subset[Math.floor(Math.random()*subset.length)];
+        }
+
+        /* ─── helper: decide rarities for one 5-card pack ─────── */
+        function rarityArrayForOnePack(){
+            const r = [];
+            /* 1) first card */
+            if (Math.random() < 0.02){
+            r.push( Math.random() < 0.65 ? 'Superior' : 'Legendary' );
+            } else {
+            r.push( Math.random() < 0.64 ? 'Common' : 'Rare' );
+            }
+            /* 2-4) middle three */
+            for(let i=0;i<3;i++){
+            r.push( Math.random()<0.65 ? 'Common' : 'Rare' );
+            }
+            /* 5) last card */
+            r.push( Math.random()<0.65 ? 'Superior' : 'Legendary' );
+            return r;
+        }
+
+        /* ─── helper: open N packs (N×5 cards) ────────────────── */
+        function openNPacks(nPacks, packName){
+            results.innerHTML = '';                       // clear previous
+            const pool = poolForPack(packName);
+
+            let delay = 0;
+            for(let p=0; p<nPacks; p++){
+            const rarities = rarityArrayForOnePack();
+            rarities.forEach(rarity => {
+                const card = randomCard(pool, rarity);
+                const cardEl = renderCard(card);          // your existing renderer
+                cardEl.dataset.cardId = card.id;
+                appendRarityBadge(cardEl, rarity);
+                cardEl.classList.add('pack-card');
+                results.appendChild(cardEl);
+
+                /* staggered reveal */
+                setTimeout(()=> cardEl.classList.add('show'), delay);
+                delay += (nPacks===1 ? 120 : 20);         // slower for showcase pack
+            });
+            }
+        }
+
+        /* ───────── state ───────── */
+        let lastPulledIds = [];   // updated each time open* is pressed
+
+        /* ───────── modal logic ───────── */
+        const addBtn       = document.getElementById('addToCollectionBtn');
+        const modal        = document.getElementById('collectionModal');
+        const newInput     = document.getElementById('newDeckInput');
+        const deckListDiv  = document.getElementById('existingDeckList');
+        const cancelBtn    = document.getElementById('cancelAddBtn');
+        const confirmBtn   = document.getElementById('confirmAddBtn');
+
+        /* augment existing openNPacks so it records pulled IDs */
+        const originalOpenNPacks = openNPacks;
+        openNPacks = function(nPacks, packName){
+            lastPulledIds = [];     // reset
+            originalOpenNPacks(nPacks, packName);  // call the old logic
+
+            // grab every card we just rendered
+            lastPulledIds = [...results.querySelectorAll('.pack-card')]
+                                .map(el => el.dataset.cardId)   // we'll tag cards below
+                                .filter(Boolean);
+
+            addBtn.style.display = 'inline-block';             // enable button
+        };
+
+        let selectedDeck = null;   // name of chosen existing deck (null ⇒ new)
+
+        addBtn.onclick = async () => {
+        // fetch user's decks to populate list
+        deckListDiv.innerHTML = 'Loading…';
+        const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/getUserDecks',
+                                { credentials:'include' });
+        const data = await res.json();
+        deckListDiv.innerHTML = '';
+
+        if (data.success && data.decks.length){
+            data.decks.sort((a,b)=>a.deck_name.localeCompare(b.deck_name))
+                .forEach(deck=>{
+                const b = document.createElement('button');
+                b.textContent = deck.deck_name;
+                b.style.cssText = 'background:#333;color:#fff;border:1px solid #777;padding:4px;cursor:pointer;';
+                b.onclick = () =>{
+                    selectedDeck = deck.deck_name;
+                    // visual select
+                    [...deckListDiv.children].forEach(btn=>btn.style.background='#333');
+                    b.style.background = '#555';
+                };
+                deckListDiv.appendChild(b);
+                });
+        } else {
+            deckListDiv.textContent = 'No decks yet.';
+        }
+
+        selectedDeck = null;
+        newInput.value = '';
+        modal.style.display = 'flex';
+        };
+
+        cancelBtn.onclick = () => { modal.style.display = 'none'; };
+
+        confirmBtn.onclick = async () =>{
+        if (!lastPulledIds.length){
+            alert('Open some packs first!');
+            return;
+        }
+
+        // priority: new deck name if provided
+        const newName = newInput.value.trim();
+        let response;
+        try{
+            if (newName){
+            response = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/createDeck',{
+                method:'POST', credentials:'include',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({ deck_name:newName, card_ids:lastPulledIds })
+            });
+            } else if (selectedDeck){
+            response = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/addCardsToDeck',{
+                method:'POST', credentials:'include',
+                headers:{'Content-Type':'application/json'},
+                body:JSON.stringify({ deck_name:selectedDeck, card_ids:lastPulledIds })
+            });
+            } else {
+            alert('Pick a deck or enter a new name.');
+            return;
+            }
+
+            const resData = await response.json();
+            alert(resData.message || (newName ? 'Deck created!' : 'Cards added!'));
+            modal.style.display='none';
+        }catch(err){
+            console.error(err);
+            alert('Something went wrong.');
+        }
+        };
+
+    </script>
+</body>
+</html>

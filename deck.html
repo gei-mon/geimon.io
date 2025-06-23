@@ -180,6 +180,24 @@
         .champ-filter-btn.active {
             background-color: #888;
         }
+        .rarity-badge{
+            position:absolute;           /* sit over the card */
+            top:-24px; right:-16px;
+            min-width:32px;              /* room for “Superior” */
+            padding:2px 4px;
+            font-size:32px;
+            font-family:'Racing Sans One', cursive;
+            color:#fff;  text-align:center; line-height:1;
+            border-radius:4px; pointer-events:none;
+            text-shadow:1px 1px 2px #000;
+        }
+        /* simple colour map – tweak as you like */
+        .rarity-common    { background:#ff4444; }
+        .rarity-rare  { background:#ff52ee; }
+        .rarity-superior      { background:#d6ec10; }
+        .rarity-legendary  { background:#9b27ff; }
+        .scaled-card .rarity-badge{ display:none!important; }
+        body.rarity-hidden .rarity-badge{ display:none!important; }
     </style>
 </head>
 <body style="background-color:rgb(78, 78, 78);">
@@ -202,7 +220,10 @@
         </button>
     </div>
     <div style="text-align: center; margin-top: 0px;">
-        <button class="button buttonEvenSmaller" id="soloButton" onclick="window.open('solo.html', '_blank')" style="text-shadow: 1px 1px 2px black, -1px -1px 2px black, 1px -1px 2px black, -1px 1px 2px black; background-color: rgb(115, 243, 166); color: white; padding: 8px 16px; font-family: 'Racing Sans One', cursive; border-radius: 6px; cursor: pointer;">Test Your Deck!</button>
+    <button id="toggleRarityBtn" class="button buttonEvenSmaller" style="text-shadow: 1px 1px 2px black, -1px -1px 2px black, 1px -1px 2px black, -1px 1px 2px black; background-color: rgb(35, 63, 220); color: white; padding: 8px 16px; font-family: 'Racing Sans One', cursive; border-radius: 6px; cursor: pointer;">
+        Hide Rarity
+    </button>
+        <button class="button buttonEvenSmaller" id="soloButton" onclick="window.open('solo.html', '_blank')" style="text-shadow: 1px 1px 2px black, -1px -1px 2px black, 1px -1px 2px black, -1px 1px 2px black; background-color: rgb(115, 243, 166); color: white; padding: 8px 16px; font-family: 'Racing Sans One', cursive; border-radius: 6px; cursor: pointer;">Test Deck</button>
     </div>
 
     <div id="deck-info" style="width: 60%; margin: 12px auto; padding: 8px 16px; background-color: #3a3a3a; color: white; font-family: 'Racing Sans One', cursive; font-size: 18px; border-radius: 8px; display: flex; gap: 8px; text-align: center; justify-content: space-between;">
@@ -212,6 +233,7 @@
       <div class="viewing-window" id="viewing-window">
         <div class="scaled-card" id="scaled-card"></div>
       </div>
+
 
     <div class="main-container">
     <div class="container">
@@ -296,6 +318,26 @@
                 const filter = document.getElementById("champion-filter");
                 filter.style.display = selectedCardType === "Champion" ? "flex" : "none";
             }
+
+            function appendRarityBadge(cardElement, rarity){
+                if(!rarity || cardElement.querySelector('.rarity-badge')) return;
+                cardElement.style.position = cardElement.style.position || 'relative';
+
+                const badge        = document.createElement('span');
+                badge.className    = `rarity-badge rarity-${rarity.toLowerCase()}`;
+                //badge.textContent  = rarity;
+                badge.textContent = rarity.trim()[0].toUpperCase();
+                cardElement.appendChild(badge);
+            }
+
+            const toggleRarityBtn = document.getElementById('toggleRarityBtn');
+
+            toggleRarityBtn.addEventListener('click', () => {
+                document.body.classList.toggle('rarity-hidden');
+
+                const hidden = document.body.classList.contains('rarity-hidden');
+                toggleRarityBtn.textContent = hidden ? 'Show Rarity' : 'Hide Rarity';
+            });
 
             document.querySelectorAll(".champ-filter-btn").forEach(btn => {
                 btn.addEventListener("click", () => {
@@ -450,6 +492,7 @@
 
                     deckCards.forEach(card => {
                         const cardElement = renderCard(card, container);
+                        appendRarityBadge(cardElement, card.rarity);
                         if (cardElement) {
                             const button = document.createElement("button");
                             button.classList.add("card-button");
@@ -594,6 +637,7 @@
 
         filteredCards.forEach(card => {
             const cardElement = renderCard(card, searchResults);
+            appendRarityBadge(cardElement, card.rarity);
 
             if (cardElement) {
                 const button = cardElement.querySelector(".card-button"); // ✅ override existing one

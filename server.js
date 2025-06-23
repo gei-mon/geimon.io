@@ -1184,6 +1184,56 @@ app.get('/user-cosmetics/:username', async (req, res) => {
   }
 });
 
+app.post('/addCardsToDeck', async (req, res) => {
+  const sessionId = req.cookies.session;
+  const username  = sessions[sessionId];
+  const { deck_name, card_ids } = req.body;
+
+  /* ── basic validation ─────────────────────────────── */
+  if (!username) {
+    return res.status(401).json({ success:false, message:'User not authenticated' });
+  }
+  if (!deck_name || !Array.isArray(card_ids) || card_ids.length === 0) {
+    return res.status(400).json({ success:false, message:'deck_name and card_ids required' });
+  }
+
+  try {
+    /* 1) fetch the deck that belongs to this user */
+    const { data: deck, error: fetchErr } = await supabase
+      .from('decks')
+      .select('card_ids')
+      .eq('user_name', username)
+      .eq('deck_name', deck_name)
+      .single();
+
+    if (fetchErr) throw fetchErr;
+    if (!deck)   return res.status(404).json({ success:false, message:'Deck not found' });
+
+    /* 2) merge & de-dupe card IDs */
+    const current = deck.card_ids || [];
+    const merged  = Array.from(new Set([...current, ...card_ids.map(String)]));
+
+    /* 3) update the deck */
+    const { error: updateErr } = await supabase
+      .from('decks')
+      .update({ card_ids: merged })
+      .eq('user_name', username)
+      .eq('deck_name', deck_name);
+
+    if (updateErr) throw updateErr;
+
+    return res.json({
+      success : true,
+      message : `Added ${card_ids.length} card(s) to "${deck_name}".`,
+      total   : merged.length
+    });
+
+  } catch (err) {
+    console.error('Error in /addCardsToDeck:', err);
+    return res.status(500).json({ success:false, message:'Server error', error:err.message });
+  }
+});
+
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({ message: 'Not Found' });
