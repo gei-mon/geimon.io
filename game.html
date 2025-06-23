@@ -1859,10 +1859,13 @@
                     const fullCard = cards.find(c => String(c.id) === String(cardData.id));
                     if (fullCard) {
                         const renderedCard = renderCard(fullCard);
-                        renderedCard.style.transformOrigin = "center center";
-                        renderedCard.style.transform = "rotate(180deg)";
-                        renderedCard.style.marginLeft = "25px";
-                        renderedCard.style.marginTop = "100px";
+                            renderedCard.style.transformOrigin = "center center";
+                            renderedCard.style.transform       = "rotate(180deg)";
+                            renderedCard.style.position        = "absolute";
+                            renderedCard.style.top             = "-25px";
+                            renderedCard.style.left            = "125px";
+                            renderedCard.style.width           = "100%";
+                            renderedCard.style.height          = "100%";
                         renderedCard.dataset.cardId       = String(cardData.id);
                         cardEl.appendChild(renderedCard);
 
