@@ -852,7 +852,7 @@ background-color: #29c7bd;
 
 #playerFaceDownBox > div {
   flex-shrink: 0 !important;
-  margin-left: -125px !important;
+  margin-left: -230px !important;
 }
 
 #playerArsenalBox > div:not(:first-child) {
@@ -862,7 +862,7 @@ background-color: #29c7bd;
 
 #playerFaceDownArsenalBox > div {
   flex-shrink: 0 !important;
-  margin-left: -195px !important;
+  margin-left: -235px !important;
 }
 #playerFaceDownArsenalBox .sleeve-overlay {
   transform: none !important;
@@ -870,7 +870,7 @@ background-color: #29c7bd;
 
 #opponentFaceDownBox > div {
   flex-shrink: 0 !important;
-  margin-left: -125px !important;
+  margin-left: -172.5px !important;
   transform: rotate(90deg) scale(0.3) !important;
 }
 #opponentFaceDownBox .sleeve-overlay {
@@ -879,7 +879,7 @@ background-color: #29c7bd;
 
 #opponentFaceDownArsenalBox > div {
   flex-shrink: 0 !important;
-  margin-left: -175px !important;
+  margin-left: -215px !important;
   transform: rotate(180deg) scale(0.3) !important;
 }
 #opponentFaceDownArsenalBox .sleeve-overlay {
