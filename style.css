@@ -872,6 +872,7 @@ background-color: #29c7bd;
   flex-shrink: 0 !important;
   margin-left: -125px !important;
   transform: rotate(90deg) scale(0.3) !important;
+  pointer-events: none;
 }
 #opponentFaceDownBox .sleeve-overlay {
   transform: rotate(180deg) !important;
@@ -881,6 +882,7 @@ background-color: #29c7bd;
   flex-shrink: 0 !important;
   margin-left: -175px !important;
   transform: rotate(180deg) scale(0.3) !important;
+  pointer-events: none;
 }
 #opponentFaceDownArsenalBox .sleeve-overlay {
   transform: rotate(180deg) !important;

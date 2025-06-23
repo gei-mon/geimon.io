@@ -542,6 +542,13 @@
 
             let opponentName;
 
+            const socket = window.socket;                // 1️⃣ make an alias everyone can use
+
+            socket.on('connect', () => {                 // 2️⃣ register with the chat system
+                const roomId = localStorage.getItem('roomId') || gameId;  // same value you used earlier
+                socket.emit('init', { username, roomId });                // now server knows who you are
+            });
+
             function addGameLogEntry(message, broadcast = true) {
                 const gameLog = document.getElementById("game-log-placeholder");
                 if (!gameLog) return;
@@ -553,7 +560,7 @@
                 gameLog.scrollTop = gameLog.scrollHeight;
 
                 if (broadcast && window.socket && gameId && username) {
-                    window.socket.emit('game_log', { gameId, username, message });
+                    socket.emit('game_log', { gameId, username, message });
                 }
             }
 
@@ -876,14 +883,14 @@
         window.onload = () => {
             (async () => {
                 await initGameClient();
-                window.socket.emit("join_game_room", { gameId });
+                socket.emit("join_game_room", { gameId });
                 //console.log("Joined game room", gameId);
 
-                window.socket.on('game_log', ({ username: from, message }) => {
+                socket.on('game_log', ({ username: from, message }) => {
                     if (from !== username) addGameLogEntry(message, /*broadcast*/ false);
                 });
 
-                window.socket.on('life_change', ({ player, life, from }) => {
+                socket.on('life_change', ({ player, life, from }) => {
                     if (from === username) return;
 
                     const original = gameState[player]?.life ?? life;
@@ -3814,7 +3821,7 @@
                         phaseTracker.style.opacity = "1";
                         turnCounter.style.opacity = "1";
                     }, 0);
-                    window.socket.emit("totem_fade_done", { gameId });
+                    socket.emit("totem_fade_done", { gameId });
                 }
             } finally {
                 renderingHand = false;
