@@ -153,6 +153,11 @@ io.on('connection', (socket) => {
     socket.to(user.roomId).emit('typing', { username: user.username, isTyping });
   });
 
+  socket.on('game_log', ({ gameId, username, message }) => {
+    if (!gameId || !message) return;                 // basic sanity check
+    io.to(gameId).emit('game_log', { username, message });
+  });
+
   socket.on('playerReady', ({ username, ready, deck }) => {
     const user = userMap.get(socket.id);
     if (!user) return;

@@ -533,20 +533,18 @@
             let opponentName;
 
             function addGameLogEntry(message) {
-                if (!username) {
-                    console.warn("❌ addGameLogEntry called before username was set.");
-                    return;
-                }
                 const gameLog = document.getElementById("game-log-placeholder");
-                if (!gameLog) {
-                    console.warn("No game log container found.");
-                    return;
-                }
+                if (!gameLog) return;
+
                 const time = new Date().toLocaleTimeString();
                 const entry = document.createElement("div");
                 entry.textContent = `[${time}] ${message}`;
                 gameLog.appendChild(entry);
                 gameLog.scrollTop = gameLog.scrollHeight;
+
+                if (broadcast && window.socket && gameId && username) {
+                    window.socket.emit('game_log', { gameId, username, message });
+                }
             }
 
             function triggerPhaseWaveEffect() {
@@ -871,12 +869,8 @@
                 window.socket.emit("join_game_room", { gameId });
                 //console.log("Joined game room", gameId);
 
-                window.socket.on("game_log", ({ username, message }) => {
-                    //console.log("Username:", username);
-                    if (username === "Bot") {
-                        addGameLogEntry(message);
-                        //console.log("Bot log received:", message);
-                    }
+                window.socket.on('game_log', ({ username: from, message }) => {
+                    if (from !== username) addGameLogEntry(message, /*broadcast*/ false);
                 });
 
                 socket.on('card_targeted', ({ cardId }) => flashTargetRing(cardId));
