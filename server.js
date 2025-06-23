@@ -161,11 +161,11 @@ io.on('connection', (socket) => {
   });
 
   socket.on('coin_flip', ({ gameId, result }) => {
-    io.to(gameId).emit('coin_flip', { result });
+    socket.to(gameId).emit('coin_flip', { result });
   });
 
   socket.on('dice_roll', ({ gameId, roll }) => {
-    io.to(gameId).emit('dice_roll', { roll });
+    socket.to(gameId).emit('dice_roll', { roll });
   });
 
   socket.on('block_event', ({ gameId, cardId, isFaceDown }) => {

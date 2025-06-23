@@ -5687,6 +5687,28 @@ html, body {
         }
     });
 
+    socket.on('attack_event', ({ cardId }) => {
+        document.querySelectorAll(`[data-card-id="${cardId}"]`).forEach(el => {
+            // if this element lives anywhere under the viewing-window, skip it
+            if (el.closest('#viewing-window')) return;
+            animateAttackToCenter(el, 800);
+        });
+    });
+
+    socket.on('block_event', ({ cardId, isFaceDown }) => {
+        document.querySelectorAll(`[data-card-id="${cardId}"]`).forEach(el => {
+            if (el.closest('#viewing-window')) return;
+            animateBlock(el, isFaceDown);
+        });
+    });
+
+    // replay Declare flash for opponent
+    socket.on('declare_event', ({ cardId }) => {
+        document.querySelectorAll(`[data-card-id="${cardId}"]`).forEach(el => {
+            flashDeclareEffect(el);
+        });
+    });
+
     document.addEventListener("DOMContentLoaded", () => {
         const tooltip = document.getElementById("tooltip");
         const tokenTooltip = document.getElementById("token-tooltip");
@@ -5707,29 +5729,6 @@ html, body {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
         window.appendSystem = appendSystem;
-
-        socket.on('attack_event', ({ cardId }) => {
-            document.querySelectorAll(`[data-card-id="${cardId}"]`).forEach(el => {
-                // if this element lives anywhere under the viewing-window, skip it
-                if (el.closest('#viewing-window')) return;
-                animateAttackToCenter(el, 800);
-            });
-        });
-
-        socket.on('block_event', ({ cardId, isFaceDown }) => {
-            document.querySelectorAll(`[data-card-id="${cardId}"]`).forEach(el => {
-                if (el.closest('#viewing-window')) return;
-                animateBlock(el, isFaceDown);
-            });
-        });
-
-        // replay Declare flash for opponent
-        socket.on('declare_event', ({ cardId }) => {
-            document.querySelectorAll(`[data-card-id="${cardId}"]`).forEach(el => {
-                flashDeclareEffect(el);
-            });
-        });
-
 
         socket.on('temp_reveal_card', ({ from, cardId }) => {
             if (from === username) return;          // ignore the echo of our own message
