@@ -575,7 +575,7 @@ html, body {
 
             // 2️⃣ Listen for opponent’s flip
             socket.on('coin_flip', ({ result }) => {
-                addGameLogEntry(`Opponent flipped a coin: ${result}`, false);
+                //addGameLogEntry(`Opponent flipped a coin: ${result}`, false);
                 showCentralCoin(result);
             });
 
@@ -589,7 +589,7 @@ html, body {
 
             // 4️⃣ Listen for opponent’s roll
             socket.on('dice_roll', ({ roll }) => {
-                addGameLogEntry(`Opponent rolled a d6: ${roll}`, false);
+                //addGameLogEntry(`Opponent rolled a d6: ${roll}`, false);
                 showCentralDice(roll);
             });
 
@@ -1750,6 +1750,28 @@ html, body {
         if (response === 'accept') showBanner('Draw', 'Players agreed to a draw');
         });
         /* ─────────────────────────────────────────────────────────────────────────── */
+
+        socket.on('attack_event', ({ cardId }) => {
+            document.querySelectorAll(`[data-card-id="${cardId}"]`).forEach(el => {
+                // if this element lives anywhere under the viewing-window, skip it
+                if (el.closest('#viewing-window')) return;
+                animateAttackToCenter(el, 800);
+            });
+        });
+
+        socket.on('block_event', ({ cardId, isFaceDown }) => {
+            document.querySelectorAll(`[data-card-id="${cardId}"]`).forEach(el => {
+                if (el.closest('#viewing-window')) return;
+                animateBlock(el, isFaceDown);
+            });
+        });
+
+        // replay Declare flash for opponent
+        socket.on('declare_event', ({ cardId }) => {
+            document.querySelectorAll(`[data-card-id="${cardId}"]`).forEach(el => {
+                flashDeclareEffect(el);
+            });
+        });
 
         function animateDeckShuffle(isOpponent = false) {
             // Determine which deck box to animate
@@ -5685,28 +5707,6 @@ html, body {
         } else {
             showBanner("You Win", "Opponent’s life reached 0");
         }
-    });
-
-    socket.on('attack_event', ({ cardId }) => {
-        document.querySelectorAll(`[data-card-id="${cardId}"]`).forEach(el => {
-            // if this element lives anywhere under the viewing-window, skip it
-            if (el.closest('#viewing-window')) return;
-            animateAttackToCenter(el, 800);
-        });
-    });
-
-    socket.on('block_event', ({ cardId, isFaceDown }) => {
-        document.querySelectorAll(`[data-card-id="${cardId}"]`).forEach(el => {
-            if (el.closest('#viewing-window')) return;
-            animateBlock(el, isFaceDown);
-        });
-    });
-
-    // replay Declare flash for opponent
-    socket.on('declare_event', ({ cardId }) => {
-        document.querySelectorAll(`[data-card-id="${cardId}"]`).forEach(el => {
-            flashDeclareEffect(el);
-        });
     });
 
     document.addEventListener("DOMContentLoaded", () => {
