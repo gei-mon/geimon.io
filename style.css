@@ -979,3 +979,8 @@ background-color: #29c7bd;
 }
 
 .revealed-card{ outline:3px solid yellow !important; }
+
+#opponentChampionsBox .card {
+  transform: rotate(180deg) scale(1);
+  transform-origin: center center;
+}
