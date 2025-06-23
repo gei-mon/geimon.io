@@ -544,13 +544,6 @@ html, body {
             let gameNumber = 1; // You could increment this between games in Match mode
             const serverUrl = "https://geimon-app-833627ba44e0.herokuapp.com";
 
-            const _origRenderCard = renderCard;
-                renderCard = (cardData) => {
-                const el = _origRenderCard(cardData);
-                el.dataset.cardId = cardData.id;
-                return el;
-            };
-
             //console.log("Gametype:", gameType, "SinglePlayer:", isSinglePlayer);
 
             const otherPlayerName = params.get("opponent") || "Unknown_Opponent"; // if multiplayer later
@@ -566,6 +559,103 @@ html, body {
             const tempRevealedIds = new Set();
 
             const socket = window.socket;                // 1️⃣ make an alias everyone can use
+
+            // ─ Preload image URLs ───────────────────────────────────────────
+            const headsImgUrl = "https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/heads.png";
+            const tailsImgUrl = "https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/tails.png";
+            const diceImgPrefix = "https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/dice"; // e.g. dice1.png–dice6.png
+
+            // 1️⃣ Update the coin-flip button handler
+            document.getElementById("coin-btn").onclick = () => {
+                const result = Math.random() < 0.5 ? "Heads" : "Tails";
+                addGameLogEntry(`${username} flipped a coin: ${result}`);
+                showCentralCoin(result);
+                socket.emit('coin_flip', { gameId, result });
+            };
+
+            // 2️⃣ Listen for opponent’s flip
+            socket.on('coin_flip', ({ result }) => {
+                addGameLogEntry(`Opponent flipped a coin: ${result}`, false);
+                showCentralCoin(result);
+            });
+
+            // 3️⃣ Update the dice-roll button handler
+            document.getElementById("dice-btn").onclick = () => {
+                const roll = Math.floor(Math.random() * 6) + 1;
+                addGameLogEntry(`${username} rolled a d6: ${roll}`);
+                showCentralDice(roll);
+                socket.emit('dice_roll', { gameId, roll });
+            };
+
+            // 4️⃣ Listen for opponent’s roll
+            socket.on('dice_roll', ({ roll }) => {
+                addGameLogEntry(`Opponent rolled a d6: ${roll}`, false);
+                showCentralDice(roll);
+            });
+
+            // ─────────────── Utility animation functions ────────────────
+
+            // Coin flip: flash, expand, fade
+            function showCentralCoin(result) {
+            const container = document.createElement('div');
+            const img = document.createElement('img');
+            img.src = result === 'Heads' ? headsImgUrl : tailsImgUrl;
+            Object.assign(container.style, {
+                position: 'fixed',
+                left: '50%', top: '50%',
+                transform: 'translate(-50%,-50%)',
+                zIndex: 200000,
+                pointerEvents: 'none'
+            });
+            container.appendChild(img);
+            document.body.appendChild(container);
+
+            container.animate([
+                { transform: 'translate(-50%,-50%) scale(0)', opacity: 0 },
+                { transform: 'translate(-50%,-50%) scale(1.5)', opacity: 1 },
+                { transform: 'translate(-50%,-50%) scale(0)', opacity: 0 }
+            ], {
+                duration: 1000,
+                easing: 'ease-out',
+                fill: 'forwards'
+            }).finished.then(() => container.remove());
+            }
+
+            // Dice roll: cycle random faces, then show final
+            function showCentralDice(finalRoll) {
+            const container = document.createElement('div');
+            const img = document.createElement('img');
+            Object.assign(container.style, {
+                position: 'fixed',
+                left: '50%', top: '50%',
+                transform: 'translate(-50%,-50%)',
+                zIndex: 200000,
+                pointerEvents: 'none'
+            });
+            img.style.width  = '120px';
+            img.style.height = '120px';
+            container.appendChild(img);
+            document.body.appendChild(container);
+
+            let ticks = 0;
+            const maxTicks = 12;      // how many random faces to show
+            const interval = setInterval(() => {
+                const face = Math.floor(Math.random() * 6) + 1;
+                img.src = `${diceImgPrefix}${face}.png`;
+                ticks++;
+                if (ticks >= maxTicks) {
+                clearInterval(interval);
+                img.src = `${diceImgPrefix}${finalRoll}.png`;
+                // fade out
+                container.animate([
+                    { opacity: 1 },
+                    { opacity: 0 }
+                ], { duration: 500, fill: 'forwards' })
+                .finished.then(() => container.remove());
+                }
+            }, 80);
+            }
+
 
             function addGameLogEntry(message, broadcast = true) {
                 const gameLog = document.getElementById("game-log-placeholder");
@@ -1464,18 +1554,6 @@ html, body {
         renderDrawnCards = async function(...args){
         await origRenderDrawnCards.apply(this,args);
         updateHandOutline();
-        };
-
-        // COIN FLIP
-        document.getElementById("coin-btn").onclick = () => {
-        const result = Math.random() < 0.5 ? "Heads" : "Tails";
-        addGameLogEntry(`${username} flipped a coin: ${result}`);
-        };
-
-        // DICE ROLL
-        document.getElementById("dice-btn").onclick = () => {
-        const roll = Math.floor(Math.random() * 6) + 1;
-        addGameLogEntry(`${username} rolled a d6: ${roll}`);
         };
 
         // TOKEN CREATION
@@ -5631,21 +5709,19 @@ html, body {
         window.appendSystem = appendSystem;
 
         socket.on('attack_event', ({ cardId }) => {
-            const preview = document.querySelector('#viewing-window .scaled-card');
             document.querySelectorAll(`[data-card-id="${cardId}"]`).forEach(el => {
-                if (preview && preview.contains(el)) return;
+                // if this element lives anywhere under the viewing-window, skip it
+                if (el.closest('#viewing-window')) return;
                 animateAttackToCenter(el, 800);
             });
         });
 
         socket.on('block_event', ({ cardId, isFaceDown }) => {
-            const preview = document.querySelector('#viewing-window .scaled-card');
             document.querySelectorAll(`[data-card-id="${cardId}"]`).forEach(el => {
-                if (preview && preview.contains(el)) return;
+                if (el.closest('#viewing-window')) return;
                 animateBlock(el, isFaceDown);
             });
         });
-
 
         // replay Declare flash for opponent
         socket.on('declare_event', ({ cardId }) => {
