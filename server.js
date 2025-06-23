@@ -153,6 +153,9 @@ io.on('connection', (socket) => {
   socket.on('hand_reveal', ({ gameId, from, reveal }) =>
     io.to(gameId).emit('hand_reveal', { from, reveal }) );
 
+  socket.on('temp_reveal_card', ({ gameId, from, cardId }) =>
+    io.to(gameId).emit('temp_reveal_card', { from, cardId }) );
+
   socket.on('message', (text) => {
     const user = userMap.get(socket.id);
     if (!user) return;
