@@ -156,6 +156,23 @@ io.on('connection', (socket) => {
   socket.on('temp_reveal_card', ({ gameId, from, cardId }) =>
     io.to(gameId).emit('temp_reveal_card', { from, cardId }) );
 
+  socket.on('change_control', ({ gameId, cardId, from, to, zone }) => {
+    const gs = gameStates.get(gameId);
+    if (!gs) return;
+
+    // remove from old owner
+    const src = gs[from][zone];
+    const idx = src.findIndex(c => String(c.id) === String(cardId));
+    if (idx === -1) return;
+    const [card] = src.splice(idx, 1);
+
+    // add to new owner (same zone name)
+    gs[to][zone].push(card);
+
+    io.to(gameId).emit('sync_zone', { owner: from, zone });
+    io.to(gameId).emit('sync_zone', { owner: to,   zone });
+  });
+
   socket.on('message', (text) => {
     const user = userMap.get(socket.id);
     if (!user) return;
