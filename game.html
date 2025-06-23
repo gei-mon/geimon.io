@@ -2393,7 +2393,7 @@
                         playerDeck,
                         opponentDeck,
                         isSinglePlayer: isSinglePlayerParam,
-                        goesFirst: choice === "first" ? username : (isSinglePlayerParam ? "Bot" : opponentUsernameParam),
+                        goesFirst: turnOrderParam === "first" ? playerUsernameParam : opponentUsernameParam,
                         totem: selectedTotem
                     })
                 });

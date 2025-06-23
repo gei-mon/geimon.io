@@ -265,6 +265,10 @@ app.post('/startGame', async (req, res) => {
       return res.status(400).json({ error: "Missing 'goesFirst' in request body" });
     }
 
+    if (gameStates.has(gameId)) {
+      return res.status(200).json({ success: true });  // idempotent – do nothing
+    }
+
     const opponent = isSinglePlayer ? "Bot" : opponentUsername;
 
     const initialPlayerState = (deck) => ({
