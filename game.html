@@ -2453,7 +2453,7 @@ html, body {
 
             // Central result box
             const resultBox = document.createElement("div");
-                resultBox.style.position = "absolute";
+                resultBox.style.position = "fixed";
                 resultBox.style.top = "50%";
                 resultBox.style.left = "50%";
                 resultBox.style.transform = "translate(-50%, -50%)";
@@ -2464,8 +2464,9 @@ html, body {
                 resultBox.style.textAlign = "center";
                 resultBox.style.opacity = "0"; // Start fully invisible
                 resultBox.style.transition = "opacity 1s ease-in-out"; // Smooth fade effect
-                resultBox.style.zIndex = "200000"; // On top of everything
+                resultBox.style.zIndex = "500000"; // On top of everything
                 resultBox.style.boxShadow = "0 0 20px black";
+                resultBox.style.pointerEvents = "none";
 
             // Trigger fade-in after DOM insertion
             setTimeout(() => {
@@ -2797,7 +2798,7 @@ html, body {
 
             // Fade out the result box after 3 seconds
             setTimeout(() => {
-                resultBox.style.zIndex = "0";
+                resultBox.remove();
                 resultBox.style.opacity = "0"; // Fades out smoothly
             }, 2000);
 
