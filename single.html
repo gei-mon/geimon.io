@@ -110,6 +110,10 @@
                 withCredentials: true
             });
 
+            // Populate decks and handle ready button
+            const deckSelectEl = document.getElementById('deckSelect');
+            const readyBtnEl   = document.getElementById('readyBtn');
+
             socket.on('connect', () => {
                 console.log('Connected to socket:', socket.id);
                 socket.emit('init', { username });
@@ -133,6 +137,13 @@
                 otherUser = ou;
                 chatWithEl.innerText = `Roomed with: ${ou}`;
                 appendSystem(`${ou} has joined.`);
+                if (readyMe) {
+                    socket.emit('playerReady', {
+                        username,
+                        ready: readyMe,
+                        deck: deckSelectEl.value
+                    });
+                }
             });
 
             socket.on('user_left', ({ otherUser: ou }) => {
@@ -270,9 +281,6 @@
                 }, 1000);
             });
 
-            // Populate decks and handle ready button
-            const deckSelectEl = document.getElementById('deckSelect');
-            const readyBtnEl   = document.getElementById('readyBtn');
             (async () => {
                 try {
                     const deckRes = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/getUserDecks', {
