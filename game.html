@@ -770,6 +770,11 @@ html, body {
             return ["Main 1", "Main 2"].includes(gameState?.turn?.currentPhase);
         }
 
+        function playSoundEffect(effectName) {
+            socket.emit('play_sound', { effect: effectName });
+        }
+        window.playSoundEffect = playSoundEffect;
+
         function updateOpponentDeckCount() {
             const opponent = gameState[gameState.player1 === username ? gameState.player2 : gameState.player1];
             const opponentDeck = opponent?.Deck || [];
@@ -5286,8 +5291,9 @@ html, body {
                         break;
 
                     case "Draw":
-                        // use your drawCards helper :contentReference[oaicite:2]{index=2}
+                        // use your drawCards helper
                         await drawCards(gameState[username].Deck, 1);
+                        //playSoundEffect('card_draw'); // example usage of playing a sound for both players
                         break;
 
                     case "Mill":
@@ -5877,6 +5883,11 @@ html, body {
         // incoming typing indicator
         socket.on('typing', ({ username: from, isTyping }) => {
             chatTyping.textContent = isTyping ? `${from} is typing…` : '';
+        });
+
+        socket.on('play_sound', ({ url }) => {
+            const audio = new Audio(url);
+            audio.play().catch(err => console.error('Failed to play sound:', err));
         });
 
         // send chat

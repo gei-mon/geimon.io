@@ -96,6 +96,14 @@ function generateRoomId() {
 const totemFadeStatus = new Map();
 const totemFadeWaited = new Set();
 
+const effectsDir = path.join(PUBLIC_DIR, 'Sounds', 'Effects');
+const effectMap  = {};
+fs.readdirSync(effectsDir).forEach(file => {
+  // key = filename without extension, value = public URL
+  const name = path.basename(file, path.extname(file));
+  effectMap[name] = `/Public/Sounds/Effects/${file}`;
+});
+
 io.on('connection', (socket) => {
   socket.on('init', ({ username, roomId }) => {
     let joinedRoom = roomId;
@@ -133,6 +141,18 @@ io.on('connection', (socket) => {
         io.to(socketId1).emit('user_joined', { otherUser: user2.username });
         io.to(socketId2).emit('user_joined', { otherUser: user1.username });
       }
+  });
+
+  socket.on('play_sound', ({ effect }) => {
+    const user = userMap.get(socket.id);
+    if (!user) return;
+    const url = effectMap[effect];
+    if (!url) {
+      console.warn(`Unknown sound effect: ${effect}`);
+      return;
+    }
+    // send to both players in this lobby/game room
+    io.to(user.roomId).emit('play_sound', { effect, url });
   });
 
   socket.on('signal_icon', ({ gameId, icon }) => {

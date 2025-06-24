@@ -11,7 +11,7 @@ export const tokens = [
     tags: ["Construct","Token"],
     damage: 0,
     life: 10,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "",
@@ -47,7 +47,7 @@ export const tokens = [
     tags: ["Construct","Token"],
     damage: 0,
     life: 1,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "While you control this Token: You draw 1 additional card during each of your Draw Phases.",
@@ -83,7 +83,7 @@ export const tokens = [
     tags: ["Construct","Token"],
     damage: 7,
     life: 1,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "While you control this Token: You cannot activate Champion effects.",
@@ -119,7 +119,7 @@ export const tokens = [
     tags: ["Construct","Token"],
     damage: 3,
     life: 1,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "While you control this Token: You cannot Bury, Discard, Sacrifice, or Obliterate cards.",
@@ -155,7 +155,7 @@ export const tokens = [
     tags: ["Token"],
     damage: 0,
     life: 1,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Offer 1 Life; transfer control of this Token to your opponent. <br> If it becomes your End Phase while you control this Token (Mandatory): Destroy this Token; you take 10 Damage.",
@@ -191,7 +191,7 @@ export const tokens = [
     tags: ["Construct","Token"],
     damage: 10,
     life: 2,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "",
@@ -227,7 +227,7 @@ export const tokens = [
     tags: ["Construct","Token"],
     damage: 0,
     life: 20,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Sacrifice this Token; Rally 1 Champion from your hand (ignoring its cost).",
@@ -263,7 +263,7 @@ export const tokens = [
     tags: ["Construct","Token"],
     damage: 5,
     life: 1,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "While you control this Token: This is the only Champion you can attack with during your Battle Phase.",
@@ -299,7 +299,7 @@ export const tokens = [
     tags: ["Construct","Token"],
     damage: 7,
     life: 1,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "While you control this Token: You skip your Main Phase 1 and immediately enter your Battle Phase.",
@@ -335,7 +335,7 @@ export const tokens = [
     tags: ["Construct","Token"],
     damage: 0,
     life: 1,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Sacrifice this Token; Draw 1.",
@@ -371,7 +371,7 @@ export const tokens = [
     tags: ["Construct","Token"],
     damage: 1,
     life: 10,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "While you control this Token: You cannot declare attacks.",
@@ -407,7 +407,7 @@ export const tokens = [
     tags: ["Construct","Token"],
     damage: 0,
     life: 1,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "While you control this Token: Your Life cannot be increased or decreased.",
@@ -443,7 +443,7 @@ export const tokens = [
     tags: ["Token"],
     damage: 0,
     life: 1,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "While you control this Token: You cannot declare attacks.",
@@ -479,7 +479,7 @@ export const tokens = [
     tags: ["Construct","Token"],
     damage: 0,
     life: 7,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "This Token can be counted for any number of Sacrifices for a single card or effect.",
@@ -515,7 +515,7 @@ export const tokens = [
     tags: ["Token"],
     damage: 0,
     life: 1,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Reflex: When an Opponent declares an attack: Sacrifice this Token; Negate that attack.",
@@ -551,7 +551,7 @@ export const tokens = [
     tags: ["Token"],
     damage: 0,
     life: 4,
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "While you control this Token: Decrease the Damage Threshold of all Champions on the Zone by 1.",
@@ -587,7 +587,7 @@ export const tokens = [
     tags: ["Token"],
     damage: "X",
     life: "X",
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "This Token’s Damage and Life are equal to the linked Target’s at the time of its Rallying. If the linked Target leaves the Zone: Destroy this Token.",
@@ -623,7 +623,7 @@ export const tokens = [
     tags: ["Token"],
     damage: "0",
     life: "1",
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Deathward",
@@ -659,7 +659,7 @@ export const tokens = [
     tags: ["Token"],
     damage: "X",
     life: "X",
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "This Token’s Damage and Life are equal to the last remaining Damage and Life of the Champion it is replacing.",
@@ -695,7 +695,7 @@ export const tokens = [
     tags: ["Token"],
     damage: "0",
     life: "2",
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "Slice and Dice: Offer 1 Life from this Token; Rally 1 Bile Token to your Zone.",
@@ -731,7 +731,7 @@ export const tokens = [
     tags: ["Token"],
     damage: "0",
     life: "1",
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "",
@@ -767,7 +767,7 @@ export const tokens = [
     tags: ["Token"],
     damage: "X",
     life: "X",
-    damageThreshold: "",
+    damageThreshold: "1",
     abilities: [
       {
         text: "This Token’s Damage and Life are equal to the Damage and Life of the Targeted Champion in the Tomb. Destroy this Token if the Targeted Champion leaves the Tomb.",
