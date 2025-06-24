@@ -211,12 +211,12 @@ io.on('connection', (socket) => {
     io.to(gameId).emit('game_log', { username, message });
   });
 
-  socket.on('life_change', ({ gameId, player, life, from }) => {
+  socket.on('life_change', ({ gameId, player, life, delta, from }) => {
     const game = gameStates.get(gameId);
     if (!game || !game[player]) return;
     game[player].life = life;
     io.to(gameId).emit('life_change', { player, life, from });
-    io.to(gameId).emit('lifeFlash', { player, life, from });
+    io.to(gameId).emit('lifeFlash', { player, life, delta, from });
   });
 
   socket.on('playerReady', ({ username, ready, deck }) => {

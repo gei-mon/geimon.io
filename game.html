@@ -1778,10 +1778,9 @@ html, body {
 
         // replay Declare flash for opponent
         socket.on('declare_event', ({ cardId }) => {
-            const cardEl = document.querySelector(`[data-card-id="${cardId}"]`);
-            if (cardEl) {
-                flashDeclareEffect(cardEl);
-            }
+            document.querySelectorAll(`[data-card-id="${cardId}"]`).forEach(el => {
+                flashDeclareEffect(el);
+            });
         });
 
         function animateDeckShuffle(isOpponent = false) {
@@ -1859,6 +1858,7 @@ html, body {
         }
 
         function flashDeclareEffect(cardEl) {
+            if (cardEl.closest("#viewing-window")) return;
             // ensure we can position inside it
             cardEl.style.position = cardEl.style.position || 'relative';
 
@@ -5077,7 +5077,11 @@ html, body {
 
             sendLifeUpdate(gameId, gameState, player);
             window.socket?.emit('life_change', {
-                gameId, player, life: newLife, from: username
+                gameId,
+                player,
+                life: newLife,
+                delta: newLife - originalLife,
+                from: username
             });
 
             if (newLife <= 0) {
@@ -5762,7 +5766,7 @@ html, body {
         }
         window.appendSystem = appendSystem;
 
-        socket.on("lifeFlash", ({ player, life, from }) => {
+        socket.on("lifeFlash", ({ player, life, delta, from }) => {
             const isSelf = player === username;
             const lifeElem = document.getElementById(isSelf ? "player-life" : "opponent-life");
             const screenHalf = document.getElementById(isSelf ? "player-side" : "opponent-side");
@@ -5775,7 +5779,6 @@ html, body {
                 animateLifeNumber(lifeElem, oldLife, newLife);
 
                 const flash = document.createElement("div");
-                const delta = newLife - oldLife;
                 flash.className = `life-flash ${delta > 0 ? "heal" : "damage"} ${isSelf ? "bottom" : "top"}`;
                 screenHalf.appendChild(flash);
 
