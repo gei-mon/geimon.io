@@ -967,6 +967,11 @@ background-color: #29c7bd;
     box-shadow: 0 0 12px red !important;    /* soft glow for visibility */
 }
 
+.revealed-card.target-highlight {
+    outline: 8px solid red !important;
+    box-shadow: 0 0 12px red !important;
+}
+
 @keyframes deckShuffle {
   0%   { transform: translateX(0) rotate(0deg); }
   25%  { transform: translateX(-8px) rotate(-2deg); }

@@ -553,6 +553,7 @@ html, body {
             let gameEnded = false;
 
             let opponentHandRevealed = false;
+            let hasInitializedOpponentState = false;
 
             let opponentName;
 
@@ -838,7 +839,6 @@ html, body {
                 }
                 previousHandIds = currentHand.map(card => card.id);
             }
-            opponentHandRevealed = gameState?.handsRevealed === true;
 
             remainingDeck = gameState[username].Deck;
             updateDeckText();
@@ -868,6 +868,12 @@ html, body {
             };
 
             const opponent = gameState[ gameState.player1 === username ? gameState.player2 : gameState.player1 ];
+            if (!hasInitializedOpponentState) {
+                const opponent = gameState[ gameState.player1 === username ? gameState.player2 : gameState.player1 ];
+                opponentHandRevealed = gameState[opponent]?.handRevealed ?? false;
+                renderOpponentHand();
+                hasInitializedOpponentState = true;
+            }
             for (const [zoneKey, domSuffix] of Object.entries(zoneMappings)) {
                 await renderCardZone( opponent[zoneKey], `opponent${domSuffix}Box` );
             }
@@ -1559,8 +1565,13 @@ html, body {
 
         /* receive opponent reveal */
         socket.on('hand_reveal', ({ from, reveal }) => {
+            const params = new URLSearchParams(window.location.search);
+            const username = params.get("playerUsername") || "You";
+            const opponentUsernameParam = params.get("opponent") || (params.get("isSinglePlayer") === "true" ? "Bot" : "Opponent");
+
             if (from === username) return;       // ignore our echo
-            opponentHandRevealed = gameState[opponentUsernameParam]?.handRevealed ?? false;
+
+            opponentHandRevealed = reveal;
             renderOpponentHand();
             const msg = `${from} ${reveal ? 'revealed' : 'hid'} their hand.`;
             addGameLogEntry(msg, false);
@@ -2870,13 +2881,23 @@ html, body {
                             document.getElementById("viewing-window").style.opacity = "1";
                             document.getElementById("context-window").style.opacity = "1";
                             document.getElementById("player-life-window").style.opacity = "1";
+                            document.getElementById("player-life").textContent = gameState[username].life;
                             document.getElementById("opponent-life-window").style.opacity = "1";
+                            document.getElementById("opponent-life").textContent = gameState[opponentUsernameParam].life;
                             document.getElementById("phase-tracker").style.opacity = "1";
                             document.getElementById("turn-counter").style.opacity = "1";
                         }
                     }
                     await sendZoneUpdate(["Deck", "Hand"]);
                 }
+                document.getElementById("viewing-window").style.opacity = "1";
+                document.getElementById("context-window").style.opacity = "1";
+                document.getElementById("player-life-window").style.opacity = "1";
+                document.getElementById("player-life").textContent = gameState[username].life;
+                document.getElementById("opponent-life-window").style.opacity = "1";
+                document.getElementById("opponent-life").textContent = gameState[opponentUsernameParam].life;
+                document.getElementById("phase-tracker").style.opacity = "1";
+                document.getElementById("turn-counter").style.opacity = "1";
                 drawnCardsArray = gameState[username].Hand; // ✅ Set the global array
                 previousHandIds = drawnCardsArray.map(card => card.id); // ✅ Track previous IDs
                 await renderDrawnCards();
