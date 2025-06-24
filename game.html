@@ -362,9 +362,9 @@ html, body {
   color: #000 !important;       /* override the white from .tab-content */
 }
   #muteBtn {
-    position: fixed;
-    bottom: 78px;
-    right: 64px;
+    position: absolute;
+    top: 865px;
+    left: 1948.75px;
     width: 36px;
     height: 36px;
     border: none;
@@ -598,6 +598,11 @@ html, body {
             const tempRevealedIds = new Set();
 
             const socket = window.socket;                // 1️⃣ make an alias everyone can use
+
+            socket.on('play_sound', ({ url }) => {
+                const audio = new Audio(url);
+                audio.play().catch(err => console.error('Failed to play sound:', err));
+            });
 
             // ─ Preload image URLs ───────────────────────────────────────────
             const headsImgUrl = "https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/heads.png";
@@ -6002,11 +6007,6 @@ html, body {
         // incoming typing indicator
         socket.on('typing', ({ username: from, isTyping }) => {
             chatTyping.textContent = isTyping ? `${from} is typing…` : '';
-        });
-
-        socket.on('play_sound', ({ url }) => {
-            const audio = new Audio(url);
-            audio.play().catch(err => console.error('Failed to play sound:', err));
         });
 
         // send chat

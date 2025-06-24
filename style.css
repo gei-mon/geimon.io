@@ -124,7 +124,7 @@ text-decoration: underline;
 }
 
 .buttonSmall:active {
-  background-color: purple;
+  background-color: rgb(170, 170, 243);
 }
 
 .buttonEvenSmaller, .buttonEvenSmaller:link, .buttonEvenSmaller:visited {
