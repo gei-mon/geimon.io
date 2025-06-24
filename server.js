@@ -98,11 +98,15 @@ const totemFadeWaited = new Set();
 
 const effectsDir = path.join(PUBLIC_DIR, 'Sounds', 'Effects');
 const effectMap  = {};
-fs.readdirSync(effectsDir).forEach(file => {
-  // key = filename without extension, value = public URL
-  const name = path.basename(file, path.extname(file));
-  effectMap[name] = `/Public/Sounds/Effects/${file}`;
-});
+
+if (fs.existsSync(effectsDir)) {
+  fs.readdirSync(effectsDir).forEach(file => {
+    const name = path.basename(file, path.extname(file));
+    effectMap[name] = `https://geimon-app-833627ba44e0.herokuapp.com/Public/Sounds/Effects/${file}`;
+  });
+} else {
+  console.warn(`[sound] Effects directory not found at ${effectsDir}, skipping load.`);
+}
 
 io.on('connection', (socket) => {
   socket.on('init', ({ username, roomId }) => {
