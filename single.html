@@ -176,6 +176,7 @@
                     return;
                 }
                 const winner = beats[myChoice] === otherChoice ? username : otherUser;
+                window.rpsWinner = winner;
                 if (winner === username) {
                     socket.emit('rpsResult', {
                         winner,
@@ -213,9 +214,10 @@
                     totem,           // from server
                     totemText,       // from server
                     turnOrder:   turn,
-                    opponent:    otherUser,                       // for game.html’s “opponent” param
+                    opponent:    otherUser,
                     playerUsername: username,
-                    isSinglePlayer: 'false'
+                    isSinglePlayer: 'false',
+                    rpsWinner: window.rpsWinner || username
                 });
 
                 // go!
