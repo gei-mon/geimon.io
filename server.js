@@ -156,6 +156,10 @@ io.on('connection', (socket) => {
   socket.on('temp_reveal_card', ({ gameId, from, cardId }) =>
     io.to(gameId).emit('temp_reveal_card', { from, cardId }) );
 
+  socket.on('declare_event', ({ gameId, cardId }) => {
+    io.to(gameId).emit('declare_event', { cardId });
+  });
+
   socket.on('attack_event', ({ gameId, cardId }) => {
     socket.to(gameId).emit('attack_event', { cardId });
   });
@@ -170,10 +174,6 @@ io.on('connection', (socket) => {
 
   socket.on('block_event', ({ gameId, cardId, isFaceDown }) => {
     socket.to(gameId).emit('block_event', { cardId, isFaceDown });
-  });
-
-  socket.on('declare_event', ({ gameId, cardId }) => {
-    socket.to(gameId).emit('declare_event', { cardId });
   });
 
   socket.on('change_control', ({ gameId, cardId, from, to, zone }) => {
@@ -213,9 +213,10 @@ io.on('connection', (socket) => {
 
   socket.on('life_change', ({ gameId, player, life, from }) => {
     const game = gameStates.get(gameId);
-    if (!game || !game[player]) return;            // bad gameId or bad player
-    game[player].life = life;                      // update authoritative state
-    io.to(gameId).emit('life_change', { player, life, from }); // broadcast
+    if (!game || !game[player]) return;
+    game[player].life = life;
+    io.to(gameId).emit('life_change', { player, life, from });
+    io.to(gameId).emit('lifeFlash', { player, life, from });
   });
 
   socket.on('playerReady', ({ username, ready, deck }) => {

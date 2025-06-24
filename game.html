@@ -1778,9 +1778,10 @@ html, body {
 
         // replay Declare flash for opponent
         socket.on('declare_event', ({ cardId }) => {
-            document.querySelectorAll(`[data-card-id="${cardId}"]`).forEach(el => {
-                flashDeclareEffect(el);
-            });
+            const cardEl = document.querySelector(`[data-card-id="${cardId}"]`);
+            if (cardEl) {
+                flashDeclareEffect(cardEl);
+            }
         });
 
         function animateDeckShuffle(isOpponent = false) {
@@ -2824,7 +2825,7 @@ html, body {
                         playerDeck,
                         opponentDeck,
                         isSinglePlayer: isSinglePlayerParam,
-                        goesFirst: turnOrderParam === "first" ? playerUsernameParam : opponentUsernameParam,
+                        goesFirst: choice === "first" ? playerUsernameParam : opponentUsernameParam,
                         totem: selectedTotem
                     })
                 });
@@ -5760,6 +5761,28 @@ html, body {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
         window.appendSystem = appendSystem;
+
+        socket.on("lifeFlash", ({ player, life, from }) => {
+            const isSelf = player === username;
+            const lifeElem = document.getElementById(isSelf ? "player-life" : "opponent-life");
+            const screenHalf = document.getElementById(isSelf ? "player-side" : "opponent-side");
+
+            const oldLife = gameState[player].life;
+            const newLife = life;
+            gameState[player].life = newLife;
+
+            if (lifeElem && screenHalf) {
+                animateLifeNumber(lifeElem, oldLife, newLife);
+
+                const flash = document.createElement("div");
+                const delta = newLife - oldLife;
+                flash.className = `life-flash ${delta > 0 ? "heal" : "damage"} ${isSelf ? "bottom" : "top"}`;
+                screenHalf.appendChild(flash);
+
+                setTimeout(() => flash.classList.add("active"), 10);
+                setTimeout(() => flash.remove(), 700);
+            }
+        });
 
         socket.on('temp_reveal_card', ({ from, cardId }) => {
             if (from === username) return;          // ignore the echo of our own message
