@@ -34,7 +34,7 @@ html, body {
   #drawn-cards {
     position: fixed;
     bottom: -180px; /* Positions the cards near the bottom */
-    left: 775px;
+    left: 650px;
     display: flex;
     flex-direction: row; /* Aligns cards in a horizontal row */
     align-items: center;
@@ -552,7 +552,7 @@ html, body {
             const otherPlayerName = params.get("opponent") || "Unknown_Opponent"; // if multiplayer later
 
             // how much they overlap at 1920×1080
-            const MAX_OVERLAP = 15; // percent
+            const MAX_OVERLAP = 12.5; // percent
             // how little they overlap at very small sizes
             const MIN_OVERLAP = 5;  // percent
 
@@ -595,6 +595,7 @@ html, body {
             // 1️⃣ Update the coin-flip button handler
             document.getElementById("coin-btn").onclick = () => {
                 const result = Math.random() < 0.5 ? "Heads" : "Tails";
+                playSoundEffect('coin');
                 addGameLogEntry(`${username} flipped a coin: ${result}`);
                 showCentralCoin(result);
                 socket.emit('coin_flip', { gameId, result });
@@ -609,6 +610,7 @@ html, body {
             // 3️⃣ Update the dice-roll button handler
             document.getElementById("dice-btn").onclick = () => {
                 const roll = Math.floor(Math.random() * 6) + 1;
+                playSoundEffect('dice');
                 addGameLogEntry(`${username} rolled a d6: ${roll}`);
                 showCentralDice(roll);
                 socket.emit('dice_roll', { gameId, roll });
@@ -864,7 +866,7 @@ html, body {
                     );
 
                     if (drawnCards.length > 0) {
-                        animateCardDraw(false);
+                        //animateCardDraw(false);
                     }
                 }
                 previousHandIds = currentHand.map(card => card.id);
@@ -1111,13 +1113,13 @@ html, body {
                 socket.on("opponent_draw_card", ({ player, count }) => {
                     if (!username || player === username) return; // ignore self
                     for (let i = 0; i < count; i++) {
-                        animateCardDraw(true); // animate for opponent
+                        //animateCardDraw(true); // animate for opponent
                     }
                 });
                 socket.on("opponent_discard_card", ({ player, count }) => {
                     if (!username || player === username) return;
                     for (let i = 0; i < count; i++) {
-                        animateCardDiscard("opponent-hand", "opponentTombBox", true);
+                        //animateCardDiscard("opponent-hand", "opponentTombBox", true);
                     }
                 });
 
@@ -1526,6 +1528,7 @@ html, body {
                     const data = await response.json();
 
                     updatePhaseDisplay(data.currentPhase);
+                    playSoundEffect('phase');
                     triggerPhaseWaveEffect();
                     const phaseBefore = gameState.turn.currentPhase;
                     await updateLocalFromGameState();
@@ -1563,6 +1566,7 @@ html, body {
         document.getElementById('shuffle-hand-btn').onclick = () => {
             const hand = document.getElementById('drawn-cards');
             if (!hand) return;
+            playSoundEffect('shuffle-hand');
             const cards = [...hand.children];
             savedHandOrder = cards.map(c => c);                // remember current order
             cards.sort(()=>Math.random() - 0.5);
@@ -1681,13 +1685,12 @@ html, body {
 
         const ICON_PATH = 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/';
         const ICONS = [
-        { file:'good.png',      title:'Thumbs-up'   },
-        { file:'bad.png',       title:'Thumbs-down' },
-        { file:'thinking.png',  title:'…'           },
-        { file:'response.png',  title:'!'           },
+            { file:'good.png',      title:'Thumbs-up'   },
+            { file:'bad.png',       title:'Thumbs-down' },
+            { file:'thinking.png',  title:'…'           },
+            { file:'response.png',  title:'!'           },
         ];
 
-        // 1) container – tweak left/top if you reposition the opponent pic
         const reactBar = document.createElement('div');
         Object.assign(reactBar.style, {
             position:'absolute', left:'1910px', top:'30px',
@@ -1700,37 +1703,35 @@ html, body {
             reactBar.style.opacity = "1";
         }, 6500);
 
-        // 2) helper to show (and auto-remove) the big icon
         function flashIcon(src) {
-        const img = document.createElement('img');
-        Object.assign(img.style, {
-            position:'fixed', left:'50%', top:'50%', transform:'translate(-50%,-50%)',
-            width:'200px', pointerEvents:'none', zIndex:'200000', opacity:'0',
-            transition:'opacity .5s ease',
-        });
-        img.src = src;
-        document.body.appendChild(img);
-        requestAnimationFrame(() => (img.style.opacity = '1'));   // fade in
-        setTimeout(() => {
-            img.style.opacity = '0';
-
-            /* 3) when fade-out completes, remove the element */
-            img.addEventListener('transitionend', () => img.remove(), { once: true });
-        }, 1500);
+            const img = document.createElement('img');
+            Object.assign(img.style, {
+                position:'fixed', left:'50%', top:'50%', transform:'translate(-50%,-50%)',
+                width:'200px', pointerEvents:'none', zIndex:'200000', opacity:'0',
+                transition:'opacity .5s ease',
+            });
+            img.src = src;
+            document.body.appendChild(img);
+            playSoundEffect('alert');
+            requestAnimationFrame(() => (img.style.opacity = '1'));   // fade in
+            setTimeout(() => {
+                img.style.opacity = '0';
+                img.addEventListener('transitionend', () => img.remove(), { once: true });
+            }, 1500);
         }
 
         // 3) build the four buttons
         ICONS.forEach(({ file, title }) => {
-        const btn = document.createElement('img');
-        btn.src   = ICON_PATH + file;
-        btn.title = title;
-        Object.assign(btn.style, { width:'46px', height:'46px', cursor:'pointer' });
-        btn.onclick = () => {
-            const src = ICON_PATH + file;
-            flashIcon(src);                                   // show on *my* screen
-            socket.emit('signal_icon', { gameId, icon: src }); // broadcast to room
-        };
-        reactBar.appendChild(btn);
+            const btn = document.createElement('img');
+            btn.src   = ICON_PATH + file;
+            btn.title = title;
+            Object.assign(btn.style, { width:'46px', height:'46px', cursor:'pointer' });
+            btn.onclick = () => {
+                const src = ICON_PATH + file;
+                flashIcon(src);                                   // show on *my* screen
+                socket.emit('signal_icon', { gameId, icon: src }); // broadcast to room
+            };
+            reactBar.appendChild(btn);
         });
 
         // 4) echo from the server → show on *their* screen
@@ -4481,11 +4482,13 @@ html, body {
 
             // ── button wiring ───────────────────────────────────────────
             panel.querySelector("#saveStats").onclick = async () => {
+                playSoundEffect('tomb');
                 cardData.damage           = +panel.querySelector("#dmg").value || 0;
                 cardData.life             = +panel.querySelector("#life").value || 0;
                 cardData.damageThreshold  = +panel.querySelector("#th").value || 0;
                 refreshCardFace(cardElement, cardData);
-                await sendZoneUpdate([ cardData.boardState ]);
+                const zoneName = cardData.boardState;
+                await sendZoneUpdate([ zoneName ]);
                 addGameLogEntry(
                 `${cardData.name}'s stats set to ` +
                 `${cardData.damage}/${cardData.life} (${cardData.damageThreshold}).`);
@@ -4903,37 +4906,48 @@ html, body {
                 hoverMenu.style.display = "none";
                 switch (text) {
                     case "To Champion (Face-Up)":
+                        playSoundEffect('activate');
                         await doMove(zone,           "Zone (Champion)",         "playerChampionsBox",        false);
                         //addGameLogEntry(`${username} rallied ${cardData.name}.`);
                         break;
                     case "To Champion (Face-Down)":
+                        playSoundEffect('set');
                         await doMove(zone,           "FaceDownZone",            "playerFaceDownBox",         true);
                         break;
                     case "To Arsenal (Face-Up)":
+                        playSoundEffect('activate');
                         await doMove(zone,           "Zone (Arsenal)",          "playerArsenalBox",          false);
                         break;
                     case "To Arsenal (Face-Down)":
+                        playSoundEffect('set');
                         await doMove(zone,           "FaceDownArsenalZone",     "playerFaceDownArsenalBox",  true);
                         break;
                     case "To Reserve":
+                        playSoundEffect('reserve');
                         await doMove(zone, "Reserve", "playerReserveBox", false);
                         break;
                     case "To Hand":
+                        playSoundEffect('draw');
                         await doMove(zone, "Hand", "drawn-cards", false);
                         break;
                     case "To Tomb":
+                        playSoundEffect('tomb');
                         await doMove(zone, "Tomb", "playerTombBox", false);
                         break;
                     case "To Void":
+                        playSoundEffect('tomb');
                         await doMove(zone, "Void", "playerVoidBox", false);
                         break;
                     case "To Top of Deck":
+                        playSoundEffect('set');
                         await doMove(zone, "Deck", "playerDeckBox", false, true);
                         break;
                     case "To Bottom of Deck":
+                        playSoundEffect('set');
                         await doMove(zone, "Deck", "playerDeckBox", false, false);
                         break;
                     case "Declare":
+                        playSoundEffect('declare');
                         // play the glow‐flash locally
                         flashDeclareEffect(cardElement);
 
@@ -4945,6 +4959,7 @@ html, body {
                         }
                         break;
                     case "Reveal":
+                        playSoundEffect('set');
                         addGameLogEntry(`${cardData.name} was revealed from the ${zone}.`);
                         if (zone === "Hand") {
                             socket.emit('temp_reveal_card', { gameId, from: username, cardId: cardData.id });
@@ -4954,6 +4969,7 @@ html, body {
                         showChangeStatsPrompt(cardElement, cardData);
                         break;
                     case "Change Control": {
+                        playSoundEffect('set');
                         const opponent = getOpponentUsername(username, gameState);
 
                         /* 1️⃣  Tell the server to transfer ownership */
@@ -4970,6 +4986,7 @@ html, body {
                         break;
                     }
                     case "Attack": {
+                        playSoundEffect('attack');
                         animateAttackToCenter(cardElement, 800)
                             .finished.then(() => {
                             // 1) Log locally and broadcast to room
@@ -4979,6 +4996,7 @@ html, body {
                         break;
                     }
                     case "Block": {
+                        playSoundEffect('block');
                         const isFaceDown = cardData.boardState === 'FaceDownZone';
                         animateBlock(cardElement, isFaceDown)
                             .then(() => {
@@ -4988,6 +5006,7 @@ html, body {
                         break;
                     }
                     case "Add 1 Counter": {
+                        playSoundEffect('tomb');
                         cardData.counters = (cardData.counters || 0) + 1;
                         updateCounterOverlay(cardElement, cardData);
                         addGameLogEntry(`${cardData.name} gains 1 counter (now ${cardData.counters}).`);
@@ -4995,6 +5014,7 @@ html, body {
                         break;
                     }
                     case "Add 5 Counters": {
+                        playSoundEffect('tomb');
                         cardData.counters = (cardData.counters || 0) + 5;
                         updateCounterOverlay(cardElement, cardData);
                         addGameLogEntry(`${cardData.name} gains 5 counters (now ${cardData.counters}).`);
@@ -5002,6 +5022,7 @@ html, body {
                         break;
                     }
                     case "Remove 1 Counter": {
+                        playSoundEffect('tomb');
                         cardData.counters = Math.max(0, (cardData.counters || 0) - 1);
                         updateCounterOverlay(cardElement, cardData);
                         addGameLogEntry(`${cardData.name} loses 1 counter (now ${cardData.counters}).`);
@@ -5009,6 +5030,7 @@ html, body {
                         break;
                     }
                     case "Remove All Counters": {
+                        playSoundEffect('tomb');
                         cardData.counters = 0;
                         updateCounterOverlay(cardElement, cardData);
                         addGameLogEntry(`${cardData.name} loses all counters.`);
@@ -5016,6 +5038,7 @@ html, body {
                         break;
                     }
                     case "Remove": {
+                        playSoundEffect('tomb');
                         /* remove the Token from its current zone and refresh that zone */
 
                         const zoneArr = gameState[username][zone] || [];
@@ -5128,6 +5151,11 @@ html, body {
 
                 const flash = document.createElement("div");
                 flash.className = `life-flash ${amount > 0 ? "heal" : "damage"} ${isSelf ? "bottom" : "top"}`;
+                if (amount > 0) {
+                    playSoundEffect('heal');
+                } else {
+                    playSoundEffect('damage');
+                }
                 screenHalf.appendChild(flash);
 
                 setTimeout(() => flash.classList.add("active"), 10);
@@ -5268,6 +5296,7 @@ html, body {
 
                 switch (text) {
                     case "Shuffle":
+                        playSoundEffect('shuffle');
                         animateDeckShuffle();
                         // Fisher–Yates shuffle (exists in your code)
                         shuffleDeck(gameState[username].Deck);
@@ -5278,17 +5307,18 @@ html, body {
 
                     case "Draw":
                         // use your drawCards helper
-                        await drawCards(gameState[username].Deck, 1);
                         playSoundEffect('draw'); // example usage of playing a sound for both players
+                        await drawCards(gameState[username].Deck, 1);
                         break;
 
                     case "Mill":
+                        playSoundEffect('tomb');
                         if (gameState[username].Deck.length === 0) return;
                         {
                             const [card] = gameState[username].Deck.splice(0,1);
                             card.boardState = "Tomb";
                             gameState[username].Tomb.push(card);
-                            await sendZoneUpdate(["Deck","Tomb"]);updateDeckText
+                            await sendZoneUpdate(["Deck","Tomb"]);
                             renderLatestTombCard();
                             updateDeckText();
                             addGameLogEntry(`${username} milled the top card of their deck.`);
@@ -5296,6 +5326,7 @@ html, body {
                         break;
 
                     case "Obliterate Mill":
+                        playSoundEffect('tomb');
                         if (gameState[username].Deck.length === 0) return;
                         {
                             const [card] = gameState[username].Deck.splice(0,1);
