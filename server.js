@@ -448,6 +448,11 @@ app.post('/updateGameState', (req, res) => {
   if (updatedZones) {
     for (const zone in updatedZones) {
       gameState[owner][zone] = updatedZones[zone];
+      io.to(gameId).emit('sync_zone', {
+        owner,
+        zone,
+        cards: gameState[owner][zone]
+      });
     }
   }
 

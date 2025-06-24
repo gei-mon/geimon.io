@@ -2287,7 +2287,7 @@ html, body {
             tombTextOverlay.innerText = "Tomb";
             Object.assign(tombTextOverlay.style, {
                 position: "absolute",
-                zIndex: "110000",
+                zIndex: "110500",
                 left: "45%",
                 top: "3%",
                 transform: "translate(-50%, -50%)",
@@ -2952,7 +2952,7 @@ html, body {
                     } finally {
                         isFetchingGameState = false;
                     }
-                }, 2500);
+                }, 10000);
             }
 
             const totemBox = document.createElement("div");
@@ -3533,7 +3533,7 @@ html, body {
         const opponentTombText = document.createElement("span");
             opponentTombText.innerText = "Tomb";
             opponentTombText.style.position = "absolute";
-            opponentTombText.style.zIndex = "110000";
+            opponentTombText.style.zIndex = "110500";
             opponentTombText.style.left = "50%";
             opponentTombText.style.top = "2%";
             opponentTombText.style.transform = "translate(-50%, -50%)";
@@ -3549,7 +3549,7 @@ html, body {
                 const count = gameState[opponentName].Tomb.length;
                 opponentTombText.innerText = `${count}`;
                 opponentTombText.style.position = "absolute";
-                opponentTombText.style.zIndex = "110000";
+                opponentTombText.style.zIndex = "110500";
                 opponentTombText.style.left = "50%";
                 opponentTombText.style.top = "2%";
                 opponentTombText.style.transform = "translate(-50%, -50%)";
@@ -3560,7 +3560,7 @@ html, body {
         opponentTombBox.addEventListener("mouseleave", () => {
             opponentTombText.innerText = "Tomb";
             opponentTombText.style.position = "absolute";
-            opponentTombText.style.zIndex = "110000";
+            opponentTombText.style.zIndex = "110500";
             opponentTombText.style.left = "50%";
             opponentTombText.style.top = "2%";
             opponentTombText.style.transform = "translate(-50%, -50%)";
@@ -3795,7 +3795,7 @@ html, body {
                 title.style.textAlign = "center";
             popup.appendChild(title);
 
-            const voidCards = gameState?.[username]?.Void || [];
+            const voidCards = gameState?.[opponentName]?.Void || [];
 
             if (voidCards.length === 0) {
                 const none = document.createElement("div");
@@ -4001,58 +4001,6 @@ html, body {
         surrenderButton.style.zIndex = "200100";
         surrenderButton.style.cursor = "pointer";
         surrenderButton.title = "Surrender";
-
-    // Add event listener for click
-    surrenderButton.addEventListener("click", () => {
-        const confirmBox = document.createElement("div");
-        confirmBox.style.position = "fixed";
-        confirmBox.style.top = "50%";
-        confirmBox.style.left = "50%";
-        confirmBox.style.transform = "translate(-50%, -50%)";
-        confirmBox.style.padding = "20px";
-        confirmBox.style.backgroundColor = "#333";
-        confirmBox.style.color = "white";
-        confirmBox.style.border = "2px solid red";
-        confirmBox.style.borderRadius = "10px";
-        confirmBox.style.zIndex = "100900";
-        confirmBox.style.textAlign = "center";
-        confirmBox.style.boxShadow = "0 0 10px black";
-
-        confirmBox.innerHTML = `
-            <p style="margin-bottom: 20px;">Are you sure you'd like to surrender?</p>
-            <button id="confirm-surrender" style="margin-right: 10px;">Surrender</button>
-            <button id="cancel-surrender">Cancel</button>
-        `;
-
-        document.body.appendChild(confirmBox);
-
-        document.getElementById("confirm-surrender").onclick = async () => {
-            try {
-                await fetch("https://geimon-app-833627ba44e0.herokuapp.com/endGame", {
-                    method: "POST",
-                    credentials: 'include',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        gameId,
-                        loser: username,
-                        reason: "Surrendered"
-                    })
-                });
-
-                showBanner("You Lose", "Surrendered");
-                document.body.removeChild(confirmBox);
-            } catch (err) {
-                console.error("Error ending game:", err);
-                alert("Failed to surrender. Please try again.");
-            }
-        };
-
-        document.getElementById("cancel-surrender").onclick = () => {
-            document.body.removeChild(confirmBox);
-        };
-    });
-
-    document.body.appendChild(surrenderButton);
 
     const toolButtons = document.getElementById("tool-buttons");
     const lifeAdjustBox = document.getElementById("life-adjust-box");
@@ -4997,6 +4945,7 @@ html, body {
                         break;
                     case "Change Stats":
                         showChangeStatsPrompt(cardElement, cardData);
+                        await sendZoneUpdate([cardData.boardState]);
                         break;
                     case "Change Control": {
                         const opponent = getOpponentUsername(username, gameState);
@@ -5036,24 +4985,28 @@ html, body {
                         cardData.counters = (cardData.counters || 0) + 1;
                         updateCounterOverlay(cardElement, cardData);
                         addGameLogEntry(`${cardData.name} gains 1 counter (now ${cardData.counters}).`);
+                        await sendZoneUpdate([cardData.boardState]);
                         break;
                     }
                     case "Add 5 Counters": {
                         cardData.counters = (cardData.counters || 0) + 5;
                         updateCounterOverlay(cardElement, cardData);
                         addGameLogEntry(`${cardData.name} gains 5 counters (now ${cardData.counters}).`);
+                        await sendZoneUpdate([cardData.boardState]);
                         break;
                     }
                     case "Remove 1 Counter": {
                         cardData.counters = Math.max(0, (cardData.counters || 0) - 1);
                         updateCounterOverlay(cardElement, cardData);
                         addGameLogEntry(`${cardData.name} loses 1 counter (now ${cardData.counters}).`);
+                        await sendZoneUpdate([cardData.boardState]);
                         break;
                     }
                     case "Remove All Counters": {
                         cardData.counters = 0;
                         updateCounterOverlay(cardElement, cardData);
                         addGameLogEntry(`${cardData.name} loses all counters.`);
+                        await sendZoneUpdate([cardData.boardState]);
                         break;
                     }
                     case "Remove": {
@@ -5290,8 +5243,9 @@ html, body {
             });
 
             const options = [
-                "Mill",
+                "Surrender",
                 "Obliterate Mill",
+                "Mill",
                 "View",
                 "Shuffle",
                 "Draw"
@@ -5323,31 +5277,77 @@ html, body {
                         break;
 
                     case "Mill":
-                    if (gameState[username].Deck.length === 0) return;
-                    {
-                        const [card] = gameState[username].Deck.splice(0,1);
-                        card.boardState = "Tomb";
-                        gameState[username].Tomb.push(card);
-                        await sendZoneUpdate(["Deck","Tomb"]);updateDeckText
-                        renderLatestTombCard();
-                        updateDeckText();
-                        addGameLogEntry(`${username} milled the top card of their deck.`);
-                    }
-                    break;
+                        if (gameState[username].Deck.length === 0) return;
+                        {
+                            const [card] = gameState[username].Deck.splice(0,1);
+                            card.boardState = "Tomb";
+                            gameState[username].Tomb.push(card);
+                            await sendZoneUpdate(["Deck","Tomb"]);updateDeckText
+                            renderLatestTombCard();
+                            updateDeckText();
+                            addGameLogEntry(`${username} milled the top card of their deck.`);
+                        }
+                        break;
 
                     case "Obliterate Mill":
-                    if (gameState[username].Deck.length === 0) return;
-                    {
-                        const [card] = gameState[username].Deck.splice(0,1);
-                        card.boardState = "Void";
-                        gameState[username].Void.push(card);
-                        await sendZoneUpdate(["Deck","Void"]);
-                        renderLatestVoidCard();
-                        updateDeckText();
-                        addGameLogEntry(`${username} obliterated the top card of their deck.`);
-                    }
-                    break;
+                        if (gameState[username].Deck.length === 0) return;
+                        {
+                            const [card] = gameState[username].Deck.splice(0,1);
+                            card.boardState = "Void";
+                            gameState[username].Void.push(card);
+                            await sendZoneUpdate(["Deck","Void"]);
+                            renderLatestVoidCard();
+                            updateDeckText();
+                            addGameLogEntry(`${username} obliterated the top card of their deck.`);
+                        }
+                        break;
 
+                    case "Surrender": {
+                        const confirmBox = document.createElement("div");
+                        Object.assign(confirmBox.style, {
+                            position: "fixed",
+                            top:      "50%",
+                            left:     "50%",
+                            transform:"translate(-50%, -50%)",
+                            padding:  "20px",
+                            backgroundColor: "#333",
+                            color:         "white",
+                            border:        "2px solid red",
+                            borderRadius:  "10px",
+                            zIndex:        "100900",
+                            textAlign:     "center",
+                            boxShadow:     "0 0 10px black"
+                        });
+                        confirmBox.innerHTML = `
+                            <p style="margin-bottom: 20px;">Are you sure you'd like to surrender?</p>
+                            <button id="confirm-surrender" style="margin-right: 10px;">Surrender</button>
+                            <button id="cancel-surrender">Cancel</button>
+                        `;
+                        document.body.appendChild(confirmBox);
+
+                        document.getElementById("confirm-surrender").onclick = async () => {
+                            try {
+                                await fetch("https://geimon-app-833627ba44e0.herokuapp.com/endGame", {
+                                    method:      "POST",
+                                    credentials: "include",
+                                    headers: { "Content-Type": "application/json" },
+                                    body:    JSON.stringify({
+                                        gameId,
+                                        loser:  username,
+                                        reason: "Surrendered"
+                                    })
+                                });
+                                showBanner("You Lose", "Surrendered");
+                                document.body.removeChild(confirmBox);
+                            } catch (err) {
+                                console.error("Error ending game:", err);
+                                alert("Failed to surrender. Please try again.");
+                            }
+                        };
+                        document.getElementById("cancel-surrender").onclick = () => {
+                            document.body.removeChild(confirmBox);
+                        };
+                    } break;
                     case "View":
                     // build a modal overlay
                     const overlay = document.createElement("div");
@@ -5752,7 +5752,7 @@ html, body {
         });
         setTimeout(async () => {
             await updateLocalFromGameState();
-        }, 1500); // adjust if needed
+        }, 5000); // adjust if needed
     }
 
     // Fetch and shuffle deck, then update count
