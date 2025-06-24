@@ -599,6 +599,11 @@ html, body {
 
             const socket = window.socket;                // 1️⃣ make an alias everyone can use
 
+            socket.on('play_sound', ({ url }) => {
+                const audio = new Audio(url);
+                audio.play().catch(err => console.error('Failed to play sound:', err));
+            });
+
             // ─ Preload image URLs ───────────────────────────────────────────
             const headsImgUrl = "https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/heads.png";
             const tailsImgUrl = "https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/tails.png";
@@ -5962,11 +5967,6 @@ html, body {
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
         window.appendSystem = appendSystem;
-
-        socket.on('play_sound', ({ url }) => {
-            const audio = new Audio(url);
-            audio.play().catch(err => console.error('Failed to play sound:', err));
-        });
 
         socket.on("lifeFlash", ({ player, life, delta, from }) => {
             const isSelf = player === username;

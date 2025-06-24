@@ -156,7 +156,7 @@ io.on('connection', (socket) => {
       return;
     }
     // send to both players in this lobby/game room
-    io.to(user.roomId).emit('play_sound', { effect, url });
+    io.to(user.gameId).emit('play_sound', { effect, url });
   });
 
   socket.on('signal_icon', ({ gameId, icon }) => {
