@@ -2441,9 +2441,8 @@ html, body {
                 resultBox.style.opacity = "1";
             }, 50);
 
-            const actualFirstPlayer = (turnOrderParam === "first") ? playerUsernameParam : opponentUsernameParam;
+            const actualFirstPlayer = gameState.turn === "first" ? playerUsernameParam : opponentUsernameParam;
             const isMyTurn = playerUsernameParam === actualFirstPlayer;
-            // Set background color based on choice
             resultBox.style.backgroundColor = isMyTurn ? "blue" : "red";
             resultBox.textContent = isMyTurn ? "Your Turn" : "Opponent's Turn";
 
