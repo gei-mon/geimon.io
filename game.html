@@ -2287,7 +2287,7 @@ html, body {
             tombTextOverlay.innerText = "Tomb";
             Object.assign(tombTextOverlay.style, {
                 position: "absolute",
-                zIndex: "110500",
+                zIndex: "120500",
                 left: "45%",
                 top: "3%",
                 transform: "translate(-50%, -50%)",
@@ -3569,10 +3569,10 @@ html, body {
     // Create Tomb Button Overlay
     const opponentTombButton = document.createElement("button");
         opponentTombButton.style.position = "absolute";
-        opponentTombButton.style.left = "372px";
-        opponentTombButton.style.top = "270px";
-        opponentTombButton.style.width = "87px";
-        opponentTombButton.style.height = "115px";
+        opponentTombButton.style.left = "380px";
+        opponentTombButton.style.top = "290px";
+        opponentTombButton.style.width = "71px";
+        opponentTombButton.style.height = "95px";
         opponentTombButton.style.backgroundColor = "rgba(0, 255, 0)";
         opponentTombButton.style.opacity = "0";
         opponentTombButton.style.border = "none";
@@ -4419,7 +4419,7 @@ html, body {
         }
 
         /* show a small modal, update cardData + DOM on “Save” */
-        function showChangeStatsPrompt(cardElement, cardData) {
+        async function showChangeStatsPrompt(cardElement, cardData) {
             // ── overlay ─────────────────────────────────────────────────
             const overlay = document.createElement("div");
             Object.assign(overlay.style, {
@@ -4473,17 +4473,17 @@ html, body {
             }
 
             // ── button wiring ───────────────────────────────────────────
-            panel.querySelector("#saveStats").onclick = () => {
+            panel.querySelector("#saveStats").onclick = async () => {
                 cardData.damage           = +panel.querySelector("#dmg").value || 0;
                 cardData.life             = +panel.querySelector("#life").value || 0;
                 cardData.damageThreshold  = +panel.querySelector("#th").value || 0;
                 refreshCardFace(cardElement, cardData);
+                await sendZoneUpdate([ cardData.boardState ]);
                 addGameLogEntry(
                 `${cardData.name}'s stats set to ` +
                 `${cardData.damage}/${cardData.life} (${cardData.damageThreshold}).`);
                 overlay.remove();
             };
-
             panel.querySelector("#cancelStats").onclick = () => overlay.remove();
         }
 
@@ -4945,7 +4945,6 @@ html, body {
                         break;
                     case "Change Stats":
                         showChangeStatsPrompt(cardElement, cardData);
-                        await sendZoneUpdate([cardData.boardState]);
                         break;
                     case "Change Control": {
                         const opponent = getOpponentUsername(username, gameState);
@@ -5691,6 +5690,7 @@ html, body {
                 });
 
                 wrap.appendChild(rendered);
+                updateCounterOverlay(wrap, cardData);
                 container.appendChild(wrap);
             });
         }
