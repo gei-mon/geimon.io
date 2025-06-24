@@ -7,6 +7,7 @@
     <link href='https://fonts.googleapis.com/css?family=Racing Sans One' rel='stylesheet'>
     <link rel="icon" href="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/favicon.png" type="image/png">
     <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Active Game</title>
     <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
     <script>
@@ -17,9 +18,11 @@
 </head>
 <style>
 html, body {
-  overflow: hidden;
-  height: 100%;
-  margin: 0;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
 }
   #coin {
     position: absolute;
@@ -319,7 +322,7 @@ html, body {
 .board-container {
   width: 1920px;
   height: 1080px;
-  transform: scale(calc(100vw / 1920));
+  transform: scale(calc(min(100vw / 1920, 100vh / 1080)));
   transform-origin: top left;
 }
 @keyframes phaseWave {
@@ -2461,7 +2464,7 @@ html, body {
                 resultBox.style.textAlign = "center";
                 resultBox.style.opacity = "0"; // Start fully invisible
                 resultBox.style.transition = "opacity 1s ease-in-out"; // Smooth fade effect
-                resultBox.style.zIndex = "100700"; // On top of everything
+                resultBox.style.zIndex = "200000"; // On top of everything
                 resultBox.style.boxShadow = "0 0 20px black";
 
             // Trigger fade-in after DOM insertion
@@ -2794,6 +2797,7 @@ html, body {
 
             // Fade out the result box after 3 seconds
             setTimeout(() => {
+                resultBox.style.zIndex = "0";
                 resultBox.style.opacity = "0"; // Fades out smoothly
             }, 2000);
 
