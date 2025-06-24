@@ -2442,7 +2442,15 @@ html, body {
             }, 50);
 
             const actualFirstPlayer = turnOrderParam === "first" ? playerUsernameParam : opponentUsernameParam;
-            const isMyTurn = username === actualFirstPlayer;
+            const isRpsWinner = username === rpsWinnerParam;
+            let isMyTurn;
+            if (isRpsWinner) {
+                // I made the choice, so "first" means I go first
+                isMyTurn = turnOrderParam === "first";
+            } else {
+                // I didn't make the choice, so I get the opposite
+                isMyTurn = turnOrderParam !== "first";
+            }
             resultBox.style.backgroundColor = isMyTurn ? "blue" : "red";
             resultBox.textContent = isMyTurn ? "Your Turn" : "Opponent's Turn";
 
