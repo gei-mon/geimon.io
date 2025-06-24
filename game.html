@@ -871,6 +871,20 @@ html, body {
             for (const [zoneKey, domSuffix] of Object.entries(zoneMappings)) {
                 await renderCardZone( opponent[zoneKey], `opponent${domSuffix}Box` );
             }
+            if (isRefresh) {
+                const zoneMappings = {
+                    "Zone (Champion)": "playerChampionsBox",
+                    "Zone (Arsenal)": "playerArsenalBox",
+                    "Reserve": "playerReserveBox",
+                    "FaceDownZone": "playerFaceDownBox",
+                    "FaceDownArsenalZone": "playerFaceDownArsenalBox"
+                };
+
+                for (const [zoneKey, domId] of Object.entries(zoneMappings)) {
+                    const cards = gameState[username][zoneKey];
+                    if (cards) await renderCardZone(cards, domId);
+                }
+            }
         }
 
         async function getUsername() {
@@ -993,6 +1007,9 @@ html, body {
 
             });
         }
+
+        const isRefresh = sessionStorage.getItem("hasVisited") === "true";
+        sessionStorage.setItem("hasVisited", "true");
 
         window.onload = () => {
             (async () => {
@@ -1503,57 +1520,57 @@ html, body {
 
         // helper – apply or remove outline
         function updateHandOutline(){
-        document.querySelectorAll('#drawn-cards .card')
-                .forEach(el => el.classList.toggle('revealed-card', handRevealed));
+            document.querySelectorAll('#drawn-cards .card')
+                    .forEach(el => el.classList.toggle('revealed-card', handRevealed));
         }
 
         /* -------- SHUFFLE ------------ */
         document.getElementById('shuffle-hand-btn').onclick = () => {
-        const hand = document.getElementById('drawn-cards');
-        if (!hand) return;
-        const cards = [...hand.children];
-        savedHandOrder = cards.map(c => c);                // remember current order
-        cards.sort(()=>Math.random() - 0.5);
-        cards.forEach(c => hand.appendChild(c));
-        addGameLogEntry(`${username} shuffled their hand.`);
+            const hand = document.getElementById('drawn-cards');
+            if (!hand) return;
+            const cards = [...hand.children];
+            savedHandOrder = cards.map(c => c);                // remember current order
+            cards.sort(()=>Math.random() - 0.5);
+            cards.forEach(c => hand.appendChild(c));
+            addGameLogEntry(`${username} shuffled their hand.`);
         };
 
         /* -------- SORT --------------- */
         document.getElementById('sort-hand-btn').onclick = () => {
-        const hand = document.getElementById('drawn-cards');
-        if (!hand || savedHandOrder.length === 0) return;
-        savedHandOrder.forEach(c => hand.appendChild(c));  // restore original order
-        savedHandOrder = [];
-        addGameLogEntry(`${username} sorted their hand.`);
+            const hand = document.getElementById('drawn-cards');
+            if (!hand || savedHandOrder.length === 0) return;
+            savedHandOrder.forEach(c => hand.appendChild(c));  // restore original order
+            savedHandOrder = [];
+            addGameLogEntry(`${username} sorted their hand.`);
         };
 
         /* -------- REVEAL / HIDE ------ */
         const revealBtn = document.getElementById('reveal-hand-btn');
         revealBtn.onclick = () => {
-        handRevealed = !handRevealed;
-        updateHandOutline();
-        revealBtn.title = handRevealed ? 'Hide Hand' : 'Reveal Hand';
-        revealBtn.src   = handRevealed
-                            ? 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/eye-closed.png'
-                            : 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/eye.png';
-        socket.emit('hand_reveal', { gameId, from:username, reveal:handRevealed });
-        addGameLogEntry(`${username} ${handRevealed ? 'revealed' : 'hid'} their hand.`);
+            handRevealed = !handRevealed;
+            updateHandOutline();
+            revealBtn.title = handRevealed ? 'Hide Hand' : 'Reveal Hand';
+            revealBtn.src   = handRevealed
+                                ? 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/eye-closed.png'
+                                : 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/eye.png';
+            socket.emit('hand_reveal', { gameId, from:username, reveal:handRevealed });
+            addGameLogEntry(`${username} ${handRevealed ? 'revealed' : 'hid'} their hand.`);
         };
 
         /* receive opponent reveal */
         socket.on('hand_reveal', ({ from, reveal }) => {
-        if (from === username) return;       // ignore our echo
-        opponentHandRevealed = reveal;       // this var already used in renderOpponentHand()
-        renderOpponentHand();
-        const msg = `${from} ${reveal ? 'revealed' : 'hid'} their hand.`;
-        addGameLogEntry(msg, false);
+            if (from === username) return;       // ignore our echo
+            opponentHandRevealed = gameState[opponentUsernameParam]?.handRevealed ?? false;
+            renderOpponentHand();
+            const msg = `${from} ${reveal ? 'revealed' : 'hid'} their hand.`;
+            addGameLogEntry(msg, false);
         });
 
         /* make sure outlines appear whenever we (re)render our hand */
         const origRenderDrawnCards = renderDrawnCards;
         renderDrawnCards = async function(...args){
-        await origRenderDrawnCards.apply(this,args);
-        updateHandOutline();
+            await origRenderDrawnCards.apply(this,args);
+            updateHandOutline();
         };
 
         // TOKEN CREATION
@@ -2306,7 +2323,7 @@ html, body {
             Object.assign(miniCard.style, {
                 transform: "rotate(90deg) scale(0.3)",
                 transformOrigin: "top left",
-                marginTop: "140%",
+                marginTop: "5%",
                 marginLeft: "95.5%",
                 pointerEvents: "none"
             });
@@ -2438,7 +2455,9 @@ html, body {
 
             // Trigger fade-in after DOM insertion
             setTimeout(() => {
-                resultBox.style.opacity = "1";
+                if (!isRefresh) {
+                    resultBox.style.opacity = "1";
+                }
             }, 50);
 
             const actualFirstPlayer = turnOrderParam === "first" ? playerUsernameParam : opponentUsernameParam;
@@ -2845,14 +2864,25 @@ html, body {
 
                 if (gameState[username].Hand.length === 0) {
                     for (let i = 0; i < 5; i++) {
-                        await drawCards(gameState[username].Deck, 1);
+                        if (!isRefresh) {
+                            await drawCards(gameState[username].Deck, 1);
+                        } else {
+                            document.getElementById("viewing-window").style.opacity = "1";
+                            document.getElementById("context-window").style.opacity = "1";
+                            document.getElementById("player-life-window").style.opacity = "1";
+                            document.getElementById("opponent-life-window").style.opacity = "1";
+                            document.getElementById("phase-tracker").style.opacity = "1";
+                            document.getElementById("turn-counter").style.opacity = "1";
+                        }
                     }
                     await sendZoneUpdate(["Deck", "Hand"]);
                 }
                 drawnCardsArray = gameState[username].Hand; // ✅ Set the global array
                 previousHandIds = drawnCardsArray.map(card => card.id); // ✅ Track previous IDs
                 await renderDrawnCards();
-                await showRedrawPrompt(); // Pause here and show redraw
+                if (!isRefresh) {
+                    await showRedrawPrompt(); // Pause here and show redraw
+                }
                 hasDrawnInitialHand = true;
 
                 updateDeckText();
@@ -2893,7 +2923,9 @@ html, body {
 
                 // Trigger fade-in
                 setTimeout(() => {
-                    totemBox.style.opacity = "1";
+                    if (!isRefresh) {
+                        totemBox.style.opacity = "1";
+                    }
                 }, 1000); // Slight delay after result box
 
                 setTimeout(() => {
@@ -3114,7 +3146,7 @@ html, body {
         tombButton.style.backgroundColor = "rgba(0, 255, 0)";
         tombButton.style.opacity = "0";
         tombButton.style.border = "none";
-        tombButton.style.zIndex = "100800";
+        tombButton.style.zIndex = "110800";
         tombButton.style.cursor = "pointer";
         tombButton.title = "Tomb";
 

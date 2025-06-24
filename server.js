@@ -150,8 +150,15 @@ io.on('connection', (socket) => {
   socket.on('draw_response',({ gameId, from, response }) =>
     io.to(gameId).emit('draw_result',  { from, response }) );
 
-  socket.on('hand_reveal', ({ gameId, from, reveal }) =>
-    io.to(gameId).emit('hand_reveal', { from, reveal }) );
+  socket.on('hand_reveal', ({ gameId, from, reveal }) => {
+    const state = gameStates.get(gameId);
+    if (!state || !state[from]) return;
+
+    state[from].handRevealed = reveal;
+    gameStates.set(gameId, state); // Save change
+
+    io.to(gameId).emit('hand_reveal', { from, reveal });
+  });
 
   socket.on('temp_reveal_card', ({ gameId, from, cardId }) =>
     io.to(gameId).emit('temp_reveal_card', { from, cardId }) );
@@ -341,7 +348,8 @@ app.post('/startGame', async (req, res) => {
         lastBoardState: null
       })),
       Hand: [],
-      drawnStartingHand: false
+      drawnStartingHand: false,
+      handRevealed: false
     });
 
     const gameState = {
