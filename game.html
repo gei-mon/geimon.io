@@ -827,8 +827,7 @@ html, body {
                     }
                     return {
                     ...full,
-                    boardState: card.boardState,
-                    lastBoardState: card.lastBoardState
+                    ...card
                     };
                 });
             }
@@ -4245,6 +4244,12 @@ html, body {
 
                     cardElement.appendChild(cardButton);
                     drawnCardsContainer.appendChild(cardElement);
+                    if (cardObj.counters) {
+                        updateCounterOverlay(cardElement, cardObj);
+                    }
+                    if (cardObj.damage !== undefined || cardObj.damageThreshold !== undefined) {
+                        refreshCardFace(cardElement, cardObj);
+                    }
                     cardElement.dataset.zone     = cardObj.boardState;
                     cardElement.dataset.facedown = (cardObj.boardState.includes("FaceDown") || card.faceDown) ? "true" : "false";
                     attachHoverMenu(cardElement, card);
@@ -4418,6 +4423,27 @@ html, body {
             }
         }
 
+        async function refreshCardFace(cardEl, card) {
+            const dmg  = cardEl.querySelector(".damage");
+            const life = cardEl.querySelector(".life");
+            let thr = cardEl.querySelector(".damageThreshold");
+            if (!thr) {
+                thr = document.createElement("div");
+                thr.className = "damageThreshold";
+                const bottomBar = cardEl.querySelector(".bottom-bar");
+                if (bottomBar) {
+                    bottomBar.appendChild(thr);
+                } else {
+                    //console.warn("No .bottom-bar on this card, skipping threshold badge");
+                }
+            }
+
+            if (dmg)  dmg.textContent  = card.damage;
+            if (life) life.textContent = card.life;
+            thr.textContent = card.damageThreshold;   // card.threshold if you renamed it
+        }
+        window.refreshCardFace = refreshCardFace;
+
         /* show a small modal, update cardData + DOM on “Save” */
         async function showChangeStatsPrompt(cardElement, cardData) {
             // ── overlay ─────────────────────────────────────────────────
@@ -4453,24 +4479,6 @@ html, body {
             `;
             overlay.appendChild(panel);
             document.body.appendChild(overlay);
-
-            // helper: refresh the numbers shown on the visible card
-            function refreshCardFace(cardEl, card) {
-                const dmg  = cardEl.querySelector(".damage");
-                const life = cardEl.querySelector(".life");
-                let  thr   = cardEl.querySelector(".damageThreshold");
-
-                if (!thr) {
-                    // card was rendered before the always-show change → build the cell now
-                    thr = document.createElement("div");
-                    thr.className = "damageThreshold";
-                    cardEl.querySelector(".bottom-bar").appendChild(thr);
-                }
-
-                if (dmg)  dmg.textContent  = card.damage;
-                if (life) life.textContent = card.life;
-                thr.textContent = card.damageThreshold;   // card.threshold if you renamed it
-            }
 
             // ── button wiring ───────────────────────────────────────────
             panel.querySelector("#saveStats").onclick = async () => {
@@ -5272,7 +5280,7 @@ html, body {
                     case "Draw":
                         // use your drawCards helper
                         await drawCards(gameState[username].Deck, 1);
-                        //playSoundEffect('card_draw'); // example usage of playing a sound for both players
+                        playSoundEffect('draw'); // example usage of playing a sound for both players
                         break;
 
                     case "Mill":
@@ -5657,6 +5665,13 @@ html, body {
                 if (containerId === "playerReserveBox")   rendered.dataset.zone = "Reserve";
 
                 attachHoverMenu(rendered, cardData);
+                // inside renderCardZone loop, after `attachHoverMenu(rendered, cardData);`
+                if (cardData.counters) {
+                    updateCounterOverlay(rendered, cardData);
+                }
+                if (cardData.damage !== undefined || cardData.damageThreshold !== undefined) {
+                    refreshCardFace(rendered, cardData);
+                }
 
                 /* wrapper controls scale / offset for various zones */
                 const wrap = document.createElement("div");
@@ -5899,7 +5914,7 @@ html, body {
         });
 
         // incoming chat
-        socket.on('message', ({ username: from, text }) => {      // :contentReference[oaicite:1]{index=1}
+        socket.on('message', ({ username: from, text }) => {
             const div = document.createElement('div');
             div.textContent = `${from}: ${text}`;
             chatMessages.appendChild(div);
@@ -5920,7 +5935,7 @@ html, body {
         function sendChat () {
             const txt = chatInput.value.trim();
             if (!txt) return;
-                socket.emit('message', txt);                 // same event you already use :contentReference[oaicite:2]{index=2}
+                socket.emit('message', txt);
                 chatInput.value = '';
         }
         chatSend.onclick = sendChat;
