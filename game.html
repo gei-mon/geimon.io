@@ -2812,6 +2812,7 @@ html, body {
             //}
 
             opponentName = opponentUsernameParam;
+            const goesFirst = (turnOrderParam === "first") ? playerUsernameParam : opponentUsernameParam;
 
             if (playerDeckResult.success && opponentDeckResult.success) {
                 await fetch('https://geimon-app-833627ba44e0.herokuapp.com/startGame', {
@@ -2825,7 +2826,7 @@ html, body {
                         playerDeck,
                         opponentDeck,
                         isSinglePlayer: isSinglePlayerParam,
-                        goesFirst: choice === "first" ? playerUsernameParam : opponentUsernameParam,
+                        goesFirst,
                         totem: selectedTotem
                     })
                 });
