@@ -2368,6 +2368,20 @@ html, body {
         }
 
         async function transitionToNextScreen(choice) {
+            const params = new URLSearchParams(window.location.search);
+            const playerUsernameParam   = params.get("playerUsername")     || "You";
+            const opponentUsernameParam = params.get("opponent")           || (params.get("isSinglePlayer")==="true" ? "Bot" : "Opponent");
+            const gameTypeParam         = params.get("gameType")           || "single";
+            const isSinglePlayerParam   = params.get("isSinglePlayer")==="true";
+            const turnOrderParam        = params.get("turnOrder")          || "first";
+            const rpsWinnerParam = params.get("rpsWinner");
+            const opponentOwner         = opponentUsernameParam;
+            // Fetch deck and start game
+            const playerDeckName = new URLSearchParams(window.location.search).get("playerDeck");
+            const opponentDeckName = new URLSearchParams(window.location.search).get("opponentDeck");
+
+            const playerDeckResult = await fetchDeckCards(playerDeckName);
+            const opponentDeckResult = await fetchDeckCards(opponentDeckName, opponentOwner);
             // Keep the background image visible
             const bgImage = document.querySelector(".bg-image");
 
@@ -2427,9 +2441,11 @@ html, body {
                 resultBox.style.opacity = "1";
             }, 50);
 
+            const actualFirstPlayer = (turnOrderParam === "first") ? playerUsernameParam : opponentUsernameParam;
+            const isMyTurn = username === actualFirstPlayer;
             // Set background color based on choice
-            resultBox.style.backgroundColor = choice === "first" ? "blue" : "red";
-            resultBox.textContent = choice === "first" ? "Your Turn" : "Opponent's Turn";
+            resultBox.style.backgroundColor = isMyTurn ? "blue" : "red";
+            resultBox.textContent = isMyTurn ? "Your Turn" : "Opponent's Turn";
 
             // Main board container
             const board = document.createElement("div");
@@ -2744,8 +2760,6 @@ html, body {
                 resultBox.style.opacity = "0"; // Fades out smoothly
             }, 2000);
 
-            const params = new URLSearchParams(window.location.search);
-
             // Function to fetch user data from the session
             async function fetchUserData() {
                 try {
@@ -2767,20 +2781,6 @@ html, body {
                     return null;
                 }
             }
-
-            const playerUsernameParam   = params.get("playerUsername")     || "You";
-            const opponentUsernameParam = params.get("opponent")           || (params.get("isSinglePlayer")==="true" ? "Bot" : "Opponent");
-            const gameTypeParam         = params.get("gameType")           || "single";
-            const isSinglePlayerParam   = params.get("isSinglePlayer")==="true";
-            const turnOrderParam        = params.get("turnOrder")          || "first";
-            const rpsWinnerParam = params.get("rpsWinner");
-            const opponentOwner         = opponentUsernameParam;
-            // Fetch deck and start game
-            const playerDeckName = new URLSearchParams(window.location.search).get("playerDeck");
-            const opponentDeckName = new URLSearchParams(window.location.search).get("opponentDeck");
-
-            const playerDeckResult = await fetchDeckCards(playerDeckName);
-            const opponentDeckResult = await fetchDeckCards(opponentDeckName, opponentOwner);
 
             if (!playerDeckResult.success || !opponentDeckResult.success) {
                 console.error("Deck fetch failed");
