@@ -551,6 +551,29 @@ html, body {
 
             const otherPlayerName = params.get("opponent") || "Unknown_Opponent"; // if multiplayer later
 
+            // how much they overlap at 1920×1080
+            const MAX_OVERLAP = 15; // percent
+            // how little they overlap at very small sizes
+            const MIN_OVERLAP = 5;  // percent
+
+            function updateHandSpacing() {
+            // scale from 0 (tiny) up to 1 (full-size)
+            const scale = Math.min(
+                window.innerWidth  / 1920,
+                window.innerHeight / 1080,
+                1
+            );
+            // interpolate overlap between MIN and MAX
+            const overlap = MIN_OVERLAP + (MAX_OVERLAP - MIN_OVERLAP) * scale;
+            document
+                .querySelectorAll('#drawn-cards .card')
+                .forEach(el => {
+                el.style.marginLeft = `${-overlap}%`;
+                });
+            }
+            window.addEventListener('resize', updateHandSpacing);
+
+
             let previousHandIds = [];
             let lastDrawTurn = null;
             let gameEnded = false;
@@ -4207,6 +4230,8 @@ html, body {
 
                 // --- Now render each drawn card ---
                 for (const cardObj of drawnCardsArray) {
+                    const scale = Math.min(window.innerWidth/1920, window.innerHeight/1080, 1);
+                    const overlap = MIN_OVERLAP + (MAX_OVERLAP - MIN_OVERLAP) * scale;
                     const card = cards.find(c => String(c.id) === String(cardObj.id));
                     if (!card) return;
 
@@ -4216,7 +4241,7 @@ html, body {
                     cardElement.dataset.cardId = String(card.id); // Ensure this is set for lookup!
                     cardElement.style.transform = "scale(0.5)";
                     cardElement.style.position = "relative";
-                    cardElement.style.marginLeft = "-15%";
+                    cardElement.style.marginLeft = `${-overlap}%`;
                     cardElement.style.opacity = "1";
                     cardElement.style.transition = "opacity 1s ease-in-out";
 
@@ -4285,6 +4310,7 @@ html, body {
                         cardButton.style.cursor = "pointer";
                     }, 1500);
                 }
+                updateHandSpacing();
 
                 // Fade in UI overlays
                 if (window.totemFullyFaded && !window.totemFadeDoneEmitted) {
