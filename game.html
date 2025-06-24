@@ -1070,18 +1070,17 @@ html, body {
                         "FaceDownZone":           owner === username ? "playerFaceDownBox"        : "opponentFaceDownBox",
                         "FaceDownArsenalZone":    owner === username ? "playerFaceDownArsenalBox" : "opponentFaceDownArsenalBox",
                         "Tomb":                   owner === username ? "playerTombBox"            : "opponentTombBox",
-                        "Void":                   owner === username ? "playerVoidBox"            : "opponentVoidBox",
-                        "Deck":                   owner === username ? "playerDeckBox"            : "opponentDeckBox"
+                        "Void":                   owner === username ? "playerVoidBox"            : "opponentVoidBox"
                     }[zone];
 
                     /* 3️⃣  repaint that box (or the hand helpers)              */
                     if (!boxId) return;
                     if (zone === "Hand") {
                         if (owner === username) {
-                        drawnCardsArray = cards;        // for renderDrawnCards()
-                        renderDrawnCards();
+                            drawnCardsArray = cards;        // for renderDrawnCards()
+                            renderDrawnCards();
                         } else {
-                        renderOpponentHand();
+                            renderOpponentHand();
                         }
                     } else {
                         renderCardZone(cards, boxId);
