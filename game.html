@@ -840,7 +840,18 @@ html, body {
         }
 
         function playSoundEffect(effectName) {
-            socket.emit('play_sound', { effect: effectName });
+            const params = new URLSearchParams(window.location.search);
+            const gameId = params.get("gameId");
+
+            if (!gameId) {
+                console.warn("Cannot play sound — gameId missing.");
+                return;
+            }
+
+            socket.emit("play_sound", {
+                effect: effectName,
+                gameId
+            });
         }
         window.playSoundEffect = playSoundEffect;
 

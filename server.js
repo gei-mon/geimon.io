@@ -147,16 +147,23 @@ io.on('connection', (socket) => {
       }
   });
 
-  socket.on('play_sound', ({ effect }) => {
-    const user = userMap.get(socket.id);
-    if (!user) return;
+  socket.on('play_sound', ({ effect, gameId }) => {
+    if (!gameId) {
+        console.warn("[play_sound] Missing gameId");
+        return;
+    }
+
     const url = effectMap[effect];
     if (!url) {
-      console.warn(`Unknown sound effect: ${effect}`);
-      return;
+        console.warn(`[play_sound] Unknown effect: ${effect}`);
+        return;
     }
-    // send to both players in this lobby/game room
+
     io.to(gameId).emit('play_sound', { effect, url });
+
+    io.in(gameId).fetchSockets().then(sockets => {
+      console.log(`[play_sound] Game ${gameId} has ${sockets.length} sockets:`, sockets.map(s => s.id));
+    });
   });
 
   socket.on('signal_icon', ({ gameId, icon }) => {
