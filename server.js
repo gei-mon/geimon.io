@@ -152,10 +152,18 @@ io.on('connection', (socket) => {
 
   socket.on('hand_reveal', ({ gameId, from, reveal }) => {
     const state = gameStates.get(gameId);
-    if (!state || !state[from]) return;
+    if (!state) {
+      console.warn("No game state found for", gameId);
+      return;
+    }
+
+    if (!state[from]) {
+      console.warn("Player", from, "not found in game state keys:", Object.keys(state));
+      return;
+    }
 
     state[from].handRevealed = reveal;
-    gameStates.set(gameId, state); // Save change
+    gameStates.set(gameId, state);
 
     io.to(gameId).emit('hand_reveal', { from, reveal });
   });
