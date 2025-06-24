@@ -4589,10 +4589,13 @@ html, body {
                 cardElement.style.transition = '';
 
             } else {
+                const inOppChampBox = !!cardElement.closest('#opponentChampionsBox');
                 // ── All other cases (your player or any face-up blocks) use existing logic ─────────
                 const move   = isFaceDown
-                ? `translate(${-deltaY}px, ${2 * deltaX}px)`
-                : `translate(${deltaX * 5}px, ${deltaY * 3}px)`;
+                    ? `translate(${-deltaY}px, ${2 * deltaX}px)`
+                    : inOppChampBox
+                        ? `translate(${deltaX * -5}px, ${deltaY * -3}px)`
+                        : `translate(${deltaX * 5}px, ${deltaY * 3}px)`;
                 const rotate = isFaceDown ? '' : ' rotate(90deg)';
                 const target = `${originalTransform} ${move}${rotate}`.trim();
 
