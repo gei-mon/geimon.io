@@ -962,6 +962,8 @@ background-color: #29c7bd;
   display: none !important;
 }
 
+.revealed-card{ outline:3px solid yellow !important; }
+
 .target-highlight{
     outline: 8px solid red !important;      /* hard red ring            */
     box-shadow: 0 0 12px red !important;    /* soft glow for visibility */
@@ -982,8 +984,6 @@ background-color: #29c7bd;
 .shuffle-animation {
   animation: deckShuffle 0.6s ease-in-out;
 }
-
-.revealed-card{ outline:3px solid yellow !important; }
 
 #opponentChampionsBox .card {
   transform: rotate(180deg) scale(1);
