@@ -2442,7 +2442,7 @@ html, body {
             }, 50);
 
             const actualFirstPlayer = gameState.turn === "first" ? playerUsernameParam : opponentUsernameParam;
-            const isMyTurn = playerUsernameParam === actualFirstPlayer;
+            const isMyTurn = username === actualFirstPlayer;
             resultBox.style.backgroundColor = isMyTurn ? "blue" : "red";
             resultBox.textContent = isMyTurn ? "Your Turn" : "Opponent's Turn";
 
