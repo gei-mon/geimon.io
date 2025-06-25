@@ -303,11 +303,6 @@
 
                     const resData = await response.json();
 
-                    if (packName === 'Game On!' && count < 60) {
-                        // record that we've done the first master run once
-                        localStorage.setItem('unlockedPacksCount', '1');
-                    }
-
                     const col = newName || selectedDeck;
                     window.selectedCollectionName = col;
 
@@ -328,6 +323,11 @@
                     if (!success) {
                         alert('Could not fetch collection size.');
                         return;
+                    }
+
+                    if (packName === 'Game On!' && count < 60) {
+                        // record that we've done the first master run once
+                        localStorage.setItem('unlockedPacksCount', '1');
                     }
 
                     // branch based on count
@@ -381,16 +381,16 @@
                 // then check total and redirect (see below)
             }
 
-            const colName = /* the deck/collection name they chose earlier */"";
-            const resp = await fetch(`/collection/count?name=${encodeURIComponent(colName)}`);
-            const { count } = await resp.json();
-            if (count < 60) {
-                alert(`You have ${count} cards. Open 1 more Game On! pack to reach 60.`);
+            //const colName = /* the deck/collection name they chose earlier */"";
+            //const resp = await fetch(`https://geimon-app-833627ba44e0.herokuapp.com/collection/count?name=${encodeURIComponent(colName)}`);
+            //const { count } = await resp.json();
+            //if (count < 60) {
+              //  alert(`You have ${count} cards. Open 1 more Game On! pack at a time until you reach 60.`);
                 // re-enable only the “Open 1” button here
-            } else {
-            window.location.href =
-                `sagaDeck.html?collection=${encodeURIComponent(colName)}&room=${encodeURIComponent(room)}&user=${encodeURIComponent(user)}`;
-            }
+            //} else {
+                //window.location.href =
+              //      `sagaDeck.html?collection=${encodeURIComponent(colName)}&room=${encodeURIComponent(room)}&user=${encodeURIComponent(user)}`;
+            //}
     </script>
 </body>
 </html>
