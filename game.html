@@ -1388,9 +1388,10 @@ html, body {
             });
             document.body.appendChild(blocker);
 
-            if (gameType === "match") {
+            // Only the loser in a match sees the next‐game prompt
+            if (gameType === "match" && mainText === "You Lose") {
                 setTimeout(() => {
-                    prepareTotemSelectionForNextGame(); // Remove winner check
+                    prepareTotemSelectionForNextGame();
                 }, 3000);
             }
         }
