@@ -206,6 +206,12 @@
                                     .filter(Boolean);
 
                 addBtn.style.display = 'inline-block';             // enable button
+
+                //disable add 1 unless rounded back around to needing to pull more to have a full enough collection
+                const currentCount = JSON.parse(localStorage.getItem('unlockedPacksCount') || '0');
+                if (packName === 'Game On!' && currentCount === 0) {
+                    btn1.style.display = 'none';
+                }
             };
 
             if (packName === 'Game On!') {
@@ -219,15 +225,17 @@
                 btn15.onclick       = () => {
                     openNPacks(15, packName);
                     // after animation:
-                    lastPulledIds = [...results.querySelectorAll('.pack-card')]
-                                        .map(el=>el.dataset.cardId);
+                    //lastPulledIds = [...results.querySelectorAll('.pack-card')]
+                                        //.map(el=>el.dataset.cardId);
                     // add and unlock:
-                    processOpenedCards(lastPulledIds);
+                    //processOpenedCards(lastPulledIds);
                     // go to deck builder:
-                    window.location.href =
-                        `sagaDeck.html?collection=${encodeURIComponent(window.selectedCollectionName)}` +
-                        `&room=${encodeURIComponent(room)}` +
-                        `&user=${encodeURIComponent(user)}`;
+                    //window.location.href =
+                        //`sagaDeck.html?collection=${encodeURIComponent(window.selectedCollectionName)}` +
+                        //`&room=${encodeURIComponent(room)}` +
+                        //`&user=${encodeURIComponent(user)}`;
+                    // show those 15 cards and enable the Add button
+                    addBtn.style.display = 'inline-block';
                 };
             }
 
@@ -295,6 +303,11 @@
 
                     const resData = await response.json();
 
+                    if (packName === 'Game On!' && count < 60) {
+                        // record that we've done the first master run once
+                        localStorage.setItem('unlockedPacksCount', '1');
+                    }
+
                     const col = newName || selectedDeck;
                     window.selectedCollectionName = col;
 
@@ -327,9 +340,8 @@
                     } else {
                         // back to shop to open more
                         window.location.href =
-                        `${returnTo}` +
-                        `?room=${encodeURIComponent(room)}` +
-                        `&user=${encodeURIComponent(user)}`;
+                            `sagaShop.html?room=${encodeURIComponent(room)}` +
+                            `&user=${encodeURIComponent(user)}`;
                     }
                 } catch(err){
                     console.error(err);

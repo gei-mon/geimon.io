@@ -1356,6 +1356,37 @@ app.get('/collection/count', async (req, res) => {
   }
 });
 
+app.get('/collection/get', async (req, res) => {
+  const sessionId = req.cookies.session;
+  const username  = sessions[sessionId];
+  const deckName  = req.query.name;
+
+  if (!username) {
+    return res.status(401).json({ success: false, message: 'Not authenticated' });
+  }
+  if (!deckName) {
+    return res.status(400).json({ success: false, message: 'Missing deck name' });
+  }
+
+  try {
+    // Reuse your Supabase call from /getDeck
+    const { data: deck, error } = await supabase
+      .from('decks')
+      .select('card_ids')
+      .eq('user_name', username)
+      .eq('deck_name', deckName)
+      .single();
+
+    if (error || !deck) {
+      return res.status(404).json({ success: false, message: 'Deck not found' });
+    }
+
+    return res.json({ success: true, card_ids: deck.card_ids || [] });
+  } catch (err) {
+    console.error('Error in /collection/get:', err);
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
 
 // 404 handler
 app.use((req, res) => {

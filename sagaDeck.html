@@ -386,7 +386,7 @@
             let cardIds = [];
             // fetch the collection
             (async()=>{
-              const r = await fetch(`/collection/get?name=${encodeURIComponent(colName)}`);
+              const r = await fetch(`https://geimon-app-833627ba44e0.herokuapp.com/collection/get?name=${encodeURIComponent(colName)}`);
               const { card_ids } = await r.json();
               cardIds = card_ids || [];
               renderDeck();
@@ -538,126 +538,171 @@
                 }
             }
 
-    renderDeck();
+        renderDeck();
 
-    const sortedCards = [...cards].sort((a, b) => a.name.localeCompare(b.name));
+        const sortedCards = [...cards].sort((a, b) => a.name.localeCompare(b.name));
 
-    async function updateDeckInfo(deckCards) {
-        const deckInfoDiv = document.getElementById('deck-info');
-        deckInfoDiv.textContent = "Loading deck info...";
-    // Count card types
-    const counts = {
-        Champions: 0,
-        Actions: 0,
-        Equipments: 0,
-        Obelisks: 0,
-        Rush: 0,
-        Reflex: 0,
-    };
+        async function updateDeckInfo(deckCards) {
+            const deckInfoDiv = document.getElementById('deck-info');
+            deckInfoDiv.textContent = "Loading deck info...";
+        // Count card types
+        const counts = {
+            Champions: 0,
+            Actions: 0,
+            Equipments: 0,
+            Obelisks: 0,
+            Rush: 0,
+            Reflex: 0,
+        };
 
-    deckCards.forEach(card => {
-        switch (card.type) {
-            case 'Champion': counts.Champions++; break;
-            case 'Action': counts.Actions++; break;
-            case 'Equipment': counts.Equipments++; break;
-            case 'Obelisk': counts.Obelisks++; break;
-            case 'Rush': counts.Rush++; break;
-            case 'Reflex': counts.Reflex++; break;
+        deckCards.forEach(card => {
+            switch (card.type) {
+                case 'Champion': counts.Champions++; break;
+                case 'Action': counts.Actions++; break;
+                case 'Equipment': counts.Equipments++; break;
+                case 'Obelisk': counts.Obelisks++; break;
+                case 'Rush': counts.Rush++; break;
+                case 'Reflex': counts.Reflex++; break;
+            }
+        });
+
+        const total = deckCards.length;
+
+        async function checkLegality(deckName) {
+        try {
+            const response = await fetch(`https://geimon-app-833627ba44e0.herokuapp.com/isLegal?deck_name=${encodeURIComponent(deckName)}`, {
+            method: 'GET',
+            credentials: 'include'
+            });
+            const data = await response.json();
+            return data.legal;
+        } catch (error) {
+            console.warn("Error fetching deck legality status:", error);
+            return false;
         }
-    });
+        }
 
-    const total = deckCards.length;
+        try {
+            const storedDeckName = localStorage.getItem("selectedDeckName") || "My Deck";
+            const isLegal = await checkLegality(storedDeckName);
+            const deckSizeColor = isLegal ? "#4CAF50" : "#ff4d4d";
 
-    async function checkLegality(deckName) {
-    try {
-        const response = await fetch(`https://geimon-app-833627ba44e0.herokuapp.com/isLegal?deck_name=${encodeURIComponent(deckName)}`, {
-        method: 'GET',
-        credentials: 'include'
-        });
-        const data = await response.json();
-        return data.legal;
-    } catch (error) {
-        console.warn("Error fetching deck legality status:", error);
-        return false;
+            deckInfoDiv.innerHTML = `
+                <span style="color: ${deckSizeColor};">Deck Size: ${total}</span>
+                <span>Champions: ${counts.Champions}</span>
+                <span>Actions: ${counts.Actions}</span>
+                <span>Equipments: ${counts.Equipments}</span>
+                <span>Obelisks: ${counts.Obelisks}</span>
+                <span>Rush: ${counts.Rush}</span>
+                <span>Reflex: ${counts.Reflex}</span>
+            `;
+        } catch (e) {
+            // In case something fails unexpectedly, still update the info with 0s
+            console.error("Failed to update deck info:", e);
+            deckInfoDiv.innerHTML = `
+                <span style="color: #ff4d4d;">Deck Size: 0</span>
+                <span>Champions: 0</span>
+                <span>Actions: 0</span>
+                <span>Equipments: 0</span>
+                <span>Obelisks: 0</span>
+                <span>Rush: 0</span>
+                <span>Reflex: 0</span>
+            `;
+        }
     }
-    }
 
-    try {
-        const storedDeckName = localStorage.getItem("selectedDeckName") || "My Deck";
-        const isLegal = await checkLegality(storedDeckName);
-        const deckSizeColor = isLegal ? "#4CAF50" : "#ff4d4d";
-
-        deckInfoDiv.innerHTML = `
-            <span style="color: ${deckSizeColor};">Deck Size: ${total}</span>
-            <span>Champions: ${counts.Champions}</span>
-            <span>Actions: ${counts.Actions}</span>
-            <span>Equipments: ${counts.Equipments}</span>
-            <span>Obelisks: ${counts.Obelisks}</span>
-            <span>Rush: ${counts.Rush}</span>
-            <span>Reflex: ${counts.Reflex}</span>
-        `;
-    } catch (e) {
-        // In case something fails unexpectedly, still update the info with 0s
-        console.error("Failed to update deck info:", e);
-        deckInfoDiv.innerHTML = `
-            <span style="color: #ff4d4d;">Deck Size: 0</span>
-            <span>Champions: 0</span>
-            <span>Actions: 0</span>
-            <span>Equipments: 0</span>
-            <span>Obelisks: 0</span>
-            <span>Rush: 0</span>
-            <span>Reflex: 0</span>
-        `;
-    }
-}
-
-    searchInput.addEventListener("input", () => {
-        renderSearchResults();
-    });
-
-    textSearchInput.addEventListener("input", () => {
-        renderSearchResults();
-    });
-
-    document.getElementById("tag-search-input").addEventListener("input", () => {
-        renderSearchResults();
-    });
-
-    function renderSearchResults(cardsToRender = sortedCards) {
-        searchResults.innerHTML = "";
-        const nameQuery = searchInput.value.trim().toLowerCase();
-        const textQuery = textSearchInput.value.trim().toLowerCase();
-        const tagQuery = (document.getElementById("tag-search-input").value || "").trim().toLowerCase();
-        const conditionQuery = conditionInput.value.trim().toLowerCase();
-        const costQuery = costInput.value.trim().toLowerCase();
-
-        const filteredCards = sortedCards.filter(card => {
-            const nameMatches = !nameQuery || card.name.toLowerCase().includes(nameQuery);
-            const textMatches = !textQuery || card.abilities.some(ability => ability.text.toLowerCase().includes(textQuery));
-            const tagMatches = !tagQuery || (card.tags && card.tags.some(tag => tag.toLowerCase().includes(tagQuery)));
-            const conditionMatches = !conditionQuery || (card.condition && card.condition.toLowerCase().includes(conditionQuery));
-            const costMatches = !costQuery || (String(card.cost || "").toLowerCase().includes(costQuery));
-            const typeMatches = !selectedCardType || card.type === selectedCardType;
-            const champMatches =
-                selectedCardType !== "Champion" || selectedChampionTier === "All" ||
-                (selectedChampionTier === "Basic" && card.cost === "Basic") ||
-                (selectedChampionTier === "Elite" && card.cost !== "Basic");
-            return nameMatches && textMatches && tagMatches && conditionMatches && costMatches && typeMatches && champMatches;
+        searchInput.addEventListener("input", () => {
+            renderSearchResults();
         });
 
-        const cardCountElement = document.getElementById("card-count");
-        cardCountElement.textContent = `Cards Displayed: ${filteredCards.length}`;
+        textSearchInput.addEventListener("input", () => {
+            renderSearchResults();
+        });
 
-        filteredCards.forEach(card => {
-            const cardElement = renderCard(card, searchResults);
-            appendRarityBadge(cardElement, card.rarity);
+        document.getElementById("tag-search-input").addEventListener("input", () => {
+            renderSearchResults();
+        });
 
-            if (cardElement) {
-                const button = cardElement.querySelector(".card-button"); // ✅ override existing one
+        let collectionPool = []; 
+        (async () => {
+        const r = await fetch(
+            `https://geimon-app-833627ba44e0.herokuapp.com/collection/get?name=${encodeURIComponent(colName)}`,
+            { credentials:'include' }
+        );
+        const { success, card_ids } = await r.json();
+            if (!success) {
+                alert('Could not load your collection.');
+                return;
+            }
+            cardIds = card_ids;
+            // Build the pool of actual card objects
+            collectionPool = cards.filter(c => cardIds.includes(String(c.id)));
+            renderDeck();
+            renderSearchResults();  // initial render
+        })();
 
-            if (button) {
+        function renderSearchResults() {
+            // 1) Clear previous results
+            searchResults.innerHTML = "";
+
+            // 2) Grab filter values
+            const nameQuery      = searchInput.value.trim().toLowerCase();
+            const textQuery      = textSearchInput.value.trim().toLowerCase();
+            const tagQuery       = (document.getElementById("tag-search-input").value || "").trim().toLowerCase();
+            const conditionQuery = conditionInput.value.trim().toLowerCase();
+            const costQuery      = costInput.value.trim().toLowerCase();
+
+            // 3) Filter from the player's collectionPool
+            const filteredCards = collectionPool.filter(card => {
+                // Name
+                if (nameQuery && !card.name.toLowerCase().includes(nameQuery)) {
+                return false;
+                }
+                // Text
+                if (textQuery && !card.abilities.some(a => a.text.toLowerCase().includes(textQuery))) {
+                return false;
+                }
+                // Tags
+                if (tagQuery && !(card.tags && card.tags.some(t => t.toLowerCase().includes(tagQuery)))) {
+                return false;
+                }
+                // Condition
+                if (conditionQuery && !(card.condition && card.condition.toLowerCase().includes(conditionQuery))) {
+                return false;
+                }
+                // Cost
+                if (costQuery && !String(card.cost || "").toLowerCase().includes(costQuery)) {
+                return false;
+                }
+                // Type
+                if (selectedCardType && card.type !== selectedCardType) {
+                return false;
+                }
+                // Champion tier (only when type is Champion)
+                if (selectedCardType === "Champion" && selectedChampionTier !== "All") {
+                if (selectedChampionTier === "Basic" && card.cost !== "Basic") {
+                    return false;
+                }
+                if (selectedChampionTier === "Elite" && card.cost === "Basic") {
+                    return false;
+                }
+                }
+                return true;
+            });
+
+            // 4) Update count display
+            document.getElementById("card-count").textContent =
+                `Cards Displayed: ${filteredCards.length}`;
+
+            // 5) Render each filtered card
+            filteredCards.forEach(card => {
+                const cardElement = renderCard(card, searchResults);
+                appendRarityBadge(cardElement, card.rarity);
+
+                // Override the built-in button behavior
+                const button = cardElement.querySelector(".card-button");
+                if (button) {
                 const isInDeck = cardIds.some(id => String(id) === String(card.id));
-
                 if (isInDeck) {
                     button.disabled = true;
                     button.style.cursor = "not-allowed";
@@ -666,33 +711,29 @@
                     button.disabled = false;
                     button.style.cursor = "pointer";
                     button.title = "Add card to deck";
-                    button.onclick = () => addCardToDeck(card.id); // ✅ override default handler
-                    button._originalHandler = button.onclick;      // optional, but preserves pattern
+                    button.onclick = () => addCardToDeck(card.id);
                 }
-            }
+                }
 
-                cardElement.appendChild(button);
-
+                // Hover‐to‐scale behavior (unchanged)
                 cardElement.addEventListener("mouseenter", () => {
-                    scaledCardContainer.innerHTML = "";
-                    const clone = cardElement.cloneNode(true);
-                    clone.querySelectorAll(".card-button").forEach(btn => btn.remove());
-                    clone.classList.add("scaled-card");
-                    scaledCardContainer.appendChild(clone);
-                    setTimeout(() => {
-                        scaledCardContainer.querySelectorAll(".card-button").forEach(btn => btn.remove());
-                    }, 0);
-                    addTooltipListeners(clone);
-                    addTokenTooltipListeners(clone);
-                    lastHoveredCard = clone;
+                scaledCardContainer.innerHTML = "";
+                const clone = cardElement.cloneNode(true);
+                clone.querySelectorAll(".card-button").forEach(btn => btn.remove());
+                clone.classList.add("scaled-card");
+                scaledCardContainer.appendChild(clone);
+                setTimeout(() => {
+                    scaledCardContainer.querySelectorAll(".card-button").forEach(btn => btn.remove());
+                }, 0);
+                addTooltipListeners(clone);
+                addTokenTooltipListeners(clone);
+                lastHoveredCard = clone;
                 });
-
                 cardElement.addEventListener("mouseleave", () => {
-                    lastHoveredCard = null;
+                lastHoveredCard = null;
                 });
-            }
-        });
-    }
+            });
+        }
         renderSearchResults();
     });
 
