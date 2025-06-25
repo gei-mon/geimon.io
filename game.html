@@ -1225,7 +1225,7 @@ html, body {
                 });
 
 
-                socket.on("game_over", ({ winner, loser, reason }) => {
+                socket.on("game_over", ({ winner, loser, draw, reason }) => {
                     /* ----------  score bookkeeping  ---------- */
                     let bannerMain, bannerReason = reason;
 

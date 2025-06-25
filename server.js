@@ -1111,11 +1111,11 @@ app.post('/endGame', (req, res) => {
     //console.log(`Game ${gameId} ended. Loser: ${loser}. Winner: ${winner}. Reason: ${reason}`);
 
     // Emit to clients
-    io.to(gameId).emit("game_over", { loser, winner, reason });
+    io.to(gameId).emit("game_over", { loser, winner, draw, reason });
 
     // Cleanup
     gameStates.delete(gameId);
-    return res.json({ success: true, loser, winner, reason });
+    return res.json({ success: true, loser, winner, draw, reason });
 });
 
 function delay(ms) {
