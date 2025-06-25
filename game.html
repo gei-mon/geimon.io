@@ -611,6 +611,12 @@ html, body {
 
             const socket = window.socket;                // 1️⃣ make an alias everyone can use
 
+            socket.on('connect', () => {
+                // run after *every* reconnect or page-reload
+                const roomId = localStorage.getItem('roomId') || gameId;
+                socket.emit('init', { username, roomId });
+            });
+
             socket.on('play_sound', ({ url }) => {
                 const audio = new Audio(url);
                 audio.play().catch(err => console.error('Failed to play sound:', err));
