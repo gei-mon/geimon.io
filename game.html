@@ -1967,7 +1967,18 @@ html, body {
             window.appendSystem(txt);
 
             /* show the end-game banner if accepted */
-            //if (response === 'accept') showBanner('Draw', 'Players agreed to a draw');
+            if (response === "accept") {
+                fetch("https://geimon-app-833627ba44e0.herokuapp.com/endGame", {
+                    method:      "POST",
+                    credentials: "include",
+                    headers:     { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        gameId,
+                        draw:   true,                 // ← key flag
+                        reason: "Players agreed to a draw"
+                    })
+                }).catch(console.error);
+            }
         });
         /* ─────────────────────────────────────────────────────────────────────────── */
 
