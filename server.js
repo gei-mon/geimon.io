@@ -171,6 +171,21 @@ app.post('/collection/add', async (req, res) => {
   res.json({ success:true });
 });
 
+// GET /collection/list
+app.get('/collection/list', async (req, res) => {
+  const sessionId = req.cookies.session;
+  const user = sessions[sessionId];
+  if (!user) return res.status(401).json({ success:false });
+
+  const { data: cols, error } = await supabase
+    .from('collections')
+    .select('collection_name')
+    .eq('user_name', user);
+
+  if (error) return res.status(500).json({ success:false });
+  res.json({ success:true, collections: cols.map(c=>c.collection_name) });
+});
+
 app.use(express.static(PUBLIC_DIR));
 
 app.set('view engine', 'ejs');

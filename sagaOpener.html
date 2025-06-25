@@ -259,29 +259,35 @@
             let selectedDeck = null;   // name of chosen existing deck (null ⇒ new)
 
             addBtn.onclick = async () => {
-                // fetch user's decks to populate list
+                // fetch user's saga collections to populate list
                 deckListDiv.innerHTML = 'Loading…';
-                const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/getUserDecks',
-                                        { credentials:'include' });
-                const data = await res.json();
-                deckListDiv.innerHTML = '';
 
-                if (data.success && data.decks.length){
-                    data.decks.sort((a,b)=>a.deck_name.localeCompare(b.deck_name))
-                            .forEach(deck=>{
-                            const b = document.createElement('button');
-                            b.textContent = deck.deck_name;
-                            b.style.cssText = 'background:#333;color:#fff;border:1px solid #777;padding:4px;cursor:pointer;';
-                            b.onclick = () =>{
-                                selectedDeck = deck.deck_name;
-                                // visual select
-                                [...deckListDiv.children].forEach(btn=>btn.style.background='#333');
-                                b.style.background = '#555';
-                            };
-                            deckListDiv.appendChild(b);
-                        });
+                const res = await fetch(
+                    'https://geimon-app-833627ba44e0.herokuapp.com/collection/list',
+                    { credentials: 'include' }
+                );
+                const { success, collections } = await res.json();
+
+                deckListDiv.innerHTML = '';
+                if (success && collections.length) {
+                    // alphabetize and render
+                    collections
+                    .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }))
+                    .forEach(name => {
+                        const btn = document.createElement('button');
+                        btn.textContent = name;
+                        btn.style.cssText =
+                        'background:#333;color:#fff;border:1px solid #777;padding:4px;cursor:pointer;';
+                        btn.onclick = () => {
+                        selectedDeck = name;
+                        // visual select
+                        [...deckListDiv.children].forEach(b => (b.style.background = '#333'));
+                        btn.style.background = '#555';
+                        };
+                        deckListDiv.appendChild(btn);
+                    });
                 } else {
-                    deckListDiv.textContent = 'No decks yet.';
+                    deckListDiv.textContent = 'No collections yet.';
                 }
 
                 selectedDeck = null;
