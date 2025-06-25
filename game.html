@@ -1219,8 +1219,8 @@ html, body {
 
 
                 socket.on("game_over", ({ winner, loser, reason }) => {
-                    const mainText = (winner === username) ? "You Win" : "You Lose";
-                    showBanner(mainText, reason);
+                    /* ----------  score bookkeeping  ---------- */
+                    let bannerMain, bannerReason = reason;
 
                     if (gameType === "match") {
                         const matchId = window.matchId;
@@ -1230,13 +1230,22 @@ html, body {
                         sessionStorage.setItem(matchId, JSON.stringify(scores));
 
                         if (scores[winner] >= 2) {
-                            // Match finished – do NOT launch another game
                             window.matchFinished = true;
-                            const finalText = (winner === username) ? "MATCH VICTORY" : "MATCH DEFEAT";
-                            showBanner(finalText, `Final score: ${scores[winner]}-${scores[loser] || 0}`);
-                            if (window.matchFinished) localStorage.removeItem("currentMatchId");
-                            return;                    // ← stop here, no totem picker
+                            bannerMain   = (winner === username) ? "MATCH VICTORY" : "MATCH DEFEAT";
+                            bannerReason = `Final score: ${scores[winner]}-${scores[loser] || 0}`;
+                        } else {
+                            bannerMain = (winner === username) ? "You Win" : "You Lose";
                         }
+                    } else {
+                        bannerMain = (winner === username) ? "You Win" : "You Lose";
+                    }
+
+                    /* ----------  show the banner once  ---------- */
+                    showBanner(bannerMain, bannerReason);
+
+                    /* ----------  loser’s totem picker (only if match continues) ---------- */
+                    if (gameType === "match" && !window.matchFinished && bannerMain === "You Lose") {
+                        setTimeout(prepareTotemSelectionForNextGame, 3000);
                     }
                 });
 
