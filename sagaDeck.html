@@ -383,13 +383,17 @@
 
             const params = new URLSearchParams(location.search);
             let colName = params.get('collection') || params.get('deck');
+            if (!colName) {
+                alert("⚠️ sagaDeck.html loaded without a valid ?collection= or ?deck= parameter!");
+                return;
+            }
 
             let collectionIds = [];
             let collectionPool = [];
             let deckIds       = JSON.parse(localStorage.getItem('workingDeck')||'[]');
 
             (async () => {
-                const r = await fetch(`/collection/get?name=${encodeURIComponent(colName)}`,{credentials:'include'});
+                const r = await fetch(`https://geimon-app-833627ba44e0.herokuapp.com/collection/get?name=${encodeURIComponent(colName)}`,{credentials:'include'});
                 const { success, card_ids } = await r.json();
                 if (!success) { alert('…'); return; }
                 collectionIds  = card_ids;
