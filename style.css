@@ -244,6 +244,10 @@ text-decoration: underline;
   background-color: #410752;
   color: #e48dff;
 }
+.nightveil {
+  background-color: #1c0041;
+  color: #e6e6e6;
+}
 .action {
   background-color: #ffac64;
   color: #000000;

@@ -75,7 +75,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Offer 10 Life",
-    tags: ["Cryptbound", "Hellfire", "Undead", "Lord"],
+    tags: ["Cryptbound", "Hellfire", "Undead", "Megalith"],
     damage: 1,
     life: 10,
     damageThreshold: "1",
@@ -97,7 +97,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Mill 6",
-    tags: ["Cryptbound", "Hellfire", "Undead", "Lord"],
+    tags: ["Cryptbound", "Hellfire", "Undead", "Megalith"],
     damage: 20,
     life: 10,
     damageThreshold: "2",
@@ -119,7 +119,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Obliterate 2 cards you control",
-    tags: ["Cryptbound", "Hellfire", "Undead", "Lord"],
+    tags: ["Cryptbound", "Hellfire", "Undead", "Megalith"],
     damage: 5,
     life: 5,
     damageThreshold: 4,
@@ -6601,6 +6601,28 @@ export const cards = [
         effect1name: "",
         effect2name: "",
         effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "301",
+    name: "Kaido, Darkblade",
+    image: `${cardArtFolder}/Champions/KaidoDarkblade.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "",
+    cost: "Sacrifice 1 face-down Champion you control",
+    tags: ["Nightveil","Blademaster","Ninja"],
+    damage: 7,
+    life: 3,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Deathtouch, Duelist, Priority, Solitary <span class="line-gap"></span> Deadly Strike (Flip): Target 1 card on the Zone; Destroy Target.  <span class="line-gap"></span> Smoke Bomb (Reflex): Flip this card face-down. <span class="line-gap"></span> If this card is in your Tomb: Discard 1 Champion with a Flip effect; Retrieve this card.`,
+        keywords: ["Deathtouch","Duelist","Priority","Solitary"],
+        effect1name: "Deadly Strike",
+        effect2name: "Smoke Bomb",
+        effect3name: "If this card is in your Tomb",
       }
     ]
   },

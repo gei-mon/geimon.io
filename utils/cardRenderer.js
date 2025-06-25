@@ -22,6 +22,40 @@ export function renderCard(card, container) {
       cardElement.classList.add("noble");}
     if (firstTag === "Vivisect") {
       cardElement.classList.add("vivisect");}
+    if (firstTag === "Nightveil") {
+      cardElement.classList.add("nightveil");}
+    if (firstTag === "Valiant") {
+      cardElement.classList.add("valiant");}
+    if (firstTag === "Dealt") {
+      cardElement.classList.add("dealt");}
+    if (firstTag === "Honed") {
+      cardElement.classList.add("honed");}
+    if (firstTag === "Gallant") {
+      cardElement.classList.add("gallant");}
+    if (firstTag === "Verdant") {
+      cardElement.classList.add("verdant");}
+    if (firstTag === "Chrome") {
+      cardElement.classList.add("chrome");}
+    if (firstTag === "Arcanum") {
+      cardElement.classList.add("arcanum");}
+    if (firstTag === "Primordial") {
+      cardElement.classList.add("primordial");}
+    if (firstTag === "Hellfire") {
+      cardElement.classList.add("hellfire");}
+    if (firstTag === "Frenzied") {
+      cardElement.classList.add("frenzied");}
+    if (firstTag === "Righteous") {
+      cardElement.classList.add("righteous");}
+    if (firstTag === "Oldblood") {
+      cardElement.classList.add("oldblood");}
+    if (firstTag === "Crescendo") {
+      cardElement.classList.add("crescendo");}
+    if (firstTag === "Radiant") {
+      cardElement.classList.add("radiant");}
+    if (firstTag === "Enlightened") {
+      cardElement.classList.add("enlightened");}
+    if (firstTag === "Driftmarked") {
+      cardElement.classList.add("driftmarked");}
     if (firstTag === "Token") {
       cardElement.classList.add("token");}
     if (secondTag === "Token") {
