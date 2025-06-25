@@ -776,12 +776,13 @@ app.get("/getDeck", async (req, res) => {
 
 app.post('/getDeckCards', async (req, res) => {
   try {
-    const sessionId    = req.cookies.session;
-    const sessionUser  = sessions[sessionId];
+    //const sessionId    = req.cookies.session;
+    //const sessionUser  = sessions[sessionId];
     const { deck_name, owner } = req.body;
+    const lookupUser = owner;
 
     // if no explicit owner is given, fall back to the logged-in user
-    const lookupUser = owner || sessionUser;
+    //const lookupUser = owner || sessionUser;
 
     // fetch the deck for whichever user we’re looking up
     const { data: deck, error } = await supabase
@@ -804,7 +805,6 @@ app.post('/getDeckCards', async (req, res) => {
       .json({ success: false, message: 'Error fetching deck cards', error: err.message });
   }
 });
-
 
 app.post('/renameDeck', async (req, res) => {
   const sessionId = req.cookies.session;

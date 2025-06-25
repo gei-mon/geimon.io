@@ -488,7 +488,7 @@ html, body {
         <div id="opponentFaceDownBox" class="card-zone"></div>
         <div id="opponentFaceDownArsenalBox" class="card-zone"></div>
         <div id="opponentReserveBox" class="card-zone"></div>
-        <button id="muteBtn" title="Mute/unmute sounds" style="opacity: 0;">🔊</button>
+        <button id="muteBtn" title="Mute/unmute sounds" style="opacity: 0; transition: opacity 1s ease-in-out;">🔊</button>
         <div id="tool-buttons" style="
             position: absolute;
             left: 1730px;
@@ -2507,7 +2507,7 @@ html, body {
             const playerDeckName = new URLSearchParams(window.location.search).get("playerDeck");
             const opponentDeckName = new URLSearchParams(window.location.search).get("opponentDeck");
 
-            const playerDeckResult = await fetchDeckCards(playerDeckName);
+            const playerDeckResult = await fetchDeckCards(playerDeckName, playerUsernameParam);
             const opponentDeckResult = await fetchDeckCards(opponentDeckName, opponentOwner);
             // Keep the background image visible
             const bgImage = document.querySelector(".bg-image");
