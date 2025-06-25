@@ -4674,6 +4674,18 @@ html, body {
             return anim;
         }
 
+        function findCardOwnerAndZone(cardId) {
+            for (const [player, zones] of Object.entries(gameState)) {
+                for (const [zoneName, cards] of Object.entries(zones)) {
+                    if (Array.isArray(cards)) {
+                        const found = cards.find(c => String(c.id) === String(cardId));
+                        if (found) return { owner: player, zoneName };
+                    }
+                }
+            }
+            return null;
+        }
+
         async function attachHoverMenu(cardElement, cardData) {
             // don’t re-attach if already done
             if (cardElement.dataset.hoverMenuAttached) return;
@@ -5075,10 +5087,14 @@ html, body {
                     case "Add 1 Counter": {
                         playSoundEffect('tomb');
 
-                        const zone = gameState[owner]?.[zoneName];
-                        const cardIndex = zone?.findIndex(c => String(c.id) === String(cardId)) ?? -1;
+                        const info = findCardOwnerAndZone(cardId);
+                        if (!info) break;
+                        const { owner, zoneName } = info;
 
-                        let card = cardData; // fallback
+                        const zone = gameState[owner][zoneName];
+                        const cardIndex = zone.findIndex(c => String(c.id) === String(cardId));
+
+                        let card = cardData;
                         if (cardIndex !== -1) {
                             card = zone[cardIndex];
                             card.counters = (card.counters || 0) + 1;
@@ -5088,16 +5104,20 @@ html, body {
                         const name = card.name || `Card ${card.id}`;
                         addGameLogEntry(`${name} gains 1 counter (now ${card.counters}).`);
 
-                        await sendZoneUpdate({ zone: zoneName, cards: gameState[owner][zoneName] });
+                        await sendZoneUpdate({ zone: zoneName, cards: zone });
                         break;
                     }
                     case "Add 5 Counters": {
                         playSoundEffect('tomb');
 
-                        const zone = gameState[owner]?.[zoneName];
-                        const cardIndex = zone?.findIndex(c => String(c.id) === String(cardId)) ?? -1;
+                        const info = findCardOwnerAndZone(cardId);
+                        if (!info) break;
+                        const { owner, zoneName } = info;
 
-                        let card = cardData; // fallback
+                        const zone = gameState[owner][zoneName];
+                        const cardIndex = zone.findIndex(c => String(c.id) === String(cardId));
+
+                        let card = cardData;
                         if (cardIndex !== -1) {
                             card = zone[cardIndex];
                             card.counters = (card.counters || 0) + 5;
@@ -5107,16 +5127,20 @@ html, body {
                         const name = card.name || `Card ${card.id}`;
                         addGameLogEntry(`${name} gains 5 counters (now ${card.counters}).`);
 
-                        await sendZoneUpdate({ zone: zoneName, cards: gameState[owner][zoneName] });
+                        await sendZoneUpdate({ zone: zoneName, cards: zone });
                         break;
                     }
                     case "Remove 1 Counter": {
                         playSoundEffect('tomb');
 
-                        const zone = gameState[owner]?.[zoneName];
-                        const cardIndex = zone?.findIndex(c => String(c.id) === String(cardId)) ?? -1;
+                        const info = findCardOwnerAndZone(cardId);
+                        if (!info) break;
+                        const { owner, zoneName } = info;
 
-                        let card = cardData; // fallback
+                        const zone = gameState[owner][zoneName];
+                        const cardIndex = zone.findIndex(c => String(c.id) === String(cardId));
+
+                        let card = cardData;
                         if (cardIndex !== -1) {
                             card = zone[cardIndex];
                             card.counters = Math.max(0, (card.counters || 0) - 1);
@@ -5126,16 +5150,20 @@ html, body {
                         const name = card.name || `Card ${card.id}`;
                         addGameLogEntry(`${name} loses 1 counter (now ${card.counters}).`);
 
-                        await sendZoneUpdate({ zone: zoneName, cards: gameState[owner][zoneName] });
+                        await sendZoneUpdate({ zone: zoneName, cards: zone });
                         break;
                     }
                     case "Remove All Counters": {
                         playSoundEffect('tomb');
 
-                        const zone = gameState[owner]?.[zoneName];
-                        const cardIndex = zone?.findIndex(c => String(c.id) === String(cardId)) ?? -1;
+                        const info = findCardOwnerAndZone(cardId);
+                        if (!info) break;
+                        const { owner, zoneName } = info;
 
-                        let card = cardData; // fallback
+                        const zone = gameState[owner][zoneName];
+                        const cardIndex = zone.findIndex(c => String(c.id) === String(cardId));
+
+                        let card = cardData;
                         if (cardIndex !== -1) {
                             card = zone[cardIndex];
                             card.counters = 0;
@@ -5145,7 +5173,7 @@ html, body {
                         const name = card.name || `Card ${card.id}`;
                         addGameLogEntry(`${name} loses all counters.`);
 
-                        await sendZoneUpdate({ zone: zoneName, cards: gameState[owner][zoneName] });
+                        await sendZoneUpdate({ zone: zoneName, cards: zone });
                         break;
                     }
                     case "Remove": {
