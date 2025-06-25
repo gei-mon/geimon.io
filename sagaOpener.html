@@ -303,14 +303,14 @@
                 try{
                     if (newName) {
                         // first time: create a new collection
-                        response = await fetch('/collection/create', {
+                        response = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/collection/create', {
                             method:'POST', credentials:'include',
                             headers:{'Content-Type':'application/json'},
                             body: JSON.stringify({ collection_name:newName, card_ids:lastPulledIds })
                         });
                     } else if (selectedDeck) {
                         // appending more pulled cards
-                        response = await fetch('/collection/add', {
+                        response = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/collection/add', {
                             method:'POST', credentials:'include',
                             headers:{'Content-Type':'application/json'},
                             body: JSON.stringify({ collection_name:selectedDeck, card_ids:lastPulledIds })

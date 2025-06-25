@@ -1318,43 +1318,35 @@ app.post('/addCardsToDeck', async (req, res) => {
   }
 });
 
-// GET /collection/count?name=<deck_name>
-// Returns how many cards are in the given deck for the logged-in user
+// GET /collection/count?name=<collection_name>
 app.get('/collection/count', async (req, res) => {
   const sessionId = req.cookies.session;
   const username  = sessions[sessionId];
-  const deckName  = req.query.name;
-
+  const collection = req.query.name;
   if (!username) {
     return res.status(401).json({ success: false, message: 'Not authenticated' });
   }
-  if (!deckName) {
-    return res.status(400).json({ success: false, message: 'Missing deck name' });
+  if (!collection) {
+    return res.status(400).json({ success: false, message: 'Missing collection name' });
   }
-
   try {
-    // reuse your existing getDeck logic
-    const { data: deck, error } = await supabase
-      .from('decks')
+    const { data, error } = await supabase
+      .from('collections')
       .select('card_ids')
       .eq('user_name', username)
-      .eq('deck_name', deckName)
+      .eq('collection_name', collection)
       .single();
-
-    if (error || !deck) {
-      return res.status(404).json({ success: false, message: 'Deck not found' });
+    if (error || !data) {
+      return res.status(404).json({ success: false, message: 'Collection not found' });
     }
-
-    const count = Array.isArray(deck.card_ids) 
-      ? deck.card_ids.length 
-      : 0;
-
+    const count = Array.isArray(data.card_ids) ? data.card_ids.length : 0;
     return res.json({ success: true, count });
   } catch (err) {
     console.error('Error in /collection/count:', err);
     return res.status(500).json({ success: false, message: 'Server error' });
   }
 });
+
 
 app.get('/collection/get', async (req, res) => {
   const sessionId = req.cookies.session;
