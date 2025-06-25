@@ -1233,15 +1233,21 @@ html, body {
                         const matchId = window.matchId;
                         const scores  = JSON.parse(sessionStorage.getItem(matchId) || "{}");
 
-                        scores[winner] = (scores[winner] || 0) + 1;
+                        if (draw) {
+                            scores.draws   = (scores.draws || 0) + 1;
+                        } else {
+                            scores[winner] = (scores[winner] || 0) + 1;
+                        }
                         sessionStorage.setItem(matchId, JSON.stringify(scores));
 
                         if (scores[winner] >= 2) {
                             window.matchFinished = true;
-                            const myScore  = scores[username]           || 0;
-                            const oppScore = scores[(winner === username ? loser : winner)] || 0;
+                            const myWins   = scores[username] || 0;
+                            const oppWins  = scores[winner === username ? loser : winner] || 0;
+                            const draws    = scores.draws || 0;
+
                             bannerMain   = (winner === username) ? "MATCH VICTORY" : "MATCH DEFEAT";
-                            bannerReason = `Final score: ${myScore}-${oppScore}`;
+                            bannerReason = `Final score: ${myWins}-${draws}-${oppWins}`;
                         } else {
                             bannerMain = (winner === username) ? "You Win" : "You Lose";
                         }
