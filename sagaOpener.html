@@ -323,6 +323,12 @@
                     const col = newName || selectedDeck;
                     window.selectedCollectionName = col;
 
+                    const sagaList = JSON.parse(localStorage.getItem('sagaCollections') || '[]');
+                    if (!sagaList.includes(col)) {
+                        sagaList.push(col);
+                        localStorage.setItem('sagaCollections', JSON.stringify(sagaList));
+                    }
+
                     alert(resData.message || (newName ? 'Deck created!' : 'Cards added!'));
                     modal.style.display='none';
 

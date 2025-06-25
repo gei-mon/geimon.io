@@ -364,11 +364,8 @@
             conditionInput.addEventListener("input", renderSearchResults);
             costInput.addEventListener("input", renderSearchResults);
 
-            const storedDeckName = localStorage.getItem("selectedDeckName") || "My Deck";
-            deckNameElement.textContent = storedDeckName;
-
             if (deckNameElement && deckNameElement.textContent.trim() !== "") {
-                document.title = deckNameElement.textContent.trim();
+                document.title = "Deck: " + deckNameElement.textContent.trim();
             }
 
             const toggleBtn = document.getElementById("toggle-options-btn");
@@ -381,8 +378,46 @@
 
             container.innerHTML = "";  // Clear container before rendering
 
-            let storedCards = localStorage.getItem("selectedDeckCards");
-            let cardIds = storedCards ? JSON.parse(storedCards) : [];
+            // ─── Determine which search pool to use ───────────────
+            const params = new URLSearchParams(location.search);
+            const deckName = localStorage.getItem('selectedDeckName') || params.get('deck');
+            deckNameElement.textContent = deckName;
+            document.title = `Deck: ${deckName}`;
+            const sagaCollections = JSON.parse(localStorage.getItem('sagaCollections') || '[]');
+            const useCollectionPool = sagaCollections.includes(deckName);
+
+            let searchPool = [];      // will hold either the limited or full set
+            let deckIds    = [];      // current deck contents
+
+            // seed deckIds from selector flow (unchanged)
+            const storedCards = localStorage.getItem("selectedDeckCards");
+            deckIds = storedCards ? JSON.parse(storedCards) : [];
+
+            // now choose searchPool
+            if (useCollectionPool) {
+            // saga‐created deck: fetch just its collection
+            fetch(`https://geimon-app-833627ba44e0.herokuapp.com/collection/get?name=${encodeURIComponent(deckName)}`, { credentials:'include' })
+                .then(r => r.json())
+                .then(data => {
+                    if (data.success) {
+                        searchPool = cards.filter(c => data.card_ids.includes(String(c.id)));
+                    } else {
+                        searchPool = cards; // fallback to full pool on error
+                    }
+                    renderDeck();
+                    renderSearchResults();
+                })
+                .catch(() => {
+                    searchPool = cards;
+                    renderDeck();
+                    renderSearchResults();
+                });
+            } else {
+                // standard deck: full 302-card pool
+                searchPool = cards;
+                renderDeck();
+                renderSearchResults();
+            }
 
             const saveDeckBtn = document.getElementById("save-deck-btn");
             const closeDeckBtn = document.getElementById("close-deck-btn");
@@ -398,20 +433,28 @@
                     Reflex: 5
                 };
 
-                const deckCards = cardIds
+                // 1) Map deckIds → card objects
+                const deckCards = deckIds
                     .map(id => cards.find(card => String(card.id) === String(id)))
                     .filter(Boolean);
 
+                // 2) Sort by type then name
                 const sorted = [...deckCards].sort((a, b) => {
                     const typeCompare = (typeOrder[a.type] ?? 999) - (typeOrder[b.type] ?? 999);
                     if (typeCompare !== 0) return typeCompare;
                     return a.name.localeCompare(b.name);
                 });
 
-                cardIds = sorted.map(card => card.id);
-                localStorage.setItem("selectedDeckCards", JSON.stringify(cardIds));
+                // 3) Rebuild deckIds in sorted order
+                deckIds = sorted.map(card => card.id);
+
+                // 4) Persist the reordered deck
+                localStorage.setItem("selectedDeckCards", JSON.stringify(deckIds));
+
+                // 5) Re-render the deck pane
                 renderDeck();
             });
+
 
             // Save Deck button functionality
             saveDeckBtn.addEventListener("click", async () => {
@@ -422,7 +465,7 @@
                 method: 'POST',
                 credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ deck_name: deckName, card_ids: cardIds })
+                body: JSON.stringify({ deck_name: deckName, card_ids: deckIds })
             });
 
             if (!response.ok) {
@@ -450,18 +493,18 @@
             });
 
             function saveDeck() {
-                localStorage.setItem("selectedDeckCards", JSON.stringify(cardIds));
+                localStorage.setItem("selectedDeckCards", JSON.stringify(deckIds));
                 updateDeckInfo(
-                    cardIds
+                    deckIds
                         .map(id => cards.find(card => String(card.id) === String(id)))
                         .filter(Boolean)
                 );
             }
 
             function addCardToDeck(cardId) {
-                if (!cardIds.includes(cardId)) {
-                    cardIds.push(cardId);
-                    saveDeck();
+                if (!deckIds.includes(cardId)) {
+                    deckIds.push(cardId);
+                    localStorage.setItem("selectedDeckCards", JSON.stringify(deckIds));
                     renderDeck();
                     renderSearchResults(); // refresh search to update buttons
                 } else {
@@ -470,21 +513,21 @@
             }
 
             function removeCardFromDeck(cardId) {
-                cardIds = cardIds.filter(id => String(id) !== String(cardId));
-                saveDeck();
+                deckIds = deckIds.filter(id => String(id) !== String(cardId));
+                localStorage.setItem("selectedDeckCards", JSON.stringify(deckIds));
                 renderDeck();
                 renderSearchResults(); // refresh search to update buttons
             }
 
             function renderDeck() {
                 container.innerHTML = "";
-                if (cardIds.length === 0) {
+                if (deckIds.length === 0) {
                     emptyMessage.style.display = "block";
                     updateDeckInfo([]);
                 } else {
                     emptyMessage.style.display = "none";
 
-                    const deckCards = cardIds
+                    const deckCards = deckIds
                         .map(id => cards.find(card => String(card.id) === String(id)))
                         .filter(Boolean);
 
@@ -610,7 +653,8 @@
         renderSearchResults();
     });
 
-    function renderSearchResults(cardsToRender = sortedCards) {
+    function renderSearchResults() {
+
         searchResults.innerHTML = "";
         const nameQuery = searchInput.value.trim().toLowerCase();
         const textQuery = textSearchInput.value.trim().toLowerCase();
@@ -618,7 +662,7 @@
         const conditionQuery = conditionInput.value.trim().toLowerCase();
         const costQuery = costInput.value.trim().toLowerCase();
 
-        const filteredCards = sortedCards.filter(card => {
+        const filteredCards = searchPool.filter(card => {
             const nameMatches = !nameQuery || card.name.toLowerCase().includes(nameQuery);
             const textMatches = !textQuery || card.abilities.some(ability => ability.text.toLowerCase().includes(textQuery));
             const tagMatches = !tagQuery || (card.tags && card.tags.some(tag => tag.toLowerCase().includes(tagQuery)));
@@ -632,6 +676,10 @@
             return nameMatches && textMatches && tagMatches && conditionMatches && costMatches && typeMatches && champMatches;
         });
 
+        filteredCards.sort((a, b) =>
+            a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+        );
+
         const cardCountElement = document.getElementById("card-count");
         cardCountElement.textContent = `Cards Displayed: ${filteredCards.length}`;
 
@@ -643,7 +691,7 @@
                 const button = cardElement.querySelector(".card-button"); // ✅ override existing one
 
             if (button) {
-                const isInDeck = cardIds.some(id => String(id) === String(card.id));
+                const isInDeck = deckIds.some(id => String(id) === String(card.id));
 
                 if (isInDeck) {
                     button.disabled = true;

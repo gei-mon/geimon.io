@@ -364,9 +364,6 @@
             conditionInput.addEventListener("input", renderSearchResults);
             costInput.addEventListener("input", renderSearchResults);
 
-            const storedDeckName = localStorage.getItem("selectedDeckName") || "My Deck";
-            deckNameElement.textContent = storedDeckName;
-
             if (deckNameElement && deckNameElement.textContent.trim() !== "") {
                 document.title = deckNameElement.textContent.trim();
             }
@@ -382,14 +379,18 @@
             container.innerHTML = "";  // Clear container before rendering
 
             const params = new URLSearchParams(location.search);
-            let colName = params.get('collection') || params.get('deck');
+            let colName = params.get('collection');
             if (!colName) {
-                alert("⚠️ sagaDeck.html loaded without a valid ?collection= or ?deck= parameter!");
+                alert("⚠️ sagaDeck.html loaded without a valid ?collection= parameter!");
                 return;
             }
+            localStorage.setItem('selectedDeckName', colName);
+            deckNameElement.textContent = colName;
+            document.title = "Deck: " + colName;
 
             let collectionIds = [];
             let collectionPool = [];
+            let deckName = null;
             let deckIds       = JSON.parse(localStorage.getItem('workingDeck')||'[]');
 
             (async () => {
@@ -593,7 +594,6 @@
         }
 
         try {
-            const storedDeckName = localStorage.getItem("selectedDeckName") || "My Deck";
             const isLegal = await checkLegality(storedDeckName);
             const deckSizeColor = isLegal ? "#4CAF50" : "#ff4d4d";
 
