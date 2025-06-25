@@ -382,7 +382,7 @@
             container.innerHTML = "";  // Clear container before rendering
 
             const params = new URLSearchParams(location.search);
-            const colName = params.get('collection');
+            let colName = params.get('collection') || params.get('deck');
 
             let collectionIds = [];
             let collectionPool = [];
@@ -544,7 +544,7 @@
                 }
             }
 
-        renderDeck();
+        //renderDeck();
 
         //const sortedCards = [...cards].sort((a, b) => a.name.localeCompare(b.name));
 
