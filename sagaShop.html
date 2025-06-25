@@ -11,9 +11,9 @@
 </head>
 <style>
   /* Reuse packShop styling for grid layout */
-  .pack-list        { display:grid;
-                      grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-                      gap:18px 24px;
+  .pack-list        { display:flex;
+                      flex-direction: column;
+                      gap:18px;
                       margin-top:24px; }
   .pack2-row        { display:flex; align-items:center; background:rgba(0,0,0,0.5);
                       padding:12px; border-radius:8px; }
@@ -25,7 +25,6 @@
   .pack2-desc       { margin-left:14px; font-size:1.2rem; color:#fff;
                        text-shadow:2px 2px 4px #000,-2px -2px 4px #000,
                                    2px -2px 4px #000,-2px  2px 4px #000; }
-  @media (max-width: 480px){ .pack-list{ grid-template-columns:1fr; }}
   body { background-color: rgb(78,78,78); color: #fff; font-family: sans-serif; }
 </style>
 <body>
@@ -33,7 +32,6 @@
   <div class="container">
     <p style="font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;"><game-title>Geimon!</game-title></p>
     <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top:-28px;">Saga Shop!</h2>
-    <button id="backBtn" class="button buttonEvenSmaller">Back</button>
   </div>
 
   <div class="pack-list" id="packList"></div>
@@ -114,14 +112,6 @@
             `;
             container.appendChild(row);
         });
-
-        // Back button
-        document.getElementById('backBtn').onclick = () => {
-            window.location.href =
-                `${returnPage}` +
-                `?room=${encodeURIComponent(params.get('room'))}` +
-                `&user=${encodeURIComponent(params.get('user'))}`;
-        };
     });
     </script>
 </body>

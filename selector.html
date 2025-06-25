@@ -301,7 +301,7 @@
                     }
 
                     try {
-                        const res = await fetch(
+                        await fetch(
                             'https://geimon-app-833627ba44e0.herokuapp.com/deleteDeck',
                             {
                                 method: "POST",
@@ -310,7 +310,6 @@
                                 body: JSON.stringify({ deck_name: deckName })
                             }
                         );
-                        const result = await res.json();
 
                         if (deleteCollection) {
                             await fetch(
@@ -326,7 +325,7 @@
                             const updated = sagaList.filter(n => n !== deckName);
                             localStorage.setItem('sagaCollections', JSON.stringify(updated));
                         }
-                        alert(result.message);
+                        alert(`"${deckName}" deleted successfully.`);
                         window.location.reload();
                     } catch (err) {
                         console.error("Error deleting deck/collection:", err);
