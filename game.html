@@ -1114,6 +1114,12 @@ html, body {
                     if (from !== username) addGameLogEntry(message, /*broadcast*/ false);
                 });
 
+                socket.on("match_next_game", (settings) => {
+                    // settings is exactly the object the loser sent when creating the new game
+                    const url = `game.html?${new URLSearchParams(settings).toString()}`;
+                    window.location.href = url;
+                });
+
                 socket.on('sync_zone', ({ owner, zone, cards }) => {
                     /* 1️⃣  trust the server – replace our copy of that zone */
                     if (cards) gameState[owner][zone] = cards;
@@ -1442,7 +1448,12 @@ html, body {
                     button.style.margin = "10px";
                     button.onclick = async () => {
                         const newGameId = Math.random().toString(36).substr(2, 9);
+                        const params       = new URLSearchParams(window.location.search);
+                        const isSingle     = params.get("isSinglePlayer") === "true";
+                        const opponentPull = params.get("opponent");
+
                         const settings = {
+                            prevGameId: params.get("gameId"),
                             gameId: newGameId,
                             playerDeck: params.get("playerDeck"),
                             opponentDeck: params.get("opponentDeck"),
@@ -1450,9 +1461,9 @@ html, body {
                             totem,
                             totemText: allTotems[totem],
                             turnOrder,
-                            isSinglePlayer: params.get("isSinglePlayer") === "true",
+                            isSinglePlayer: isSingle,
                             playerUsername: username,
-                            opponentUsername: "Bot",
+                            opponentUsername: isSingle ? "Bot" : opponentPull,
                             goesFirst: turnOrder
                         };
 
@@ -1462,6 +1473,8 @@ html, body {
                             headers: { "Content-Type": "application/json" },
                             body: JSON.stringify(settings)
                         });
+
+                        socket.emit("match_next_game", settings);
 
                         const urlParams = new URLSearchParams(settings).toString();
                         window.location.href = `game.html?${urlParams}`;

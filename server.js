@@ -166,6 +166,12 @@ io.on('connection', (socket) => {
     });
   });
 
+  socket.on("match_next_game", (settings) => {
+    const { prevGameId } = settings;
+    // send to everyone still in the old game room (including the loser if needed)
+    io.in(prevGameId).emit("match_next_game", settings);
+  });
+
   socket.on('signal_icon', ({ gameId, icon }) => {
     io.to(gameId).emit('signal_icon', { icon });
   });
