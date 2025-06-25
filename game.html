@@ -1240,7 +1240,9 @@ html, body {
                         }
                         sessionStorage.setItem(matchId, JSON.stringify(scores));
 
-                        if (!draw && scores[winner] >= 2) {
+                        if (draw) {
+                            bannerMain = "Draw";
+                        } else if (scores[winner] >= 2) {
                             window.matchFinished = true;
                             const myWins   = scores[username] || 0;
                             const oppWins  = scores[winner === username ? loser : winner] || 0;
@@ -1252,7 +1254,9 @@ html, body {
                             bannerMain = (winner === username) ? "You Win" : "You Lose";
                         }
                     } else {
-                        bannerMain = (winner === username) ? "You Win" : "You Lose";
+                        bannerMain = draw
+                            ? "Draw"
+                            : (winner === username ? "You Win" : "You Lose");
                     }
 
                     /* ----------  show the banner once  ---------- */
