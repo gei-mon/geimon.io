@@ -4415,6 +4415,21 @@ html, body {
             }
         }
 
+        async function sendZoneSpecificUpdate({ owner, zone, cards }) {
+            const updatedZones = { [zone]: cards };
+
+            const res = await fetch(`${serverUrl}/updateGameState`, {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ gameId, owner, updatedZones })
+            });
+
+            const data = await res.json();
+            if (data.updatedPlayerZone) gameState[owner] = data.updatedPlayerZone;
+            return data;
+        }
+
         async function sendZoneUpdate(zones) {
             const updatedZones = {};
             zones.forEach(z => updatedZones[z] = gameState[username][z]);
@@ -5106,7 +5121,7 @@ html, body {
                         addGameLogEntry(`${name} gains 1 counter (now ${card.counters}).`);
 
                         zone[cardIndex] = card; // make sure the updated card is in the zone array
-                        await sendZoneUpdate({ owner, zone: zoneName, cards: zone });
+                        await sendZoneSpecificUpdate({ owner, zone: zoneName, cards: zone });
                         break;
                     }
                     case "Add 5 Counters": {
@@ -5131,7 +5146,7 @@ html, body {
                         addGameLogEntry(`${name} gains 5 counters (now ${card.counters}).`);
 
                         zone[cardIndex] = card; // make sure the updated card is in the zone array
-                        await sendZoneUpdate({ owner, zone: zoneName, cards: zone });
+                        await sendZoneSpecificUpdate({ owner, zone: zoneName, cards: zone });
                         break;
                     }
                     case "Remove 1 Counter": {
@@ -5156,7 +5171,7 @@ html, body {
                         addGameLogEntry(`${name} loses 1 counter (now ${card.counters}).`);
 
                         zone[cardIndex] = card; // make sure the updated card is in the zone array
-                        await sendZoneUpdate({ owner, zone: zoneName, cards: zone });
+                        await sendZoneSpecificUpdate({ owner, zone: zoneName, cards: zone });
                         break;
                     }
                     case "Remove All Counters": {
@@ -5181,7 +5196,7 @@ html, body {
                         addGameLogEntry(`${name} loses all counters.`);
 
                         zone[cardIndex] = card; // make sure the updated card is in the zone array
-                        await sendZoneUpdate({ owner, zone: zoneName, cards: zone });
+                        await sendZoneSpecificUpdate({ owner, zone: zoneName, cards: zone });
                         break;
                     }
                     case "Remove": {
