@@ -110,8 +110,24 @@
             const results  = document.getElementById('packResults');
             const addBtn  = document.getElementById('addToCollectionBtn');
 
+            const firstRun = !localStorage.getItem('unlockedPacksCount');
+            if (packName === 'Game On!' && firstRun) {
+                // First time into the master pack opener:
+                btn1.style.display  = 'none';      // hide “Open 1”
+                btn10.style.display = 'inline-block'; // ensure “Open 10” shows
+            } else {
+                // Subsequent visits or secret packs:
+                btn1.style.display  = 'inline-block';
+                btn10.style.display = 'inline-block';
+            }
+
             btn1 .onclick = () => openNPacks(1,  packName);
-            btn10.onclick = () => openNPacks(10, packName); // 10 packs × 5 cards = 50
+            btn10.onclick = () => {
+                // hide itself immediately on click
+                btn10.style.display = 'none';
+                // then perform your normal 10-pack open
+                openNPacks(10, packName);
+            };
 
             function appendRarityBadge(cardEl, rarity){
                 if(!rarity) return;
@@ -330,18 +346,26 @@
                         localStorage.setItem('unlockedPacksCount', '1');
                     }
 
-                    // branch based on count
-                    if (count >= 60) {
-                        // proceed to deck builder
-                        window.location.href =
-                        `sagaDeck.html?collection=${encodeURIComponent(col)}` +
-                        `&room=${encodeURIComponent(room)}` +
+                    // For Game On! packs, always return to Saga Shop (to select secret packs)
+                    if (packName === 'Game On!') {
+                    window.location.href =
+                        `sagaShop.html?room=${encodeURIComponent(room)}` +
                         `&user=${encodeURIComponent(user)}`;
-                    } else {
-                        // back to shop to open more
-                        window.location.href =
+                    }
+                    // For secret packs, enforce 60-card minimum
+                    else {
+                        if (count >= 60) {
+                            // now that threshold is met, go to deck builder
+                            window.location.href =
+                            `sagaDeck.html?collection=${encodeURIComponent(col)}` +
+                            `&room=${encodeURIComponent(room)}` +
+                            `&user=${encodeURIComponent(user)}`;
+                        } else {
+                            // still under 60 (rare), send back to shop
+                            window.location.href =
                             `sagaShop.html?room=${encodeURIComponent(room)}` +
                             `&user=${encodeURIComponent(user)}`;
+                        }
                     }
                 } catch(err){
                     console.error(err);
