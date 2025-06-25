@@ -1280,11 +1280,11 @@ html, body {
                     if (gameType === "match" && draw && !window.matchFinished) {
                         const params = new URLSearchParams(window.location.search);
 
+                        const cameFirst = gameState.turn.firstPlayer;
                         // who was second last game?
-                        const secondPlayer =
-                            (params.get("turnOrder") === "first")
-                                ? params.get("opponentUsername")   // opponent went second
-                                : params.get("playerUsername");    // I went second
+                        const secondPlayer = (cameFirst === params.get("playerUsername"))
+                            ? params.get("opponentUsername")
+                            : params.get("playerUsername");
 
                         if (username === secondPlayer) {           // ← only this client prepares
                             const allTotems = Object.assign({}, ...totems);      // your totem dict
@@ -1306,7 +1306,7 @@ html, body {
                             // build next-game settings
                             const newGameId = Math.random().toString(36).substr(2,9);
                             const gameNumber = (Number(sessionStorage.getItem(matchId+"_gameNum")) || 1) + 1;
-                            sessionStorage.setItem(matchId + "_gameNum", gameNumber + 1);
+                            sessionStorage.setItem(matchId + "_gameNum", gameNumber);
 
                             const settings = {
                                 prevGameId: params.get("gameId"),
@@ -1619,7 +1619,7 @@ html, body {
                         const isSingle     = params.get("isSinglePlayer") === "true";
                         const opponentPull = params.get("opponentUsername");
                         const gameNumber = (Number(sessionStorage.getItem(matchId+"_gameNum")) || 1) + 1;
-                        sessionStorage.setItem(matchId + "_gameNum", gameNumber + 1);
+                        sessionStorage.setItem(matchId + "_gameNum", gameNumber);
 
                         const settings = {
                             prevGameId: params.get("gameId"),
