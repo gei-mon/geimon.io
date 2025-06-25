@@ -557,10 +557,15 @@ html, body {
             const gameType = params.get("gameType") || "single"; // "single" or "match"
             const isSinglePlayer = params.get("isSinglePlayer") === "true"; // true/false
             const matchId =
-                    params.get("matchId")               // came from previous game ?
-                || params.get("prevGameId")            // fall back: game-1’s id
+                    params.get("matchId")
                 || localStorage.getItem("currentMatchId")
                 || Math.random().toString(36).substr(2, 9);   // brand-new match
+            if (!params.get("matchId")) {
+                params.set("matchId", matchId);
+                history.replaceState(null, "", `?${params.toString()}`);
+            }
+            localStorage.setItem("currentMatchId", matchId);
+            window.matchId = matchId;
             let gameNumber = 1; // You could increment this between games in Match mode
             const serverUrl = "https://geimon-app-833627ba44e0.herokuapp.com";
 
@@ -1218,7 +1223,7 @@ html, body {
                     showBanner(mainText, reason);
 
                     if (gameType === "match") {
-                        const matchId = params.get("matchId") || "defaultMatch";
+                        const matchId = window.matchId;
                         const scores  = JSON.parse(sessionStorage.getItem(matchId) || "{}");
 
                         scores[winner] = (scores[winner] || 0) + 1;
@@ -1229,6 +1234,7 @@ html, body {
                             window.matchFinished = true;
                             const finalText = (winner === username) ? "MATCH VICTORY" : "MATCH DEFEAT";
                             showBanner(finalText, `Final score: ${scores[winner]}-${scores[loser] || 0}`);
+                            if (window.matchFinished) localStorage.removeItem("currentMatchId");
                             return;                    // ← stop here, no totem picker
                         }
                     }
@@ -1455,9 +1461,11 @@ html, body {
             document.body.appendChild(blocker);
 
             // Only the loser in a match sees the next‐game prompt
-            if (gameType === "match" && mainText === "You Lose" && !window.matchFinished) {
+            if (gameType === "match" && mainText === "You Lose") {
                 setTimeout(() => {
-                    prepareTotemSelectionForNextGame();
+                    if (!window.matchFinished) {
+                        prepareTotemSelectionForNextGame();
+                    }
                 }, 3000);
             }
         }
@@ -2616,30 +2624,6 @@ html, body {
                 mainContainer.style.opacity = "1";
             }, 50);
 
-            // Central result box
-            const resultBox = document.createElement("div");
-                resultBox.style.position = "fixed";
-                resultBox.style.top = "50%";
-                resultBox.style.left = "50%";
-                resultBox.style.transform = "translate(-50%, -50%)";
-                resultBox.style.padding = "20px 40px";
-                resultBox.style.color = "white";
-                resultBox.style.fontSize = "2em";
-                resultBox.style.borderRadius = "10px";
-                resultBox.style.textAlign = "center";
-                resultBox.style.opacity = "0"; // Start fully invisible
-                resultBox.style.transition = "opacity 1s ease-in-out"; // Smooth fade effect
-                resultBox.style.zIndex = "500000"; // On top of everything
-                resultBox.style.boxShadow = "0 0 20px black";
-                resultBox.style.pointerEvents = "none";
-
-            // Trigger fade-in after DOM insertion
-            setTimeout(() => {
-                if (!isRefresh) {
-                    resultBox.style.opacity = "1";
-                }
-            }, 50);
-
             const actualFirstPlayer = turnOrderParam === "first" ? playerUsernameParam : opponentUsernameParam;
             const isRpsWinner = username === rpsWinnerParam;
             let isMyTurn;
@@ -2650,9 +2634,6 @@ html, body {
                 // I didn't make the choice, so I get the opposite
                 isMyTurn = turnOrderParam !== "first";
             }
-            resultBox.style.backgroundColor = isMyTurn ? "blue" : "red";
-            resultBox.textContent = isMyTurn ? "Your Turn" : "Opponent's Turn";
-
             // Main board container
             const board = document.createElement("div");
                 board.style.position = "absolute";
@@ -2959,13 +2940,6 @@ html, body {
             document.body.appendChild(overlay);
             document.body.appendChild(mainContainer);
             mainContainer.appendChild(board);
-            mainContainer.appendChild(resultBox);
-
-            // Fade out the result box after 3 seconds
-            setTimeout(() => {
-                resultBox.remove();
-                resultBox.style.opacity = "0"; // Fades out smoothly
-            }, 2000);
 
             // Function to fetch user data from the session
             async function fetchUserData() {
