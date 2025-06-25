@@ -1139,6 +1139,7 @@ html, body {
                 });
 
                 socket.on("match_next_game", (settings) => {
+                    sessionStorage.setItem(matchId + "_gameNum", settings.gameNumber);
                     const me = username;                 // we already know who we are
                     const personalised = { ...settings };
 
@@ -1304,6 +1305,9 @@ html, body {
 
                             // build next-game settings
                             const newGameId = Math.random().toString(36).substr(2,9);
+                            const gameNumber = (Number(sessionStorage.getItem(matchId+"_gameNum")) || 1) + 1;
+                            sessionStorage.setItem(matchId + "_gameNum", gameNumber + 1);
+
                             const settings = {
                                 prevGameId: params.get("gameId"),
                                 gameId:     newGameId,
@@ -1317,9 +1321,9 @@ html, body {
                                 playerUsername: params.get("playerUsername"),
                                 opponentUsername: params.get("opponentUsername"),
                                 playerDeck:  params.get("playerDeck"),
-                                opponentDeck:params.get("opponentDeck")
+                                opponentDeck:params.get("opponentDeck"),
+                                gameNumber
                             };
-                            sessionStorage.setItem(matchId + "_gameNum", gameNumber + 1);
 
                             // start the game on the server and tell both clients
                             await fetch(serverUrl+"/startGame", {
@@ -1614,6 +1618,8 @@ html, body {
                         const params       = new URLSearchParams(window.location.search);
                         const isSingle     = params.get("isSinglePlayer") === "true";
                         const opponentPull = params.get("opponentUsername");
+                        const gameNumber = (Number(sessionStorage.getItem(matchId+"_gameNum")) || 1) + 1;
+                        sessionStorage.setItem(matchId + "_gameNum", gameNumber + 1);
 
                         const settings = {
                             prevGameId: params.get("gameId"),
@@ -1628,9 +1634,9 @@ html, body {
                             playerUsername: params.get("playerUsername"),
                             opponentUsername: params.get("opponentUsername"),
                             goesFirst: turnOrder,
-                            matchId
+                            matchId,
+                            gameNumber
                         };
-                        sessionStorage.setItem(matchId + "_gameNum", gameNumber + 1);
 
                         await fetch("https://geimon-app-833627ba44e0.herokuapp.com/startGame", {
                             method: "POST",
