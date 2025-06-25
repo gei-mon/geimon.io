@@ -134,155 +134,183 @@
             deckList.innerHTML = "";
 
             try {
-                const response = await fetch(`https://geimon-app-833627ba44e0.herokuapp.com/getUserDecks`, {
-                    credentials: 'include',
-                });
-                const data = await response.json();
+                // 1) Fetch standard decks
+                const deckRes = await fetch(
+                    'https://geimon-app-833627ba44e0.herokuapp.com/getUserDecks',
+                    { credentials: 'include' }
+                );
+                const deckData = await deckRes.json();
+                const decks = deckData.success
+                    ? deckData.decks.map(d => d.deck_name)
+                    : [];
 
-                if (data.success) {
-                    const sortedDecks = data.decks.sort((a, b) => a.deck_name.localeCompare(b.deck_name));
+                // 2) Fetch Saga collections
+                const colRes = await fetch(
+                    'https://geimon-app-833627ba44e0.herokuapp.com/collection/list',
+                    { credentials: 'include' }
+                );
+                const colData = await colRes.json();
+                const collections = colData.success
+                    ? colData.collections
+                    : [];
 
-                    sortedDecks.forEach(deck => {
-                        const deckName = deck.deck_name;
-                        const deckRow = document.createElement("div");
-                        deckRow.className = "deck-row";
+                // 3) Merge decks + collections, dedupe, sort A→Z
+                const allNames = Array.from(new Set([...decks, ...collections]))
+                    .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
 
-                        const leftBtn = document.createElement("button");
-                        leftBtn.className = "left-btn";
-                        leftBtn.textContent = "R";
-                        leftBtn.title = "Rename";
-                        leftBtn.onclick = async () => {
-                            const newDeckName = prompt("Enter new deck name:");
-                            if (newDeckName) {
-                                try {
-                                    const res = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/renameDeck", {
-                                        method: "POST",
-                                        headers: { "Content-Type": "application/json" },
-                                        credentials: 'include',
-                                        body: JSON.stringify({ old_deck_name: deckName, new_deck_name: newDeckName })
-                                    });
-                                    const result = await res.json();
-                                    alert(result.message);
-                                    window.location.reload();
-                                } catch (err) {
-                                    console.error("Error renaming deck:", err);
-                                }
+                // 4) Render each entry
+                allNames.forEach(deckName => {
+                    const deckRow = document.createElement("div");
+                    deckRow.className = "deck-row";
+
+                    // COPY button
+                    const copyBtn = document.createElement("button");
+                    copyBtn.className = "copy-btn";
+                    copyBtn.textContent = "C";
+                    copyBtn.title = "Copy";
+                    copyBtn.onclick = async () => {
+                    const newDeckName = prompt("Enter name for the copied deck:");
+                    if (!newDeckName) return;
+                    try {
+                        // Fetch original deck cards
+                        const res = await fetch(
+                        'https://geimon-app-833627ba44e0.herokuapp.com/getDeckCards',
+                        {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            credentials: 'include',
+                            body: JSON.stringify({ deck_name: deckName })
+                        }
+                        );
+                        const data = await res.json();
+                        if (!data.success) {
+                        alert("Failed to retrieve cards from original deck.");
+                        return;
+                        }
+                        // Create new deck with copied cards
+                        const copyRes = await fetch(
+                        'https://geimon-app-833627ba44e0.herokuapp.com/createDeck',
+                        {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            credentials: 'include',
+                            body: JSON.stringify({ deck_name: newDeckName, card_ids: data.card_ids })
+                        }
+                        );
+                        const copyResult = await copyRes.json();
+                        alert(copyResult.message || "Deck copied.");
+                        window.location.reload();
+                    } catch (err) {
+                        console.error("Error copying deck:", err);
+                    }
+                    };
+
+                    // RENAME button
+                    const leftBtn = document.createElement("button");
+                    leftBtn.className = "left-btn";
+                    leftBtn.textContent = "R";
+                    leftBtn.title = "Rename";
+                    leftBtn.onclick = async () => {
+                    const newDeckName = prompt("Enter new deck name:");
+                    if (newDeckName) {
+                        try {
+                        const res = await fetch(
+                            'https://geimon-app-833627ba44e0.herokuapp.com/renameDeck',
+                            {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            credentials: 'include',
+                            body: JSON.stringify({
+                                old_deck_name: deckName,
+                                new_deck_name: newDeckName
+                            })
                             }
-                        };
+                        );
+                        const result = await res.json();
+                        alert(result.message);
+                        window.location.reload();
+                        } catch (err) {
+                        console.error("Error renaming deck:", err);
+                        }
+                    }
+                    };
 
-                    // Main deck button (existing)
+                    // MAIN deck button
                     const button = document.createElement("button");
                     button.textContent = deckName;
                     button.className = "menu-item";
-                    button.onclick = async () => {
+                    button.onclick = () => {
+                    // If this is a Saga collection, skip getDeckCards and open sagaDeck.html
+                    if (collections.includes(deckName)) {
+                        window.open(
+                        `sagaDeck.html?collection=${encodeURIComponent(deckName)}` +
+                        `&room=${encodeURIComponent(userName)}` +
+                        `&user=${encodeURIComponent(userName)}`,
+                        '_blank'
+                        );
+                        return;
+                    }
+                    // Otherwise, load from decks table
+                    (async () => {
                         try {
-                            const response = await fetch(`https://geimon-app-833627ba44e0.herokuapp.com/getDeckCards`, {
-                                method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                credentials: 'include',
-                                body: JSON.stringify({ deck_name: deckName, owner: userName })
-                            });
-                            const data = await response.json();
-                            if (data.success) {
-                                localStorage.setItem("selectedDeckCards", JSON.stringify(data.card_ids));
-                                localStorage.setItem("selectedDeckName", deckName);
-
-                                // If this deck was created in Saga, open the Saga‐flow page:
-                                const sagaList = JSON.parse(localStorage.getItem('sagaCollections')||'[]');
-                                if (sagaList.includes(deckName)) {
-                                    window.open(
-                                        `sagaDeck.html?collection=${encodeURIComponent(deckName)}` +
-                                        `&room=${encodeURIComponent(userName)}` +  // or whatever you need
-                                        `&user=${encodeURIComponent(userName)}`,
-                                        '_blank'
-                                    );
-                                    return;
-                                }
-                                window.open('deck.html', '_blank');
-                            } else {
-                                alert("Failed to retrieve deck cards.");
+                        const response = await fetch(
+                            'https://geimon-app-833627ba44e0.herokuapp.com/getDeckCards',
+                            {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            credentials: 'include',
+                            body: JSON.stringify({ deck_name: deckName, owner: userName })
                             }
+                        );
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        const data = await response.json();
+                        if (!data.success) throw new Error("Server returned success=false");
+
+                        localStorage.setItem("selectedDeckCards", JSON.stringify(data.card_ids));
+                        localStorage.setItem("selectedDeckName", deckName);
+                        window.open('deck.html', '_blank');
                         } catch (err) {
-                            console.error("Error fetching deck cards:", err);
+                        console.error("Error fetching deck cards:", err);
+                        alert("Failed to retrieve deck cards.");
                         }
+                    })();
                     };
 
-                    // Right red button
+                    // DELETE button
                     const rightBtn = document.createElement("button");
                     rightBtn.className = "right-btn";
-                    rightBtn.textContent = "X"; // Or any icon/text you want
+                    rightBtn.textContent = "X";
                     rightBtn.title = "Delete";
                     rightBtn.onclick = async () => {
-                        const confirmDelete = confirm("Are you sure you want to delete this deck?");
-                        if (confirmDelete) {
-                            try {
-                                const res = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/deleteDeck", {
-                                    method: "POST",
-                                    headers: { "Content-Type": "application/json" },
-                                    credentials: 'include',
-                                    body: JSON.stringify({ deck_name: deckName })
-                                });
-                                const result = await res.json();
-                                alert(result.message);
-                                window.location.reload();
-                            } catch (err) {
-                                console.error("Error deleting deck:", err);
-                            }
+                    if (!confirm("Are you sure you want to delete this deck?")) return;
+                    try {
+                        const res = await fetch(
+                        'https://geimon-app-833627ba44e0.herokuapp.com/deleteDeck',
+                        {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            credentials: 'include',
+                            body: JSON.stringify({ deck_name: deckName })
                         }
+                        );
+                        const result = await res.json();
+                        alert(result.message);
+                        window.location.reload();
+                    } catch (err) {
+                        console.error("Error deleting deck:", err);
+                    }
                     };
 
-                    const copyBtn = document.createElement("button");
-                    copyBtn.className = "copy-btn";
-                    copyBtn.textContent = "C"; // Or any icon/text you want
-                    copyBtn.title = "Copy";
-                    copyBtn.onclick = async () => {
-                        const newDeckName = prompt("Enter name for the copied deck:");
-                        if (!newDeckName) return;
-
-                        try {
-                            // Fetch original deck cards
-                            const res = await fetch(`https://geimon-app-833627ba44e0.herokuapp.com/getDeckCards`, {
-                                method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                credentials: 'include',
-                                body: JSON.stringify({ deck_name: deckName })
-                            });
-                            const data = await res.json();
-
-                            if (!data.success) {
-                                alert("Failed to retrieve cards from original deck.");
-                                return;
-                            }
-
-                            // Create new deck with copied cards
-                            const copyRes = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/createDeck", {
-                                method: "POST",
-                                headers: { "Content-Type": "application/json" },
-                                credentials: 'include',
-                                body: JSON.stringify({ deck_name: newDeckName, card_ids: data.card_ids })
-                            });
-
-                            const copyResult = await copyRes.json();
-                            alert(copyResult.message || "Deck copied.");
-                            window.location.reload();
-                        } catch (err) {
-                            console.error("Error copying deck:", err);
-                        }
-                    };
-
-                    // Append all four buttons to deckRow in order: copy, rename, main, delete
+                    // Append buttons: copy, rename, main, delete
                     deckRow.appendChild(copyBtn);
                     deckRow.appendChild(leftBtn);
                     deckRow.appendChild(button);
                     deckRow.appendChild(rightBtn);
 
-
                     deckList.appendChild(deckRow);
                 });
-
-                }
             } catch (err) {
-                console.error("Error fetching decks:", err);
+                console.error("Error fetching decks and collections:", err);
             }
         });
     </script>

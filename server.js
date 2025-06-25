@@ -186,6 +186,34 @@ app.get('/collection/list', async (req, res) => {
   res.json({ success:true, collections: cols.map(c=>c.collection_name) });
 });
 
+app.post('/saveDeck', async (req, res) => {
+  const sessionId = req.cookies.session;
+  const username  = sessions[sessionId];
+  const { deck_name, card_ids } = req.body;
+
+  if (!username) {
+    return res.status(401).json({ success: false, message: 'User not authenticated' });
+  }
+  if (!deck_name || !Array.isArray(card_ids)) {
+    return res.status(400).json({ success: false, message: 'Invalid data' });
+  }
+
+  try {
+    const { error } = await supabase
+      .from('decks')
+      .upsert([
+        { user_name: username, deck_name, card_ids }
+      ], { onConflict: ['user_name','deck_name'] });
+
+    if (error) throw error;
+
+    res.status(200).json({ success: true, message: 'Deck saved' });
+  } catch (err) {
+    console.error('Error saving deck:', err);
+    res.status(500).json({ success: false, message: 'Error saving deck', error: err.message });
+  }
+});
+
 app.use(express.static(PUBLIC_DIR));
 
 app.set('view engine', 'ejs');
@@ -998,36 +1026,6 @@ app.get('/isLegal', async (req, res) => {
   } catch (err) {
     console.error('Error checking deck legality:', err);
     res.status(500).json({ success: false, message: 'Error checking deck legality', error: err.message });
-  }
-});
-
-app.post('/saveDeck', async (req, res) => {
-  const sessionId = req.cookies.session;
-  const username = sessions[sessionId];
-  const { deck_name, card_ids } = req.body;
-
-  if (!username) {
-    return res.status(401).json({ success: false, message: 'User not authenticated' });
-  }
-
-  if (!deck_name || !Array.isArray(card_ids)) {
-    return res.status(400).json({ success: false, message: 'Invalid data' });
-  }
-
-  try {
-    // Update the deck with new card IDs
-    const { error } = await supabase
-      .from('decks')
-      .update({ card_ids: card_ids })
-      .eq('user_name', username)
-      .eq('deck_name', deck_name);
-
-    if (error) throw error;
-
-    res.status(200).json({ success: true, message: 'Deck saved' });
-  } catch (err) {
-    console.error('Error saving deck:', err);
-    res.status(500).json({ success: false, message: 'Error saving deck', error: err.message });
   }
 });
 
