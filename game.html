@@ -561,7 +561,7 @@ html, body {
 
             //console.log("Gametype:", gameType, "SinglePlayer:", isSinglePlayer);
 
-            const otherPlayerName = params.get("opponent") || "Unknown_Opponent"; // if multiplayer later
+            const otherPlayerName = params.get("opponentUsername") || "Unknown_Opponent"; // if multiplayer later
 
             // how much they overlap at 1920×1080
             const MAX_OVERLAP = 12.5; // percent
@@ -1450,7 +1450,7 @@ html, body {
                         const newGameId = Math.random().toString(36).substr(2, 9);
                         const params       = new URLSearchParams(window.location.search);
                         const isSingle     = params.get("isSinglePlayer") === "true";
-                        const opponentPull = params.get("opponent");
+                        const opponentPull = params.get("opponentUsername");
 
                         const settings = {
                             prevGameId: params.get("gameId"),
@@ -1669,7 +1669,7 @@ html, body {
         socket.on('hand_reveal', ({ from, reveal }) => {
             const params = new URLSearchParams(window.location.search);
             const username = params.get("playerUsername") || "You";
-            const opponentUsernameParam = params.get("opponent") || (params.get("isSinglePlayer") === "true" ? "Bot" : "Opponent");
+            const opponentUsernameParam = params.get("opponentUsername") || (params.get("isSinglePlayer") === "true" ? "Bot" : "Opponent");
 
             if (from === username) return;       // ignore our echo
 
@@ -2497,7 +2497,7 @@ html, body {
         async function transitionToNextScreen(choice) {
             const params = new URLSearchParams(window.location.search);
             const playerUsernameParam   = params.get("playerUsername")     || "You";
-            const opponentUsernameParam = params.get("opponent")           || (params.get("isSinglePlayer")==="true" ? "Bot" : "Opponent");
+            const opponentUsernameParam = params.get("opponentUsername")           || (params.get("isSinglePlayer")==="true" ? "Bot" : "Opponent");
             const gameTypeParam         = params.get("gameType")           || "single";
             const isSinglePlayerParam   = params.get("isSinglePlayer")==="true";
             const turnOrderParam        = params.get("turnOrder")          || "first";
@@ -4125,7 +4125,7 @@ html, body {
     setTimeout(async () => {
         const urlParams = new URLSearchParams(window.location.search);
         const playerUsernameParam   = urlParams.get("playerUsername") || "";
-        const opponentUsernameParam = urlParams.get("opponent")       || "";
+        const opponentUsernameParam = urlParams.get("opponentUsername")       || "";
 
         async function getDeckFromParam(paramName) {
             const paramValue = urlParams.get(paramName);
