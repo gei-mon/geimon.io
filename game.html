@@ -1462,8 +1462,8 @@ html, body {
                             totemText: allTotems[totem],
                             turnOrder,
                             isSinglePlayer: isSingle,
-                            playerUsername: username,
-                            opponentUsername: isSingle ? "Bot" : opponentPull,
+                            playerUsername: params.get("playerUsername"),
+                            opponentUsername: params.get("opponentUsername"),
                             goesFirst: turnOrder
                         };
 
@@ -4147,7 +4147,7 @@ html, body {
 
             // 2) Decide whose deck we’re fetching
             const isOpponent = paramName === "opponentDeck";
-            const owner      = isOpponent ? opponentUsernameParam : username;
+            const owner      = isOpponent ? opponentUsernameParam : playerUsernameParam;
 
             // 3) Fetch from the server, passing the owner
             try {
