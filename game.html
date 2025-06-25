@@ -4164,17 +4164,6 @@ html, body {
             }
         }
 
-        // Fetch deck count dynamically
-        setTimeout(async () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            const playerUsernameParam   = urlParams.get("playerUsername")    || username;
-            const opponentUsernameParam = urlParams.get("opponentUsername")  || (isSinglePlayer ? "Bot" : username);
-
-            const playerDeckCardIds   = await getDeckFromParam("playerDeck");
-            const opponentDeckCardIds = await getDeckFromParam("opponentDeck");
-        }, 200);
-
-
         let remainingDeck = []; // Store shuffled deck globally
         let drawnCardsArray = []; // Track drawn cards separately
         let initialDeckSize = 0; // Store starting deck size globally
