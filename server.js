@@ -66,6 +66,11 @@ const io = new Server(server, {
   }
 });
 
+// Middleware
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+
 // GET /collection/count?name=<collection_name>
 app.get('/collection/count', async (req, res) => {
   const sessionId = req.cookies.session;
@@ -136,7 +141,7 @@ app.post('/collection/create', async (req, res) => {
   // Upsert the entire collection
   const { data, error } = await supabase
     .from('collections')
-    .upsert({ user_name, collection_name, card_ids });
+    .upsert([{ user_name, collection_name, card_ids }]);
   if (error) return res.status(500).json({ success:false, message:error.message });
   res.json({ success:true });
 });
@@ -166,10 +171,6 @@ app.post('/collection/add', async (req, res) => {
   res.json({ success:true });
 });
 
-// Middleware
-app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.json());
 app.use(express.static(PUBLIC_DIR));
 
 app.set('view engine', 'ejs');
