@@ -24,6 +24,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            display: none;
         }
         #deckSelect { font-size: 1.5em; padding: 4px; }
         #readyBtn { font-size: 1.1em; background-color: lightgray; border: none; padding: 8px 16px; margin-left: 8px; cursor: pointer; }
@@ -33,16 +34,15 @@
   <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
         <div class="container">
             <p style="font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: -8px;"><game-title>Geimon!</game-title></p>
-            <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: -28px;">Pack Madness - Waiting Room</h2>
-            <h3 style="text-shadow: 1px 1px 2px black, -1px -1px 2px black, 1px -1px 2px black, -1px 1px 2px black; margin-top: -28px; margin-left: 350px;">Pack Madness is a Best of 3 Draft Format where you open 10 Game On! Packs and then 15 more packs of one type that you unlock through that opening.</h2>
+            <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: -28px;">Best of 3 - Waiting Room</h2>
         </div>
         <div style="max-width: 600px;">
         <div id="roomId">Connecting…</div>
         <div id="chatWith" style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Roomed with: …</div>
         <div id="readyContainer">
-        <!--<select id="deckSelect">
+        <select id="deckSelect">
             <option value="" disabled selected>Select Deck</option>
-        </select>-->
+        </select>
         <button id="readyBtn">Ready?</button>
         </div>
         <div id="messages"></div>
@@ -75,6 +75,10 @@
             otherChoice = null;
         let otherUser = null;
         let otherDeck = null;
+        const urlP = new URLSearchParams(location.search);
+        const room   = urlP.get('room');
+        const deck   = urlP.get('deck');
+        const user   = urlP.get('user');
 
         const rpsContainer        = document.getElementById('rpsContainer'),
             turnChoiceContainer = document.getElementById('turnChoiceContainer');
@@ -113,11 +117,14 @@
 
             // Populate decks and handle ready button
             const deckSelectEl = document.getElementById('deckSelect');
+                deckSelectEl.value    = deck;
+                deckSelectEl.disabled = true;
             const readyBtnEl   = document.getElementById('readyBtn');
 
             socket.on('connect', () => {
                 console.log('Connected to socket:', socket.id);
                 socket.emit('init', { username });
+                socket.emit('playerReady', { username: user, ready: true, deck });
             });
 
             let roomId = localStorage.getItem('roomId');
@@ -142,7 +149,7 @@
                     socket.emit('playerReady', {
                         username,
                         ready: readyMe,
-                        deck: deckSelectEl.value
+                        deck: deck
                     });
                 }
             });
@@ -215,7 +222,7 @@
             // Broadcast to both:
             socket.on('turnOrderChoice', ({ chooser, turn, totem, totemText }) => {
                     appendSystem(`${chooser} chose to go ${turn === 'first' ? 'First' : 'Second'}.`);
-                    //if (!deckSelectEl.value || !otherDeck) return;
+                    if (!deckSelectEl.value || !otherDeck) return;
 
                 // gather params
                 const params = new URLSearchParams({
@@ -246,10 +253,8 @@
 
                 // both ready? show RPS
                 if (readyMe && readyOther) {
-                    window.location.href =
-                        `sagaShop.html?room=${roomId}&user=${encodeURIComponent(username)}`;
-                    //appendSystem('Both ready! Choose Rock, Paper, or Scissors.');
-                    //rpsContainer.style.display = 'flex';
+                    appendSystem('Both ready! Choose Rock, Paper, or Scissors.');
+                    rpsContainer.style.display = 'flex';
                 } else {
                     // someone unreadied mid‐flow → hide RPS & reset
                     rpsContainer.style.display        = 'none';
@@ -286,55 +291,55 @@
 
             (async () => {
                 try {
-                    //const deckRes = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/getUserDecks', {
-                        //credentials: 'include'
-                    //});
-                    //const deckData = await deckRes.json();
-                    //if (deckData.success && Array.isArray(deckData.decks)) {
-                        //const names = deckData.decks
-                            //.map(d => d.deck_name)
-                            //.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
-                        //deckSelectEl.innerHTML = '<option value="" disabled selected>Select Deck</option>';
-                        //names.forEach(name => {
-                            //const opt = document.createElement('option');
-                            //opt.value       = name;
-                            //opt.textContent = name;
-                            //deckSelectEl.appendChild(opt);
-                        //});
-                        //const randomOpt = document.createElement('option');
-                        //randomOpt.value       = 'Random';
-                        //randomOpt.textContent = 'Random';
-                        //deckSelectEl.appendChild(randomOpt);
-                    //} else {
-                        //console.error('Failed to fetch decks:', deckData);
-                    //}
+                    const deckRes = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/getUserDecks', {
+                        credentials: 'include'
+                    });
+                    const deckData = await deckRes.json();
+                    if (deckData.success && Array.isArray(deckData.decks)) {
+                        const names = deckData.decks
+                            .map(d => d.deck_name)
+                            .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+                        deckSelectEl.innerHTML = '<option value="" disabled selected>Select Deck</option>';
+                        names.forEach(name => {
+                            const opt = document.createElement('option');
+                            opt.value       = name;
+                            opt.textContent = name;
+                            deckSelectEl.appendChild(opt);
+                        });
+                        const randomOpt = document.createElement('option');
+                        randomOpt.value       = 'Random';
+                        randomOpt.textContent = 'Random';
+                        deckSelectEl.appendChild(randomOpt);
+                    } else {
+                        console.error('Failed to fetch decks:', deckData);
+                    }
                 } catch (err) {
-                    //console.error('Error fetching decks:', err);
+                    console.error('Error fetching decks:', err);
                 }
             })();
 
             let isReady = false;
             readyBtnEl.onclick = () => {
-                //if (!deckSelectEl.value) {
-                    //alert('Please select a deck.');
-                    //return;
-                //}
+                if (!deckSelectEl.value) {
+                    alert('Please select a deck.');
+                    return;
+                }
                 isReady = !isReady;
                 if (isReady) {
                     readyBtnEl.innerText           = 'Ready!';
                     readyBtnEl.style.backgroundColor = 'lightgreen';
-                    //deckSelectEl.disabled          = true;
+                    deckSelectEl.disabled          = true;
                     console.log('Emitting playerReady →', isReady);
                 } else {
                     readyBtnEl.innerText           = 'Ready?';
                     readyBtnEl.style.backgroundColor = 'lightgray';
-                    //deckSelectEl.disabled          = false;
+                    deckSelectEl.disabled          = false;
                 }
                 readyMe = isReady;
                 socket.emit('playerReady', {
                     username,
                     ready: isReady,
-                    //deck: deckSelectEl.value
+                    deck: deckSelectEl.value
                 });
             };
         })();

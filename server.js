@@ -1318,6 +1318,45 @@ app.post('/addCardsToDeck', async (req, res) => {
   }
 });
 
+// GET /collection/count?name=<deck_name>
+// Returns how many cards are in the given deck for the logged-in user
+app.get('/collection/count', async (req, res) => {
+  const sessionId = req.cookies.session;
+  const username  = sessions[sessionId];
+  const deckName  = req.query.name;
+
+  if (!username) {
+    return res.status(401).json({ success: false, message: 'Not authenticated' });
+  }
+  if (!deckName) {
+    return res.status(400).json({ success: false, message: 'Missing deck name' });
+  }
+
+  try {
+    // reuse your existing getDeck logic
+    const { data: deck, error } = await supabase
+      .from('decks')
+      .select('card_ids')
+      .eq('user_name', username)
+      .eq('deck_name', deckName)
+      .single();
+
+    if (error || !deck) {
+      return res.status(404).json({ success: false, message: 'Deck not found' });
+    }
+
+    const count = Array.isArray(deck.card_ids) 
+      ? deck.card_ids.length 
+      : 0;
+
+    return res.json({ success: true, count });
+  } catch (err) {
+    console.error('Error in /collection/count:', err);
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({ message: 'Not Found' });

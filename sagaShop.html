@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href='https://fonts.googleapis.com/css?family=Racing Sans One' rel='stylesheet'>
+  <link rel="icon" href="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="style.css">
+  <title>Geimon!</title>
+</head>
+<style>
+  /* Reuse packShop styling for grid layout */
+  .pack-list        { display:grid;
+                      grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+                      gap:18px 24px;
+                      margin-top:24px; }
+  .pack2-row        { display:flex; align-items:center; background:rgba(0,0,0,0.5);
+                      padding:12px; border-radius:8px; }
+  .pack2-img-btn    { width:130px; height:200px; padding:0;
+                       border:4px solid #000;
+                       box-sizing:border-box;
+                       cursor:pointer; overflow:hidden; }
+  .pack2-img-btn img{ width:100%; height:100%; object-fit:cover; object-position:center; }
+  .pack2-desc       { margin-left:14px; font-size:1.2rem; color:#fff;
+                       text-shadow:2px 2px 4px #000,-2px -2px 4px #000,
+                                   2px -2px 4px #000,-2px  2px 4px #000; }
+  @media (max-width: 480px){ .pack-list{ grid-template-columns:1fr; }}
+  body { background-color: rgb(78,78,78); color: #fff; font-family: sans-serif; }
+</style>
+<body>
+  <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
+  <div class="container">
+    <p style="font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;"><game-title>Geimon!</game-title></p>
+    <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top:-28px;">Saga Shop!</h2>
+    <button id="backBtn" class="button buttonEvenSmaller">Back</button>
+  </div>
+
+  <div class="pack-list" id="packList"></div>
+
+    <script>
+        const PACK_INFO = {
+        'Game On!': {
+            img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Rush/GameOn.png',
+            desc: 'Every card within Geimon can be found in this pack.'
+        },
+        'Ancient Scholar': {
+            img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/MarkerionSupreme.png',
+            desc: 'Cards for the Ancient Scholar Starter Deck are within here.'
+        },
+        'Brilliant Scientist': {
+            img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/CarlyBestBrightest.png',
+            desc: 'Cards for the Brilliant Scientist Starter Deck are within here.'
+        },
+        'Mad Doctor': {
+            img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/DrJeremiah.png',
+            desc: 'Cards for the Mad Doctor Starter Deck are within here.'
+        },
+        'Shining Knight': {
+            img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/AldredOathbound.png',
+            desc: 'Cards for the Shining Knight Starter Deck are within here.'
+        },
+        'Sunset Sharpshooter': {
+            img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/CyrusDustwalker.png',
+            desc: 'Cards for the Sunset Sharpshooter Starter Deck are within here.'
+        }
+        };
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('packList');
+        const params = new URLSearchParams(location.search);
+        //const returnPage = params.get('return') || 'sagaShop.html';
+        const returnPage = params.get('return') || 'saga.html';
+        const roomParam  = encodeURIComponent(params.get('room') || '');
+        const userParam  = encodeURIComponent(params.get('user') || '');
+
+        // Always start with only Game On!
+        let available = ['Game On!'];
+        // After opening, secret packs stored here
+        const unlocked = JSON.parse(localStorage.getItem('unlockedPacks') || '[]');
+        // Combine and dedupe
+        available = Array.from(new Set([...available, ...unlocked]));
+
+        available.forEach(name => {
+            const info = PACK_INFO[name] || { img: '', desc: '' };
+
+            // 1) capture these locally now, so the inline handler can see them
+            const packParam   = encodeURIComponent(name);
+            const roomParam   = encodeURIComponent(params.get('room'));
+            const userParam   = encodeURIComponent(params.get('user'));
+            const returnParam = encodeURIComponent(returnPage);
+
+            // 2) build the href string once
+            const href = [
+                'sagaOpener.html?',
+                'pack='  + encodeURIComponent(name),
+                '&room=' + roomParam,
+                '&user=' + userParam,
+                '&return=' + encodeURIComponent(returnPage)
+            ].join('');
+
+            const row = document.createElement('div');
+            row.className = 'pack2-row';
+            row.innerHTML = `
+                <button class="pack2-img-btn"
+                    onclick="location.href='${href}'"
+                        >
+            <img src="${info.img}" alt="${name} art">
+            </button>
+            <div class="pack2-desc">
+                <strong>${name} Pack</strong><br><br>
+                ${info.desc}
+            </div>
+            `;
+            container.appendChild(row);
+        });
+
+        // Back button
+        document.getElementById('backBtn').onclick = () => {
+            window.location.href =
+                `${returnPage}` +
+                `?room=${encodeURIComponent(params.get('room'))}` +
+                `&user=${encodeURIComponent(params.get('user'))}`;
+        };
+    });
+    </script>
+</body>
+</html>
