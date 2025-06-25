@@ -1115,6 +1115,14 @@ html, body {
                 });
 
                 socket.on("match_next_game", (settings) => {
+                    const me = username;                 // we already know who we are
+                    const personalised = { ...settings };
+
+                    // make sure *this* client is always playerUsername
+                    if (personalised.playerUsername !== me) {
+                        personalised.opponentUsername = personalised.playerUsername;
+                        personalised.playerUsername   = me;
+                    }
                     // settings is exactly the object the loser sent when creating the new game
                     const url = `game.html?${new URLSearchParams(settings).toString()}`;
                     window.location.href = url;
@@ -1188,6 +1196,21 @@ html, body {
                 socket.on("game_over", ({ winner, loser, reason }) => {
                     const mainText = (winner === username) ? "You Win" : "You Lose";
                     showBanner(mainText, reason);
+
+                    if (gameType === "match") {
+                        const matchId = params.get("prevGameId") || params.get("matchId") || "defaultMatch";
+                        const scores  = JSON.parse(sessionStorage.getItem(matchId) || "{}");
+
+                        scores[winner] = (scores[winner] || 0) + 1;
+                        sessionStorage.setItem(matchId, JSON.stringify(scores));
+
+                        if (scores[winner] >= 2) {
+                        // Match finished – do NOT launch another game
+                        const finalText = (winner === username) ? "MATCH VICTORY" : "MATCH DEFEAT";
+                        showBanner(finalText, `Final score: ${scores[winner]}-${scores[loser] || 0}`);
+                        return;                    // ← stop here, no totem picker
+                        }
+                    }
                 });
 
                 if (!username) {
@@ -1464,7 +1487,8 @@ html, body {
                             isSinglePlayer: isSingle,
                             playerUsername: params.get("playerUsername"),
                             opponentUsername: params.get("opponentUsername"),
-                            goesFirst: turnOrder
+                            goesFirst: turnOrder,
+                            matchId
                         };
 
                         await fetch("https://geimon-app-833627ba44e0.herokuapp.com/startGame", {
