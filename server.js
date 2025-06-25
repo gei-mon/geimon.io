@@ -186,6 +186,45 @@ app.get('/collection/list', async (req, res) => {
   res.json({ success:true, collections: cols.map(c=>c.collection_name) });
 });
 
+// POST /collection/delete
+app.post('/collection/delete', async (req, res) => {
+  const sessionId      = req.cookies.session;
+  const user_name      = sessions[sessionId];
+  const { collection_name } = req.body;
+
+  if (!user_name) {
+    return res.status(401).json({ success: false, message: 'Not authenticated' });
+  }
+  if (!collection_name) {
+    return res.status(400).json({ success: false, message: 'Missing collection_name' });
+  }
+
+  try {
+    // Delete the collection row
+    const { error } = await supabase
+      .from('collections')
+      .delete()
+      .eq('user_name', user_name)
+      .eq('collection_name', collection_name);
+
+    if (error) {
+      throw error;
+    }
+
+    return res.json({
+      success: true,
+      message: `Collection "${collection_name}" deleted successfully`
+    });
+  } catch (err) {
+    console.error('Error in /collection/delete:', err);
+    return res.status(500).json({
+      success: false,
+      message: 'Error deleting collection',
+      error: err.message
+    });
+  }
+});
+
 app.post('/saveDeck', async (req, res) => {
   const sessionId = req.cookies.session;
   const username  = sessions[sessionId];

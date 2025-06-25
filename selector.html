@@ -282,22 +282,54 @@
                     rightBtn.textContent = "X";
                     rightBtn.title = "Delete";
                     rightBtn.onclick = async () => {
-                    if (!confirm("Are you sure you want to delete this deck?")) return;
+                    const confirmDeck = confirm(
+                        `Are you sure you want to delete the deck "${deckName}"?`
+                    );
+                    if (!confirmDeck) return;
+
+                    // 2) Check if this is a Saga collection
+                    const sagaList = JSON.parse(localStorage.getItem('sagaCollections') || '[]');
+                    const isSaga   = sagaList.includes(deckName);
+
+                    // 3) If Saga, ask whether to delete its collection too
+                    let deleteCollection = false;
+                    if (isSaga) {
+                        deleteCollection = confirm(
+                        `This is a Saga‐created deck. Do you also want to delete\n` +
+                        `the entire "${deckName}" collection (all opened cards)?`
+                        );
+                    }
+
                     try {
                         const res = await fetch(
-                        'https://geimon-app-833627ba44e0.herokuapp.com/deleteDeck',
-                        {
-                            method: "POST",
-                            headers: { "Content-Type": "application/json" },
-                            credentials: 'include',
-                            body: JSON.stringify({ deck_name: deckName })
-                        }
+                            'https://geimon-app-833627ba44e0.herokuapp.com/deleteDeck',
+                            {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                credentials: 'include',
+                                body: JSON.stringify({ deck_name: deckName })
+                            }
                         );
                         const result = await res.json();
+
+                        if (deleteCollection) {
+                            await fetch(
+                                'https://geimon-app-833627ba44e0.herokuapp.com/collection/delete',
+                                {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                credentials: "include",
+                                body: JSON.stringify({ collection_name: deckName })
+                                }
+                            );
+                            // remove from localStorage.sagaCollections
+                            const updated = sagaList.filter(n => n !== deckName);
+                            localStorage.setItem('sagaCollections', JSON.stringify(updated));
+                        }
                         alert(result.message);
                         window.location.reload();
                     } catch (err) {
-                        console.error("Error deleting deck:", err);
+                        console.error("Error deleting deck/collection:", err);
                     }
                     };
 
