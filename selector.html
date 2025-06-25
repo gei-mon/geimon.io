@@ -186,6 +186,18 @@
                             if (data.success) {
                                 localStorage.setItem("selectedDeckCards", JSON.stringify(data.card_ids));
                                 localStorage.setItem("selectedDeckName", deckName);
+
+                                // If this deck was created in Saga, open the Saga‐flow page:
+                                const sagaList = JSON.parse(localStorage.getItem('sagaCollections')||'[]');
+                                if (sagaList.includes(deckName)) {
+                                    window.open(
+                                        `sagaDeck.html?collection=${encodeURIComponent(deckName)}` +
+                                        `&room=${encodeURIComponent(userName)}` +  // or whatever you need
+                                        `&user=${encodeURIComponent(userName)}`,
+                                        '_blank'
+                                    );
+                                    return;
+                                }
                                 window.open('deck.html', '_blank');
                             } else {
                                 alert("Failed to retrieve deck cards.");

@@ -302,16 +302,18 @@
                 let response;
                 try{
                     if (newName) {
-                        response = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/createDeck',{
+                        // first time: create a new collection
+                        response = await fetch('/collection/create', {
                             method:'POST', credentials:'include',
                             headers:{'Content-Type':'application/json'},
-                            body:JSON.stringify({ deck_name:newName, card_ids:lastPulledIds })
+                            body: JSON.stringify({ collection_name:newName, card_ids:lastPulledIds })
                         });
-                    } else if (selectedDeck){
-                        response = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/addCardsToDeck',{
+                    } else if (selectedDeck) {
+                        // appending more pulled cards
+                        response = await fetch('/collection/add', {
                             method:'POST', credentials:'include',
                             headers:{'Content-Type':'application/json'},
-                            body:JSON.stringify({ deck_name:selectedDeck, card_ids:lastPulledIds })
+                            body: JSON.stringify({ collection_name:selectedDeck, card_ids:lastPulledIds })
                         });
                     } else {
                         alert('Pick a deck or enter a new name.');

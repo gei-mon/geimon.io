@@ -1388,6 +1388,49 @@ app.get('/collection/get', async (req, res) => {
   }
 });
 
+// POST /collection/create
+app.post('/collection/create', async (req, res) => {
+  const { collection_name, card_ids } = req.body;
+  const sessionId = req.cookies.session;
+  const user_name = sessions[sessionId];
+  if (!user_name) return res.status(401).json({ success:false });
+  // Upsert the entire collection
+  const { data, error } = await supabase
+    .from('collections')
+    .upsert({ user_name, collection_name, card_ids });
+  if (error) return res.status(500).json({ success:false, message:error.message });
+  res.json({ success:true });
+});
+
+// POST /collection/add
+app.post('/collection/add', async (req, res) => {
+  const { collection_name, card_ids } = req.body;
+  const sessionId = req.cookies.session;
+  const user_name = sessions[sessionId];
+  if (!user_name) return res.status(401).json({ success:false });
+  // Pull existing
+  const { data: existing } = await supabase
+    .from('collections')
+    .select('card_ids')
+    .eq('user_name', user_name)
+    .eq('collection_name', collection_name)
+    .single();
+  if (!existing) return res.status(404).json({ success:false });
+  // Merge & dedupe
+  const merged = Array.from(new Set([ ...existing.card_ids, ...card_ids ]));
+  const { error } = await supabase
+    .from('collections')
+    .update({ card_ids: merged })
+    .eq('user_name', user_name)
+    .eq('collection_name', collection_name);
+  if (error) return res.status(500).json({ success:false, message:error.message });
+  res.json({ success:true });
+});
+
+// GET /collection/get?name=...
+// (you already created this)
+
+
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({ message: 'Not Found' });

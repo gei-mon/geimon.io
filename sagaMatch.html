@@ -139,6 +139,13 @@
                 //chatWithEl.innerText = `Roomed with: ${data.otherUser?.username || 'Waiting for opponent...'}`;
                 otherUser = data.otherUser?.username || null;
                 chatWithEl.innerText = `Roomed with: ${otherUser || 'Waiting for opponent...'}`;
+                if (readyMe) {
+                    socket.emit('playerReady', {
+                    username,
+                    ready: true,
+                    deck: deck
+                    });
+                }
             });
 
             socket.on('user_joined', ({ otherUser: ou }) => {
