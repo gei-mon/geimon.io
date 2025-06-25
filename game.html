@@ -1118,6 +1118,7 @@ html, body {
                     console.log("gameStateUpdated event fired");
                     updateLocalFromGameState();
                 });
+
                 socket.emit("join_game_room", { gameId });
                 //console.log("Joined game room", gameId);
 
@@ -1231,6 +1232,12 @@ html, body {
 
             const params = new URLSearchParams(window.location.search);
             const turnOrder = params.get("turnOrder");
+            const matchId =
+                    params.get("matchId")               // came from previous game ?
+                || params.get("prevGameId")            // fall back: game-1’s id
+                || localStorage.getItem("currentMatchId")
+                || Math.random().toString(36).substr(2, 9);   // brand-new match
+
 
             if (turnOrder === "coinflip") {
                 const container = document.getElementById("coin-flip-container");
