@@ -6225,8 +6225,8 @@ html, body {
         function sendChat () {
             const txt = chatInput.value.trim();
             if (!txt) return;
-                socket.emit('message', { username, text: txt });
-                chatInput.value = '';
+            socket.emit('message', txt);
+            chatInput.value = '';
         }
         chatSend.onclick = sendChat;
         chatInput.addEventListener('keypress', e => {
