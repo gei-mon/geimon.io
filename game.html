@@ -4436,6 +4436,11 @@ html, body {
                 //console.log("🔄 state synced → Arsenal:", gameState[username]["Zone (Arsenal)"].map(c=>c.id), "Tomb:", gameState[username].Tomb.map(c=>c.id));
             }
 
+            // ✅ Also notify opponent via socket broadcast
+            zones.forEach(zone => {
+                socket.emit("sync_zone", { owner: username, zone });
+            });
+
             return data;
         }
 
