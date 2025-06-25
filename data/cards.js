@@ -426,7 +426,7 @@ export const cards = [
     rarity: "Rare",
     type: "Rush",
     condition: "",
-    cost: "Target 1 Construct or Helper you control and take Damage equal to its Damage",
+    cost: "Target 1 Construct or Helper you control with a Damage of 1 or higher and take Damage equal to its Damage",
     tags: ["Rush"],
     damage: "",
     life: "",
@@ -1360,7 +1360,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Heavy Hands <br> On Rally: Draw 2. <span class="line-gap"></span> Deadeye (Reflex): Discard 1 and Target 1 card on the Zone; Destroy Target.`,
+        text: `Heavy Hands <span class="line-gap"></span> On Rally: Draw 2. <span class="line-gap"></span> Deadeye (Reflex): Discard 1 and Target 1 card on the Zone; Destroy Target.`,
         keywords: ["Heavy Hands"],
         effect1name: "On Rally",
         effect2name: "Deadeye",
@@ -1470,7 +1470,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Sniffer Sense: Target 1 face-down Champion; Flip the target face-up (Flip effects are not activated). <br> Take the Bullet (Reflex): If your Opponent declares an attack or activates an effect that Destroys a card: Sacrifice this card; Negate the attack or effect, and if you do, destroy the triggering card. <span class="line-gap"></span> Helping Hand: If this card is in your Tomb: Obliterate this card and Target 1 Frontier or Helper in your Tomb; Resurrect Target.`,
+        text: `Sniffer Sense: Target 1 face-down Champion; Flip the target face-up (Flip effects are not activated). <span class="line-gap"></span> Take the Bullet (Reflex): If your Opponent declares an attack or activates an effect that Destroys a card: Sacrifice this card; Negate the attack or effect, and if you do, destroy the triggering card. <span class="line-gap"></span> Helping Hand: If this card is in your Tomb: Obliterate this card and Target 1 Frontier or Helper in your Tomb; Resurrect Target.`,
         keywords: ["blank"],
         effect1name: "Sniffer Sense",
         effect2name: "Take the Bullet",
@@ -3274,7 +3274,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Choose 1 of the following effects to activate: <br> • Draw 2. <span class="line-gap"></span> • Take control of 1 of your Opponent's Champions until the End Phase of this turn. <span class="line-gap"></span> • Look at your Opponent's Hand, and if you do, shuffle 1 card of your choice from their Hand back into their Deck.`,
+        text: `Choose 1 of the following effects to activate: <span class="line-gap"></span> • Draw 2. <span class="line-gap"></span> • Take control of 1 of your Opponent's Champions until the End Phase of this turn. <span class="line-gap"></span> • Look at your Opponent's Hand, and if you do, shuffle 1 card of your choice from their Hand back into their Deck.`,
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -5892,7 +5892,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Your Opponent discards 1, and if they do, draw 1.",
+        text: "Your Opponent discards 1, and if they do, you draw 1.",
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -6171,7 +6171,7 @@ export const cards = [
     rarity: "Rare",
     type: "Rush",
     condition: "",
-    cost: "Target 1 Champion in your Tomb",
+    cost: "Target 1 Champion in your Tomb with a Damage of 1 or higher",
     tags: ["Rush"],
     damage: 0,
     life: 0,
