@@ -874,6 +874,12 @@ html, body {
         }
 
         async function updateLocalFromGameState() {
+            if (!username || !gameState || !gameState[username]) {
+                console.warn("updateLocalFromGameState: player state not ready", {
+                    username, keys: Object.keys(gameState || {})
+                });
+                return;                 // bail out quietly – we’ll try again later
+            }
 
             function rehydrateZone(zone, cards) {
                 return zone.map(card => {
@@ -1107,6 +1113,11 @@ html, body {
         window.onload = () => {
             (async () => {
                 await initGameClient();
+
+                document.addEventListener("gameStateUpdated", () => {
+                    console.log("gameStateUpdated event fired");
+                    updateLocalFromGameState();
+                });
                 socket.emit("join_game_room", { gameId });
                 //console.log("Joined game room", gameId);
 
@@ -1348,9 +1359,19 @@ html, body {
                 credentials: "include"
                 });
 
+                function ensureZones(p) {
+                    [
+                        "Hand","Deck","Tomb","Void","Reserve",
+                        "Zone (Champion)","FaceDownZone",
+                        "Zone (Arsenal)","FaceDownArsenalZone"
+                    ].forEach(z => { if (!p[z]) p[z] = []; });
+                }
+
                 if (res.ok) {
-                const gameState = await res.json();
-                if (gameState && gameState.turn) return gameState;
+                    const gameState = await res.json();
+                    ensureZones(gameState[gameState.player1]);
+                    ensureZones(gameState[gameState.player2]);
+                    if (gameState && gameState.turn) return gameState;
                 }
 
                 console.warn(`Retry ${i + 1} of ${retries}... waiting for game state...`);
@@ -6001,11 +6022,6 @@ html, body {
             await updateLocalFromGameState();
         }, 5000); // adjust if needed
     }
-
-    document.addEventListener("gameStateUpdated", () => {
-        console.log("gameStateUpdated event fired");
-        updateLocalFromGameState();
-    });
 
     document.addEventListener("playerLifeReachedZero", async (e) => {
         if (gameEnded) return;
