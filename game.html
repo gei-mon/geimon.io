@@ -4129,43 +4129,47 @@ html, body {
             });
         }
 
+        async function getDeckFromParam(paramName) {
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const playerUsernameParam   = urlParams.get("playerUsername")    || username;
+            const opponentUsernameParam = urlParams.get("opponentUsername")  || (isSinglePlayer ? "Bot" : username);
+            const paramValue = urlParams.get(paramName);
+
+            // 1) If the param is already a JSON array of IDs, use it directly
+            try {
+                const parsed = JSON.parse(paramValue);
+                if (Array.isArray(parsed)) {
+                    return parsed;
+                }
+            } catch (e) {
+            // not JSON → continue to fetch by name
+            }
+
+            // 2) Decide whose deck we’re fetching
+            const isOpponent = paramName === "opponentDeck";
+            const owner      = isOpponent ? opponentUsernameParam : playerUsernameParam;
+
+            // 3) Fetch from the server, passing the owner
+            try {
+                const data = await fetchDeckCards(paramValue, owner);
+                if (data.success && Array.isArray(data.card_ids)) {
+                    return data.card_ids;
+                } else {
+                    console.error(`Deck fetch failed for '${paramName}':`, data.message);
+                    return [];
+                }
+            } catch (err) {
+                console.error(`Failed to load deck '${paramName}':`, err.message);
+                return [];
+            }
+        }
+
         // Fetch deck count dynamically
         setTimeout(async () => {
             const urlParams = new URLSearchParams(window.location.search);
             const playerUsernameParam   = urlParams.get("playerUsername")    || username;
             const opponentUsernameParam = urlParams.get("opponentUsername")  || (isSinglePlayer ? "Bot" : username);
-
-            async function getDeckFromParam(paramName) {
-                const paramValue = urlParams.get(paramName);
-
-                // 1) If the param is already a JSON array of IDs, use it directly
-                try {
-                    const parsed = JSON.parse(paramValue);
-                    if (Array.isArray(parsed)) {
-                        return parsed;
-                    }
-                } catch (e) {
-                // not JSON → continue to fetch by name
-                }
-
-                // 2) Decide whose deck we’re fetching
-                const isOpponent = paramName === "opponentDeck";
-                const owner      = isOpponent ? opponentUsernameParam : playerUsernameParam;
-
-                // 3) Fetch from the server, passing the owner
-                try {
-                    const data = await fetchDeckCards(paramValue, owner);
-                    if (data.success && Array.isArray(data.card_ids)) {
-                        return data.card_ids;
-                    } else {
-                        console.error(`Deck fetch failed for '${paramName}':`, data.message);
-                        return [];
-                    }
-                } catch (err) {
-                    console.error(`Failed to load deck '${paramName}':`, err.message);
-                    return [];
-                }
-            }
 
             // 4) Load both decks
             const playerDeckCardIds   = await getDeckFromParam("playerDeck");
