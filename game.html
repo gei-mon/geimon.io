@@ -1238,8 +1238,10 @@ html, body {
 
                         if (scores[winner] >= 2) {
                             window.matchFinished = true;
+                            const myScore  = scores[username]           || 0;
+                            const oppScore = scores[(winner === username ? loser : winner)] || 0;
                             bannerMain   = (winner === username) ? "MATCH VICTORY" : "MATCH DEFEAT";
-                            bannerReason = `Final score: ${scores[winner]}-${scores[loser] || 0}`;
+                            bannerReason = `Final score: ${myScore}-${oppScore}`;
                         } else {
                             bannerMain = (winner === username) ? "You Win" : "You Lose";
                         }
