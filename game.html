@@ -1137,9 +1137,11 @@ html, body {
 
                     // make sure *this* client is always playerUsername
                     if (personalised.playerUsername !== me) {
-                        [personalised.playerUsername,
-                        personalised.opponentUsername] =
-                        [me, personalised.playerUsername];         // swap once
+                        [personalised.playerUsername, personalised.opponentUsername] = 
+                            [me, personalised.playerUsername];
+
+                        [personalised.playerDeck, personalised.opponentDeck] = 
+                            [personalised.opponentDeck, personalised.playerDeck];
                     }
                     // settings is exactly the object the loser sent when creating the new game
                     const url = `game.html?${new URLSearchParams(personalised).toString()}`;
