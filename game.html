@@ -1240,7 +1240,7 @@ html, body {
                         }
                         sessionStorage.setItem(matchId, JSON.stringify(scores));
 
-                        if (scores[winner] >= 2) {
+                        if (!draw && scores[winner] >= 2) {
                             window.matchFinished = true;
                             const myWins   = scores[username] || 0;
                             const oppWins  = scores[winner === username ? loser : winner] || 0;

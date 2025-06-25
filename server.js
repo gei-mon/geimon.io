@@ -1100,22 +1100,22 @@ app.post('/deleteDeck', async (req, res) => {
 });
 
 app.post('/endGame', (req, res) => {
-    const { gameId, loser, reason } = req.body;
+    const { gameId, loser, reason, draw = false } = req.body;
 
     const game = gameStates.get(gameId);
     if (!game) {
         return res.status(404).json({ success: false, message: "Game not found" });
     }
 
-    const winner = [game.player1, game.player2].find(name => name !== loser);
+    const winner = draw ? null : [game.player1, game.player2].find(name => name !== loser);
     //console.log(`Game ${gameId} ended. Loser: ${loser}. Winner: ${winner}. Reason: ${reason}`);
 
     // Emit to clients
-    io.to(gameId).emit("game_over", { loser, winner, reason });
+    io.to(gameId).emit("game_over", { winner, loser, draw, reason });
 
     // Cleanup
     gameStates.delete(gameId);
-    return res.json({ success: true, loser, winner, reason });
+    return res.json({ success: true, winner, loser, draw, reason });
 });
 
 function delay(ms) {
