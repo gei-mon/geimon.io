@@ -2507,8 +2507,8 @@ html, body {
             const opponentDeckName = new URLSearchParams(window.location.search).get("opponentDeck");
 
             //console.log("→ fetching deck", playerDeckName, "owned by", playerUsernameParam);
-            //const playerDeckResult = await fetchDeckCards(playerDeckName, playerUsernameParam);
-            //const opponentDeckResult = await fetchDeckCards(opponentDeckName, opponentUsernameParam);
+            const playerDeckResult = await fetchDeckCards(playerDeckName, playerUsernameParam);
+            const opponentDeckResult = await fetchDeckCards(opponentDeckName, opponentUsernameParam);
             const playerDeckCardIds   = await getDeckFromParam("playerDeck");
             if (playerDeckCardIds.length === 0) {
                 return alert(`Could not load your deck "${playerDeckName}" (owner: ${playerUsernameParam}).`);
