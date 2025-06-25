@@ -66,6 +66,106 @@ const io = new Server(server, {
   }
 });
 
+// GET /collection/count?name=<collection_name>
+app.get('/collection/count', async (req, res) => {
+  const sessionId = req.cookies.session;
+  const username  = sessions[sessionId];
+  const collection = req.query.name;
+  if (!username) {
+    return res.status(401).json({ success: false, message: 'Not authenticated' });
+  }
+  if (!collection) {
+    return res.status(400).json({ success: false, message: 'Missing collection name' });
+  }
+  try {
+    const { data, error } = await supabase
+      .from('collections')
+      .select('card_ids')
+      .eq('user_name', username)
+      .eq('collection_name', collection)
+      .single();
+    if (error || !data) {
+      return res.status(404).json({ success: false, message: 'Collection not found' });
+    }
+    const count = Array.isArray(data.card_ids) ? data.card_ids.length : 0;
+    return res.json({ success: true, count });
+  } catch (err) {
+    console.error('Error in /collection/count:', err);
+    return res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+
+// GET a Saga collection by name
+app.get('/collection/get', async (req, res) => {
+  const sessionId      = req.cookies.session;
+  const user_name      = sessions[sessionId];
+  const collectionName = req.query.name;
+  if (!user_name) {
+    return res.status(401).json({ success:false, message:'Not authenticated' });
+  }
+  if (!collectionName) {
+    return res.status(400).json({ success:false, message:'Missing name' });
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('collections')
+      .select('card_ids')
+      .eq('user_name',    user_name)
+      .eq('collection_name', collectionName)
+      .single();
+
+    if (error || !data) {
+      return res.status(404).json({ success:false, message:'Not found' });
+    }
+
+    return res.json({ success: true, card_ids: data.card_ids });
+  } catch (err) {
+    console.error('GET /collection/get error:', err);
+    return res.status(500).json({ success:false, message:'Server error' });
+  }
+});
+
+// POST /collection/create
+app.post('/collection/create', async (req, res) => {
+  const { collection_name, card_ids } = req.body;
+  const sessionId = req.cookies.session;
+  const user_name = sessions[sessionId];
+  if (!user_name) return res.status(401).json({ success:false });
+  // Upsert the entire collection
+  const { data, error } = await supabase
+    .from('collections')
+    .upsert({ user_name, collection_name, card_ids });
+  if (error) return res.status(500).json({ success:false, message:error.message });
+  res.json({ success:true });
+});
+
+// POST /collection/add
+app.post('/collection/add', async (req, res) => {
+  const { collection_name, card_ids } = req.body;
+  const sessionId = req.cookies.session;
+  const user_name = sessions[sessionId];
+  if (!user_name) return res.status(401).json({ success:false });
+  // Pull existing
+  const { data: existing } = await supabase
+    .from('collections')
+    .select('card_ids')
+    .eq('user_name', user_name)
+    .eq('collection_name', collection_name)
+    .single();
+  if (!existing) return res.status(404).json({ success:false });
+  // Merge & dedupe
+  const merged = Array.from(new Set([ ...existing.card_ids, ...card_ids ]));
+  const { error } = await supabase
+    .from('collections')
+    .update({ card_ids: merged })
+    .eq('user_name', user_name)
+    .eq('collection_name', collection_name);
+  if (error) return res.status(500).json({ success:false, message:error.message });
+  res.json({ success:true });
+});
+
 // Middleware
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -1317,111 +1417,6 @@ app.post('/addCardsToDeck', async (req, res) => {
     return res.status(500).json({ success:false, message:'Server error', error:err.message });
   }
 });
-
-// GET /collection/count?name=<collection_name>
-app.get('/collection/count', async (req, res) => {
-  const sessionId = req.cookies.session;
-  const username  = sessions[sessionId];
-  const collection = req.query.name;
-  if (!username) {
-    return res.status(401).json({ success: false, message: 'Not authenticated' });
-  }
-  if (!collection) {
-    return res.status(400).json({ success: false, message: 'Missing collection name' });
-  }
-  try {
-    const { data, error } = await supabase
-      .from('collections')
-      .select('card_ids')
-      .eq('user_name', username)
-      .eq('collection_name', collection)
-      .single();
-    if (error || !data) {
-      return res.status(404).json({ success: false, message: 'Collection not found' });
-    }
-    const count = Array.isArray(data.card_ids) ? data.card_ids.length : 0;
-    return res.json({ success: true, count });
-  } catch (err) {
-    console.error('Error in /collection/count:', err);
-    return res.status(500).json({ success: false, message: 'Server error' });
-  }
-});
-
-
-app.get('/collection/get', async (req, res) => {
-  const sessionId = req.cookies.session;
-  const username  = sessions[sessionId];
-  const deckName  = req.query.name;
-
-  if (!username) {
-    return res.status(401).json({ success: false, message: 'Not authenticated' });
-  }
-  if (!deckName) {
-    return res.status(400).json({ success: false, message: 'Missing deck name' });
-  }
-
-  try {
-    // Reuse your Supabase call from /getDeck
-    const { data: deck, error } = await supabase
-      .from('decks')
-      .select('card_ids')
-      .eq('user_name', username)
-      .eq('deck_name', deckName)
-      .single();
-
-    if (error || !deck) {
-      return res.status(404).json({ success: false, message: 'Deck not found' });
-    }
-
-    return res.json({ success: true, card_ids: deck.card_ids || [] });
-  } catch (err) {
-    console.error('Error in /collection/get:', err);
-    return res.status(500).json({ success: false, message: 'Server error' });
-  }
-});
-
-// POST /collection/create
-app.post('/collection/create', async (req, res) => {
-  const { collection_name, card_ids } = req.body;
-  const sessionId = req.cookies.session;
-  const user_name = sessions[sessionId];
-  if (!user_name) return res.status(401).json({ success:false });
-  // Upsert the entire collection
-  const { data, error } = await supabase
-    .from('collections')
-    .upsert({ user_name, collection_name, card_ids });
-  if (error) return res.status(500).json({ success:false, message:error.message });
-  res.json({ success:true });
-});
-
-// POST /collection/add
-app.post('/collection/add', async (req, res) => {
-  const { collection_name, card_ids } = req.body;
-  const sessionId = req.cookies.session;
-  const user_name = sessions[sessionId];
-  if (!user_name) return res.status(401).json({ success:false });
-  // Pull existing
-  const { data: existing } = await supabase
-    .from('collections')
-    .select('card_ids')
-    .eq('user_name', user_name)
-    .eq('collection_name', collection_name)
-    .single();
-  if (!existing) return res.status(404).json({ success:false });
-  // Merge & dedupe
-  const merged = Array.from(new Set([ ...existing.card_ids, ...card_ids ]));
-  const { error } = await supabase
-    .from('collections')
-    .update({ card_ids: merged })
-    .eq('user_name', user_name)
-    .eq('collection_name', collection_name);
-  if (error) return res.status(500).json({ success:false, message:error.message });
-  res.json({ success:true });
-});
-
-// GET /collection/get?name=...
-// (you already created this)
-
 
 // 404 handler
 app.use((req, res) => {
