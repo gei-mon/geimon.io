@@ -1241,9 +1241,17 @@ html, body {
                         sessionStorage.setItem(matchId, JSON.stringify(scores));
 
                         if (draw) {
-                            bannerMain = "Draw";
-                            bannerReason = `Current score: ${(scores[username] || 0)}-` +
-                                        `${scores.draws}-${scores[winner === username ? loser : winner] || 0}`;
+                            const params      = new URLSearchParams(window.location.search);
+                            const opponent    = (params.get("playerUsername") === username)
+                                                ? params.get("opponentUsername")
+                                                : params.get("playerUsername");
+
+                            const myWins      = scores[username]   || 0;
+                            const oppWins     = scores[opponent]   || 0;
+                            const draws       = scores.draws       || 0;
+
+                            bannerMain   = "Draw";
+                            bannerReason = `Current score: ${myWins}-${draws}-${oppWins}`;
                         } else if (scores[winner] >= 2) {
                             window.matchFinished = true;
                             const myWins   = scores[username] || 0;
@@ -1256,9 +1264,7 @@ html, body {
                             bannerMain = (winner === username) ? "You Win" : "You Lose";
                         }
                     } else {
-                        bannerMain = draw
-                            ? "Draw"
-                            : (winner === username ? "You Win" : "You Lose");
+                        bannerMain = draw ? "Draw" : (winner === username ? "You Win" : "You Lose");
                     }
 
                     /* ----------  show the banner once  ---------- */
