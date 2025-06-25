@@ -2755,7 +2755,7 @@ html, body {
                         board.appendChild(opponentZoneArtContainer);
                     });
                 } else {
-                    const opponentData = isSinglePlayer ? null : await fetchOpponentData(otherPlayerName);
+                    const opponentData = isSinglePlayer ? null : await fetchOpponentData(opponentUsernameParam);
                     if (opponentData?.zoneArt) {
                         opponentZoneArtImage.src =
                             `${serverUrl}/Public/Images/Zones/${opponentData.zoneArt}`;
@@ -2812,7 +2812,7 @@ html, body {
                         board.appendChild(opponentProfilePic);
                     });
                 } else {
-                    const opponentData = await fetchOpponentData(otherPlayerName);
+                    const opponentData = await fetchOpponentData(opponentUsernameParam);
                     const opponentProfilePic = document.createElement("div");
                     Object.assign(opponentProfilePic.style, {
                         position:"absolute", left:"1960px", top:"70px",
@@ -2845,7 +2845,7 @@ html, body {
                         opponentDeckBox.style.backgroundRepeat = "no-repeat";
                     });
                 } else {
-                    const opponentData = await fetchOpponentData(otherPlayerName);
+                    const opponentData = await fetchOpponentData(opponentUsernameParam);
                     if (opponentData?.deckSleeve) {
                         opponentDeckBox.style.backgroundImage =
                         `url(${serverUrl}/Public/Images/Sleeves/${opponentData.deckSleeve})`;
