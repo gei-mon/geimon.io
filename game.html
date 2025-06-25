@@ -1653,9 +1653,9 @@ html, body {
                         await updateLocalFromGameState();
 
                         if (data.draw) {
-                            alert("The game ended in a draw.");
+                            //alert("The game ended in a draw.");
                         } else if (data.loser) {
-                            showBanner(data.loser === username ? "You Lose" : "You Win", data.reason);
+                            //showBanner(data.loser === username ? "You Lose" : "You Win", data.reason);
                         }
                     } else {
                         console.error("Failed to change phase:", await response.text());
@@ -1688,9 +1688,9 @@ html, body {
                         alert("The game ended in a draw.");
                     } else if (data.loser) {
                         if (data.loser === username) {
-                            showBanner("You Lose", data.reason);
+                            //showBanner("You Lose", data.reason);
                         } else {
-                            showBanner("You Win", data.reason);
+                            //showBanner("You Win", data.reason);
                         }
                     }
                 } else {
@@ -1946,13 +1946,13 @@ html, body {
 
         /* ─── 3) final result for both players ───────────────────────────────────── */
         socket.on('draw_result', ({ from, response }) => {
-        const txt = response === 'accept'
-            ? `${from} accepted the draw. The game is a draw.`
-            : `${from} rejected the draw. Play continues.`;
-        window.appendSystem(txt);
+            const txt = response === 'accept'
+                ? `${from} accepted the draw. The game is a draw.`
+                : `${from} rejected the draw. Play continues.`;
+            window.appendSystem(txt);
 
-        /* show the end-game banner if accepted */
-        if (response === 'accept') showBanner('Draw', 'Players agreed to a draw');
+            /* show the end-game banner if accepted */
+            //if (response === 'accept') showBanner('Draw', 'Players agreed to a draw');
         });
         /* ─────────────────────────────────────────────────────────────────────────── */
 
@@ -5596,7 +5596,7 @@ html, body {
                                         reason: "Surrendered"
                                     })
                                 });
-                                showBanner("You Lose", "Surrendered");
+                                //showBanner("You Lose", "Surrendered");
                                 document.body.removeChild(confirmBox);
                             } catch (err) {
                                 console.error("Error ending game:", err);
@@ -6042,9 +6042,9 @@ html, body {
         });
 
         if (loser === username) {
-            showBanner("You Lose", "Your life reached 0");
+            //showBanner("You Lose", "Your life reached 0");
         } else {
-            showBanner("You Win", "Opponent’s life reached 0");
+            //showBanner("You Win", "Opponent’s life reached 0");
         }
     });
 
