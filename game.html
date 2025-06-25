@@ -411,6 +411,7 @@ html, body {
                     <button id="chat-send">Send</button>
                 </div>
                 <div class="tab-content" id="game-log">
+                    <p id="game-number" style="font-weight:bold; margin-bottom:4px;"></p>
                     <p><span id="totem" style="color: goldenrod;"></span></p>
                     <div id="game-log-placeholder"></div>
                 </div>
@@ -566,7 +567,8 @@ html, body {
             }
             localStorage.setItem("currentMatchId", matchId);
             window.matchId = matchId;
-            let gameNumber = 1; // You could increment this between games in Match mode
+            let gameNumber = Number(sessionStorage.getItem(matchId + "_gameNum") || 1);
+            document.getElementById("game-number").textContent = `Game ${gameNumber}`;
             const serverUrl = "https://geimon-app-833627ba44e0.herokuapp.com";
 
             //console.log("Gametype:", gameType, "SinglePlayer:", isSinglePlayer);
@@ -1224,7 +1226,6 @@ html, body {
                     }
                 });
 
-
                 socket.on("game_over", async ({ winner, loser, draw, reason }) => {
                     /* ----------  score bookkeeping  ---------- */
                     const matchId = window.matchId;
@@ -1318,6 +1319,7 @@ html, body {
                                 playerDeck:  params.get("playerDeck"),
                                 opponentDeck:params.get("opponentDeck")
                             };
+                            sessionStorage.setItem(matchId + "_gameNum", gameNumber + 1);
 
                             // start the game on the server and tell both clients
                             await fetch(serverUrl+"/startGame", {
@@ -1326,7 +1328,7 @@ html, body {
                                 headers:{ "Content-Type":"application/json" },
                                 body:JSON.stringify(settings)
                             });
-                            socket.emit("match_next_game", settings);
+                            await new Promise(res => socket.emit("match_next_game", settings, res));
 
                             window.location.href = `game.html?${new URLSearchParams(settings)}`;
                         }
@@ -1628,6 +1630,7 @@ html, body {
                             goesFirst: turnOrder,
                             matchId
                         };
+                        sessionStorage.setItem(matchId + "_gameNum", gameNumber + 1);
 
                         await fetch("https://geimon-app-833627ba44e0.herokuapp.com/startGame", {
                             method: "POST",
