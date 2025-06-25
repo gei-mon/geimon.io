@@ -5074,34 +5074,78 @@ html, body {
                     }
                     case "Add 1 Counter": {
                         playSoundEffect('tomb');
-                        cardData.counters = (cardData.counters || 0) + 1;
-                        updateCounterOverlay(cardElement, cardData);
-                        addGameLogEntry(`${cardData.name} gains 1 counter (now ${cardData.counters}).`);
-                        await sendZoneUpdate([cardData.boardState]);
+
+                        const zone = gameState[owner]?.[zoneName];
+                        const cardIndex = zone?.findIndex(c => String(c.id) === String(cardId)) ?? -1;
+
+                        let card = cardData; // fallback
+                        if (cardIndex !== -1) {
+                            card = zone[cardIndex];
+                            card.counters = (card.counters || 0) + 1;
+                        }
+
+                        updateCounterOverlay(cardElement, card);
+                        const name = card.name || `Card ${card.id}`;
+                        addGameLogEntry(`${name} gains 1 counter (now ${card.counters}).`);
+
+                        await sendZoneUpdate({ zone: zoneName, cards: gameState[owner][zoneName] });
                         break;
                     }
                     case "Add 5 Counters": {
                         playSoundEffect('tomb');
-                        cardData.counters = (cardData.counters || 0) + 5;
-                        updateCounterOverlay(cardElement, cardData);
-                        addGameLogEntry(`${cardData.name} gains 5 counters (now ${cardData.counters}).`);
-                        await sendZoneUpdate([cardData.boardState]);
+
+                        const zone = gameState[owner]?.[zoneName];
+                        const cardIndex = zone?.findIndex(c => String(c.id) === String(cardId)) ?? -1;
+
+                        let card = cardData; // fallback
+                        if (cardIndex !== -1) {
+                            card = zone[cardIndex];
+                            card.counters = (card.counters || 0) + 5;
+                        }
+
+                        updateCounterOverlay(cardElement, card);
+                        const name = card.name || `Card ${card.id}`;
+                        addGameLogEntry(`${name} gains 5 counters (now ${card.counters}).`);
+
+                        await sendZoneUpdate({ zone: zoneName, cards: gameState[owner][zoneName] });
                         break;
                     }
                     case "Remove 1 Counter": {
                         playSoundEffect('tomb');
-                        cardData.counters = Math.max(0, (cardData.counters || 0) - 1);
-                        updateCounterOverlay(cardElement, cardData);
-                        addGameLogEntry(`${cardData.name} loses 1 counter (now ${cardData.counters}).`);
-                        await sendZoneUpdate([cardData.boardState]);
+
+                        const zone = gameState[owner]?.[zoneName];
+                        const cardIndex = zone?.findIndex(c => String(c.id) === String(cardId)) ?? -1;
+
+                        let card = cardData; // fallback
+                        if (cardIndex !== -1) {
+                            card = zone[cardIndex];
+                            card.counters = Math.max(0, (card.counters || 0) - 1);
+                        }
+
+                        updateCounterOverlay(cardElement, card);
+                        const name = card.name || `Card ${card.id}`;
+                        addGameLogEntry(`${name} loses 1 counter (now ${card.counters}).`);
+
+                        await sendZoneUpdate({ zone: zoneName, cards: gameState[owner][zoneName] });
                         break;
                     }
                     case "Remove All Counters": {
                         playSoundEffect('tomb');
-                        cardData.counters = 0;
-                        updateCounterOverlay(cardElement, cardData);
-                        addGameLogEntry(`${cardData.name} loses all counters.`);
-                        await sendZoneUpdate([cardData.boardState]);
+
+                        const zone = gameState[owner]?.[zoneName];
+                        const cardIndex = zone?.findIndex(c => String(c.id) === String(cardId)) ?? -1;
+
+                        let card = cardData; // fallback
+                        if (cardIndex !== -1) {
+                            card = zone[cardIndex];
+                            card.counters = 0;
+                        }
+
+                        updateCounterOverlay(cardElement, card);
+                        const name = card.name || `Card ${card.id}`;
+                        addGameLogEntry(`${name} loses all counters.`);
+
+                        await sendZoneUpdate({ zone: zoneName, cards: gameState[owner][zoneName] });
                         break;
                     }
                     case "Remove": {
