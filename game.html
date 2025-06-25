@@ -2507,8 +2507,16 @@ html, body {
             const opponentDeckName = new URLSearchParams(window.location.search).get("opponentDeck");
 
             //console.log("→ fetching deck", playerDeckName, "owned by", playerUsernameParam);
-            const playerDeckResult = await fetchDeckCards(playerDeckName, playerUsernameParam);
-            const opponentDeckResult = await fetchDeckCards(opponentDeckName, opponentUsernameParam);
+            //const playerDeckResult = await fetchDeckCards(playerDeckName, playerUsernameParam);
+            //const opponentDeckResult = await fetchDeckCards(opponentDeckName, opponentUsernameParam);
+            const playerDeckCardIds   = await getDeckFromParam("playerDeck");
+            if (playerDeckCardIds.length === 0) {
+                return alert(`Could not load your deck "${playerDeckName}" (owner: ${playerUsernameParam}).`);
+            }
+            const opponentDeckCardIds = await getDeckFromParam("opponentDeck");
+            if (opponentDeckCardIds.length === 0) {
+                return alert(`Could not load opponent’s deck "${opponentDeckName}" (owner: ${opponentUsernameParam}).`);
+            }
             // Keep the background image visible
             const bgImage = document.querySelector(".bg-image");
 
@@ -2963,8 +2971,8 @@ html, body {
                             gameId,
                             playerUsername: username,
                             opponentUsername: isSinglePlayerParam ? "Bot" : opponentUsernameParam,
-                            playerDeck,
-                            opponentDeck,
+                            playerDeck: playerDeckCardIds,
+                            opponentDeck: opponentDeckCardIds,
                             isSinglePlayer: isSinglePlayerParam,
                             goesFirst,
                             totem: selectedTotem
@@ -4142,7 +4150,7 @@ html, body {
 
                 // 2) Decide whose deck we’re fetching
                 const isOpponent = paramName === "opponentDeck";
-                const owner      = isOpponent ? opponentUsernameParam : username;
+                const owner      = isOpponent ? opponentUsernameParam : playerUsernameParam;
 
                 // 3) Fetch from the server, passing the owner
                 try {

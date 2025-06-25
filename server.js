@@ -790,9 +790,14 @@ app.post('/getDeckCards', async (req, res) => {
       .select('card_ids')
       .eq('user_name', lookupUser)
       .eq('deck_name', deck_name)
-      .single();
+      .maybeSingle();
 
-    if (error) throw error;
+    if (error) {
+      console.error('Error fetching deck cards:', error);
+      return res
+        .status(500)
+        .json({ success: false, message: 'Error fetching deck cards', error: error.message });
+    }
     if (!deck) {
       return res.status(404).json({ success: false, message: 'Deck not found' });
     }
