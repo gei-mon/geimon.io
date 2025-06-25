@@ -1225,12 +1225,12 @@ html, body {
                 });
 
 
-                socket.on("game_over", ({ winner, loser, draw, reason }) => {
+                socket.on("game_over", async ({ winner, loser, draw, reason }) => {
                     /* ----------  score bookkeeping  ---------- */
+                    const matchId = window.matchId;
                     let bannerMain, bannerReason = reason;
 
                     if (gameType === "match") {
-                        const matchId = window.matchId;
                         const scores  = JSON.parse(sessionStorage.getItem(matchId) || "{}");
 
                         if (draw) {
@@ -1242,6 +1242,8 @@ html, body {
 
                         if (draw) {
                             bannerMain = "Draw";
+                            bannerReason = `Current score: ${(scores[username] || 0)}-` +
+                                        `${scores.draws}-${scores[winner === username ? loser : winner] || 0}`;
                         } else if (scores[winner] >= 2) {
                             window.matchFinished = true;
                             const myWins   = scores[username] || 0;
@@ -1265,6 +1267,63 @@ html, body {
                     /* ----------  loser’s totem picker (only if match continues) ---------- */
                     if (gameType === "match" && !window.matchFinished && bannerMain === "You Lose") {
                         setTimeout(prepareTotemSelectionForNextGame, 3000);
+                    }
+                    /* ---------- DRAW: player who went second now builds the next game ---------- */
+                    if (gameType === "match" && draw && !window.matchFinished) {
+                        const params = new URLSearchParams(window.location.search);
+
+                        // who was second last game?
+                        const secondPlayer =
+                            (params.get("turnOrder") === "first")
+                                ? params.get("opponentUsername")   // opponent went second
+                                : params.get("playerUsername");    // I went second
+
+                        if (username === secondPlayer) {           // ← only this client prepares
+                            const allTotems = Object.assign({}, ...totems);      // your totem dict
+                            const used      = JSON.parse(sessionStorage.getItem(matchId+"_totems")||"[]");
+
+                            // pick a random unused totem
+                            let choices = Object.keys(allTotems).filter(t => !used.includes(t));
+                            if (choices.length === 0) {            // all used once – reset
+                                choices = Object.keys(allTotems);
+                                used.length = 0;
+                            }
+                            const totem = choices[Math.floor(Math.random()*choices.length)];
+                            used.push(totem);
+                            sessionStorage.setItem(matchId+"_totems", JSON.stringify(used));
+
+                            // flip who goes first
+                            const nextTurn = (params.get("turnOrder") === "first") ? "second" : "first";
+
+                            // build next-game settings
+                            const newGameId = Math.random().toString(36).substr(2,9);
+                            const settings = {
+                                prevGameId: params.get("gameId"),
+                                gameId:     newGameId,
+                                matchId,
+                                gameType:   "match",
+                                totem,
+                                totemText:  allTotems[totem],
+                                turnOrder:  nextTurn,
+                                goesFirst:  nextTurn,
+                                isSinglePlayer: params.get("isSinglePlayer")==="true",
+                                playerUsername: params.get("playerUsername"),
+                                opponentUsername: params.get("opponentUsername"),
+                                playerDeck:  params.get("playerDeck"),
+                                opponentDeck:params.get("opponentDeck")
+                            };
+
+                            // start the game on the server and tell both clients
+                            await fetch(serverUrl+"/startGame", {
+                                method:"POST",
+                                credentials:"include",
+                                headers:{ "Content-Type":"application/json" },
+                                body:JSON.stringify(settings)
+                            });
+                            socket.emit("match_next_game", settings);
+
+                            window.location.href = `game.html?${new URLSearchParams(settings)}`;
+                        }
                     }
                 });
 
