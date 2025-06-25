@@ -248,11 +248,9 @@
     <div id="deck-info" style="position: relative; left: -45px; width: 1200px; margin: 12px auto; padding: 8px 16px; background-color: #3a3a3a; color: white; font-family: 'Racing Sans One', cursive; font-size: 18px; border-radius: 8px; display: flex; gap: 8px; text-align: center; justify-content: space-between;">
         Loading deck info...
     </div>
-
-      <div class="viewing-window" id="viewing-window">
+    <div class="viewing-window" id="viewing-window">
         <div class="scaled-card" id="scaled-card"></div>
-      </div>
-
+    </div>
 
     <div class="main-container">
     <div class="container">
@@ -262,11 +260,12 @@
     <div class="search-panel" id="search-panel">
         <p id="card-count" style="font-family: 'Racing Sans One', cursive; font-size: 18px; margin-bottom: 8px; margin-top: 8px;">Cards Found: 0</p>
         <input type="search" id="search-input" placeholder="Search cards by name..." autocomplete="off" />
-        <button id="toggle-options-btn" style="margin-bottom: 8px; font-family: 'Racing Sans One', cursive; cursor: pointer;">
+        <button id="toggle-options-btn" style="margin-bottom: 8px; font-family: 'Racing Sans One', cursive; cursor: pointer; width: 300px; display:block; margin:0 auto 8px;">
             Show More Options ▼
         </button>
         <div class="search-options" id="search-options">
-            <div id="card-type-buttons" style="display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px;">
+            <span class="line-gap"></span>
+            <div id="card-type-buttons" style="display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 10px; justify-content:center;">
                 <button class="type-btn" data-type="Champion">Champion</button>
                 <button class="type-btn" data-type="Action">Action</button>
                 <button class="type-btn" data-type="Equipment">Equipment</button>
