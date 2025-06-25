@@ -5087,6 +5087,7 @@ html, body {
                     case "Add 1 Counter": {
                         playSoundEffect('tomb');
 
+                        const cardId = cardData.id;
                         const info = findCardOwnerAndZone(cardId);
                         if (!info) break;
                         const { owner, zoneName } = info;
@@ -5110,6 +5111,7 @@ html, body {
                     case "Add 5 Counters": {
                         playSoundEffect('tomb');
 
+                        const cardId = cardData.id;
                         const info = findCardOwnerAndZone(cardId);
                         if (!info) break;
                         const { owner, zoneName } = info;
@@ -5133,6 +5135,7 @@ html, body {
                     case "Remove 1 Counter": {
                         playSoundEffect('tomb');
 
+                        const cardId = cardData.id;
                         const info = findCardOwnerAndZone(cardId);
                         if (!info) break;
                         const { owner, zoneName } = info;
@@ -5156,6 +5159,7 @@ html, body {
                     case "Remove All Counters": {
                         playSoundEffect('tomb');
 
+                        const cardId = cardData.id;
                         const info = findCardOwnerAndZone(cardId);
                         if (!info) break;
                         const { owner, zoneName } = info;
