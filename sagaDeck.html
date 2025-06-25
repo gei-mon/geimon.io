@@ -383,13 +383,19 @@
 
             const params = new URLSearchParams(location.search);
             const colName = params.get('collection');
-            let cardIds = [];
-            // fetch the collection
-            (async()=>{
-              const r = await fetch(`https://geimon-app-833627ba44e0.herokuapp.com/collection/get?name=${encodeURIComponent(colName)}`);
-              const { card_ids } = await r.json();
-              cardIds = card_ids || [];
-              renderDeck();
+
+            let collectionIds = [];
+            let collectionPool = [];
+            let deckIds       = JSON.parse(localStorage.getItem('workingDeck')||'[]');
+
+            (async () => {
+                const r = await fetch(`/collection/get?name=${encodeURIComponent(colName)}`,{credentials:'include'});
+                const { success, card_ids } = await r.json();
+                if (!success) { alert('…'); return; }
+                collectionIds  = card_ids;
+                collectionPool = cards.filter(c=>collectionIds.includes(String(c.id)));
+                renderDeck();           // uses deckIds
+                renderSearchResults();  // uses collectionPool
             })();
 
             const saveDeckBtn = document.getElementById("save-deck-btn");
@@ -406,7 +412,7 @@
                     Reflex: 5
                 };
 
-                const deckCards = cardIds
+                const deckCards = deckIds
                     .map(id => cards.find(card => String(card.id) === String(id)))
                     .filter(Boolean);
 
@@ -416,8 +422,8 @@
                     return a.name.localeCompare(b.name);
                 });
 
-                cardIds = sorted.map(card => card.id);
-                localStorage.setItem("selectedDeckCards", JSON.stringify(cardIds));
+                deckIds = sorted.map(c=>c.id);
+                localStorage.setItem('workingDeck', JSON.stringify(deckIds));
                 renderDeck();
             });
 
@@ -430,7 +436,7 @@
                     method: 'POST',
                     credentials: 'include',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ deck_name: deckName, card_ids: cardIds })
+                    body: JSON.stringify({ deck_name: deckName, card_ids: deckIds })
                 });
 
                 if (!response.ok) {
@@ -463,18 +469,18 @@
             });
 
             function saveDeck() {
-                localStorage.setItem("selectedDeckCards", JSON.stringify(cardIds));
+                localStorage.setItem("selectedDeckCards", JSON.stringify(deckIds));
                 updateDeckInfo(
-                    cardIds
+                    deckIds
                         .map(id => cards.find(card => String(card.id) === String(id)))
                         .filter(Boolean)
                 );
             }
 
             function addCardToDeck(cardId) {
-                if (!cardIds.includes(cardId)) {
-                    cardIds.push(cardId);
-                    saveDeck();
+                if (!deckIds.includes(cardId)) {
+                    deckIds.push(cardId);
+                    localStorage.setItem('workingDeck', JSON.stringify(deckIds));
                     renderDeck();
                     renderSearchResults(); // refresh search to update buttons
                 } else {
@@ -483,21 +489,21 @@
             }
 
             function removeCardFromDeck(cardId) {
-                cardIds = cardIds.filter(id => String(id) !== String(cardId));
-                saveDeck();
+                deckIds = deckIds.filter(id => String(id) !== String(cardId));
+                localStorage.setItem('workingDeck', JSON.stringify(deckIds));
                 renderDeck();
                 renderSearchResults(); // refresh search to update buttons
             }
 
             function renderDeck() {
                 container.innerHTML = "";
-                if (cardIds.length === 0) {
+                if (deckIds.length === 0) {
                     emptyMessage.style.display = "block";
                     updateDeckInfo([]);
                 } else {
                     emptyMessage.style.display = "none";
 
-                    const deckCards = cardIds
+                    const deckCards = deckIds
                         .map(id => cards.find(card => String(card.id) === String(id)))
                         .filter(Boolean);
 
@@ -540,7 +546,7 @@
 
         renderDeck();
 
-        const sortedCards = [...cards].sort((a, b) => a.name.localeCompare(b.name));
+        //const sortedCards = [...cards].sort((a, b) => a.name.localeCompare(b.name));
 
         async function updateDeckInfo(deckCards) {
             const deckInfoDiv = document.getElementById('deck-info');
@@ -623,24 +629,6 @@
             renderSearchResults();
         });
 
-        let collectionPool = []; 
-        (async () => {
-        const r = await fetch(
-            `https://geimon-app-833627ba44e0.herokuapp.com/collection/get?name=${encodeURIComponent(colName)}`,
-            { credentials:'include' }
-        );
-        const { success, card_ids } = await r.json();
-            if (!success) {
-                alert('Could not load your collection.');
-                return;
-            }
-            cardIds = card_ids;
-            // Build the pool of actual card objects
-            collectionPool = cards.filter(c => cardIds.includes(String(c.id)));
-            renderDeck();
-            renderSearchResults();  // initial render
-        })();
-
         function renderSearchResults() {
             // 1) Clear previous results
             searchResults.innerHTML = "";
@@ -653,7 +641,7 @@
             const costQuery      = costInput.value.trim().toLowerCase();
 
             // 3) Filter from the player's collectionPool
-            const filteredCards = collectionPool.filter(card => {
+            let filteredCards = collectionPool.filter(card => {
                 // Name
                 if (nameQuery && !card.name.toLowerCase().includes(nameQuery)) {
                 return false;
@@ -690,6 +678,10 @@
                 return true;
             });
 
+            filteredCards.sort((a, b) =>
+                a.name.localeCompare(b.name, undefined, { sensitivity: 'base' })
+            );
+
             // 4) Update count display
             document.getElementById("card-count").textContent =
                 `Cards Displayed: ${filteredCards.length}`;
@@ -702,7 +694,7 @@
                 // Override the built-in button behavior
                 const button = cardElement.querySelector(".card-button");
                 if (button) {
-                const isInDeck = cardIds.some(id => String(id) === String(card.id));
+                const isInDeck = deckIds.some(id => String(id) === String(card.id));
                 if (isInDeck) {
                     button.disabled = true;
                     button.style.cursor = "not-allowed";
@@ -734,7 +726,7 @@
                 });
             });
         }
-        renderSearchResults();
+        //renderSearchResults();
     });
 
     function adjustCardSpacing() {

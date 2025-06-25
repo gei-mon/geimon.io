@@ -222,12 +222,12 @@
             // Broadcast to both:
             socket.on('turnOrderChoice', ({ chooser, turn, totem, totemText }) => {
                     appendSystem(`${chooser} chose to go ${turn === 'first' ? 'First' : 'Second'}.`);
-                    if (!deckSelectEl.value || !otherDeck) return;
+                    if (!deck || !otherDeck) return;
 
                 // gather params
                 const params = new URLSearchParams({
                     gameId:      localStorage.getItem('roomId'),  // same roomId you used to join
-                    playerDeck:  deckSelectEl.value,
+                    playerDeck:  deck,
                     opponentDeck: otherDeck,
                     gameType:    'match',
                     totem,           // from server
@@ -291,55 +291,55 @@
 
             (async () => {
                 try {
-                    const deckRes = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/getUserDecks', {
-                        credentials: 'include'
-                    });
-                    const deckData = await deckRes.json();
-                    if (deckData.success && Array.isArray(deckData.decks)) {
-                        const names = deckData.decks
-                            .map(d => d.deck_name)
-                            .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
-                        deckSelectEl.innerHTML = '<option value="" disabled selected>Select Deck</option>';
-                        names.forEach(name => {
-                            const opt = document.createElement('option');
-                            opt.value       = name;
-                            opt.textContent = name;
-                            deckSelectEl.appendChild(opt);
-                        });
-                        const randomOpt = document.createElement('option');
-                        randomOpt.value       = 'Random';
-                        randomOpt.textContent = 'Random';
-                        deckSelectEl.appendChild(randomOpt);
-                    } else {
-                        console.error('Failed to fetch decks:', deckData);
-                    }
+                    //const deckRes = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/getUserDecks', {
+                        //credentials: 'include'
+                    //});
+                    //const deckData = await deckRes.json();
+                    //if (deckData.success && Array.isArray(deckData.decks)) {
+                      //  const names = deckData.decks
+                        //    .map(d => d.deck_name)
+                          //  .sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+                        //deckSelectEl.innerHTML = '<option value="" disabled selected>Select Deck</option>';
+                        //names.forEach(name => {
+                      //      const opt = document.createElement('option');
+                        ///    opt.value       = name;
+                           // opt.textContent = name;
+                            //deckSelectEl.appendChild(opt);
+                        //});
+                        //const randomOpt = document.createElement('option');
+                        //randomOpt.value       = 'Random';
+                        //randomOpt.textContent = 'Random';
+                        //deckSelectEl.appendChild(randomOpt);
+                    //} else {
+                        //console.error('Failed to fetch decks:', deckData);
+                    //}
                 } catch (err) {
-                    console.error('Error fetching decks:', err);
+                    //console.error('Error fetching decks:', err);
                 }
             })();
 
             let isReady = false;
             readyBtnEl.onclick = () => {
-                if (!deckSelectEl.value) {
-                    alert('Please select a deck.');
-                    return;
-                }
+                //if (!deckSelectEl.value) {
+                 //   alert('Please select a deck.');
+                 //   return;
+                //}
                 isReady = !isReady;
                 if (isReady) {
                     readyBtnEl.innerText           = 'Ready!';
                     readyBtnEl.style.backgroundColor = 'lightgreen';
-                    deckSelectEl.disabled          = true;
+                    //deckSelectEl.disabled          = true;
                     console.log('Emitting playerReady →', isReady);
                 } else {
                     readyBtnEl.innerText           = 'Ready?';
                     readyBtnEl.style.backgroundColor = 'lightgray';
-                    deckSelectEl.disabled          = false;
+                    //deckSelectEl.disabled          = false;
                 }
                 readyMe = isReady;
                 socket.emit('playerReady', {
                     username,
                     ready: isReady,
-                    deck: deckSelectEl.value
+                    deck: deck
                 });
             };
         })();
