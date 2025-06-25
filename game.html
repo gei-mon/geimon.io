@@ -1112,8 +1112,8 @@ html, body {
             });
         }
 
-        const isRefresh = sessionStorage.getItem("hasVisited") === "true";
-        sessionStorage.setItem("hasVisited", "true");
+        const isRefresh = sessionStorage.getItem(`visited_${gameId}`) === "true";
+        sessionStorage.setItem(`visited_${gameId}`, "true");
 
         window.onload = () => {
             (async () => {
