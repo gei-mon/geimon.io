@@ -611,12 +611,6 @@ html, body {
 
             const socket = window.socket;                // 1️⃣ make an alias everyone can use
 
-            socket.on('connect', () => {
-                // run after *every* reconnect or page-reload
-                const roomId = localStorage.getItem('roomId') || gameId;
-                socket.emit('init', { username, roomId });
-            });
-
             socket.on('play_sound', ({ url }) => {
                 const audio = new Audio(url);
                 audio.play().catch(err => console.error('Failed to play sound:', err));
@@ -1020,8 +1014,12 @@ html, body {
             }
             const roomId = localStorage.getItem('roomId') || gameId;
             socket.emit('init', { username, roomId });
+
+            socket.on('connect', () => {
+                socket.emit('init', { username, roomId });
+            });
+
             socket.on('room_joined', ({ roomId: joined }) => {
-                //console.log("⚡ joined lobby room", joined);
                 socket.emit('join_game_room', { gameId });
             });
         }
@@ -6227,13 +6225,13 @@ html, body {
         function sendChat () {
             const txt = chatInput.value.trim();
             if (!txt) return;
-                socket.emit('message', txt);
+                socket.emit('message', { username, text: txt });
                 chatInput.value = '';
         }
         chatSend.onclick = sendChat;
         chatInput.addEventListener('keypress', e => {
-        if (e.key === 'Enter') sendChat();
-            socket.emit('typing', true);
+            if (e.key === 'Enter') sendChat();
+                socket.emit('typing', true);
         });
         chatInput.addEventListener('input', () => {
             if (chatInput.value === '') socket.emit('typing', false);
