@@ -4130,7 +4130,6 @@ html, body {
         }
 
         async function getDeckFromParam(paramName) {
-            
             const urlParams = new URLSearchParams(window.location.search);
             const playerUsernameParam   = urlParams.get("playerUsername")    || username;
             const opponentUsernameParam = urlParams.get("opponentUsername")  || (isSinglePlayer ? "Bot" : username);
@@ -4148,7 +4147,7 @@ html, body {
 
             // 2) Decide whose deck we’re fetching
             const isOpponent = paramName === "opponentDeck";
-            const owner      = isOpponent ? opponentUsernameParam : playerUsernameParam;
+            const owner      = isOpponent ? opponentUsernameParam : username;
 
             // 3) Fetch from the server, passing the owner
             try {
@@ -4171,12 +4170,8 @@ html, body {
             const playerUsernameParam   = urlParams.get("playerUsername")    || username;
             const opponentUsernameParam = urlParams.get("opponentUsername")  || (isSinglePlayer ? "Bot" : username);
 
-            // 4) Load both decks
             const playerDeckCardIds   = await getDeckFromParam("playerDeck");
             const opponentDeckCardIds = await getDeckFromParam("opponentDeck");
-
-            // 5) Now you can continue your setup, e.g.:
-            // startGameWithDecks(playerDeckCardIds, opponentDeckCardIds);
         }, 200);
 
 
