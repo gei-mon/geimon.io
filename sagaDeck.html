@@ -238,10 +238,20 @@
             Close
         </button>
     </div>
+
     <div style="text-align: center; margin-top: 0px;">
-    <button id="toggleRarityBtn" class="button buttonEvenSmaller" style="text-shadow: 1px 1px 2px black, -1px -1px 2px black, 1px -1px 2px black, -1px 1px 2px black; background-color: rgb(35, 63, 220); color: white; padding: 8px 16px; font-family: 'Racing Sans One', cursive; border-radius: 6px; cursor: pointer; width: 131.75px;">
-        Hide Rarities
-    </button>
+        <button id="undoBtn" class="button buttonEvenSmaller" style="text-shadow: 1px 1px 2px black, -1px -1px 2px black, 1px -1px 2px black, -1px 1px 2px black; background-color: rgb(170, 45, 107); color: white; padding: 8px 16px; font-family: 'Racing Sans One', cursive; border-radius: 6px; cursor: pointer;">
+            ← &nbsp; Undo
+        </button>
+
+        <button id="toggleRarityBtn" class="button buttonEvenSmaller" style="margin: 0 6px; text-shadow: 1px 1px 2px black, -1px -1px 2px black, 1px -1px 2px black, -1px 1px 2px black; background-color: rgb(35, 63, 220); color: white; padding: 8px 16px; font-family: 'Racing Sans One', cursive; border-radius: 6px; cursor: pointer; width: 131.75px;">
+            Hide Rarities
+        </button>
+
+        <button id="redoBtn" class="button buttonEvenSmaller" style="text-shadow: 1px 1px 2px black, -1px -1px 2px black, 1px -1px 2px black, -1px 1px 2px black; background-color: rgb(0, 118, 10); color: white; padding: 8px 16px; font-family: 'Racing Sans One', cursive; border-radius: 6px; cursor: pointer;">
+            Redo &nbsp; →
+        </button>
+
         <button class="button buttonEvenSmaller" id="soloButton" onclick="window.open('solo.html', '_blank')" style="display: none; text-shadow: 1px 1px 2px black, -1px -1px 2px black, 1px -1px 2px black, -1px 1px 2px black; background-color: rgb(115, 243, 166); color: white; padding: 8px 16px; font-family: 'Racing Sans One', cursive; border-radius: 6px; cursor: pointer;">Test Deck</button>
     </div>
 
@@ -347,6 +357,16 @@
                     //badge.textContent  = rarity;
                     badge.textContent = rarity.trim()[0].toUpperCase();
                     cardElement.appendChild(badge);
+                }
+
+                // History stacks
+                const undoStack = [];
+                const redoStack = [];
+
+                // Utility to push a fresh operation and clear redo
+                function record(op) {
+                    undoStack.push(op);
+                    redoStack.length = 0;
                 }
 
                 const toggleRarityBtn = document.getElementById('toggleRarityBtn');
@@ -504,6 +524,40 @@
                     }
                 })();
 
+            const undoBtn = document.getElementById('undoBtn');
+            const redoBtn = document.getElementById('redoBtn');
+
+            undoBtn.addEventListener('click', () => {
+                const op = undoStack.pop();
+                if (!op) return;     // nothing to undo
+                if (op.type === 'add') {
+                    deckIds.push(op.cardId);
+                    // inverse for redo:
+                    redoStack.push({ type: 'remove', cardId: op.cardId });
+                } else if (op.type === 'remove') {
+                    deckIds = deckIds.filter(id => String(id) !== String(op.cardId));
+                    redoStack.push({ type: 'add', cardId: op.cardId });
+                }
+                localStorage.setItem("selectedDeckCards", JSON.stringify(deckIds));
+                renderDeck();
+                renderSearchResults();
+            });
+
+            redoBtn.addEventListener('click', () => {
+                const op = redoStack.pop();
+                if (!op) return;     // nothing to redo
+                if (op.type === 'add') {
+                    deckIds.push(op.cardId);
+                    undoStack.push({ type: 'remove', cardId: op.cardId });
+                } else if (op.type === 'remove') {
+                    deckIds = deckIds.filter(id => String(id) !== String(op.cardId));
+                    undoStack.push({ type: 'add', cardId: op.cardId });
+                }
+                localStorage.setItem("selectedDeckCards", JSON.stringify(deckIds));
+                renderDeck();
+                renderSearchResults();
+            });
+
                 const saveDeckBtn = document.getElementById("save-deck-btn");
                 const closeDeckBtn = document.getElementById("close-deck-btn");
                 const sortDeckBtn = document.getElementById("sort-deck-btn");
@@ -608,8 +662,9 @@
 
                 function addCardToDeck(cardId) {
                     if (!deckIds.includes(cardId)) {
+                        record({ type: 'remove', cardId });
                         deckIds.push(cardId);
-                        localStorage.setItem(storageKeyDeck, JSON.stringify(deckIds));
+                        localStorage.setItem("selectedDeckCards", JSON.stringify(deckIds));
                         renderDeck();
                         renderSearchResults(); // refresh search to update buttons
                     } else {
@@ -618,8 +673,9 @@
                 }
 
                 function removeCardFromDeck(cardId) {
+                    record({ type: 'add', cardId });
                     deckIds = deckIds.filter(id => String(id) !== String(cardId));
-                    localStorage.setItem(storageKeyDeck, JSON.stringify(deckIds));
+                    localStorage.setItem("selectedDeckCards", JSON.stringify(deckIds));
                     renderDeck();
                     renderSearchResults(); // refresh search to update buttons
                 }
