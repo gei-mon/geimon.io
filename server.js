@@ -428,6 +428,28 @@ io.on('connection', (socket) => {
     io.to(gameId).emit('sync_zone', { owner: to,   zone, cards: gs[to][zone]   });
   });
 
+  socket.on(
+    "phase_change_request",
+    ({ gameId, username: actor, phase }, ack) => {
+    const state = gameStates.get(gameId);
+    if (!state) {
+      return ack({ error: "Game not found" });
+    }
+    if (state.turn.currentPlayer !== actor) {
+      return ack({ error: "Not your turn" });
+    }
+
+    // commit phase change
+    state.turn.currentPhase = phase;
+
+    // broadcast to all players
+    io.to(gameId).emit("phase_change", { phase, username: actor });
+
+    // immediate client ack
+    ack({ currentPhase: phase });
+    }
+  );
+
   socket.on('message', (text) => {
     const user = userMap.get(socket.id);
     if (!user) return;

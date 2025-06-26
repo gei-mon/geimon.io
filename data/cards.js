@@ -4542,7 +4542,7 @@ export const cards = [
     image: `${cardArtFolder}/Equipments/Gleam.png`,
     rarity: "Superior",
     type: "Equipment",
-    condition: "Attach only to a Knight",
+    condition: "Attach only to a Blademaster or Knight",
     cost: "Your Opponent can Retrieve 1",
     tags: ["Equipment"],
     damage: "",
@@ -6987,7 +6987,7 @@ export const cards = [
     condition: "Your Opponent controls at least 1 Champion",
     cost: "Basic",
     tags: ["Oldblood","Blademaster","Specialist"],
-    damage: 6,
+    damage: 4,
     life: 4,
     damageThreshold: "2",
     abilities: [
