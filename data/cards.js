@@ -389,7 +389,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Resurrect the first Target and attach this card to it, and if you do, Obliterate the other 3 Targets. If this card leaves the Zone, Destroy the attached Champion.",
+        text: "Resurrect the first Target and attach this card to it, and if you do, Obliterate the other 3 Targets. If this card leaves the Zone, Obliterate the attached Champion.",
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -1668,7 +1668,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Bottoms Up!: Target 1 Champion on the Zone; Target Champion's Damage Threshold increases by 1, but their Damage is reduced by 1.",
+        text: "Bottoms Up!: Target 1 face-up Champion on the Zone; Target Champion's Damage Threshold increases by 1, but their Damage is reduced by 1.",
         keywords: ["blank"],
         effect1name: "Bottoms Up",
         effect2name: "",
@@ -2681,7 +2681,7 @@ export const cards = [
     abilities: [
       {
         text: `Lightbulb: Excavate 1; Return it to either the top or the bottom of your Deck. <span class="line-gap"></span> Wake-Up Jolt: Sacrifice this card and Target 1 Champion or Obelisk in your Reserve; Activate Target (ignoring its cost). <span class="line-gap"></span> Helping Hand: If this card is in your Tomb: Obliterate this card and Target 1 Clockwork or Helper in your Tomb; Resurrect Target, it gains Deathtouch and its Life is reduced to 1.`,
-        keywords: ["blank"],
+        keywords: ["Deathtouch"],
         effect1name: "Lightbulb",
         effect2name: "Wake-Up Jolt",
         effect3name: "Helping Hand",
@@ -2849,7 +2849,7 @@ export const cards = [
     rarity: "Rare",
     type: "Rush",
     condition: "",
-    cost: "Target 1 Champion you control",
+    cost: "Target 1 face-up Champion you control",
     tags: ["Rush"],
     damage: 0,
     life: 0,
@@ -2922,8 +2922,8 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Mount <span class="line-gap"></span> Mounted: Destroy this card and Target 1 Champion you control; Target Champion cannot be blocked this turn.`,
-        keywords: ["Mount"],
+        text: `Mount <span class="line-gap"></span> Mounted: Destroy this card and Target 1 face-up Champion you control; Target gains Unstoppable until the end of this turn.`,
+        keywords: ["Mount","Unstoppable"],
         effect1name: "",
         effect2name: "Mounted",
         effect3name: "",
@@ -3780,7 +3780,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `On Activation: Recruit 1 Clockwork, that Champion becomes this card's Commander. <span class="line-gap"></span> Mount <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted: This card's Commander cannot attack. <span class="line-gap"></span> Mounted: Target 1 Champion on the Zone; Target takes 5 Damage.`,
+        text: `On Activation: Recruit 1 Clockwork, that Champion becomes this card's Commander. <span class="line-gap"></span> Mount <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted: This card's Commander cannot attack. <span class="line-gap"></span> Mounted: Target 1 face-up Champion on the Zone; Target takes 5 Damage.`,
         keywords: ["Shielded","Mount"],
         effect1name: "On Activation",
         effect2name: "Mounted",
@@ -4088,7 +4088,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Defender, Naive <span class="line-gap"></span> While Equipped: This Champion is unaffected by its Passives. <span class="line-gap"></span> Hail Mary: Destroy 1 of this Champion's attached Equipments and Target 1 Champion on the Zone; Deal 3 Damage to Target.`,
+        text: `Defender, Naive <span class="line-gap"></span> While Equipped: This Champion is unaffected by its Passives. <span class="line-gap"></span> Hail Mary: Destroy 1 of this Champion's attached Equipments and Target 1 face-up Champion on the Zone; Target takes 3 Damage.`,
         keywords: ["Defender","Naive"],
         effect1name: "While Equipped",
         effect2name: "Hail Mary",
@@ -4176,7 +4176,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Maintenance <span class="line-gap"></span> Target 1 Champion you control; Attach 1 Equipment to Target from your Hand or Deck (ignoring its cost). <span class="line-gap"></span> While you control at least 1 face-up \"Castle\" Obelisk and this card is in you Reserve: Destroy 1 face-up card you control; Activate this card (ignoring its cost). <span class="line-gap"></span> While you control at least 2 other face-up \"Castle\" Obelisks: Increase the Damage Threshold of your Champions by 1 for every face-up \"Castle\" Obelisk you control.`,
+        text: `Maintenance <span class="line-gap"></span> Target 1 face-up Champion you control; Attach 1 Equipment to Target from your Hand or Deck (ignoring its cost). <span class="line-gap"></span> While you control at least 1 face-up \"Castle\" Obelisk and this card is in you Reserve: Destroy 1 face-up card you control; Activate this card (ignoring its cost). <span class="line-gap"></span> While you control at least 2 other face-up \"Castle\" Obelisks: Increase the Damage Threshold of your Champions by 1 for every face-up \"Castle\" Obelisk you control.`,
         keywords: ["Maintenance"],
         effect1name: "While you control at least 1 face-up \"Castle\" Obelisk and this card is in you Reserve",
         effect2name: "While you control at least 2 other face-up \"Castle\" Obelisks",
@@ -4264,7 +4264,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Maintenance <span class="line-gap"></span> Offer 1 Life and Target 1 Champion you control; Target gains 3 Life. <span class="line-gap"></span> If a Champion(s) you control is Destroyed while you control at least 1 other face-up \"Castle\" Obelisk (Reflex): Flip this card face-down; Resurrect 1 of the Destroyed Champions. <span class="line-gap"></span> While you control at least 2 other face-up \"Castle\" Obelisks: Your Champions gain Greedy.`,
+        text: `Maintenance <span class="line-gap"></span> Offer 1 Life and Target 1 face-up Champion you control; Target gains 3 Life. <span class="line-gap"></span> If a Champion(s) you control is Destroyed while you control at least 1 other face-up \"Castle\" Obelisk (Reflex): Flip this card face-down; Resurrect 1 of the Destroyed Champions. <span class="line-gap"></span> While you control at least 2 other face-up \"Castle\" Obelisks: Your Champions gain Greedy.`,
         keywords: ["Maintenance","Greedy"],
         effect1name: "While you control at least 1 other face-up \"Castle\" Obelisk",
         effect2name: "While you control at least 2 other face-up \"Castle\" Obelisks",
@@ -4770,7 +4770,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Destroy Target, and if you do, your Opponent can Recruit 1 that shares a tag with the Destroyed Champion, and has equal or less Damage than it.",
+        text: "Destroy Target, and if you do, your Opponent can Recruit 1 that shares a tag with the Destroyed Champion, and has equal or less Damage than it does in the Tomb.",
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -5144,7 +5144,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "If the attached Champion deals battle Damage: Target 1 Champion on the Zone; Deal 2 Damage to Target.",
+        text: "If the attached Champion deals battle Damage: Target 1 face-up Champion on the Zone; Deal 2 Damage to Target.",
         keywords: ["blank"],
         effect1name: "If the attached Champion deals battle Damage",
         effect2name: "",
@@ -5709,7 +5709,7 @@ export const cards = [
     rarity: "Superior",
     type: "Action",
     condition: "",
-    cost: "Target 1 Champion on the Zone, its controller gains 6 Life",
+    cost: "Target 1 face-up Champion on the Zone, its controller gains 6 Life",
     tags: ["Action"],
     damage: 0,
     life: 0,
@@ -5995,7 +5995,7 @@ export const cards = [
     rarity: "Common",
     type: "Action",
     condition: "Your Opponent controls a Specialist that is not also a Lifebinder",
-    cost: "Target 1 Champion your Opponent controls",
+    cost: "Target 1 face-up Champion your Opponent controls",
     tags: ["Action"],
     damage: 0,
     life: 0,
@@ -6259,15 +6259,15 @@ export const cards = [
     rarity: "Common",
     type: "Rush",
     condition: "",
-    cost: "Target 1 Champion you control",
+    cost: "Target 1 face-up Champion you control",
     tags: ["Rush"],
     damage: 0,
     life: 0,
     damageThreshold: "",
     abilities: [
       {
-        text: "Increase Target's Damage by 4. Destroy the Target during the End Phase.",
-        keywords: ["blank"],
+        text: "Increase Target's Damage by 4, and it gains Menace. Destroy the Target during the End Phase.",
+        keywords: ["Menace"],
         effect1name: "",
         effect2name: "",
         effect3name: "",
@@ -6479,7 +6479,7 @@ export const cards = [
     rarity: "Rare",
     type: "Reflex",
     condition: "",
-    cost: "Target 1 Champion you control",
+    cost: "Target 1 face-up Champion you control",
     tags: ["Reflex"],
     damage: "",
     life: "",
@@ -6919,7 +6919,7 @@ export const cards = [
     rarity: "Rare",
     type: "Reflex",
     condition: "It is your Opponent's turn",
-    cost: "Target 1 Champion you control with 1 or Less Damage",
+    cost: "Target 1 face-up Champion you control with 1 or Less Damage",
     tags: ["Reflex"],
     damage: "",
     life: "",
@@ -6942,7 +6942,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "",
-    tags: ["Driftmarked","Swordsdancer","Mage","Outlaw"],
+    tags: ["Driftmarked","Blademaster","Mage","Outlaw"],
     damage: 4,
     life: 4,
     damageThreshold: "1",
