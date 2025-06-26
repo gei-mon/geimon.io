@@ -6706,7 +6706,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Add the top card of your Opponent's Deck to your Hand.`,
+        text: `Add the top card of your Opponent's Deck to your Hand. <span class="line-gap"></span> If you activate it, you can do so without paying its cost.`,
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
