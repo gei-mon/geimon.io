@@ -560,6 +560,7 @@ padding-bottom: calc(32px + 3px + 2px) !important;
 .hover-menu {
   font-family: Arial, sans-serif;
   border-radius: 4px;
+  z-index: 550000 !important;
 }
 
 .bottom-bar {
@@ -944,10 +945,6 @@ background-color: #29c7bd;
 #opponentReserveBox>div{
   transform: rotate(180deg) scale(0.25) !important;
   transform-origin: bottom center !important;  /* pivot from new “top”   */
-}
-
-.hover-menu {
-  z-index: 200000 !important;
 }
 
 #life-adjust-box {

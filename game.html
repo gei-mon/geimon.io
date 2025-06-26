@@ -2209,19 +2209,19 @@ html, body {
         const targetTimers = {};                 // cardId ➜ timeout handle
 
         function flashTargetRing(cardId, duration = 2500){
-        // 1️⃣  add / refresh the visual
-        document.querySelectorAll(`[data-card-id="${cardId}"]`)
-                .forEach(el => el.classList.add('target-highlight'));
-
-        // 2️⃣  clear any existing timer for this card
-        clearTimeout(targetTimers[cardId]);
-
-        // 3️⃣  schedule automatic removal
-        targetTimers[cardId] = setTimeout(() => {
+            // 1️⃣  add / refresh the visual
             document.querySelectorAll(`[data-card-id="${cardId}"]`)
-                    .forEach(el => el.classList.remove('target-highlight'));
-            delete targetTimers[cardId];
-        }, duration);
+                    .forEach(el => el.classList.add('target-highlight'));
+
+            // 2️⃣  clear any existing timer for this card
+            clearTimeout(targetTimers[cardId]);
+
+            // 3️⃣  schedule automatic removal
+            targetTimers[cardId] = setTimeout(() => {
+                document.querySelectorAll(`[data-card-id="${cardId}"]`)
+                        .forEach(el => el.classList.remove('target-highlight'));
+                delete targetTimers[cardId];
+            }, duration);
         }
 
         function wrapCardButton(btn){
@@ -4967,13 +4967,11 @@ html, body {
             hoverMenu.className = "hover-menu";
             Object.assign(hoverMenu.style, {
                 position:       "absolute",
-                bottom:         "100%",
-                left:           "50%",
                 transform:      "translateX(-50%) scale(1)",
                 marginBottom:   "0em",
                 backgroundColor:"#111",
                 color:          "white",
-                border:         "1px solid #ccc",
+                border:         "6px solid yellow",
                 padding:        "6px",
                 display:        "none",
                 zIndex:         "550000",
@@ -5033,16 +5031,25 @@ html, body {
                     "To Arsenal (Face-Down)"
                 ];
             } else if (zone === "Zone (Champion)") {
-                hoverMenu.style.fontSize = "3.5em";
+                hoverMenu.style.fontSize = "3em";
+                //hoverMenu.style.bottom = "-75%";
+                //hoverMenu.style.left = "-110%"
+                //hoverMenu.style.display = "grid";
+                hoverMenu.style.gridTemplateColumns = "repeat(2,max-content)";
+                hoverMenu.style.gridGap = "4px 8px";
+                hoverMenu.style.justifyContent = "center";
+                hoverMenu.style.flexDirection = "";
+                hoverMenu.style.columnCount = "";
+                hoverMenu.style.bottom = "90%";
                 opts = [
                     "Change Control",
                     "Add 1 Counter",
-                    "Add 5 Counters",
-                    "Remove 1 Counter",
-                    "Remove All Counters",
-                    "To Hand",
+                    //"Add 5 Counters",
                     "To Tomb",
+                    "Remove 1 Counter",
                     "To Void",
+                    //"Remove All Counters",
+                    "To Hand",
                     "To Top of Deck",
                     "To Bottom of Deck",
                     "To Reserve",
@@ -5384,7 +5391,13 @@ html, body {
             function showMenu() {
                 clearTimeout(hideTimer);
                 cardElement.style.zIndex = "120000";
-                hoverMenu.style.display = "flex";
+                cardElement.style.outline = "6px solid yellow";
+                if (zone === "Zone (Champion)") {
+                    hoverMenu.style.display = "grid";
+                }
+                else {
+                    hoverMenu.style.display = "flex";
+                }
 
                 // force initial state
                 void hoverMenu.offsetWidth;
@@ -5408,14 +5421,35 @@ html, body {
                 setTimeout(() => {
                     hoverMenu.style.display   = "none";
                     cardElement.style.zIndex  = "";
+                    cardElement.style.outline = "";
                 }, 150);
             }
 
+            const targetOverlay = document.createElement('div');
+            Object.assign(targetOverlay.style, {
+                position:   'absolute',
+                top:        '0',
+                left:       '0',
+                width:      '100%',
+                height:     '100%',
+                background: 'transparent',
+                cursor:     'pointer',
+                zIndex:     '220000'    // above the card but well below hover-menu (z-index 550000)
+            });
+            // forward hover to show/hide your menu
+            targetOverlay.addEventListener('mouseenter', showMenu);
+            targetOverlay.addEventListener('mouseleave', () => hideTimer = setTimeout(hideMenu, 150));
+            // handle “target” clicks
+            targetOverlay.addEventListener('click', e => {
+                e.stopPropagation();
+                flashTargetRing(cardData.id);
+                socket.emit('card_target', { gameId, cardId: cardData.id });
+            });
+            cardElement.appendChild(targetOverlay);
+
             // 6) event wiring
-            cardElement.addEventListener("mouseenter", showMenu);
-            cardElement.addEventListener("mouseleave", () => hideTimer = setTimeout(hideMenu, 150));
             hoverMenu.addEventListener("mouseenter", () => clearTimeout(hideTimer));
-            hoverMenu.addEventListener("mouseleave", hideMenu);
+            hoverMenu.addEventListener("mouseleave", () => hideTimer = setTimeout(hideMenu, 150));
         }
 
         function applyHoverMenus() {
@@ -6036,6 +6070,16 @@ html, body {
             });
         }
     applyHoverMenus();
+
+    setInterval(() => {
+        // you may want to guard that gameState is initialized
+        if (!gameState) return;
+
+        renderLatestTombCard();
+        renderLatestVoidCard();
+        renderLatestOpponentTombCard();
+        renderLatestOpponentVoidCard();
+    }, 250);
 
     async function flipCard(cardId) {
         const facedownZone = gameState[username].FaceDownZone;
