@@ -6794,7 +6794,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `During each of you Intermissions, roll a six-sided die, and apply the following effect for that turn: <span class="line-gap"></span> 1 • Discard 1. <span class="line-gap"></span> 2 • Draw 1. <span class="line-gap"></span> 3 • Double the Damage of 1 Champion you control until the end of this turn. <span class="line-gap"></span> 4 • Obliterate the top 5 cards of your Deck. <span class="line-gap"></span> 5 • Set 1 non-Champion from your Tomb face-down into your Arsenal. </span><span class="line-gap"></span> 6 • Change control of this card to your Opponent.`,
+        text: `During each of you Intermissions, roll a six-sided die, and apply the following effect: <span class="line-gap"></span> 1 • Discard 1. <span class="line-gap"></span> 2 • Draw 1. <span class="line-gap"></span> 3 • Double the Damage of 1 Champion you control until the end of this turn. <span class="line-gap"></span> 4 • Obliterate the top 5 cards of your Deck. <span class="line-gap"></span> 5 • Set 1 non-Champion from your Tomb face-down into your Arsenal. </span><span class="line-gap"></span> 6 • Change control of this card to your Opponent.`,
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -6908,6 +6908,50 @@ export const cards = [
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "903",
+    name: "Look At This Cat",
+    image: `${cardArtFolder}/Reflex/LookAtThisCat.png`,
+    rarity: "Rare",
+    type: "Reflex",
+    condition: "It is your Opponent's turn",
+    cost: "Target 1 Champion you control with 1 or Less Damage",
+    tags: ["Reflex"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Target gains Bulletproof, Defender, and Non-Believer until the end of this turn, also, it is the only card your Opponent can Target for effects and attacks this turn.`,
+        keywords: ["Bulletproof","Defender","Non-Believer"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "1141",
+    name: "Voyage, Pactbound Pirate",
+    image: `${cardArtFolder}/Champions/Voyage.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "",
+    tags: ["Driftmarked","Swordsdancer","Mage","Outlaw"],
+    damage: 4,
+    life: 4,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Priority, Veilbind <span class="line-gap"></span> On Rally: Offer up to 3 Life from this card; Increase this card's Damage by the amount offered. <span class="line-gap"></span> Pactbound (Reflex): If this card would be Destroyed (Mandatory): Offer 8 Life; It is not Destroyed.`,
+        keywords: ["Priority","Veilbind"],
+        effect1name: "On Rally",
+        effect2name: "Pactbound",
         effect3name: "",
       }
     ]
