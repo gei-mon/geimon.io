@@ -1470,7 +1470,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Sniffer Sense: Target 1 face-down Champion; Flip the target face-up (Flip effects are not activated). <span class="line-gap"></span> Take the Bullet (Reflex): If your Opponent declares an attack or activates an effect that Destroys a card: Sacrifice this card; Negate the attack or effect, and if you do, destroy the triggering card. <span class="line-gap"></span> Helping Hand: If this card is in your Tomb: Obliterate this card and Target 1 Frontier or Helper in your Tomb; Resurrect Target.`,
+        text: `Sniffer Sense: Target 1 face-down Champion; Flip the Target face-up (Flip effects are negated). <span class="line-gap"></span> Take the Bullet (Reflex): If your Opponent declares an attack or activates an effect that Destroys a card: Sacrifice this card; Negate the attack or effect, and if you do, destroy the triggering card. <span class="line-gap"></span> Helping Hand: If this card is in your Tomb: Obliterate this card and Target 1 Frontier or Helper in your Tomb; Resurrect Target.`,
         keywords: ["blank"],
         effect1name: "Sniffer Sense",
         effect2name: "Take the Bullet",
@@ -6623,6 +6623,116 @@ export const cards = [
         effect1name: "Deadly Strike",
         effect2name: "Smoke Bomb",
         effect3name: "If this card is in your Tomb",
+      }
+    ]
+  },
+  {
+    id: "302",
+    name: "Yume, Lightblade",
+    image: `${cardArtFolder}/Champions/YumeLightblade.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "",
+    cost: "Obliterate 1 Champion with a Flip effect from either Tomb",
+    tags: ["Nightveil","Blademaster","Ninja"],
+    damage: 5,
+    life: 6,
+    damageThreshold: "4",
+    abilities: [
+      {
+        text: `Lifetouch, Priority <span class="line-gap"></span> If a Champion increases to 10 or more Life by the effect of this card's Lifetouch: Destroy it. <span class="line-gap"></span> Radiant Burst (Reflex): Move this card to your Reserve. <span class="line-gap"></span> If this card is in your Reserve: Obliterate 1 Champion with a Flip effect from either your Hand or face-up Zone; Add this card to your Hand.`,
+        keywords: ["Lifetouch","Priority"],
+        effect1name: "If a Champion is raised to have 10 or more Life by the effect of this card's",
+        effect2name: "Radiant Burst",
+        effect3name: "If this card is in your Reserve",
+      }
+    ]
+  },
+  {
+    id: "303",
+    name: "Stealth Infiltration",
+    image: `${cardArtFolder}/Actions/StealthInfiltration.png`,
+    rarity: "Rare",
+    type: "Action",
+    condition: "",
+    cost: "",
+    tags: ["Action"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Rally face-down from your Hand 1 Basic Champion.`,
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "361",
+    name: "Silveredge, Harbinger for the Moon",
+    image: `${cardArtFolder}/Champions/Silveredge.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "This card is in your Hand, Reserve, Tomb, or Void and a Champion you control is Destroyed",
+    cost: "Your Opponent Gains 4 Life",
+    tags: ["Valiant","Protector","Hero"],
+    damage: 3,
+    life: 8,
+    damageThreshold: "4",
+    abilities: [
+      {
+        text: `Defender, Warded <span class="line-gap"></span> Moonlight Barrier (Reflex): If a card on the Zone would be Destroyed: Offer 1 Life from this card; It is not Destroyed. <span class="line-gap"></span> Cosmic Crashdown: If this card is Resurrected or Unleashed: Deal 3 Damage to all face-up Champions your Opponent controls.`,
+        keywords: ["Defender","Warded"],
+        effect1name: "Moonlight Barrier",
+        effect2name: "Silverlight Blasts",
+        effect3name: "Cosmic Crashdown",
+      }
+    ]
+  },
+  {
+    id: "421",
+    name: "Gimme That!",
+    image: `${cardArtFolder}/Actions/GimmeThat.png`,
+    rarity: "Common",
+    type: "Action",
+    condition: "",
+    cost: "",
+    tags: ["Action"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Add the top card of your Opponent's Deck to your Hand.`,
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "661",
+    name: "Carly, Brightest Burnout",
+    image: `${cardArtFolder}/Champions/CarlyBrightestBurnout.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "",
+    cost: "Rally 1 Grenade Token to your Zone",
+    tags: ["Chrome","Inventor","Specialist"],
+    damage: 6,
+    life: 3,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Repair Specialist, Solitary <span class="line-gap"></span> On Rally: Activate 1 Obelisk from your Hand, Deck, or Reserve (ignoring its cost). <span class="line-gap"></span> Mine Now: Target 1 Equipment in either Tomb; Attach Target to this card (ignoring its cost). <span class="line-gap"></span> Let's Bounce (Reflex): If this card is Targeted for an attack or effect: Destroy 1 card in your Arsenal; Bounce this card.`,
+        keywords: ["Repair Specialist","Solitary"],
+        effect1name: "On Rally",
+        effect2name: "Mine Now",
+        effect3name: "Let's Bounce",
       }
     ]
   },
