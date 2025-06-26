@@ -1155,7 +1155,7 @@ export const cards = [
     rarity: "Common",
     type: "Rush",
     condition: "",
-    cost: "Target 3 Champions on the Zone",
+    cost: "Target 3 face-up Champions on the Zone",
     tags: ["Rush"],
     damage: "",
     life: "",
