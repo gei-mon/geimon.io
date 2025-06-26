@@ -1470,7 +1470,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Sniffer Sense: Target 1 face-down Champion; Flip the Target face-up (Flip effects are negated). <span class="line-gap"></span> Take the Bullet (Reflex): If your Opponent declares an attack or activates an effect that Destroys a card: Sacrifice this card; Negate the attack or effect, and if you do, destroy the triggering card. <span class="line-gap"></span> Helping Hand: If this card is in your Tomb: Obliterate this card and Target 1 Frontier or Helper in your Tomb; Resurrect Target.`,
+        text: `Sniffer Sense: Target 1 face-down Champion; Flip the Target face-up (negate its Flip effects). <span class="line-gap"></span> Take the Bullet (Reflex): If your Opponent declares an attack or activates an effect that Destroys a card: Sacrifice this card; Negate the attack or effect, and if you do, destroy the triggering card. <span class="line-gap"></span> Helping Hand: If this card is in your Tomb: Obliterate this card and Target 1 Frontier or Helper in your Tomb; Resurrect Target.`,
         keywords: ["blank"],
         effect1name: "Sniffer Sense",
         effect2name: "Take the Bullet",
@@ -2658,7 +2658,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Repair Specialist <span class="line-gap"></span> On Rally: Activate 1 Equipment or Obelisk from your Hand, Deck, or Tomb (ignoring its cost). <span class="line-gap"></span> Upgrade: Rally 1 Blocker Token to your Opponent's Zone; Add 1 Equipment. <span class="line-gap"></span> Emergency Transport (Reflex): If this card isn't a Commander: Obliterate the top 6 cards of your Deck; Activate 1 Commander Obelisk from your Hand, Deck, or Tomb (ignoring its cost).`,
+        text: `Repair Specialist <span class="line-gap"></span> On Rally: Activate 1 Equipment or Obelisk from your Hand, Deck, or Tomb (ignoring its cost). <span class="line-gap"></span> Upgrade: Rally 1 Blocker Token to your Opponent's Zone; Add 1 Equipment. <span class="line-gap"></span> Emergency Transport (Reflex): If this card isn't a Commander: Obliterate mill 6; Activate 1 Commander Obelisk from your Hand, Deck, or Tomb (ignoring its cost).`,
         keywords: ["Repair Specialist"],
         effect1name: "On Rally",
         effect2name: "Upgrade",
@@ -4176,7 +4176,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Maintenance <span class="line-gap"></span> Target 1 face-up Champion you control; Attach 1 Equipment to Target from your Hand or Deck (ignoring its cost). <span class="line-gap"></span> While you control at least 1 face-up \"Castle\" Obelisk and this card is in you Reserve: Destroy 1 face-up card you control; Activate this card (ignoring its cost). <span class="line-gap"></span> While you control at least 2 other face-up \"Castle\" Obelisks: Increase the Damage Threshold of your Champions by 1 for every face-up \"Castle\" Obelisk you control.`,
+        text: `Maintenance <br> Target 1 face-up Champion you control; Attach 1 Equipment to Target from your Hand or Deck (ignoring its cost). <br> While you control at least 1 face-up \"Castle\" Obelisk and this card is in you Reserve: Destroy 1 face-up card you control; Activate this card (ignoring its cost). <br> While you control at least 2 other face-up \"Castle\" Obelisks: Increase the Damage Threshold of your Champions by 1 for every face-up \"Castle\" Obelisk you control.`,
         keywords: ["Maintenance"],
         effect1name: "While you control at least 1 face-up \"Castle\" Obelisk and this card is in you Reserve",
         effect2name: "While you control at least 2 other face-up \"Castle\" Obelisks",
