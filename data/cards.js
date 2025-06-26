@@ -6684,7 +6684,7 @@ export const cards = [
     damageThreshold: "4",
     abilities: [
       {
-        text: `Defender, Warded <span class="line-gap"></span> Moonlight Barrier (Reflex): If a card on the Zone would be Destroyed: Offer 1 Life from this card; It is not Destroyed. <span class="line-gap"></span> Cosmic Crashdown: If this card is Resurrected or Unleashed: Deal 3 Damage to all face-up Champions your Opponent controls.`,
+        text: `Defender, Warded <span class="line-gap"></span> Moonlight Barrier (Reflex): If a card(s) on the Zone would be Destroyed: Offer 1 Life from this card; They is not Destroyed. <span class="line-gap"></span> Cosmic Crashdown: If this card is Resurrected or Unleashed: Deal 3 Damage to all face-up Champions your Opponent controls.`,
         keywords: ["Defender","Warded"],
         effect1name: "Moonlight Barrier",
         effect2name: "Silverlight Blasts",
