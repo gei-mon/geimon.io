@@ -6678,17 +6678,61 @@ export const cards = [
     type: "Champion",
     condition: "This card is in your Hand, Reserve, Tomb, or Void and a Champion you control is Destroyed",
     cost: "Your Opponent Gains 4 Life",
-    tags: ["Valiant","Protector","Hero"],
+    tags: ["Valiant","Protector","Centurion","Hero"],
     damage: 3,
     life: 8,
     damageThreshold: "4",
     abilities: [
       {
-        text: `Defender, Warded <span class="line-gap"></span> Moonlight Barrier (Reflex): If a card(s) on the Zone would be Destroyed: Offer 1 Life from this card; They is not Destroyed. <span class="line-gap"></span> Cosmic Crashdown: If this card is Resurrected or Unleashed: Deal 3 Damage to all face-up Champions your Opponent controls.`,
+        text: `Defender, Warded <span class="line-gap"></span> Moonlight Barrier (Reflex): If a card(s) on the Zone would be Destroyed: Offer 1 Life from this card; They are not Destroyed. <span class="line-gap"></span> Cosmic Crashdown: If this card is Resurrected or Unleashed: Deal 3 Damage to all face-up Champions your Opponent controls.`,
         keywords: ["Defender","Warded"],
         effect1name: "Moonlight Barrier",
-        effect2name: "Silverlight Blasts",
+        effect2name: "",
         effect3name: "Cosmic Crashdown",
+      }
+    ]
+  },
+  {
+    id: "362",
+    name: "Solar, Harbinger for the Sun",
+    image: `${cardArtFolder}/Champions/Solar.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "This card is in your Hand or Reserve and an attack is declared against you",
+    cost: "All face-up Champions take 1 Damage",
+    tags: ["Valiant","Protector","Centurion","Hero"],
+    damage: 9,
+    life: 3,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `Defender, Duelist, Priority <span class="line-gap"></span> On Rally: Retrieve 1 Hero. <span class="line-gap"></span> Sunlight Blast (Reflex): If a card is Targeted by an effect: Target 1 face-up Champion; Destroy Target. <span class="line-gap"></span> Solar Blitz (Exhaustion): Deal 2 Damage to all face-up Champions your Opponent controls.`,
+        keywords: ["Defender","Duelist", "Priority"],
+        effect1name: "Sunlight Blast",
+        effect2name: "Solar Blitz",
+        effect3name: "On Rally",
+      }
+    ]
+  },
+  {
+    id: "363",
+    name: "Dawnbreak, of the Sun and Moon",
+    image: `${cardArtFolder}/Champions/DawnbreakOfTheSunAndMoon.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "You have at least 1 Hero in your Tomb",
+    cost: "Discard 1",
+    tags: ["Valiant","Protector","Hero"],
+    damage: 5,
+    life: 5,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Duelist, Naive, Necrocharge, Priority <span class="line-gap"></span> On Rally: Add 1 Hero. <span class="line-gap"></span> Sunshine Sparkles (Reflex): If an attack is declared: Negate that attack.`,
+        keywords: ["Naive","Necrocharge","Duelist","Priority"],
+        effect1name: "Sunshine Sparkles",
+        effect2name: "",
+        effect3name: "On Rally",
       }
     ]
   },
@@ -6715,6 +6759,50 @@ export const cards = [
     ]
   },
   {
+    id: "422",
+    name: "Full House, Looks Like I Win",
+    image: `${cardArtFolder}/Actions/FullHouseLooksLikeIWin.png`,
+    rarity: "Rare",
+    type: "Action",
+    condition: "",
+    cost: "Reveal your entire Hand",
+    tags: ["Action"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Depending on the number of unique card types revealed, you can activate the following effects: <span class="line-gap"></span> 1 • Draw 1. <span class="line-gap"></span> 2 • Retrieve 1 non-Champion. <span class="line-gap"></span> 3 • Look at your Opponent's Hand. <span class="line-gap"></span> 4 • Destroy up to 2 cards from your Opponent's Arsenal. <span class="line-gap"></span> 5 • Take control of 1 of your Opponent's Champions. </span><span class="line-gap"></span> 6 • Skip your Opponent's next turn.`,
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "423",
+    name: "Lucky Spin",
+    image: `${cardArtFolder}/Actions/LuckySpin.png`,
+    rarity: "Common",
+    type: "Action",
+    condition: "",
+    cost: "",
+    tags: ["Action"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `During each of you Intermissions, roll a six-sided die, and apply the following effect for that turn: <span class="line-gap"></span> 1 • Discard 1. <span class="line-gap"></span> 2 • Draw 1. <span class="line-gap"></span> 3 • Double the Damage of 1 Champion you control until the end of this turn. <span class="line-gap"></span> 4 • Obliterate the top 5 cards of your Deck. <span class="line-gap"></span> 5 • Set 1 non-Champion from your Tomb face-down into your Arsenal. </span><span class="line-gap"></span> 6 • Change control of this card to your Opponent.`,
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
     id: "661",
     name: "Carly, Brightest Burnout",
     image: `${cardArtFolder}/Champions/CarlyBrightestBurnout.png`,
@@ -6733,6 +6821,50 @@ export const cards = [
         effect1name: "On Rally",
         effect2name: "Mine Now",
         effect3name: "Let's Bounce",
+      }
+    ]
+  },
+  {
+    id: "781",
+    name: "Skaridrex, the Mighty",
+    image: `${cardArtFolder}/Champions/Skaridrex.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "Sacrifice 1 Champion your Opponent controls, Rally this card under their control",
+    tags: ["Primordial","Megalith","Kaiju"],
+    damage: 9,
+    life: 10,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `Bloodrage, Menace <span class="line-gap"></span> On Rally (Mandatory): Your Opponent draws 1. <span class="line-gap"></span> City Breaker: If this card successfully attacks: You can Target 1 card on the Zone; Destroy Target. <span class="line-gap"></span> If Destroyed by Battle: Add 1 Kaiju.`,
+        keywords: ["Bloodrage","Menace"],
+        effect1name: "On Rally",
+        effect2name: "City Breaker",
+        effect3name: "If Destroyed by Battle",
+      }
+    ]
+  },
+  {
+    id: "782",
+    name: "Nyrieux, the Inevitable End",
+    image: `${cardArtFolder}/Champions/Nyrieux.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "",
+    cost: "Sacrifice 2 Champions your Opponent controls, Rally this card under their control",
+    tags: ["Primordial","Megalith","Kaiju"],
+    damage: 15,
+    life: 7,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `Bloodrage, Deathcurse <span class="line-gap"></span> The End of All Things: Discard your entire Hand (Minimum of 3 cards); Destroy all cards on the Zone. <span class="line-gap"></span> During your End Phase (Mandatory): Switch control of this card to your Opponent, and if you do, destroy it during the next End Phase.`,
+        keywords: ["Bloodrage","Deathcurse"],
+        effect1name: "On Rally",
+        effect2name: "The End of All Things",
+        effect3name: "During your End Phase",
       }
     ]
   },
