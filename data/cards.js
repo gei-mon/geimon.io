@@ -4462,11 +4462,11 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Forged <br><span class="line-gap"></span> If this card has 1 attached Equipment: This card gains Warded. <span class="line-gap"></span> If this card has 2 attached Equipments: This card gains Priority. <span class="line-gap"></span> If this card has 3 attached Equipments: This card gains Bulletproof.`,
+        text: `Forged <br><span class="line-gap"></span> If this card has at least 1 attached Equipment: This card gains Warded. <span class="line-gap"></span> If this card has at least 2 attached Equipments: This card gains Priority. <span class="line-gap"></span> If this card has at least 3 attached Equipments: This card gains Bulletproof.`,
         keywords: ["Forged","Warded","Priority","Bulletproof"],
-        effect1name: "If this card has 1 attached Equipment",
-        effect2name: "If this card has 2 attached Equipments",
-        effect3name: "If this card has 3 attached Equipments",
+        effect1name: "If this card has at least 1 attached Equipment",
+        effect2name: "If this card has at least 2 attached Equipments",
+        effect3name: "If this card has at least 3 attached Equipments",
       }
     ]
   },
@@ -6672,7 +6672,7 @@ export const cards = [
   },
   {
     id: "361",
-    name: "Silveredge, Harbinger for the Moon",
+    name: "Silveredge, Envoy of the Moon",
     image: `${cardArtFolder}/Champions/Silveredge.png`,
     rarity: "Legendary",
     type: "Champion",
@@ -6694,7 +6694,7 @@ export const cards = [
   },
   {
     id: "362",
-    name: "Solar, Harbinger for the Sun",
+    name: "Solar, Envoy of the Sun",
     image: `${cardArtFolder}/Champions/Solar.png`,
     rarity: "Legendary",
     type: "Champion",
@@ -6732,6 +6732,50 @@ export const cards = [
         keywords: ["Naive","Necrocharge","Duelist","Priority"],
         effect1name: "Sunshine Sparkles",
         effect2name: "",
+        effect3name: "On Rally",
+      }
+    ]
+  },
+  {
+    id: "364",
+    name: "Team Up Move",
+    image: `${cardArtFolder}/Rush/TeamUpMove.png`,
+    rarity: "Rare",
+    type: "Rush",
+    condition: "You control 3 or more Champions with a shared Tag",
+    cost: "Declare the shared Tag and Target 1 Champion you control with that Tag",
+    tags: ["Rush"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Target is the only Champion you can attack with this turn. Also, increase Target's Damage to be the sum of all Champions you control with the shared Tag.",
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "365",
+    name: "Mastermind, Envoy of Ingenuity",
+    image: `${cardArtFolder}/Champions/Mastermind.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "A Champion effect is activated",
+    cost: "Discard 3",
+    tags: ["Valiant","Protector","Centurion","Hero"],
+    damage: 3,
+    life: 3,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `Forged, Taskmaster <span class="line-gap"></span> On Rally: Excavate 3, add 1 revealed. <span class="line-gap"></span> Rapid Creation (Reflex): If a card is Targeted by an attack or effect: Excavate 5, activate 1 revealed Equipment or Obelisk (ignoring its cost). <span class="line-gap"></span> Toys for Everyone! (Exhaustion): Attach 1 Equipment to another Champion you control from your Hand or Deck (ignoring its cost).`,
+        keywords: ["Taskmaster","Forged"],
+        effect1name: "Rapid Creation",
+        effect2name: "Toys for Everyone",
         effect3name: "On Rally",
       }
     ]
@@ -6930,6 +6974,28 @@ export const cards = [
         keywords: ["Bulletproof","Defender","Non-Believer"],
         effect1name: "",
         effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "904",
+    name: "Alena, Monster Hunter",
+    image: `${cardArtFolder}/Champions/AlenaMonsterHunter.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "Your Opponent controls at least 1 Champion",
+    cost: "Basic",
+    tags: ["Oldblood","Blademaster","Specialist"],
+    damage: 6,
+    life: 4,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Duelist, Priority <span class="line-gap"></span> On Rally: Declare 1 Champion Tag; This card deals double battle Damage against Champions with that Tag. <span class="line-gap"></span> If this Champion has at least l attached Equipment: This card loses Duelist and gains Menace.`,
+        keywords: ["Duelist","Priority","Menace"],
+        effect1name: "On Rally",
+        effect2name: "If this Champion has at least l attached Equipment",
         effect3name: "",
       }
     ]

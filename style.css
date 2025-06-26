@@ -264,6 +264,10 @@ text-decoration: underline;
   background-color: #037389;
   color: #d8f7ff;
 }
+.oldblood {
+  background-color: #780000;
+  color: #ffadad;
+}
 .action {
   background-color: #ffac64;
   color: #000000;
