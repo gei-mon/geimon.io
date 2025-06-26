@@ -6785,10 +6785,10 @@ export const cards = [
     name: "Lucky Spin",
     image: `${cardArtFolder}/Actions/LuckySpin.png`,
     rarity: "Common",
-    type: "Action",
+    type: "Obelisk",
     condition: "",
     cost: "",
-    tags: ["Action"],
+    tags: ["Obelisk"],
     damage: "",
     life: "",
     damageThreshold: "",
@@ -6838,7 +6838,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: `Bloodrage, Menace <span class="line-gap"></span> On Rally (Mandatory): Your Opponent draws 1. <span class="line-gap"></span> City Breaker: If this card successfully attacks: You can Target 1 card on the Zone; Destroy Target. <span class="line-gap"></span> If Destroyed by Battle: Add 1 Kaiju.`,
+        text: `Bloodrage, Menace <span class="line-gap"></span> On Rally (Mandatory): Your Opponent draws 1. <span class="line-gap"></span> City Breaker: If this card successfully attacks: You can Target 1 card on the Zone; Destroy Target. <span class="line-gap"></span> If Destroyed by Battle: Add 1 Kaiju. <br>&nbsp;`,
         keywords: ["Bloodrage","Menace"],
         effect1name: "On Rally",
         effect2name: "City Breaker",
