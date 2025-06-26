@@ -6311,7 +6311,7 @@ export const cards = [
     abilities: [
       {
         text: "All Champions gain Forged until the end of this turn.",
-        keywords: ["blank"],
+        keywords: ["Forged"],
         effect1name: "",
         effect2name: "",
         effect3name: "",
@@ -6435,7 +6435,7 @@ export const cards = [
     rarity: "Common",
     type: "Reflex",
     condition: "",
-    cost: "Target 2 Champions on the Zone",
+    cost: "Target 2 Champions on the Zone controlled by different Players",
     tags: ["Reflex"],
     damage: "",
     life: "",
@@ -6596,7 +6596,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Flip Target face-up without activating its Flip effects.",
+        text: "Flip Target face-up (negate its Flip effects).",
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
