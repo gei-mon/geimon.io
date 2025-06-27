@@ -2373,26 +2373,6 @@ html, body {
             }, duration);
         }
 
-        function wrapCardButton(btn){
-            if (btn.dataset.targetWrapperAttached) return; // already done
-            btn.dataset.targetWrapperAttached = "true";
-
-            const original = btn._originalHandler || btn.onclick;   // keep whatever was there
-            btn._originalHandler = original;                       // (defensive)
-
-            btn.onclick = function(e){
-            if (typeof original === "function") original.call(this, e); // old behaviour first
-
-            const cardId = this.closest(".card")?.dataset.cardId;
-            if (!cardId) return;
-
-            flashTargetRing(cardId);               // instant local feedback
-            socket.emit("toggle_target", { gameId, cardId }); // sync to server
-            };
-        }
-
-        document.querySelectorAll(".card-button").forEach(wrapCardButton);
-
         const observer = new MutationObserver(muts => {
             muts.forEach(m => {
             m.addedNodes.forEach(node => {
@@ -4982,7 +4962,6 @@ html, body {
         }
 
         async function attachHoverMenu(cardElement, cardData) {
-            // don’t re-attach if already done
             if (cardElement.closest('#viewing-window') ||
                 cardElement.closest('.scaled-card')) {
                 return;
@@ -5706,7 +5685,7 @@ html, body {
                     height:     '100%',
                     background: 'transparent',
                     cursor:     'pointer',
-                    zIndex:     '220000'    // above the card but well below hover-menu (z-index 550000)
+                    zIndex:     '220000'
                 });
                 // forward hover to show/hide your menu
                 targetOverlay.addEventListener('mouseenter', showMenu);
@@ -5715,7 +5694,7 @@ html, body {
                 targetOverlay.addEventListener('click', e => {
                     e.stopPropagation();
                     flashTargetRing(cardData.id);
-                    socket.emit('card_target', { gameId, cardId: cardData.id });
+                    socket.emit('toggle_target', { gameId, cardId: cardData.id });
                 });
                 cardElement.appendChild(targetOverlay);
             }
