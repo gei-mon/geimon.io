@@ -4440,10 +4440,7 @@ html, body {
                     cardElement.addEventListener("mouseenter", () => {
                         scaledCardContainer.innerHTML = "";
                         const clone = cardElement.cloneNode(true);
-                        const sleeve = clone.querySelector(".sleeve-overlay");
-                        if (sleeve) sleeve.remove();
-                        const cloneButton = clone.querySelector(".card-button");
-                        if (cloneButton) cloneButton.remove();
+                        clone.querySelectorAll('.sleeve-overlay, .card-button, .target-overlay').forEach(el => el.remove());
                         clone.style.transform = "scale(1.2)";
                         clone.style.width = "100%";
                         clone.style.position = "relative";
@@ -4837,6 +4834,10 @@ html, body {
 
         async function attachHoverMenu(cardElement, cardData) {
             // don’t re-attach if already done
+            if (cardElement.closest('#viewing-window') ||
+                cardElement.closest('.scaled-card')) {
+                return;
+            }
             if (cardElement.dataset.hoverMenuAttached) return;
             cardElement.dataset.hoverMenuAttached = "true";
             cardElement.style.position = "relative";
@@ -5017,7 +5018,13 @@ html, body {
                     "Declare"
                 ];
             } else if (zone === "Deck") {
-                hoverMenu.style.fontSize = "3.5em";
+                hoverMenu.style.fontSize = "3em";
+                hoverMenu.style.gridTemplateColumns = "repeat(2,max-content)";
+                hoverMenu.style.gridGap = "4px 8px";
+                hoverMenu.style.justifyContent = "center";
+                hoverMenu.style.flexDirection = "";
+                hoverMenu.style.columnCount = "";
+                hoverMenu.style.bottom = "90%";
                 opts = [
                     "To Hand",
                     "To Tomb",
@@ -5032,9 +5039,6 @@ html, body {
                 ];
             } else if (zone === "Zone (Champion)") {
                 hoverMenu.style.fontSize = "3em";
-                //hoverMenu.style.bottom = "-75%";
-                //hoverMenu.style.left = "-110%"
-                //hoverMenu.style.display = "grid";
                 hoverMenu.style.gridTemplateColumns = "repeat(2,max-content)";
                 hoverMenu.style.gridGap = "4px 8px";
                 hoverMenu.style.justifyContent = "center";
@@ -5391,8 +5395,8 @@ html, body {
             function showMenu() {
                 clearTimeout(hideTimer);
                 cardElement.style.zIndex = "120000";
-                cardElement.style.outline = "6px solid yellow";
-                if (zone === "Zone (Champion)") {
+                cardElement.style.outline = "4px solid yellow";
+                if (zone === "Zone (Champion)" || zone === "Deck") {
                     hoverMenu.style.display = "grid";
                 }
                 else {
@@ -5425,27 +5429,30 @@ html, body {
                 }, 150);
             }
 
-            const targetOverlay = document.createElement('div');
-            Object.assign(targetOverlay.style, {
-                position:   'absolute',
-                top:        '0',
-                left:       '0',
-                width:      '100%',
-                height:     '100%',
-                background: 'transparent',
-                cursor:     'pointer',
-                zIndex:     '220000'    // above the card but well below hover-menu (z-index 550000)
-            });
-            // forward hover to show/hide your menu
-            targetOverlay.addEventListener('mouseenter', showMenu);
-            targetOverlay.addEventListener('mouseleave', () => hideTimer = setTimeout(hideMenu, 150));
-            // handle “target” clicks
-            targetOverlay.addEventListener('click', e => {
-                e.stopPropagation();
-                flashTargetRing(cardData.id);
-                socket.emit('card_target', { gameId, cardId: cardData.id });
-            });
-            cardElement.appendChild(targetOverlay);
+            if (!cardElement.closest('#viewing-window')) {
+                const targetOverlay = document.createElement('div');
+                targetOverlay.classList.add('target-overlay');
+                Object.assign(targetOverlay.style, {
+                    position:   'absolute',
+                    top:        '0',
+                    left:       '0',
+                    width:      '100%',
+                    height:     '100%',
+                    background: 'transparent',
+                    cursor:     'pointer',
+                    zIndex:     '220000'    // above the card but well below hover-menu (z-index 550000)
+                });
+                // forward hover to show/hide your menu
+                targetOverlay.addEventListener('mouseenter', showMenu);
+                targetOverlay.addEventListener('mouseleave', () => hideTimer = setTimeout(hideMenu, 150));
+                // handle “target” clicks
+                targetOverlay.addEventListener('click', e => {
+                    e.stopPropagation();
+                    flashTargetRing(cardData.id);
+                    socket.emit('card_target', { gameId, cardId: cardData.id });
+                });
+                cardElement.appendChild(targetOverlay);
+            }
 
             // 6) event wiring
             hoverMenu.addEventListener("mouseenter", () => clearTimeout(hideTimer));
@@ -5453,7 +5460,7 @@ html, body {
         }
 
         function applyHoverMenus() {
-            document.querySelectorAll('.card').forEach(el => {
+            document.querySelectorAll('.card:not(#viewing-window .card)').forEach(el => {
                 const cardData = el._card || { name: el.dataset.zone };
                 attachHoverMenu(el, cardData);
             });
@@ -5720,7 +5727,7 @@ html, body {
                     const overlay = document.createElement("div");
                     Object.assign(overlay.style, {
                         position:        "fixed",
-                        top:             "45%",
+                        top:             "47.5%",
                         left:            "50%",
                         transform:       "translate(-50%, -50%)",
                         width:           "60vw",
