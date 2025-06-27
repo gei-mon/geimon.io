@@ -525,7 +525,7 @@ io.on('connection', (socket) => {
     const attachment = { sourceId, targetId, color };
     attachmentsByGame[gameId].push(attachment);
     // Broadcast to all clients in the game
-    io.in(`game-${gameId}`).emit('attach_card', attachment);
+    io.in(gameId).emit('attach_card', attachment);
   });
 
   // Handler: remove an existing attachment
@@ -537,7 +537,7 @@ io.on('connection', (socket) => {
       !(att.sourceId === sourceId && att.targetId === targetId && att.color === color)
     );
     // Broadcast removal
-    io.in(`game-${gameId}`).emit('remove_attachment', { sourceId, targetId, color });
+    io.in(gameId).emit('remove_attachment', { sourceId, targetId, color });
   });
 
   socket.on('disconnect', () => {

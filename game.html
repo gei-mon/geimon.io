@@ -620,28 +620,38 @@ html, body {
                 placeCircle(targetId, color);
             });
 
-            // Utility to draw/remove circles and lines
             function placeCircle(cardId, color) {
-                const el = document.querySelector(`[data-card-id="${cardId}"] .card-image`) || 
-                            document.querySelector(`[data-card-id="${cardId}"]`);
-                if (!el) return;
-                // remove any existing circle for this pairing
-                let existing = el.querySelector(`.attachment-circle[data-color="${color}"]`);
-                if (existing) existing.remove();
+                // only look for the wrapper itself
+                const el = document.querySelector(`[data-card-id="${cardId}"]`);
+                if (!el) {
+                    console.warn(`placeCircle: no wrapper found for cardId=${cardId}`);
+                    return;
+                }
+
+                // ensure we can absolutely position the dot
+                if (getComputedStyle(el).position === "static") {
+                    el.style.position = "relative";
+                }
+
+                // remove any existing dot of the same color
+                const old = el.querySelector(`.attachment-circle[data-color="${color}"]`);
+                if (old) old.remove();
+
+                // create the new circle
                 const circle = document.createElement("div");
                 circle.className = "attachment-circle";
                 circle.dataset.color = color;
                 Object.assign(circle.style, {
-                    position: "absolute",
-                    width: "16px",
-                    height: "16px",
-                    border: `2px solid ${color}`,
-                    borderRadius: "50%",
-                    top: "50%",
-                    left: "50%",
-                    transform: "translate(-50%, -50%)",
+                    position:      "absolute",
+                    width:         "16px",
+                    height:        "16px",
+                    border:        `2px solid ${color}`,
+                    borderRadius:  "50%",
+                    top:           "50%",
+                    left:          "50%",
+                    transform:     "translate(-50%, -50%)",
                     pointerEvents: "none",
-                    zIndex: 200000
+                    zIndex:        200000
                 });
                 el.appendChild(circle);
 
@@ -684,10 +694,10 @@ html, body {
             }
 
             function removeCircle(cardId) {
-                document.querySelectorAll(`[data-card-id="${cardId}"] .attachment-circle`)
-                        .forEach(el=>el.remove());
-                // clear any dangling lines
-                document.querySelectorAll(".attachment-line").forEach(l=>l.remove());
+                const el = document.querySelector(`[data-card-id="${cardId}"]`);
+                if (!el) return;
+                el.querySelectorAll(`.attachment-circle`).forEach(c => c.remove());
+                document.querySelectorAll(".attachment-line").forEach(l => l.remove());
             }
 
             socket.on('remove_attachment', ({ sourceId, targetId, color }) => {
