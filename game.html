@@ -613,75 +613,92 @@ html, body {
 
             const attachments = []; // { sourceId, targetId, color }
 
+            socket.on('attach_card', ({ gameId: g, sourceId, targetId, color }) => {
+                console.log('[attach_card]', sourceId, targetId, color);
+                attachments.push({ sourceId, targetId, color });
+                placeCircle(sourceId, color);
+                placeCircle(targetId, color);
+            });
+
             // Utility to draw/remove circles and lines
             function placeCircle(cardId, color) {
-            const el = document.querySelector(`[data-card-id="${cardId}"] .card-image`) || 
-                        document.querySelector(`[data-card-id="${cardId}"]`);
-            if (!el) return;
-            // remove any existing circle for this pairing
-            let existing = el.querySelector(`.attachment-circle[data-color="${color}"]`);
-            if (existing) existing.remove();
-            const circle = document.createElement("div");
-            circle.className = "attachment-circle";
-            circle.dataset.color = color;
-            Object.assign(circle.style, {
-                position: "absolute",
-                width: "16px",
-                height: "16px",
-                border: `2px solid ${color}`,
-                borderRadius: "50%",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                pointerEvents: "none",
-                zIndex: 200000
-            });
-            el.appendChild(circle);
+                const el = document.querySelector(`[data-card-id="${cardId}"] .card-image`) || 
+                            document.querySelector(`[data-card-id="${cardId}"]`);
+                if (!el) return;
+                // remove any existing circle for this pairing
+                let existing = el.querySelector(`.attachment-circle[data-color="${color}"]`);
+                if (existing) existing.remove();
+                const circle = document.createElement("div");
+                circle.className = "attachment-circle";
+                circle.dataset.color = color;
+                Object.assign(circle.style, {
+                    position: "absolute",
+                    width: "16px",
+                    height: "16px",
+                    border: `2px solid ${color}`,
+                    borderRadius: "50%",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    pointerEvents: "none",
+                    zIndex: 200000
+                });
+                el.appendChild(circle);
 
-            // hover-line logic
-            function drawLines() {
-                // remove old lines
-                document.querySelectorAll(".attachment-line").forEach(l => l.remove());
-                attachments.forEach(({ sourceId, targetId, color: c }) => {
-                [sourceId, targetId].forEach(id => {
-                    if (Number(id) === Number(cardId)) {
-                    const srcEl = document.querySelector(`[data-card-id="${sourceId}"] .attachment-circle[data-color="${c}"]`);
-                    const tgtEl = document.querySelector(`[data-card-id="${targetId}"] .attachment-circle[data-color="${c}"]`);
-                    if (srcEl && tgtEl) {
-                        // compute centers
-                        const r = srcEl.getBoundingClientRect();
-                        const s = tgtEl.getBoundingClientRect();
-                        const ns = document.createElementNS("http://www.w3.org/2000/svg","svg");
-                        ns.classList.add("attachment-line");
-                        Object.assign(ns.style, {
-                        position: "fixed", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 199999
-                        });
-                        const line = document.createElementNS(ns.namespaceURI,"line");
-                        line.setAttribute("x1", r.left + r.width/2);
-                        line.setAttribute("y1", r.top  + r.height/2);
-                        line.setAttribute("x2", s.left + s.width/2);
-                        line.setAttribute("y2", s.top  + s.height/2);
-                        line.setAttribute("stroke", c);
-                        line.setAttribute("stroke-width", "2");
-                        line.setAttribute("stroke-dasharray", "4 4");
-                        ns.appendChild(line);
-                        document.body.appendChild(ns);
-                    }
-                    }
+                // hover-line logic
+                function drawLines() {
+                    // remove old lines
+                    document.querySelectorAll(".attachment-line").forEach(l => l.remove());
+                    attachments.forEach(({ sourceId, targetId, color: c }) => {
+                    [sourceId, targetId].forEach(id => {
+                        if (Number(id) === Number(cardId)) {
+                        const srcEl = document.querySelector(`[data-card-id="${sourceId}"] .attachment-circle[data-color="${c}"]`);
+                        const tgtEl = document.querySelector(`[data-card-id="${targetId}"] .attachment-circle[data-color="${c}"]`);
+                        if (srcEl && tgtEl) {
+                            // compute centers
+                            const r = srcEl.getBoundingClientRect();
+                            const s = tgtEl.getBoundingClientRect();
+                            const ns = document.createElementNS("http://www.w3.org/2000/svg","svg");
+                            ns.classList.add("attachment-line");
+                            Object.assign(ns.style, {
+                            position: "fixed", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 199999
+                            });
+                            const line = document.createElementNS(ns.namespaceURI,"line");
+                            line.setAttribute("x1", r.left + r.width/2);
+                            line.setAttribute("y1", r.top  + r.height/2);
+                            line.setAttribute("x2", s.left + s.width/2);
+                            line.setAttribute("y2", s.top  + s.height/2);
+                            line.setAttribute("stroke", c);
+                            line.setAttribute("stroke-width", "2");
+                            line.setAttribute("stroke-dasharray", "4 4");
+                            ns.appendChild(line);
+                            document.body.appendChild(ns);
+                        }
+                        }
+                    });
+                    });
+                }
+                ["mouseenter","mouseleave"].forEach(evt => {
+                    el.addEventListener(evt, drawLines);
                 });
-                });
-            }
-            ["mouseenter","mouseleave"].forEach(evt => {
-                el.addEventListener(evt, drawLines);
-            });
             }
 
             function removeCircle(cardId) {
-            document.querySelectorAll(`[data-card-id="${cardId}"] .attachment-circle`)
-                    .forEach(el=>el.remove());
-            // clear any dangling lines
-            document.querySelectorAll(".attachment-line").forEach(l=>l.remove());
+                document.querySelectorAll(`[data-card-id="${cardId}"] .attachment-circle`)
+                        .forEach(el=>el.remove());
+                // clear any dangling lines
+                document.querySelectorAll(".attachment-line").forEach(l=>l.remove());
             }
+
+            socket.on('remove_attachment', ({ sourceId, targetId, color }) => {
+                // remove from array
+                const idx = attachments.findIndex(a =>
+                    a.sourceId==sourceId && a.targetId==targetId && a.color==color
+                );
+                if (idx>=0) attachments.splice(idx,1);
+                removeCircle(sourceId);
+                removeCircle(targetId);
+            });
 
             socket.on('play_sound', ({ url }) => {
                 const audio = new Audio(url);
@@ -5417,49 +5434,112 @@ html, body {
                         await sendZoneSpecificUpdate({ owner, zone: zoneName, cards: zone });
                         break;
                     }
+                    // --- Updated client-side "Attach / Mount" handler with correct color array and cursor restoration ---
                     case "Attach / Mount": {
-                        // pick a random “vibrant” color
-                        const color = ['#e6194b','#3cb44b','#ffe119','#4363d8','#f58231','#911eb4']
-                                        [Math.floor(Math.random()*6)];
-                        // mark this card visually
-                        placeCircle(cardData.id, color);
+                    // pick a random vibrant color
+                    const colors = ['#e6194b','#3cb44b','#ffe119','#4363d8','#f58231','#911eb4'];
+                    const color = colors[Math.floor(Math.random() * colors.length)];
+                    placeCircle(cardData.id, color);
 
-                        // create a draggable circle for cursor
-                        const drag = document.createElement("div");
-                        drag.className = "attachment-drag";
-                        Object.assign(drag.style, {
-                            position: "fixed", width:"16px", height:"16px",
-                            border:`2px solid ${color}`, borderRadius:"50%",
-                            pointerEvents:"none", zIndex:300000
+                    // Create draggable circle for cursor
+                    const drag = document.createElement("div");
+                    drag.className = "attachment-drag";
+                    Object.assign(drag.style, {
+                        position: "fixed",
+                        width: "16px",
+                        height: "16px",
+                        backgroundColor: `${color}`,
+                        border: `2px solid ${color}`,
+                        borderRadius: "50%",
+                        pointerEvents: "none",
+                        zIndex: 300000
+                    });
+                    document.body.appendChild(drag);
+                    document.body.style.cursor = "none";
+
+                    function onMove(e) {
+                        drag.style.top = `${e.clientY - 8}px`;
+                        drag.style.left = `${e.clientX - 8}px`;
+                    }
+                    document.addEventListener("mousemove", onMove);
+
+                    // Modal builder with restored cursor over popup
+                    function showModal(message, onConfirm, onCancel) {
+                        const overlay = document.createElement("div");
+                        Object.assign(overlay.style, {
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        background: "rgba(0,0,0,0.5)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        zIndex: 400000,
+                        cursor: "auto"  // show cursor over overlay
                         });
-                        document.body.appendChild(drag);
-                        document.body.style.cursor = "none";
-                        function onMove(e){
-                            drag.style.top  = `${e.clientY-8}px`;
-                            drag.style.left = `${e.clientX-8}px`;
-                        }
-                        document.addEventListener("mousemove", onMove);
+                        const box = document.createElement("div");
+                        Object.assign(box.style, {
+                        background: "#fff",
+                        padding: "20px",
+                        borderRadius: "8px",
+                        textAlign: "center",
+                        maxWidth: "300px",
+                        cursor: "auto"  // ensure cursor is visible on modal
+                        });
+                        const msg = document.createElement("p");
+                        msg.textContent = message;
+                        const btnConfirm = document.createElement("button");
+                        btnConfirm.textContent = "Confirm";
+                        const btnCancel = document.createElement("button");
+                        btnCancel.textContent = "Cancel";
+                        btnConfirm.style.margin = btnCancel.style.margin = "8px";
+                        box.append(msg, btnConfirm, btnCancel);
+                        overlay.appendChild(box);
+                        document.body.appendChild(overlay);
 
-                        // next click selects target
-                        const clickHandler = async ev => {
-                            ev.stopPropagation(); ev.preventDefault();
-                            const tgtCard = ev.target.closest(".card");
-                            if (!tgtCard) return;
-                            const tgtId = tgtCard.dataset.cardId;
-                            // prompt confirm
-                            const ok = confirm(`Attach "${cardData.name}" to "${tgtCard.dataset.cardName || tgtCard.dataset.cardId}"?`);
-                            if (ok) {
-                            socket.emit('attach_card', { gameId, sourceId:cardData.id, targetId:tgtId, color });
-                            // swap menu entry
-                            text = "Remove Attachment";
-                            }
-                            // cleanup
-                            document.removeEventListener("click", clickHandler, true);
-                            document.removeEventListener("mousemove", onMove);
-                            drag.remove();
-                            document.body.style.cursor = "";
-                        };
-                        document.addEventListener("click", clickHandler, true);
+                        btnConfirm.addEventListener("click", () => {
+                        onConfirm();
+                        cleanup();
+                        });
+                        btnCancel.addEventListener("click", () => {
+                        onCancel();
+                        cleanup();
+                        });
+
+                        function cleanup() {
+                        overlay.remove();
+                        document.removeEventListener("click", clickHandler, true);
+                        document.removeEventListener("mousemove", onMove);
+                        drag.remove();
+                        document.body.style.cursor = "";
+                        }
+                    }
+
+                    // Only intercept clicks on cards; modal buttons will still receive events
+                    const clickHandler = ev => {
+                        const tgt = ev.target.closest(".card");
+                        if (!tgt) return;
+                        ev.stopPropagation();
+                        ev.preventDefault();
+                        const tgtId = tgt.dataset.cardId;
+                        const name = tgt.dataset.cardName || tgt.querySelector(".card-name")?.innerText || `#${tgtId}`;
+                        showModal(
+                        `Attach "${cardData.name}" to "${name}"?`,
+                        () => {
+                            socket.emit('attach_card', { gameId, sourceId: cardData.id, targetId: tgtId, color });
+                            // now update this card’s menu text:
+                            const menuBtn = document.querySelector(
+                                `.card[data-card-id="${cardData.id}"] .hover-menu button[ data-action="Attach / Mount" ]`
+                            );
+                            if (menuBtn) menuBtn.textContent = 'Remove Attachment';
+                        },
+                        () => { /* cancel: allow re-pick */ }
+                        );
+                    };
+
+                    document.addEventListener("click", clickHandler, true);
                     } break;
                     case "Remove Attachment": {
                         // find your attachment
@@ -6199,7 +6279,15 @@ html, body {
 
                 wrap.appendChild(rendered);
                 updateCounterOverlay(wrap, cardData);
+
+                wrap.dataset.cardId   = String(cardData.id);
+                wrap.dataset.cardName = enriched.name;
+
                 container.appendChild(wrap);
+            });
+            attachments.forEach(({ sourceId, targetId, color }) => {
+                placeCircle(sourceId, color);
+                placeCircle(targetId, color);
             });
         }
     applyHoverMenus();
@@ -6362,22 +6450,6 @@ html, body {
         // incoming typing indicator
         socket.on('typing', ({ username: from, isTyping }) => {
             chatTyping.textContent = isTyping ? `${from} is typing…` : '';
-        });
-
-        // ↪ socket handlers (place somewhere after your other `socket.on(...)` calls):
-        socket.on('attach_card', ({ gameId: g, sourceId, targetId, color }) => {
-            attachments.push({ sourceId, targetId, color });
-            placeCircle(sourceId, color);
-            placeCircle(targetId, color);
-        });
-        socket.on('remove_attachment', ({ sourceId, targetId, color }) => {
-            // remove from array
-            const idx = attachments.findIndex(a =>
-                a.sourceId==sourceId && a.targetId==targetId && a.color==color
-            );
-            if (idx>=0) attachments.splice(idx,1);
-            removeCircle(sourceId);
-            removeCircle(targetId);
         });
 
         // send chat
