@@ -612,92 +612,139 @@ html, body {
             const socket = window.socket;                // 1️⃣ make an alias everyone can use
 
             const attachments = []; // { sourceId, targetId, color }
+            try {
+                const saved = JSON.parse(localStorage.getItem('attachments') || '[]');
+                if (Array.isArray(saved)) attachments = saved;
+            } catch(e) {
+                console.warn("Could not parse saved attachments:", e);
+            }
+
+            // Once the DOM is ready, stamp any you loaded
+            window.addEventListener('DOMContentLoaded', () => {
+                attachments.forEach(({ sourceId, targetId, color }) => {
+                    placeCircle(sourceId, color);
+                    placeCircle(targetId, color);
+                });
+            });
+
+            function saveAttachments() {
+                localStorage.setItem('attachments', JSON.stringify(attachments));
+            }
 
             socket.on('attach_card', ({ gameId: g, sourceId, targetId, color }) => {
-                console.log('[attach_card]', sourceId, targetId, color);
+                //console.log('[attach_card]', sourceId, targetId, color);
                 attachments.push({ sourceId, targetId, color });
+                saveAttachments();
                 placeCircle(sourceId, color);
                 placeCircle(targetId, color);
             });
 
+            const hoveredAttachmentCards = new Set();
+
+            function drawAttachmentLines() {
+                // clear old
+                document.querySelectorAll(".attachment-line").forEach(l => l.remove());
+                // for any attachment where *either* end is hovered, draw its line
+                attachments.forEach(({ sourceId, targetId, color }) => {
+                    if (!hoveredAttachmentCards.has(sourceId) &&
+                        !hoveredAttachmentCards.has(targetId)) return;
+
+                    const srcDot = document.querySelector(
+                    `[data-card-id="${sourceId}"] .attachment-circle[data-color="${color}"]`
+                    );
+                    const tgtDot = document.querySelector(
+                    `[data-card-id="${targetId}"] .attachment-circle[data-color="${color}"]`
+                    );
+                    if (!srcDot || !tgtDot) return;
+
+                    const r = srcDot.getBoundingClientRect();
+                    const s = tgtDot.getBoundingClientRect();
+                    const svg = document.createElementNS("http://www.w3.org/2000/svg","svg");
+                    svg.classList.add("attachment-line");
+                    Object.assign(svg.style,{
+                        position: "fixed", top: 0, left: 0,
+                        width: "100%", height: "100%",
+                        pointerEvents: "none", zIndex: 110000
+                    });
+                    const line = document.createElementNS(svg.namespaceURI,"line");
+                    line.setAttribute("x1", r.left + r.width/2);
+                    line.setAttribute("y1", r.top  + r.height/2);
+                    line.setAttribute("x2", s.left + s.width/2);
+                    line.setAttribute("y2", s.top  + s.height/2);
+                    line.setAttribute("stroke", color);
+                    line.setAttribute("stroke-width", "5");
+                    line.setAttribute("stroke-dasharray", "4 4");
+                    svg.appendChild(line);
+                    document.body.appendChild(svg);
+                });
+            }
+
+            function clearAttachmentLines() {
+                document.querySelectorAll(".attachment-line").forEach(l => l.remove());
+            }
+
             function placeCircle(cardId, color) {
-                // only look for the wrapper itself
-                const el = document.querySelector(`[data-card-id="${cardId}"]`);
+                // pick the real field wrapper
+                const all = Array.from(document.querySelectorAll(`[data-card-id="${cardId}"]`));
+                const el  = all.find(e => !e.closest('#viewing-window'));
                 if (!el) {
-                    console.warn(`placeCircle: no wrapper found for cardId=${cardId}`);
+                    console.warn(`placeCircle: no wrapper for ${cardId}`);
                     return;
                 }
 
-                // ensure we can absolutely position the dot
                 if (getComputedStyle(el).position === "static") {
                     el.style.position = "relative";
                 }
 
-                // remove any existing dot of the same color
-                const old = el.querySelector(`.attachment-circle[data-color="${color}"]`);
-                if (old) old.remove();
+                // remove old dot
+                el.querySelectorAll(`.attachment-circle[data-color="${color}"]`)
+                    .forEach(d => d.remove());
 
-                // create the new circle
+                // add new dot
                 const circle = document.createElement("div");
                 circle.className = "attachment-circle";
                 circle.dataset.color = color;
-                Object.assign(circle.style, {
-                    position:      "absolute",
-                    width:         "16px",
-                    height:        "16px",
-                    border:        `2px solid ${color}`,
-                    borderRadius:  "50%",
-                    top:           "50%",
-                    left:          "50%",
-                    transform:     "translate(-50%, -50%)",
-                    pointerEvents: "none",
-                    zIndex:        200000
+                Object.assign(circle.style,{
+                    position:     "absolute",
+                    width:        "48px",
+                    height:       "48px",
+                    border:       `4px solid white`,
+                    backgroundColor: `${color}`,
+                    borderRadius: "50%",
+                    top:          "25%",
+                    left:         "0%",
+                    transform:    "translate(-50%, -50%)",
+                    pointerEvents:"none",
+                    zIndex:       200000
                 });
                 el.appendChild(circle);
 
-                // hover-line logic
-                function drawLines() {
-                    // remove old lines
-                    document.querySelectorAll(".attachment-line").forEach(l => l.remove());
-                    attachments.forEach(({ sourceId, targetId, color: c }) => {
-                    [sourceId, targetId].forEach(id => {
-                        if (Number(id) === Number(cardId)) {
-                        const srcEl = document.querySelector(`[data-card-id="${sourceId}"] .attachment-circle[data-color="${c}"]`);
-                        const tgtEl = document.querySelector(`[data-card-id="${targetId}"] .attachment-circle[data-color="${c}"]`);
-                        if (srcEl && tgtEl) {
-                            // compute centers
-                            const r = srcEl.getBoundingClientRect();
-                            const s = tgtEl.getBoundingClientRect();
-                            const ns = document.createElementNS("http://www.w3.org/2000/svg","svg");
-                            ns.classList.add("attachment-line");
-                            Object.assign(ns.style, {
-                            position: "fixed", top: 0, left: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 199999
-                            });
-                            const line = document.createElementNS(ns.namespaceURI,"line");
-                            line.setAttribute("x1", r.left + r.width/2);
-                            line.setAttribute("y1", r.top  + r.height/2);
-                            line.setAttribute("x2", s.left + s.width/2);
-                            line.setAttribute("y2", s.top  + s.height/2);
-                            line.setAttribute("stroke", c);
-                            line.setAttribute("stroke-width", "2");
-                            line.setAttribute("stroke-dasharray", "4 4");
-                            ns.appendChild(line);
-                            document.body.appendChild(ns);
-                        }
-                        }
-                    });
-                    });
-                }
-                ["mouseenter","mouseleave"].forEach(evt => {
-                    el.addEventListener(evt, drawLines);
-                });
+                // unbind any old enter/leave
+                if (el._enter) el.removeEventListener("mouseenter", el._enter);
+                if (el._leave) el.removeEventListener("mouseleave", el._leave);
+
+                // bind new hover handlers
+                const onEnter = () => {
+                    hoveredAttachmentCards.add(cardId);
+                    drawAttachmentLines();
+                };
+                const onLeave = () => {
+                    hoveredAttachmentCards.delete(cardId);
+                    if (hoveredAttachmentCards.size) drawAttachmentLines();
+                    else clearAttachmentLines();
+                };
+                el._enter = onEnter;
+                el._leave = onLeave;
+                el.addEventListener("mouseenter", onEnter);
+                el.addEventListener("mouseleave", onLeave);
             }
 
             function removeCircle(cardId) {
-                const el = document.querySelector(`[data-card-id="${cardId}"]`);
+                const all = Array.from(document.querySelectorAll(`[data-card-id="${cardId}"]`));
+                const el  = all.find(e => !e.closest('#viewing-window'));
                 if (!el) return;
-                el.querySelectorAll(`.attachment-circle`).forEach(c => c.remove());
-                document.querySelectorAll(".attachment-line").forEach(l => l.remove());
+                el.querySelectorAll(".attachment-circle").forEach(d => d.remove());
+                clearAttachmentLines();
             }
 
             socket.on('remove_attachment', ({ sourceId, targetId, color }) => {
@@ -705,9 +752,12 @@ html, body {
                 const idx = attachments.findIndex(a =>
                     a.sourceId==sourceId && a.targetId==targetId && a.color==color
                 );
-                if (idx>=0) attachments.splice(idx,1);
-                removeCircle(sourceId);
-                removeCircle(targetId);
+                if (idx !== -1) {
+                    attachments.splice(idx, 1);
+                    saveAttachments();
+                    removeCircle(sourceId);
+                    removeCircle(targetId);
+                }
             });
 
             socket.on('play_sound', ({ url }) => {
