@@ -282,6 +282,8 @@ const totemFadeWaited = new Set();
 const effectsDir = path.join(PUBLIC_DIR, 'Sounds', 'Effects');
 const effectMap  = {};
 
+const attachmentsByGame = {};
+
 if (fs.existsSync(effectsDir)) {
   fs.readdirSync(effectsDir).forEach(file => {
     const name = path.basename(file, path.extname(file));
@@ -510,6 +512,32 @@ io.on('connection', (socket) => {
       totem,
       totemText
     });
+  });
+
+  // Handler: attach a card to another
+  socket.on('attach_card', ({ gameId, sourceId, targetId, color }) => {
+    // Ensure array exists
+    if (!attachmentsByGame[gameId]) attachmentsByGame[gameId] = [];
+    // Enforce one attachment per source card
+    attachmentsByGame[gameId] = attachmentsByGame[gameId]
+      .filter(att => att.sourceId !== sourceId);
+    // Add the new link
+    const attachment = { sourceId, targetId, color };
+    attachmentsByGame[gameId].push(attachment);
+    // Broadcast to all clients in the game
+    io.in(`game-${gameId}`).emit('attach_card', attachment);
+  });
+
+  // Handler: remove an existing attachment
+  socket.on('remove_attachment', ({ gameId, sourceId, targetId, color }) => {
+    const list = attachmentsByGame[gameId];
+    if (!list) return;
+    // Remove the specific link
+    attachmentsByGame[gameId] = list.filter(att =>
+      !(att.sourceId === sourceId && att.targetId === targetId && att.color === color)
+    );
+    // Broadcast removal
+    io.in(`game-${gameId}`).emit('remove_attachment', { sourceId, targetId, color });
   });
 
   socket.on('disconnect', () => {
