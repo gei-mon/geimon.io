@@ -2357,19 +2357,26 @@ html, body {
         // 🔴 show the red ring for N ms (default 5000)
         const targetTimers = {};                 // cardId ➜ timeout handle
 
-        function flashTargetRing(cardId, duration = 2500){
+        function flashTargetRing(cardId, duration = 2500) {
+            playSoundEffect('block');
             // 1️⃣  add / refresh the visual
-            document.querySelectorAll(`[data-card-id="${cardId}"]`)
-                    .forEach(el => el.classList.add('target-highlight'));
+            document.querySelectorAll(`.card[data-card-id="${cardId}"]`)
+                .forEach(el => {
+                    if (el.closest('.scaled-card') || el.closest('#viewing-window')) return;
+                    el.classList.add('target-highlight');
+                });
 
             // 2️⃣  clear any existing timer for this card
             clearTimeout(targetTimers[cardId]);
 
             // 3️⃣  schedule automatic removal
             targetTimers[cardId] = setTimeout(() => {
-                document.querySelectorAll(`[data-card-id="${cardId}"]`)
-                        .forEach(el => el.classList.remove('target-highlight'));
-                delete targetTimers[cardId];
+                document.querySelectorAll(`.card[data-card-id="${cardId}"]`)
+                    .forEach(el => {
+                        if (el.closest('.scaled-card') || el.closest('#viewing-window')) return;
+                        el.classList.remove('target-highlight');
+                    });
+                    delete targetTimers[cardId];
             }, duration);
         }
 
@@ -4570,6 +4577,7 @@ html, body {
                         scaledCardContainer.innerHTML = "";
                         const clone = cardElement.cloneNode(true);
                         clone.querySelectorAll('.sleeve-overlay, .card-button, .target-overlay').forEach(el => el.remove());
+                        clone.removeAttribute('data-card-id');
                         clone.style.transform = "scale(1.2)";
                         clone.style.width = "100%";
                         clone.style.position = "relative";
