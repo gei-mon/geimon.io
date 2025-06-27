@@ -5693,7 +5693,7 @@ html, body {
                 // handle “target” clicks
                 targetOverlay.addEventListener('click', e => {
                     e.stopPropagation();
-                    flashTargetRing(cardData.id);
+                    //flashTargetRing(cardData.id);
                     socket.emit('toggle_target', { gameId, cardId: cardData.id });
                 });
                 cardElement.appendChild(targetOverlay);

@@ -363,7 +363,7 @@ io.on('connection', (socket) => {
 
   socket.on('toggle_target', ({ gameId, cardId }) => {
     // simply rebroadcast to everyone in the same game room
-    socket.to(gameId).emit('card_targeted', { cardId });
+    io.to(gameId).emit('card_targeted', { cardId });
   });
 
   socket.on('draw_offer',   ({ gameId, from }) =>
