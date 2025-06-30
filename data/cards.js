@@ -1001,14 +1001,14 @@ export const cards = [
     rarity: "Rare",
     type: "Equipment",
     condition: "",
-    cost: "Exhaust the attached Champion for the turn",
+    cost: "",
     tags: ["Equipment"],
     damage: "",
     life: "",
     damageThreshold: "",
     abilities: [
       {
-        text: "Excavate 3, add 1 revealed.",
+        text: "Exhaustion: Excavate 3, add 1 revealed.",
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -1536,7 +1536,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Raider, Reach <br> Train Sniffer (Exhaustion): Your Opponent can activate 1 Commander Obelisk from their Deck (ignoring its cost); Your Opponent chooses whether: You Draw 2 for every Commander Obelisk your Opponent controls, or Your Opponent discards 1 for every Commander Obelisk they control.`,
+        text: `Raider, Reach <br> Train Sniffer (Exhaustion): Your Opponent can activate 1 Commander Obelisk from their Deck (ignoring its cost); Then, if they did, your Opponent chooses whether: You Draw 2 for every Commander Obelisk your Opponent controls, or Your Opponent discards 1 for every Commander Obelisk they control.`,
         keywords: ["Raider","Reach"],
         effect1name: "Train Sniffer",
         effect2name: "",
@@ -3010,7 +3010,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Both Players can set face-down 1 Reflex card from their Deck (without revealing what they are).",
+        text: "Both Players set face-down 1 Reflex card from their Deck (without revealing what they are).",
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -6948,7 +6948,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Obliterate your Opponent’s Hand, Deck, Tomb, Reserve, and all cards your Opponent controls, and if you do, both Players can Unleash 1 (ignoring their conditions). <span class="line-gap"></span><span class="line-gap"></span> If either Champion leaves the Zone, that player loses. If both leave the Zone at the same time, it is a draw. Players cannot lose by failing to draw a card at the start of their turn.`,
+        text: `Obliterate your Opponent’s Hand, Deck, Tomb, Reserve, and all cards your Opponent controls, and if you do, both Players Unleash 1 (ignoring their conditions). <span class="line-gap"></span><span class="line-gap"></span> If either Champion leaves the Zone, that player loses. If both leave the Zone at the same time, it is a draw. Players cannot lose by failing to draw a card at the start of their turn.`,
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
