@@ -157,19 +157,23 @@
       fetch('https://geimon-app-833627ba44e0.herokuapp.com/sleeve-images')
         .then(res => res.json())
         .then(images => {
-          images.forEach(img => {
+          images.forEach((img, idx) => {
             const imgEl = document.createElement('img');
             imgEl.src = `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Sleeves/${img}`;
             imgEl.className = 'thumbnail';
             imgEl.style.width = '260px';
             imgEl.style.height = '400px';
-            imgEl.style.transform = "scale(0.6)";
-            imgEl.style.marginLeft = "-96px";
-            imgEl.style.marginTop = "-64px";
-            imgEl.style.marginBottom = "-64px";
+            imgEl.style.transform = 'scale(0.6)';
+            imgEl.style.marginTop = '-64px';
+            imgEl.style.marginBottom = '-64px';
+            // only shift left if it's not the first sleeve
+            if (idx > 0) {
+              imgEl.style.marginLeft = '-96px';
+            }
             imageGridSleeves.appendChild(imgEl);
           });
-        });
+      });
+
 
       fetch('https://geimon-app-833627ba44e0.herokuapp.com/zone-images')
         .then(res => res.json())
