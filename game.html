@@ -2540,6 +2540,7 @@ html, body {
                 if (!isFaceUp) {
                     cardEl.appendChild(btn);
                     if (typeof wrapCardButton === "function") wrapCardButton(btn, container.id);
+                    attachTargetOverlay(btn, cardData);
                 }
 
                 container.appendChild(cardEl);
