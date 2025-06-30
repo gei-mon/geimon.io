@@ -413,29 +413,31 @@
 
                 container.innerHTML = "";  // Clear container before rendering
 
-                const params = new URLSearchParams(location.search);
-                let colName = params.get('collection');
+                const params     = new URLSearchParams(location.search);
+                const colName    = params.get('collection');
+                const passedDeck = params.get('deck');   // optional ?deck=
                 if (!colName) {
                     alert("⚠️ sagaDeck.html loaded without a valid ?collection= parameter!");
                     return;
                 }
-                // On first save or on initial load of sagaDeck.html
-                const col    = colName;  // or deckName
-                const sagaList = JSON.parse(localStorage.getItem('sagaCollections')||'[]');
-                if (!sagaList.includes(col)) {
-                    sagaList.push(col);
+                // Remember this deck as a Saga deck
+                const sagaList = JSON.parse(localStorage.getItem('sagaCollections') || '[]');
+                if (!sagaList.includes(colName)) {
+                    sagaList.push(colName);
                     localStorage.setItem('sagaCollections', JSON.stringify(sagaList));
                 }
 
+                const deckName = passedDeck || colName;
+                // Unique storage keys per deck
+                const storageKeyDeck = `workingDeck_${deckName}`;
+                const storageKeyName = `selectedDeckName_${deckName}`;
+                localStorage.setItem(storageKeyName, deckName);
+                // Display the deck's name (not the collection name)
+                deckNameElement.textContent = deckName;
+                document.title = "Deck: " + deckName;
+
                 let collectionIds = [];
                 let collectionPool = [];
-                // New: unique per collection
-                const storageKeyDeck   = `workingDeck_${colName}`;
-                const storageKeyName   = `selectedDeckName_${colName}`;
-                let deckName = colName;
-                localStorage.setItem(storageKeyName, deckName);
-                deckNameElement.textContent = colName;
-                document.title = "Deck: " + colName;
 
                 // Decide if we came via selector.html (editing) or sagaOpener.html (fresh)
                 const fromSelector = document.referrer.endsWith("selector.html");
@@ -598,8 +600,8 @@
                     // enforce Saga legality *locally* (>=60 cards & no more than 3 copies)
                     if (isSagaDeck) {
                         if (deckIds.length < 60) {
-                            alert("Your Saga deck must have at least 60 cards before saving.");
-                            return;
+                            //alert("Your Saga deck must have at least 60 cards before saving.");
+                            //return;
                         }
                     }
 
@@ -629,20 +631,21 @@
                     }
 
                     // 2) Post-save routing
-                    if (fromSelector) {
-                        // Came in from selector.html: just close the builder
-                        // window.close();    // uncomment if you want the tab to close
-                        // OR redirect back to selector:
-                        // window.location.href = 'selector.html';
-                    } else {
-                        // Saga flow mid-game: continue into match
+                    const fromOpener   = document.referrer.endsWith("sagaOpener.html");
+
+                    // Only redirect into the match if you’re in mid-game *and* have 60+ cards
+                    if (deckIds.length >= 60 && fromOpener) {
                         const params = new URLSearchParams(location.search);
                         const room   = params.get('room');
                         const user   = params.get('user');
                         window.location.href =
-                        `sagaMatch.html?room=${encodeURIComponent(room)}` +
-                        `&deck=${encodeURIComponent(deckName)}` +
-                        `&user=${encodeURIComponent(user)}`;
+                            `sagaMatch.html?room=${encodeURIComponent(room)}` +
+                            `&deck=${encodeURIComponent(deckName)}` +
+                            `&user=${encodeURIComponent(user)}`;
+                    } else {
+                        // Otherwise (under-60, or came from selector, etc.), stay put.
+                        // You could optionally close the window or just leave the builder open.
+                        // e.g. window.close(); or nothing.
                     }
                 });
 

@@ -73,12 +73,10 @@
                 style="width:100%; padding:6px; margin-bottom:14px;">
             <p style="margin:6px 0 8px;">…or choose an existing deck:</p>
             <div id="existingDeckList"
-                style="max-height:160px; overflow:auto; display:flex; flex-direction:column; gap:6px; margin-bottom:16px;">
-            <!-- JS populates buttons here -->
-            </div>
+                style="max-height:160px; overflow:auto; display:flex; flex-direction:column; gap:6px; margin-bottom:16px;"></div>
             <div style="display:flex; justify-content:space-between;">
-            <button id="cancelAddBtn">Cancel</button>
-            <button id="confirmAddBtn">Add</button>
+                <button id="confirmAddBtn">Add</button>
+                <button id="cancelAddBtn">Cancel</button>
             </div>
         </div>
         </div>
@@ -201,73 +199,92 @@
         let selectedDeck = null;   // name of chosen existing deck (null ⇒ new)
 
         addBtn.onclick = async () => {
-        // fetch user's decks to populate list
-        deckListDiv.innerHTML = 'Loading…';
-        const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/getUserDecks',
-                                { credentials:'include' });
-        const data = await res.json();
-        deckListDiv.innerHTML = '';
-
-        if (data.success && data.decks.length){
-            data.decks.sort((a,b)=>a.deck_name.localeCompare(b.deck_name))
-                .forEach(deck=>{
-                const b = document.createElement('button');
-                b.textContent = deck.deck_name;
-                b.style.cssText = 'background:#333;color:#fff;border:1px solid #777;padding:4px;cursor:pointer;';
-                b.onclick = () =>{
-                    selectedDeck = deck.deck_name;
-                    // visual select
-                    [...deckListDiv.children].forEach(btn=>btn.style.background='#333');
-                    b.style.background = '#555';
-                };
-                deckListDiv.appendChild(b);
+            deckListDiv.innerHTML = "Loading…";
+            // fetch saga collections instead of decks
+            const res = await fetch(
+                "https://geimon-app-833627ba44e0.herokuapp.com/collection/list",
+                { credentials: "include" }
+            );
+            const { success, collections } = await res.json();
+            deckListDiv.innerHTML = "";
+            if (success && collections.length) {
+                collections.sort((a,b)=>a.localeCompare(b))
+                .forEach(name => {
+                    const b = document.createElement("button");
+                    b.textContent = name;
+                    b.style.cssText = "background:#333;color:#fff;border:1px solid #777;padding:4px;cursor:pointer;";
+                    b.onclick = () => {
+                    selectedDeck = name;
+                    [...deckListDiv.children].forEach(btn=>btn.style.background="#333");
+                    b.style.background="#555";
+                    };
+                    deckListDiv.appendChild(b);
                 });
-        } else {
-            deckListDiv.textContent = 'No decks yet.';
-        }
+            } else {
+                deckListDiv.textContent = "No collections yet.";
+            }
+            selectedDeck = null;
+            newInput.value = "";  // still use text input for “new collection”
+            modal.style.display = "flex";
+        };
 
-        selectedDeck = null;
-        newInput.value = '';
-        modal.style.display = 'flex';
+        confirmBtn.onclick = async () => {
+            if (!lastPulledIds.length) {
+                alert("Open some packs first!");
+                return;
+            }
+            const newName = newInput.value.trim();
+            let response;
+            try {
+                if (newName) {
+                // create new collection
+                response = await fetch(
+                    "https://geimon-app-833627ba44e0.herokuapp.com/collection/create",
+                    {
+                    method: "POST", credentials: "include",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        collection_name: newName,
+                        card_ids: lastPulledIds
+                    })
+                    }
+                );
+                } else if (selectedDeck) {
+                // add to existing collection
+                response = await fetch(
+                    "https://geimon-app-833627ba44e0.herokuapp.com/collection/add",
+                    {
+                    method: "POST", credentials: "include",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        collection_name: selectedDeck,
+                        card_ids: lastPulledIds
+                    })
+                    }
+                );
+                } else {
+                alert("Pick a collection or enter a new name.");
+                return;
+                }
+
+                const resData = await response.json();
+                const col = newName || selectedDeck;
+                // persist to localStorage if needed
+                const sagaList = JSON.parse(localStorage.getItem("sagaCollections") || "[]");
+                if (!sagaList.includes(col)) {
+                sagaList.push(col);
+                localStorage.setItem("sagaCollections", JSON.stringify(sagaList));
+                }
+
+                alert(resData.message || (newName ? "Collection created!" : "Cards added!"));
+                modal.style.display = "none";
+            } catch(err) {
+                console.error(err);
+                alert("Something went wrong.");
+            }
         };
 
         cancelBtn.onclick = () => { modal.style.display = 'none'; };
-
-        confirmBtn.onclick = async () =>{
-        if (!lastPulledIds.length){
-            alert('Open some packs first!');
-            return;
-        }
-
-        // priority: new deck name if provided
-        const newName = newInput.value.trim();
-        let response;
-        try{
-            if (newName){
-            response = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/createDeck',{
-                method:'POST', credentials:'include',
-                headers:{'Content-Type':'application/json'},
-                body:JSON.stringify({ deck_name:newName, card_ids:lastPulledIds })
-            });
-            } else if (selectedDeck){
-            response = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/addCardsToDeck',{
-                method:'POST', credentials:'include',
-                headers:{'Content-Type':'application/json'},
-                body:JSON.stringify({ deck_name:selectedDeck, card_ids:lastPulledIds })
-            });
-            } else {
-            alert('Pick a deck or enter a new name.');
-            return;
-            }
-
-            const resData = await response.json();
-            alert(resData.message || (newName ? 'Deck created!' : 'Cards added!'));
-            modal.style.display='none';
-        }catch(err){
-            console.error(err);
-            alert('Something went wrong.');
-        }
-        };
 
     </script>
 </body>
