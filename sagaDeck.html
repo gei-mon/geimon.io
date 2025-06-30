@@ -642,6 +642,8 @@
                             `sagaMatch.html?room=${encodeURIComponent(room)}` +
                             `&deck=${encodeURIComponent(deckName)}` +
                             `&user=${encodeURIComponent(user)}`;
+                    } else if (deckIds.length < 60 && fromOpener) {
+                        return alert("Your Saga deck must have at least 60 cards before saving.");
                     } else {
                         // Otherwise (under-60, or came from selector, etc.), stay put.
                         // You could optionally close the window or just leave the builder open.
