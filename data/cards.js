@@ -6882,7 +6882,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: `Bloodrage, Menace <span class="line-gap"></span> On Rally (Mandatory): Your Opponent draws 1. <span class="line-gap"></span> City Breaker: If this card successfully attacks: You can Target 1 card on the Zone; Destroy Target. <span class="line-gap"></span> If Destroyed by Battle: Add 1 Kaiju. <br>&nbsp;`,
+        text: `Bloodrage, Menace <span class="line-gap"></span> On Rally (Mandatory): Your Opponent draws 1. <span class="line-gap"></span> City Breaker: If this card successfully attacks: You can remove 1 K-Cell Counter from anywhere on the Zone and Target 1 card on the Zone; Destroy Target. <span class="line-gap"></span> If Destroyed by Battle: Add 1 Kaiju.`,
         keywords: ["Bloodrage","Menace"],
         effect1name: "On Rally",
         effect2name: "City Breaker",
@@ -6904,11 +6904,143 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: `Bloodrage, Deathcurse <span class="line-gap"></span> The End of All Things: Discard your entire Hand (Minimum of 3 cards); Destroy all cards on the Zone. <span class="line-gap"></span> During your End Phase (Mandatory): Switch control of this card to your Opponent, and if you do, destroy it during the next End Phase.`,
+        text: `Bloodrage, Deathcurse <span class="line-gap"></span> The End of All Things: Remove 3 K-Cell Counters from anywhere on the Zone and Discard your entire Hand (Minimum of 1 card); Destroy all cards on the Zone. <span class="line-gap"></span> During your End Phase (Mandatory): Switch control of this card to your Opponent, and if you do, destroy it during the next End Phase.`,
         keywords: ["Bloodrage","Deathcurse"],
-        effect1name: "On Rally",
+        effect1name: "",
         effect2name: "The End of All Things",
         effect3name: "During your End Phase",
+      }
+    ]
+  },
+  {
+    id: "783",
+    name: "Arena: Graystone",
+    image: `${cardArtFolder}/Obelisks/ArenaGraystone.png`,
+    rarity: "Superior",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Each time a card(s) is sent from the Zone to the Tomb: Place 1 K-Cell Counter on this card for each sent card (max. 5 per instance). <br><br> You can remove 3 K-Cell Counters from this card: Add 1 Clockwork.`,
+        keywords: ["blank"],
+        effect1name: "Each time a card(s) is sent from the Zone to the Tomb",
+        effect2name: "You can remove 3 K-Cell Counters from this card",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "784",
+    name: "Arena: Redemption",
+    image: `${cardArtFolder}/Obelisks/ArenaRedemption.png`,
+    rarity: "Common",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Each time a card(s) is added: Place 1 K-Cell Counter on this card for each added card (max. 5 per instance). <br><br> You can remove 2 K-Cell Counters from this card and Target 1 Frontier you control: Increase Target's Damage by 2.`,
+        keywords: ["blank"],
+        effect1name: "Each time a card(s) is added",
+        effect2name: "You can remove 2 K-Cell Counters from this card and Target 1 Frontier you control",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "785",
+    name: "Arena: Vaelwind",
+    image: `${cardArtFolder}/Obelisks/ArenaVaelwind.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Each time an Equipment card(s) is activated: Place 1 K-Cell Counter on this card for each card activated (max. 5 per instance). <br><br> You can remove 3 K-Cell Counters from this card and Target 1 Noble in either Tomb: Resurrect Target.`,
+        keywords: ["blank"],
+        effect1name: "Each time an Equipment card(s) is activated",
+        effect2name: "and Target 1 Noble in either Tomb",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "786",
+    name: "Arena: Oakwood Harbor",
+    image: `${cardArtFolder}/Obelisks/ArenaOakwoodHarbor.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Each time an attack is declared: Place 1 K-Cell Counter on this card. <br><br> You can remove 5 K-Cell Counters from this card and Target 1 Champion on the Zone: Destroy Target. <br><br> If Destroyed: Recruit 1 Hero.`,
+        keywords: ["blank"],
+        effect1name: "Each time an attack is declared",
+        effect2name: "You can remove 5 K-Cell Counters from this card and Target 1 Champion on the Zone",
+        effect3name: "If Destroyed",
+      }
+    ]
+  },
+  {
+    id: "787",
+    name: "Arena: Moonridge",
+    image: `${cardArtFolder}/Obelisks/ArenaMoonridge.png`,
+    rarity: "Legendary",
+    type: "Obelisk",
+    condition: "This card must be set for a turn before you can activate it, this card can be flipped or activated by another card's effect",
+    cost: "Offer 1 Life",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `You can remove X K-Cell Counters from any one location on the Zone and Target 1 Champion you control; Increase Target's Damage by X.`,
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "788",
+    name: "Akrobell, the Stormrider",
+    image: `${cardArtFolder}/Champions/AkrobellTheStormrider.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Sacrifice 1 Champion your Opponent controls, Rally this card under their control",
+    tags: ["Primordial","Megalith","Kaiju"],
+    damage: 4,
+    life: 6,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Reach, Taunt <span class="line-gap"></span> On Rally (Mandatory): Obliterate Mill 2. <span class="line-gap"></span> Lightning Rider: If this card is Targeted by an attack or effect: You can remove 1 K-Cell Counter from anywhere on the Zone; Negate the triggering effect, and if you do, Obliterate that card and this card.`,
+        keywords: ["Reach","Taunt"],
+        effect1name: "On Rally",
+        effect2name: "Lightning Rider",
+        effect3name: "",
       }
     ]
   },
