@@ -41,7 +41,7 @@ app.use('/utils', express.static(path.join(__dirname, 'utils'), {
 const transporter = nodemailer.createTransport({
   host: process.env.MAILGUN_SMTP_SERVER,
   port: Number(process.env.MAILGUN_SMTP_PORT),
-  secure: false, // Mailgun gives you 587 by default; switch to true if you go 465
+  secure: false,
   auth: {
     user: process.env.MAILGUN_SMTP_LOGIN,
     pass: process.env.MAILGUN_SMTP_PASSWORD
@@ -1541,79 +1541,24 @@ app.post('/addCardsToDeck', async (req, res) => {
   }
 });
 
-// ─── 1) Request a reset link ────────────────────────────────────────────────
 app.post('/password-reset', async (req, res) => {
   const { email } = req.body;
-  // look up user
-  const { data: user, error: findErr } = await supabase
-    .from('users')
-    .select('id,email')
-    .eq('email', email)
-    .single();
-
-  // always return success to avoid enumeration
-  if (findErr || !user) {
-    return res.json({ message: 'If that email exists, a reset link has been sent.' });
-  }
-
-  // generate & store token (1 hour expiry)
-  const token     = crypto.randomBytes(32).toString('hex');
-  const expiresAt = new Date(Date.now() + 3600 * 1000).toISOString();
-  await supabase
-    .from('password_reset_tokens')
-    .insert([{ user_id: user.id, token, expires_at: expiresAt }]);
-
-  // send the reset email
-  const resetLink = `${APP_BASE_URL}/reset_password.html?token=${token}`;
-  try {
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM,
-      to: email,
-      subject: 'Your Password Reset Link',
-      text: `Reset your password here:\n\n${resetLink}`,
-      html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`
-    });
-  } catch (mailErr) {
-    console.error('Failed to send reset email:', mailErr);
-  }
-
-  return res.json({ message: 'If that email exists, a reset link has been sent.' });
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${APP_BASE_URL}/reset_password.html`
+  });
+  // Always return success so we don’t leak which emails exist
+  return res.json({ message: 'If that email exists, you’ll receive a reset link.' });
 });
 
 
-// ─── 2) Confirm & overwrite password ───────────────────────────────────────
 app.post('/password-reset/confirm', async (req, res) => {
-  const { token, newPassword } = req.body;
-  const now = new Date().toISOString();
-
-  // find a non-expired token
-  const { data: row, error: tokErr } = await supabase
-    .from('password_reset_tokens')
-    .select('id,user_id,expires_at')
-    .eq('token', token)
-    .gte('expires_at', now)
-    .single();
-
-  if (tokErr || !row) {
-    return res.status(400).json({ message: 'Invalid or expired token.' });
-  }
-
-  // update the user's password
-  const { error: updErr } = await supabase
-    .from('users')
-    .update({ password: newPassword })
-    .eq('id', row.user_id);
-
-  if (updErr) {
-    return res.status(500).json({ message: 'Error updating password.' });
-  }
-
-  // clean up the used token
-  await supabase
-    .from('password_reset_tokens')
-    .delete()
-    .eq('id', row.id);
-
+  const { access_token, newPassword } = req.body;
+  // initialize a Supabase client _with_ that token
+  const authClient = createClient(SUPABASE_URL, SUPABASE_KEY, {
+    global: { headers: { Authorization: `Bearer ${access_token}` } }
+  });
+  const { error } = await authClient.auth.updateUser({ password: newPassword });
+  if (error) return res.status(400).json({ message: error.message });
   return res.json({ message: 'Password has been reset successfully.' });
 });
 
