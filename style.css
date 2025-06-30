@@ -695,7 +695,7 @@ padding-bottom: calc(32px + 3px + 2px) !important;
   margin-bottom: 10px;
 }
 
-.left-btn, .right-btn, .copy-btn {
+.left-btn, .right-btn, .copy-btn, .export-btn {
 width: 50px;
 height: 50px;
 border: 8px solid #000;
@@ -724,6 +724,14 @@ background-color: #ff0000;
 }
 .right-btn:hover {
 background-color: #cc0000;
+}
+
+.export-btn {
+background-color: #ffb300;
+margin-right: 5px;
+}
+.export-btn:hover {
+background-color: #c7a003;
 }
 
 .copy-btn {

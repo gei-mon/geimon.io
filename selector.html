@@ -19,7 +19,12 @@
     <button class="button buttonEvenSmaller" onclick="location.href='index.html'" style="display: block; margin: 0 auto;">Home</button>
 
     <br>
-    <button class="button buttonEvenSmaller deck-button" id="create-deck-button" style="display: block; margin: 0 auto;">Create Deck</button>
+    <div style="display: flex; flex-direction: row; align-items: center; gap: 8px; justify-content: center;">
+        <button class="button buttonEvenSmaller deck-button" id="create-deck-button" style="display: block; margin: 0;">Create Deck</button>
+        <button class="button buttonEvenSmaller" id="import-deck-button" style="display: block; margin: 0;">Import Deck</button>
+    </div>
+
+    <input type="file" id="import-deck-input" accept=".txt" style="display:none">
 
     <div class="menu-container">
             <ul class="menu-list" id="deck-list"></ul>
@@ -75,6 +80,55 @@
 
             deckModal.style.display       = "none";
             collectionModal.style.display = "none";
+
+            const importDeckButton = document.getElementById("import-deck-button");
+            const importDeckInput  = document.getElementById("import-deck-input");
+
+            importDeckButton.addEventListener("click", () => {
+            // clear any previous selection and open file picker
+            importDeckInput.value = "";
+            importDeckInput.click();
+            });
+
+            importDeckInput.addEventListener("change", async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            // read the .txt file
+            const text = await file.text();
+            // assume one card ID per line
+            const cardIds = text
+                .split(/\r?\n/)
+                .map(line => parseInt(line.trim(), 10))
+                .filter(id => !isNaN(id));
+
+            // ask user for a deck name
+            const deckName = prompt("Enter a name for your imported deck:");
+            if (!deckName) return;
+
+            // create the deck using Default (All Cards) collection
+            try {
+                const res = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/createDeck", {
+                method: "POST",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    deck_name: deckName,
+                    card_ids: cardIds
+                })
+                });
+                const result = await res.json();
+                if (!result.success) {
+                alert(result.message || "Deck import failed.");
+                return;
+                }
+                alert("Deck imported successfully!");
+                window.location.reload();
+            } catch (err) {
+                console.error("Import error:", err);
+                alert("An error occurred while importing the deck.");
+            }
+            });
 
             // 1) Build-and-show collection picker
             createDeckButton.addEventListener("click", async () => {
@@ -434,6 +488,38 @@
                         })();
                     };
 
+                    // EXPORT button (insert just before the DELETE button code) :contentReference[oaicite:0]{index=0}
+                    const exportBtn = document.createElement("button");
+                    exportBtn.className = "export-btn";
+                    exportBtn.textContent = "E";
+                    exportBtn.title = "Export Deck";
+                    exportBtn.onclick = async () => {
+                        // fetch this deck’s cards
+                        const res = await fetch(
+                            'https://geimon-app-833627ba44e0.herokuapp.com/getDeckCards',
+                            {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                credentials: 'include',
+                                body: JSON.stringify({ deck_name: deckName, owner: userName })
+                            }
+                        );
+                        const data = await res.json();
+                        if (!data.success) {
+                            alert("Failed to retrieve deck cards.");
+                            return;
+                        }
+                        // create & download a .txt
+                        const blob = new Blob([ data.card_ids.join("\n") ], { type: "text/plain" });
+                        const url  = URL.createObjectURL(blob);
+                        const a    = document.createElement("a");
+                        a.href     = url;
+                        a.download = `${deckName}.txt`;
+                        a.click();
+                        URL.revokeObjectURL(url);
+                    };
+
+
                     // DELETE button
                     const rightBtn = document.createElement("button");
                     rightBtn.className = "right-btn";
@@ -494,6 +580,7 @@
                     deckRow.appendChild(copyBtn);
                     deckRow.appendChild(leftBtn);
                     deckRow.appendChild(button);
+                    deckRow.appendChild(exportBtn);
                     deckRow.appendChild(rightBtn);
 
                     deckList.appendChild(deckRow);
