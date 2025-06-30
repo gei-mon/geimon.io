@@ -36,43 +36,6 @@
     <br>
     <p id="status" style="font-family: 'Racing Sans One', sans-serif; font-size: 18px; color: rgb(0, 0, 0); display: block; margin: 0 auto; text-align:center; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;"></p>
 
-    <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
-        <button class="button buttonEvenSmaller" onclick="location.href='register.html'">New User?</button>
-        <button class="button buttonEvenSmaller" onclick="location.href='index.html'">Cancel</button>
-    </div>
-
-    <br><br>
-    <button type="button" class="button buttonEvenSmallerCrimped" id="forgotPasswordBtn" style="display: block; margin: 0 auto;">Forgot Password?</button>
-
-    <div id="resetModal" class="modal" style="
-        display:none;
-        position:fixed; z-index:1000;
-        left:0; top:0;
-        width:100%; height:100%;
-        background:rgba(0,0,0,0.4);
-        ">
-        <div class="modal-content" style="
-                background:#fff;
-                margin:15% auto;
-                padding:20px;
-                border:1px solid #888;
-                width:80%; max-width:400px;
-                text-align:center;
-            ">
-            <span id="closeResetModal" style="
-                color:#aaa;
-                float:right;
-                font-size:28px;
-                font-weight:bold;
-                cursor:pointer;
-                ">&times;</span>
-            <h2>Reset Password</h2>
-            <input type="email" id="resetEmail" placeholder="Enter your email" required style="width:95%;padding:8px;"><br><br>
-            <button type="button" id="sendResetLink">Send Reset Link</button>
-            <div id="resetMessage" style="margin-top:10px;color:green;"></div>
-        </div>
-    </div>
-
     <script>
         async function login() {
             const identifier = document.getElementById('identifier').value;
@@ -113,43 +76,11 @@
                 console.error('Login error:', err);
             }
         }
-        const forgotBtn  = document.getElementById('forgotPasswordBtn');
-        const resetModal = document.getElementById('resetModal');
-        const closeModal = document.getElementById('closeResetModal');
-        const sendBtn    = document.getElementById('sendResetLink');
-        const resetMsg   = document.getElementById('resetMessage');
-
-        forgotBtn.addEventListener('click', () => {
-            resetMsg.textContent = '';
-            document.getElementById('resetEmail').value = '';
-            resetModal.style.display = 'block';
-        });
-        closeModal.addEventListener('click', () => resetModal.style.display = 'none');
-        window.addEventListener('click', e => {
-            if (e.target === resetModal) resetModal.style.display = 'none';
-        });
-
-        sendBtn.addEventListener('click', async () => {
-            const email = document.getElementById('resetEmail').value;
-            if (!email) {
-            resetMsg.style.color = 'red';
-            resetMsg.textContent = 'Please enter an email.';
-            return;
-            }
-            try {
-                const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/password-reset', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify({ email })
-                });
-                resetMsg.style.color = 'green';
-                resetMsg.textContent = 'If that email exists, you’ll get a link shortly.';
-            } catch {
-                resetMsg.style.color = 'red';
-                resetMsg.textContent = 'Network error.';
-            }
-        });
     </script>
+
+    <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px;">
+        <button class="button buttonEvenSmaller" onclick="location.href='register.html'">New User?</button>
+        <button class="button buttonEvenSmaller" onclick="location.href='index.html'">Cancel</button>
+    </div>
 </body>
 </html>

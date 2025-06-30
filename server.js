@@ -14,7 +14,6 @@ const { Server } = require('socket.io');
 const { TotemExecutor } = require('./utils/totemExecutor.cjs');
 const { cards } = require('./data/cards.js');
 const { totems } = require('./data/totems.js');
-const nodemailer = require('nodemailer');
 
 // In-memory storage
 let sessions = {};
@@ -37,8 +36,6 @@ app.use('/utils', express.static(path.join(__dirname, 'utils'), {
     res.setHeader('Access-Control-Allow-Origin', '*');
   }
 }));
-
-const APP_BASE_URL = process.env.APP_BASE_URL || 'http://localhost:3000';
 
 // CORS setup
 const allowedOrigins = [
@@ -740,7 +737,7 @@ function generateSessionId() {
   return crypto.randomBytes(16).toString('hex');
 }
 
-// GET /users (Login)
+// GET /users
 app.get('/users', async (req, res) => {
   const { data: users, error } = await supabase
     .from('users')
@@ -755,99 +752,54 @@ app.get('/users', async (req, res) => {
 
 // POST /users (Register)
 app.post('/users', async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, password, email } = req.body;
 
-  // 1) Make sure nobody’s already using that username/email in your profile table
-  const { data: existingProfile, error: profileCheckError } = await supabase
+  const { data: existingUser, error: findError } = await supabase
     .from('users')
     .select('id')
     .or(`username.eq.${username},email.eq.${email}`)
     .single();
 
-  if (profileCheckError && profileCheckError.code !== 'PGRST116') {
-    // some DB error other than “no rows found”
-    return res.status(500).json({ message: 'Database error', details: profileCheckError.message });
-  }
-  if (existingProfile) {
-    return res.status(409).json({ message: 'Username or email already in use' });
+  if (existingUser) {
+    return res.status(409).json({ message: 'User already exists' });
   }
 
-  // 2) Create the Auth user
-  const { data: authData, error: authError } = await supabase.auth.signUp({
-    email,
-    password
-  });
-  if (authError) {
-    return res.status(400).json({ message: authError.message });
-  }
-  const authUser = authData.user;
-
-  // 3) Insert your profile row with a reference to authUser.id
-  const { error: insertError } = await supabase
-    .from('users')
-    .insert([{
+  const { error: insertError } = await supabase.from('users').insert([
+    {
       username,
       email,
-      auth_id:     authUser.id,
+      password,
       profile_pic: 'Sharpshooter-Square.png',
-      deck_sleeve:'Rusty.png',
-      zone_art:    'CyrusDustwalker.png'
-    }]);
+      deck_sleeve: 'Rusty.png',
+      zone_art: 'CyrusDustwalker.png'
+    }
+  ]);
 
   if (insertError) {
-    // rollback the Auth user so you don't leak
-    await supabase.auth.admin.deleteUser(authUser.id).catch(() => {});
     return res.status(500).json({ message: 'Database error', details: insertError.message });
   }
 
-  // 4) All done!
-  res.status(200).json({ message: 'User registered successfully' });
+  res.status(200).json({ message: 'User added successfully' });
 });
 
 // POST /login
 app.post('/login', async (req, res) => {
   const { identifier, password } = req.body;
 
-  // 1) Determine the email to authenticate with
-  let emailToAuth = identifier;
-  if (!identifier.includes('@')) {
-    // treat identifier as username, look up email in your users table
-    const { data: profile, error: profileErr } = await supabase
-      .from('users')
-      .select('email')
-      .eq('username', identifier)
-      .single();
-    if (profileErr || !profile) {
-      return res.status(401).json({ message: 'Invalid credentials' });
-    }
-    emailToAuth = profile.email;
-  }
+  // Retrieve user from database
+  const { data: user, error } = await supabase
+    .from('users')
+    .select('*')
+    .or(`username.eq.${identifier},email.eq.${identifier}`)
+    .single();
 
-  // 2) Authenticate via Supabase Auth
-  const {
-    data: { user: authUser, session },
-    error: authError
-  } = await supabase.auth.signInWithPassword({
-    email: emailToAuth,
-    password
-  });
-  if (authError || !authUser) {
+  if (error || !user || user.password !== password) {
     return res.status(401).json({ message: 'Invalid credentials' });
   }
 
-  // 3) Fetch the corresponding profile row to get username
-  const { data: profile, error: profErr } = await supabase
-    .from('users')
-    .select('*')
-    .eq('auth_id', authUser.id)
-    .single();
-  if (profErr || !profile) {
-    return res.status(500).json({ message: 'User profile not found' });
-  }
-
-  // 4) Create your session cookie as before
+  // Create session
   const sessionId = generateSessionId();
-  sessions[sessionId] = profile.username;
+  sessions[sessionId] = user.username;
 
   res.cookie('session', sessionId, {
     httpOnly: true,
@@ -1574,27 +1526,6 @@ app.post('/addCardsToDeck', async (req, res) => {
     console.error('Error in /addCardsToDeck:', err);
     return res.status(500).json({ success:false, message:'Server error', error:err.message });
   }
-});
-
-app.post('/password-reset', async (req, res) => {
-  const { email } = req.body;
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${APP_BASE_URL}/reset_password.html`
-  });
-  // Always return success so we don’t leak which emails exist
-  return res.json({ message: 'If that email exists, you’ll receive a reset link.' });
-});
-
-
-app.post('/password-reset/confirm', async (req, res) => {
-  const { access_token, newPassword } = req.body;
-  // initialize a Supabase client _with_ that token
-  const authClient = createClient(SUPABASE_URL, SUPABASE_KEY, {
-    global: { headers: { Authorization: `Bearer ${access_token}` } }
-  });
-  const { error } = await authClient.auth.updateUser({ password: newPassword });
-  if (error) return res.status(400).json({ message: error.message });
-  return res.json({ message: 'Password has been reset successfully.' });
 });
 
 // 404 handler
