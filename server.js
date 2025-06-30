@@ -39,12 +39,12 @@ app.use('/utils', express.static(path.join(__dirname, 'utils'), {
 }));
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT || 587),
-  secure: false,
+  host: process.env.MAILGUN_SMTP_SERVER,
+  port: Number(process.env.MAILGUN_SMTP_PORT),
+  secure: false, // Mailgun gives you 587 by default; switch to true if you go 465
   auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS
+    user: process.env.MAILGUN_SMTP_LOGIN,
+    pass: process.env.MAILGUN_SMTP_PASSWORD
   }
 });
 

@@ -79,7 +79,7 @@
             const password = document.getElementById('password').value;
             const status = document.getElementById('status');
 
-            if (!username || !password) {
+            if (!identifier || !password) {
                 status.textContent = 'Please enter both username and password.';
                 status.style.color = 'red';
                 return;
@@ -137,7 +137,7 @@
             return;
             }
             try {
-                const res = await fetch('https://YOUR_API_DOMAIN/password-reset', {
+                const res = await fetch('https://geimon-app-833627ba44e0.herokuapp.com/password-reset', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     credentials: 'include',
