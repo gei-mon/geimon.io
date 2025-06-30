@@ -36,5 +36,6 @@ export const keywords = {
   Fortified: "Increase this Champion&apos;s Damage Threshold by 1 for every Obelisk you control.",
   Twitchy: "Increase this Champion&apos;s Damage by 1 for every Reflex in your Tomb.",
   "Non-Believer": "This Champion is unaffected by other cards and effects.",
-  Taskmaster: "Increase this Champion&apos;s Damage by 1 for every Champion your Opponent controls."
+  Taskmaster: "Increase this Champion&apos;s Damage by 1 for every Champion your Opponent controls.",
+  Taunt: "This is the only card you control that your Opponent can Target for attacks and with effects. If you control 2 or more cards with this keyword, your Opponent can choose any of them to Target."
 };

@@ -6970,8 +6970,8 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Target gains Bulletproof, Defender, and Non-Believer until the end of this turn, also, it is the only card your Opponent can Target for effects and attacks this turn.`,
-        keywords: ["Bulletproof","Defender","Non-Believer"],
+        text: `Target gains Bulletproof, Defender, Non-Believer, and Taunt until the end of this turn.`,
+        keywords: ["Bulletproof","Defender","Non-Believer","Taunt"],
         effect1name: "",
         effect2name: "",
         effect3name: "",

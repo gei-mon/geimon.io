@@ -611,7 +611,7 @@ html, body {
 
             const socket = window.socket;                // 1️⃣ make an alias everyone can use
 
-            const attachments = []; // { sourceId, targetId, color }
+            let attachments = []; // { sourceId, targetId, color }
             try {
                 const saved = JSON.parse(localStorage.getItem('attachments') || '[]');
                 if (Array.isArray(saved)) attachments = saved;
@@ -2380,14 +2380,31 @@ html, body {
             }, duration);
         }
 
+        function wrapCardButton(btn) {
+            // e.g. grab the card-id from the button
+            const id = btn.dataset.cardId;
+            // find the matching data object
+            const cardData = cards.find(c => String(c.id) === id);
+            if (!cardData) return;
+
+            // if this is an opponent face-down, only allow targeting:
+            const isOpp = containerId.startsWith("opponent");
+            if (isOpp) {
+                attachTargetOverlay(btn, cardData);
+            } else {
+                // on your own cards give full hover menu:
+                attachHoverMenu(btn, cardData);
+            }
+        }
+
         const observer = new MutationObserver(muts => {
             muts.forEach(m => {
             m.addedNodes.forEach(node => {
                 if (node.nodeType !== 1) return;
                 if (node.classList.contains("card-button")) {
-                wrapCardButton(node);
+                    wrapCardButton(node);
                 } else {
-                node.querySelectorAll?.(".card-button").forEach(wrapCardButton);
+                    node.querySelectorAll?.(".card-button").forEach(wrapCardButton);
                 }
             });
             });
@@ -5220,7 +5237,12 @@ html, body {
                     "To Arsenal (Face-Down)",
                     "Declare"
                 ];
-                opts.unshift("Attach / Mount");
+                const hasAttachment = attachments.some(a => a.sourceId === cardData.id);
+                if (hasAttachment) {
+                    opts.unshift("Remove Attachment");
+                } else {
+                    opts.unshift("Attach / Mount");
+                }
             } else if (zone === "Reserve") {
                 hoverMenu.style.fontSize = "3.5em";
                 opts = [
@@ -5481,112 +5503,110 @@ html, body {
                         await sendZoneSpecificUpdate({ owner, zone: zoneName, cards: zone });
                         break;
                     }
-                    // --- Updated client-side "Attach / Mount" handler with correct color array and cursor restoration ---
                     case "Attach / Mount": {
-                    // pick a random vibrant color
-                    const colors = ['#e6194b','#3cb44b','#ffe119','#4363d8','#f58231','#911eb4'];
-                    const color = colors[Math.floor(Math.random() * colors.length)];
-                    placeCircle(cardData.id, color);
+                        const colors = ['#e6194b','#3cb44b','#ffe119','#4363d8','#f58231','#911eb4'];
+                        const color = colors[Math.floor(Math.random() * colors.length)];
+                        placeCircle(cardData.id, color);
 
-                    // Create draggable circle for cursor
-                    const drag = document.createElement("div");
-                    drag.className = "attachment-drag";
-                    Object.assign(drag.style, {
-                        position: "fixed",
-                        width: "16px",
-                        height: "16px",
-                        backgroundColor: `${color}`,
-                        border: `2px solid ${color}`,
-                        borderRadius: "50%",
-                        pointerEvents: "none",
-                        zIndex: 300000
-                    });
-                    document.body.appendChild(drag);
-                    document.body.style.cursor = "none";
-
-                    function onMove(e) {
-                        drag.style.top = `${e.clientY - 8}px`;
-                        drag.style.left = `${e.clientX - 8}px`;
-                    }
-                    document.addEventListener("mousemove", onMove);
-
-                    // Modal builder with restored cursor over popup
-                    function showModal(message, onConfirm, onCancel) {
-                        const overlay = document.createElement("div");
-                        Object.assign(overlay.style, {
-                        position: "fixed",
-                        top: 0,
-                        left: 0,
-                        width: "100%",
-                        height: "100%",
-                        background: "rgba(0,0,0,0.5)",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        zIndex: 400000,
-                        cursor: "auto"  // show cursor over overlay
+                        // Create draggable circle for cursor
+                        const drag = document.createElement("div");
+                        drag.className = "attachment-drag";
+                        Object.assign(drag.style, {
+                            position: "fixed",
+                            width: "16px",
+                            height: "16px",
+                            backgroundColor: `${color}`,
+                            border: `2px solid ${color}`,
+                            borderRadius: "50%",
+                            pointerEvents: "none",
+                            zIndex: 300000
                         });
-                        const box = document.createElement("div");
-                        Object.assign(box.style, {
-                        background: "#fff",
-                        padding: "20px",
-                        borderRadius: "8px",
-                        textAlign: "center",
-                        maxWidth: "300px",
-                        cursor: "auto"  // ensure cursor is visible on modal
-                        });
-                        const msg = document.createElement("p");
-                        msg.textContent = message;
-                        const btnConfirm = document.createElement("button");
-                        btnConfirm.textContent = "Confirm";
-                        const btnCancel = document.createElement("button");
-                        btnCancel.textContent = "Cancel";
-                        btnConfirm.style.margin = btnCancel.style.margin = "8px";
-                        box.append(msg, btnConfirm, btnCancel);
-                        overlay.appendChild(box);
-                        document.body.appendChild(overlay);
+                        document.body.appendChild(drag);
+                        document.body.style.cursor = "none";
 
-                        btnConfirm.addEventListener("click", () => {
-                        onConfirm();
-                        cleanup();
-                        });
-                        btnCancel.addEventListener("click", () => {
-                        onCancel();
-                        cleanup();
-                        });
-
-                        function cleanup() {
-                        overlay.remove();
-                        document.removeEventListener("click", clickHandler, true);
-                        document.removeEventListener("mousemove", onMove);
-                        drag.remove();
-                        document.body.style.cursor = "";
+                        function onMove(e) {
+                            drag.style.top = `${e.clientY - 8}px`;
+                            drag.style.left = `${e.clientX - 8}px`;
                         }
-                    }
+                        document.addEventListener("mousemove", onMove);
 
-                    // Only intercept clicks on cards; modal buttons will still receive events
-                    const clickHandler = ev => {
-                        const tgt = ev.target.closest(".card");
-                        if (!tgt) return;
-                        ev.stopPropagation();
-                        ev.preventDefault();
-                        const tgtId = tgt.dataset.cardId;
-                        const name = tgt.dataset.cardName || tgt.querySelector(".card-name")?.innerText || `#${tgtId}`;
-                        showModal(
-                        `Attach "${cardData.name}" to "${name}"?`,
-                        () => {
-                            socket.emit('attach_card', { gameId, sourceId: cardData.id, targetId: tgtId, color });
-                            // now update this card’s menu text:
-                            const menuBtn = document.querySelector(
-                                `.card[data-card-id="${cardData.id}"] .hover-menu button[ data-action="Attach / Mount" ]`
+                        // Modal builder with restored cursor over popup
+                        function showModal(message, onConfirm, onCancel) {
+                            const overlay = document.createElement("div");
+                            Object.assign(overlay.style, {
+                            position: "fixed",
+                            top: 0,
+                            left: 0,
+                            width: "100%",
+                            height: "100%",
+                            background: "rgba(0,0,0,0.5)",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            zIndex: 400000,
+                            cursor: "auto"  // show cursor over overlay
+                            });
+                            const box = document.createElement("div");
+                            Object.assign(box.style, {
+                            background: "#fff",
+                            padding: "20px",
+                            borderRadius: "8px",
+                            textAlign: "center",
+                            maxWidth: "300px",
+                            cursor: "auto"  // ensure cursor is visible on modal
+                            });
+                            const msg = document.createElement("p");
+                            msg.textContent = message;
+                            const btnConfirm = document.createElement("button");
+                            btnConfirm.textContent = "Confirm";
+                            const btnCancel = document.createElement("button");
+                            btnCancel.textContent = "Cancel";
+                            btnConfirm.style.margin = btnCancel.style.margin = "8px";
+                            box.append(msg, btnConfirm, btnCancel);
+                            overlay.appendChild(box);
+                            document.body.appendChild(overlay);
+
+                            btnConfirm.addEventListener("click", () => {
+                            onConfirm();
+                            cleanup();
+                            });
+                            btnCancel.addEventListener("click", () => {
+                            onCancel();
+                            cleanup();
+                            });
+
+                            function cleanup() {
+                            overlay.remove();
+                            document.removeEventListener("click", clickHandler, true);
+                            document.removeEventListener("mousemove", onMove);
+                            drag.remove();
+                            document.body.style.cursor = "";
+                            }
+                        }
+
+                        // Only intercept clicks on cards; modal buttons will still receive events
+                        const clickHandler = ev => {
+                            const tgt = ev.target.closest(".card");
+                            if (!tgt) return;
+                            ev.stopPropagation();
+                            ev.preventDefault();
+                            const tgtId = tgt.dataset.cardId;
+                            const name = tgt.dataset.cardName || tgt.querySelector(".card-name")?.innerText || `#${tgtId}`;
+                            showModal(
+                            `Attach "${cardData.name}" to "${name}"?`,
+                            () => {
+                                socket.emit('attach_card', { gameId, sourceId: cardData.id, targetId: tgtId, color });
+                                // now update this card’s menu text:
+                                const menuBtn = document.querySelector(
+                                    `.card[data-card-id="${cardData.id}"] .hover-menu button[ data-action="Attach / Mount" ]`
+                                );
+                                if (menuBtn) menuBtn.textContent = 'Remove Attachment';
+                            },
+                            () => { /* cancel: allow re-pick */ }
                             );
-                            if (menuBtn) menuBtn.textContent = 'Remove Attachment';
-                        },
-                        () => { /* cancel: allow re-pick */ }
-                        );
-                    };
+                        };
 
-                    document.addEventListener("click", clickHandler, true);
+                        document.addEventListener("click", clickHandler, true);
                     } break;
                     case "Remove Attachment": {
                         // find your attachment
@@ -5654,6 +5674,21 @@ html, body {
                 }
                 else {
                     hoverMenu.style.display = "flex";
+                }
+
+                if (isFaceDown) {
+                    // do your preview here
+                    const real = cards.find(c => String(c.id) === String(cardData.id));
+                    if (real) {
+                        const scaled = document.querySelector("#viewing-window .scaled-card");
+                        scaled.innerHTML = "";
+                        const preview = renderCard(real);
+                        Object.assign(preview.style,{
+                            width:"240px", height:"420px", transform:"scale(1.2)",
+                            marginLeft:"-15%", marginTop:"7%"
+                        });
+                        scaled.appendChild(preview);
+                    }
                 }
 
                 // force initial state
@@ -6169,17 +6204,17 @@ html, body {
                     wrap.appendChild(cardBack);
 
                     /* ── overlay button restores targeting/highlight ─────────── */
-                    const btn = document.createElement("button");              /* ‹NEW› */
-                    btn.className = "card-button";                             /* ‹NEW› */
-                    btn.dataset.cardId = String(cardData.id);                  /* ‹NEW› */
-                    Object.assign(btn.style,{                                  /* ‹NEW› */
-                        position:"absolute", top:"0", left:"0",                  /* ‹NEW› */
-                        width:"100%", height:"100%",                             /* ‹NEW› */
-                        border:"none", background:"transparent", opacity:"0",    /* ‹NEW› */
-                        cursor:"pointer", pointerEvents:"auto", zIndex:100100    /* ‹NEW› */
-                    });                                                        /* ‹NEW› */
-                    wrap.appendChild(btn);                                     /* ‹NEW› */
-                    if (typeof wrapCardButton === "function") wrapCardButton(btn); /* ‹NEW› */
+                    const btn = document.createElement("button");
+                    btn.className = "card-button";
+                    btn.dataset.cardId = String(cardData.id);
+                    Object.assign(btn.style,{
+                        position:"absolute", top:"0", left:"0",
+                        width:"100%", height:"100%",
+                        border:"none", background:"transparent", opacity:"0",
+                        cursor:"pointer", pointerEvents:"auto", zIndex:100100
+                    });
+                    wrap.appendChild(btn);
+                    if (typeof wrapCardButton === "function") wrapCardButton(btn);
 
                     /* only PLAYER’S own face-down arsenal previews */
                     if (!isOppSide) {
@@ -6198,10 +6233,21 @@ html, body {
                         });
                     }
 
+                    wrap.appendChild(btn);
+                    if (typeof wrapCardButton === "function") wrapCardButton(btn);
+                    if (isOppSide) {
+                        attachTargetOverlay(btn,  cardData);
+                    } else {
+                        attachHoverMenu(btn,  cardData);
+                    }
                     wrap.dataset.cardId = String(cardData.id);
                     wrap.dataset.zone   = "FaceDownArsenalZone";
                     wrap._card          = cardData;
-                    if (!isOppSide) attachHoverMenu(wrap, cardData);
+                    if (isOppSide) {
+                        attachTargetOverlay(wrap, cardData);
+                    } else {
+                        attachHoverMenu(wrap, cardData);
+                    }
                     container.appendChild(wrap);
                     return;       // done with this card
                 }
@@ -6262,17 +6308,23 @@ html, body {
                     }
                     wrap.appendChild(btn);
                     if (typeof wrapCardButton === "function") wrapCardButton(btn);
-                    if (!isOppSide) {
-                        attachHoverMenu(btn, cardData);      /* ← NEW */
+                    if (isOppSide) {
+                        attachTargetOverlay(btn,  cardData);
+                    } else {
+                        attachHoverMenu(btn,  cardData);
                     }
                     wrap.dataset.cardId = String(cardData.id);
                     wrap.dataset.zone = "FaceDownZone";
                     wrap._card        = cardData;
 
-                    if (!isOppSide) attachHoverMenu(wrap, cardData);
+                    if (isOppSide) {
+                        attachTargetOverlay(wrap, cardData);
+                    } else {
+                        attachHoverMenu(wrap, cardData);
+                    }
 
                     container.appendChild(wrap);
-                    return;          // finished this card
+                    return;
                 }
 
                 /* ---------------- FACE-UP cards (normal path) ---------------- */
@@ -6303,12 +6355,12 @@ html, body {
                     transform:"scale(0.3)", transformOrigin:"top center"
                 });
                 } else if (containerId === "opponentReserveBox") {
-                Object.assign(wrap.style,{ marginLeft:"-210px", marginTop:"-350px" });
+                    Object.assign(wrap.style,{ marginLeft:"-210px", marginTop:"-350px" });
                 } else {
-                Object.assign(wrap.style,{
-                    marginLeft:"-44px", marginTop:"323px",
-                    transform:"scale(0.3)", transformOrigin:"top center"
-                });
+                    Object.assign(wrap.style,{
+                        marginLeft:"-44px", marginTop:"323px",
+                        transform:"scale(0.3)", transformOrigin:"top center"
+                    });
                 }
 
                 /* hover to show big card */
@@ -6348,6 +6400,36 @@ html, body {
         renderLatestOpponentTombCard();
         renderLatestOpponentVoidCard();
     }, 250);
+
+    // 1) New helper – only gives you the click-through target overlay:
+    function attachTargetOverlay(el, cardData) {
+        // don’t double-add
+        if (el.querySelector('.target-overlay')) return;
+
+        // make sure the parent can be positioned
+        if (getComputedStyle(el).position === 'static') {
+            el.style.position = 'relative';
+        }
+
+        const overlay = document.createElement('div');
+        overlay.classList.add('target-overlay');
+        Object.assign(overlay.style, {
+            position:   'absolute',
+            top:        '0',
+            left:       '0',
+            width:      '100%',
+            height:     '100%',
+            cursor:     'pointer',
+            zIndex:     '220000'
+        });
+
+        overlay.addEventListener('click', e => {
+            e.stopPropagation();
+            socket.emit('toggle_target', { gameId, cardId: cardData.id });
+        });
+
+        el.appendChild(overlay);
+    }
 
     async function flipCard(cardId) {
         const facedownZone = gameState[username].FaceDownZone;
