@@ -38,16 +38,6 @@ app.use('/utils', express.static(path.join(__dirname, 'utils'), {
   }
 }));
 
-const transporter = nodemailer.createTransport({
-  host: process.env.MAILGUN_SMTP_SERVER,
-  port: Number(process.env.MAILGUN_SMTP_PORT),
-  secure: false,
-  auth: {
-    user: process.env.MAILGUN_SMTP_LOGIN,
-    pass: process.env.MAILGUN_SMTP_PASSWORD
-  }
-});
-
 const APP_BASE_URL = process.env.APP_BASE_URL || 'http://localhost:3000';
 
 // CORS setup
@@ -750,7 +740,7 @@ function generateSessionId() {
   return crypto.randomBytes(16).toString('hex');
 }
 
-// GET /users
+// GET /users (Login)
 app.get('/users', async (req, res) => {
   const { data: users, error } = await supabase
     .from('users')
@@ -765,54 +755,99 @@ app.get('/users', async (req, res) => {
 
 // POST /users (Register)
 app.post('/users', async (req, res) => {
-  const { username, password, email } = req.body;
+  const { username, email, password } = req.body;
 
-  const { data: existingUser, error: findError } = await supabase
+  // 1) Make sure nobody’s already using that username/email in your profile table
+  const { data: existingProfile, error: profileCheckError } = await supabase
     .from('users')
     .select('id')
     .or(`username.eq.${username},email.eq.${email}`)
     .single();
 
-  if (existingUser) {
-    return res.status(409).json({ message: 'User already exists' });
+  if (profileCheckError && profileCheckError.code !== 'PGRST116') {
+    // some DB error other than “no rows found”
+    return res.status(500).json({ message: 'Database error', details: profileCheckError.message });
+  }
+  if (existingProfile) {
+    return res.status(409).json({ message: 'Username or email already in use' });
   }
 
-  const { error: insertError } = await supabase.from('users').insert([
-    {
+  // 2) Create the Auth user
+  const { data: authData, error: authError } = await supabase.auth.signUp({
+    email,
+    password
+  });
+  if (authError) {
+    return res.status(400).json({ message: authError.message });
+  }
+  const authUser = authData.user;
+
+  // 3) Insert your profile row with a reference to authUser.id
+  const { error: insertError } = await supabase
+    .from('users')
+    .insert([{
       username,
       email,
-      password,
+      auth_id:     authUser.id,
       profile_pic: 'Sharpshooter-Square.png',
-      deck_sleeve: 'Rusty.png',
-      zone_art: 'CyrusDustwalker.png'
-    }
-  ]);
+      deck_sleeve:'Rusty.png',
+      zone_art:    'CyrusDustwalker.png'
+    }]);
 
   if (insertError) {
+    // rollback the Auth user so you don't leak
+    await supabase.auth.admin.deleteUser(authUser.id).catch(() => {});
     return res.status(500).json({ message: 'Database error', details: insertError.message });
   }
 
-  res.status(200).json({ message: 'User added successfully' });
+  // 4) All done!
+  res.status(200).json({ message: 'User registered successfully' });
 });
 
 // POST /login
 app.post('/login', async (req, res) => {
   const { identifier, password } = req.body;
 
-  // Retrieve user from database
-  const { data: user, error } = await supabase
-    .from('users')
-    .select('*')
-    .or(`username.eq.${identifier},email.eq.${identifier}`)
-    .single();
+  // 1) Determine the email to authenticate with
+  let emailToAuth = identifier;
+  if (!identifier.includes('@')) {
+    // treat identifier as username, look up email in your users table
+    const { data: profile, error: profileErr } = await supabase
+      .from('users')
+      .select('email')
+      .eq('username', identifier)
+      .single();
+    if (profileErr || !profile) {
+      return res.status(401).json({ message: 'Invalid credentials' });
+    }
+    emailToAuth = profile.email;
+  }
 
-  if (error || !user || user.password !== password) {
+  // 2) Authenticate via Supabase Auth
+  const {
+    data: { user: authUser, session },
+    error: authError
+  } = await supabase.auth.signInWithPassword({
+    email: emailToAuth,
+    password
+  });
+  if (authError || !authUser) {
     return res.status(401).json({ message: 'Invalid credentials' });
   }
 
-  // Create session
+  // 3) Fetch the corresponding profile row to get username
+  const { data: profile, error: profErr } = await supabase
+    .from('users')
+    .select('*')
+    .eq('auth_id', authUser.id)
+    .single();
+  if (profErr || !profile) {
+    return res.status(500).json({ message: 'User profile not found' });
+  }
+
+  // 4) Create your session cookie as before
   const sessionId = generateSessionId();
-  sessions[sessionId] = user.username;
+  sessions[sessionId] = profile.username;
 
   res.cookie('session', sessionId, {
     httpOnly: true,
