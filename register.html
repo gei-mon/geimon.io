@@ -29,6 +29,7 @@
         <p style="text-align:center; font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;"><game-title>Geimon!</game-title></p>
         <h1 style="color:white; text-align:center; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Signup!</h1>
         <br>
+        <input type="email" style="font-size: 20px; display: block; margin: 0 auto;" id="email" placeholder="Email" required><br><br>
         <input type="text" style="font-size: 20px; display: block; margin: 0 auto;" id="username" placeholder="Username" required><br><br>
         <input type="password" style="font-size: 20px; display: block; margin: 0 auto;" id="password" placeholder="Password" required><br><br>
         <button class="button buttonSmall" id="registerUser" onclick="registerUser()" style="margin: 0 auto; text-align: center; display: block; display: flex; justify-content: center;">Register</button>
@@ -39,7 +40,7 @@
             async function registerUser() {
                 const username = document.getElementById('username').value;
                 const password = document.getElementById('password').value;
-                const email = username + '@example.com';
+                const email    = document.getElementById('email').value;
 
                 if (!username || !password) {
                     document.getElementById('output').textContent = 'Please fill in both fields.';
@@ -52,7 +53,7 @@
                         headers: {
                             'Content-Type': 'application/json'
                         },
-                        body: JSON.stringify({ username, password }),
+                        body: JSON.stringify({ username, password, email }),
                         credentials: 'include'
                     });
 

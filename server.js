@@ -14,6 +14,7 @@ const { Server } = require('socket.io');
 const { TotemExecutor } = require('./utils/totemExecutor.cjs');
 const { cards } = require('./data/cards.js');
 const { totems } = require('./data/totems.js');
+const nodemailer = require('nodemailer');
 
 // In-memory storage
 let sessions = {};
@@ -36,6 +37,18 @@ app.use('/utils', express.static(path.join(__dirname, 'utils'), {
     res.setHeader('Access-Control-Allow-Origin', '*');
   }
 }));
+
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: Number(process.env.SMTP_PORT || 587),
+  secure: false,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
+  }
+});
+
+const APP_BASE_URL = process.env.APP_BASE_URL || 'http://localhost:3000';
 
 // CORS setup
 const allowedOrigins = [
@@ -752,12 +765,12 @@ app.get('/users', async (req, res) => {
 
 // POST /users (Register)
 app.post('/users', async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, email } = req.body;
 
   const { data: existingUser, error: findError } = await supabase
     .from('users')
     .select('id')
-    .eq('username', username)
+    .or(`username.eq.${username},email.eq.${email}`)
     .single();
 
   if (existingUser) {
@@ -765,7 +778,14 @@ app.post('/users', async (req, res) => {
   }
 
   const { error: insertError } = await supabase.from('users').insert([
-    { username, password, profile_pic: 'Sharpshooter-Square.png', deck_sleeve: 'Rusty.png', zone_art: 'CyrusDustwalker.png' }
+    {
+      username,
+      email,
+      password,
+      profile_pic: 'Sharpshooter-Square.png',
+      deck_sleeve: 'Rusty.png',
+      zone_art: 'CyrusDustwalker.png'
+    }
   ]);
 
   if (insertError) {
@@ -777,13 +797,13 @@ app.post('/users', async (req, res) => {
 
 // POST /login
 app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
+  const { identifier, password } = req.body;
 
   // Retrieve user from database
   const { data: user, error } = await supabase
     .from('users')
     .select('*')
-    .eq('username', username)
+    .or(`username.eq.${identifier},email.eq.${identifier}`)
     .single();
 
   if (error || !user || user.password !== password) {
@@ -1519,6 +1539,82 @@ app.post('/addCardsToDeck', async (req, res) => {
     console.error('Error in /addCardsToDeck:', err);
     return res.status(500).json({ success:false, message:'Server error', error:err.message });
   }
+});
+
+// ─── 1) Request a reset link ────────────────────────────────────────────────
+app.post('/password-reset', async (req, res) => {
+  const { email } = req.body;
+  // look up user
+  const { data: user, error: findErr } = await supabase
+    .from('users')
+    .select('id,email')
+    .eq('email', email)
+    .single();
+
+  // always return success to avoid enumeration
+  if (findErr || !user) {
+    return res.json({ message: 'If that email exists, a reset link has been sent.' });
+  }
+
+  // generate & store token (1 hour expiry)
+  const token     = crypto.randomBytes(32).toString('hex');
+  const expiresAt = new Date(Date.now() + 3600 * 1000).toISOString();
+  await supabase
+    .from('password_reset_tokens')
+    .insert([{ user_id: user.id, token, expires_at: expiresAt }]);
+
+  // send the reset email
+  const resetLink = `${APP_BASE_URL}/reset_password.html?token=${token}`;
+  try {
+    await transporter.sendMail({
+      from: process.env.SMTP_FROM,
+      to: email,
+      subject: 'Your Password Reset Link',
+      text: `Reset your password here:\n\n${resetLink}`,
+      html: `<p>Click <a href="${resetLink}">here</a> to reset your password.</p>`
+    });
+  } catch (mailErr) {
+    console.error('Failed to send reset email:', mailErr);
+  }
+
+  return res.json({ message: 'If that email exists, a reset link has been sent.' });
+});
+
+
+// ─── 2) Confirm & overwrite password ───────────────────────────────────────
+app.post('/password-reset/confirm', async (req, res) => {
+  const { token, newPassword } = req.body;
+  const now = new Date().toISOString();
+
+  // find a non-expired token
+  const { data: row, error: tokErr } = await supabase
+    .from('password_reset_tokens')
+    .select('id,user_id,expires_at')
+    .eq('token', token)
+    .gte('expires_at', now)
+    .single();
+
+  if (tokErr || !row) {
+    return res.status(400).json({ message: 'Invalid or expired token.' });
+  }
+
+  // update the user's password
+  const { error: updErr } = await supabase
+    .from('users')
+    .update({ password: newPassword })
+    .eq('id', row.user_id);
+
+  if (updErr) {
+    return res.status(500).json({ message: 'Error updating password.' });
+  }
+
+  // clean up the used token
+  await supabase
+    .from('password_reset_tokens')
+    .delete()
+    .eq('id', row.id);
+
+  return res.json({ message: 'Password has been reset successfully.' });
 });
 
 // 404 handler
