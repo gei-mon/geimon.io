@@ -103,7 +103,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Deathpower, Deathtouch <br><span class="line-gap"></span> On Rally (Mandatory): Obliterate all cards in both Players' Tombs. <span class="line-gap"></span> Break the Seal: Resurrect or Unleash 1 Undead. Destroy all Champions Resurrected this way if this card leaves the Zone. <span class="line-gap"></span> Fateseal (Reflex, Exhaustion): Obliterate the top 10 cards of your Deck; Reduce the Life of all other Champions to 1.`,
+        text: `Deathpower, Deathtouch <br><span class="line-gap"></span> On Rally (Mandatory): Obliterate all cards in both Players' Tombs. <span class="line-gap"></span> Break the Seal: Resurrect or Unleash 1 Undead. Destroy all Champions Resurrected this way if this card leaves the Zone. <span class="line-gap"></span> Fateseal (Reflex, Exhaustion): Obliterate Mill 10; Reduce the Life of all other Champions to 1.`,
         keywords: ["Deathpower", "Deathtouch"],
         effect1name: "On Rally",
         effect2name: "Break the Seal",
@@ -2658,7 +2658,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Repair Specialist <span class="line-gap"></span> On Rally: Activate 1 Equipment or Obelisk from your Hand, Deck, or Tomb (ignoring its cost). <span class="line-gap"></span> Upgrade: Rally 1 Blocker Token to your Opponent's Zone; Add 1 Equipment. <span class="line-gap"></span> Emergency Transport (Reflex): If this card isn't a Commander: Obliterate mill 6; Activate 1 Commander Obelisk from your Hand, Deck, or Tomb (ignoring its cost).`,
+        text: `Repair Specialist <span class="line-gap"></span> On Rally: Activate 1 Equipment or Obelisk from your Hand, Deck, or Tomb (ignoring its cost). <span class="line-gap"></span> Upgrade: Rally 1 Blocker Token to your Opponent's Zone; Add 1 Equipment. <span class="line-gap"></span> Emergency Transport (Reflex): If this card isn't a Commander: Obliterate Mill 6; Activate 1 Commander Obelisk from your Hand, Deck, or Tomb (ignoring its cost).`,
         keywords: ["Repair Specialist"],
         effect1name: "On Rally",
         effect2name: "Upgrade",
@@ -3076,7 +3076,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Mount <span class="line-gap"></span> Mounted: Add 1 Equipment, but you cannot activate it this turn. <span class="line-gap"></span><span class="line-gap"></span> If this card is in your Reserve: Obliterate the top 5 cards of your Deck; Activate this card.`,
+        text: `Mount <span class="line-gap"></span> Mounted: Add 1 Equipment, but you cannot activate it this turn. <span class="line-gap"></span><span class="line-gap"></span> If this card is in your Reserve: Obliterate Mill 5; Activate this card.`,
         keywords: ["Mount"],
         effect1name: "Mounted",
         effect2name: "If this card is in your Reserve",
@@ -5298,7 +5298,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Lifebalance <span class="line-gap"></span> Healing Hands (Exhaustion): Your Opponent gains 5 Life; Obliterate the top 8 cards of their Deck. <span class="line-gap"></span> Bestow Life (Exhaustion): Target 1 Construct or Helper in your Tomb; Resurrect Target Champion, but Destroy all Champions Resurrected this way if this card leaves the Zone.`,
+        text: `Lifebalance <span class="line-gap"></span> Healing Hands (Exhaustion): Your Opponent gains 5 Life; Obliterate Mill 8 from your Opponent's Deck. <span class="line-gap"></span> Bestow Life (Exhaustion): Target 1 Construct or Helper in your Tomb; Resurrect Target Champion, but Destroy all Champions Resurrected this way if this card leaves the Zone.`,
         keywords: ["Lifebalance"],
         effect1name: "Healing Hands",
         effect2name: "Bestow Life",
@@ -6764,7 +6764,7 @@ export const cards = [
     image: `${cardArtFolder}/Champions/Mastermind.png`,
     rarity: "Legendary",
     type: "Champion",
-    condition: "A Champion effect is activated",
+    condition: "Reflex: A Champion effect is activated",
     cost: "Discard 3",
     tags: ["Valiant","Protector","Centurion","Hero"],
     damage: 3,
@@ -6772,11 +6772,121 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: `Forged, Taskmaster <span class="line-gap"></span> On Rally: Excavate 3, add 1 revealed. <span class="line-gap"></span> Rapid Creation (Reflex): If a card is Targeted by an attack or effect: Excavate 5, activate 1 revealed Equipment or Obelisk (ignoring its cost). <span class="line-gap"></span> Toys for Everyone! (Exhaustion): Attach 1 Equipment to another Champion you control from your Hand or Deck (ignoring its cost).`,
+        text: `Forged, Taskmaster <br> On Rally: Excavate 3, add 1 revealed. <span class="line-gap"></span> Rapid Creation (Reflex): If a card is Targeted by an attack or effect: Excavate 5, activate 1 revealed Equipment or Obelisk (ignoring its cost). <span class="line-gap"></span> Toys for Everyone! (Exhaustion): Attach 1 Equipment to another Champion you control from your Hand or Deck (ignoring its cost).`,
         keywords: ["Taskmaster","Forged"],
         effect1name: "Rapid Creation",
         effect2name: "Toys for Everyone",
         effect3name: "On Rally",
+      }
+    ]
+  },
+  {
+    id: "366",
+    name: "Stand of the Centurions",
+    image: `${cardArtFolder}/Action/Centurions.png`,
+    rarity: "Superior",
+    type: "Action",
+    condition: "",
+    cost: "",
+    tags: ["Action"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Add 1 Centurion. <br><br> If this card is in your Tomb: Obliterate this card and 1 Centurion from your Tomb; Rally 1 Centurion from your Hand (ignoring its cost and conditions).",
+        keywords: ["blank"],
+        effect1name: "If this card is in your Tomb",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "367",
+    name: "Gaia, Envoy of Plantlife",
+    image: `${cardArtFolder}/Champions/Gaia.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "Reflex: A card in your Arsenal is Destroyed",
+    cost: "Offer 4 Life",
+    tags: ["Valiant","Protector","Centurion","Hero"],
+    damage: 2,
+    life: 6,
+    damageThreshold: "4",
+    abilities: [
+      {
+        text: `Lifesteal, Menace <span class="line-gap"></span> On Rally: Retrieve 1 Action or Rush. <span class="line-gap"></span> Ensnaring Strike: Target 1 Champion on the Zone; Target cannot declare attacks or block until the end of your next turn.`,
+        keywords: ["Lifesteal","Menace"],
+        effect1name: "On Rally",
+        effect2name: "Ensnaring Strike",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "368",
+    name: "Hunter, Envoy of Wildlife",
+    image: `${cardArtFolder}/Champions/Hunter.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "Reflex: This card is in your Hand or Tomb and a card is retrieved or resurrected",
+    cost: "Sacrifice 1",
+    tags: ["Valiant","Protector","Centurion","Hero"],
+    damage: 2,
+    life: 11,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Bloodrage, Duelist, Priority <span class="line-gap"></span> On Rally: Target 1 Champion on the Zone; Target takes 3 Damage. <span class="line-gap"></span> Weakening Strike: Champions Damaged by this card in battle can no longer block.`,
+        keywords: ["Bloodrage","Priority","Duelist"],
+        effect1name: "On Rally",
+        effect2name: "Weakening Strike",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "369",
+    name: "Tempest, Envoy of Storms",
+    image: `${cardArtFolder}/Champions/Tempest.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "Reflex: A Champion or Player takes Damage from an effect",
+    cost: "Obliterate Mill 10",
+    tags: ["Valiant","Protector","Centurion","Hero"],
+    damage: 9,
+    life: 3,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Duelist, Priority, Taunt <span class="line-gap"></span> On Rally: Target 1 Champion you control; Target gains Invisible until the start of your next turn. <span class="line-gap"></span> Thunderstruck (Exhaustion): Target 1 Champion on the Zone; Destroy Target.`,
+        keywords: ["Taunt","Priority","Duelist","Invisible"],
+        effect1name: "On Rally",
+        effect2name: "Thunderstruck",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "370",
+    name: "Riptide, Envoy of the Sea",
+    image: `${cardArtFolder}/Champions/Riptide.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "Reflex: An attack is declared",
+    cost: "Obliterate 2 cards of different types from your Tomb",
+    tags: ["Valiant","Protector","Centurion","Hero"],
+    damage: 4,
+    life: 7,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `Defender, Duelist, Priority <span class="line-gap"></span> On Rally: Target 1 face-up Champion on the Zone; Flip Target face-down. <span class="line-gap"></span> Aqua Armor: Decrease the Damage this card takes by its Damage Threshold.`,
+        keywords: ["Defender","Priority","Duelist"],
+        effect1name: "On Rally",
+        effect2name: "Aqua Armor",
+        effect3name: "",
       }
     ]
   },
@@ -6838,7 +6948,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `During each of you Intermissions, roll a six-sided die, and apply the following effect: <span class="line-gap"></span> 1 • Discard 1. <span class="line-gap"></span> 2 • Draw 1. <span class="line-gap"></span> 3 • Double the Damage of 1 Champion you control until the end of this turn. <span class="line-gap"></span> 4 • Obliterate the top 5 cards of your Deck. <span class="line-gap"></span> 5 • Set 1 non-Champion from your Tomb face-down into your Arsenal. </span><span class="line-gap"></span> 6 • Change control of this card to your Opponent.`,
+        text: `During each of you Intermissions, roll a six-sided die, and apply the following effect: <span class="line-gap"></span> 1 • Discard 1. <span class="line-gap"></span> 2 • Draw 1. <span class="line-gap"></span> 3 • Double the Damage of 1 Champion you control until the end of this turn. <span class="line-gap"></span> 4 • Obliterate Mill 5. <span class="line-gap"></span> 5 • Set 1 non-Champion from your Tomb face-down into your Arsenal. </span><span class="line-gap"></span> 6 • Change control of this card to your Opponent.`,
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -6948,7 +7058,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Each time a card(s) is added: Place 1 K-Cell Counter on this card for each added card (max. 5 per instance). <br><br> You can remove 2 K-Cell Counters from this card and Target 1 Frontier you control: Increase Target's Damage by 2.`,
+        text: `Each time a card(s) is added: Place 1 K-Cell Counter on this card for each added card (max. 5 per instance). <br><br> You can remove 2 K-Cell Counters from this card and Target 1 Champion you control: Increase Target's Damage by 2.`,
         keywords: ["blank"],
         effect1name: "Each time a card(s) is added",
         effect2name: "You can remove 2 K-Cell Counters from this card and Target 1 Frontier you control",
