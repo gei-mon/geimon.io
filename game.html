@@ -2534,14 +2534,15 @@ html, body {
                     background:"transparent",
                     opacity:  "0",
                     cursor:   "pointer",
-                    pointerEvents: isFaceUp ? "none" : "auto",
+                    //pointerEvents: isFaceUp ? "none" : "auto",
+                    pointerEvents: "auto",
                     zIndex:   100100
                 });
-                if (!isFaceUp) {
+                //if (!isFaceUp) {
                     cardEl.appendChild(btn);
                     if (typeof wrapCardButton === "function") wrapCardButton(btn, container.id);
                     attachTargetOverlay(btn, cardData);
-                }
+                //}
 
                 container.appendChild(cardEl);
             });
