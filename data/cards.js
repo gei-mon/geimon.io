@@ -6783,7 +6783,7 @@ export const cards = [
   {
     id: "366",
     name: "Stand of the Centurions",
-    image: `${cardArtFolder}/Action/Centurions.png`,
+    image: `${cardArtFolder}/Actions/Centurions.png`,
     rarity: "Superior",
     type: "Action",
     condition: "",
