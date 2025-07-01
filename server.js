@@ -619,7 +619,7 @@ app.post('/startGame', async (req, res) => {
 
     const initialPlayerState = (deck) => ({
       ...defaultZones(),
-      life: 40,
+      life: 20,
       Deck: deck.map(id => ({
         id,
         boardState: "Deck",

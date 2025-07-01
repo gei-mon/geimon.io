@@ -55,7 +55,7 @@ export const cards = [
     cost: "Offer 5 Life, Mill 5, and Sacrifice 1",
     tags: ["Cryptbound", "Necromancer", "Mage"],
     damage: 5,
-    life: 20,
+    life: 10,
     damageThreshold: "1",
     abilities: [
       {
@@ -74,14 +74,14 @@ export const cards = [
     rarity: "Superior",
     type: "Champion",
     condition: "",
-    cost: "Offer 10 Life",
+    cost: "Offer 9 Life",
     tags: ["Cryptbound", "Hellfire", "Undead", "Megalith"],
     damage: 1,
     life: 10,
     damageThreshold: "1",
     abilities: [
       {
-        text: `Bloodrage, Deathward <br><span class="line-gap"></span> Soulburn (Exhaustion): Offer up to a total of 3 Life from Champions you control; Destroy cards on the Zone up to the Life offered.`,
+        text: `Bloodrage, Deathward <br><span class="line-gap"></span> Soulburn (Exhaustion): Offer up to a total of 9 Life from Champions you control (in increments of 3); Destroy 1 card on the Zone per 3 Life offered.`,
         keywords: ["Bloodrage", "Deathward"],
         effect1name: "Soulburn",
         effect2name: "",
@@ -99,7 +99,7 @@ export const cards = [
     cost: "Mill 6",
     tags: ["Cryptbound", "Hellfire", "Undead", "Megalith"],
     damage: 20,
-    life: 10,
+    life: 7,
     damageThreshold: "2",
     abilities: [
       {
@@ -316,7 +316,7 @@ export const cards = [
     rarity: "Rare",
     type: "Action",
     condition: "",
-    cost: "Target 1 Champion in your Opponent's Tomb and Offer 6 Life",
+    cost: "Target 1 Champion in your Opponent's Tomb and Offer 4 Life",
     tags: ["Action"],
     damage: "",
     life: "",
@@ -689,7 +689,7 @@ export const cards = [
     image: `${cardArtFolder}/Champions/ElthiraPalefireWitch.png`,
     rarity: "Rare",
     type: "Champion",
-    condition: "You take Damage",
+    condition: "Reflex: When you take Damage",
     cost: "Offer Life equal to the Damage you took",
     tags: ["Cryptbound", "Necromancer","Mage"],
     damage: 0,
@@ -854,7 +854,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Recruit, Resurrect, or Unleash 1 Hellfire (ignoring their conditions). <br><span class="line-gap"></span> Obliterate it at the end of your 6th turn after activating this card. <span class="line-gap"></span><span class="line-gap"></span> When it leaves the Zone, you lose the game.`,
+        text: `Recruit, Resurrect, or Unleash 1 Hellfire (ignoring their conditions). <br><span class="line-gap"></span> Obliterate it at the end of the 6th turn after activating this card. <span class="line-gap"></span><span class="line-gap"></span> When it leaves the Zone, you lose the game.`,
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -1426,7 +1426,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "This card gains 6 Bullet Counters. Increase the attached Champion's Damage by 1 per Bullet Counter this card has. <br><br> After each time the attached Champion battles: Remove 1 Bullet Counter from this card. <br><br> If this card has no Bullet Counters (Reflex): Destroy this card; Deal 6 Damage to 1 Champion or Player.",
+        text: "This card gains 6 Bullet Counters. Increase the attached Champion's Damage by 1 per Bullet Counter this card has. <br><br> After each time the attached Champion battles: Remove 1 Bullet Counter from this card. <br><br> If this card has no Bullet Counters (Reflex): Destroy this card; Deal 6 Damage to 1 Champion or Player of your choice.",
         keywords: ["blank"],
         effect1name: "If this card has no Bullet Counters",
         effect2name: "After each time the attached Champion battles",
@@ -2064,7 +2064,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Champion: Destroy 1 card on the Zone. <br> Action: Draw 1. <span class="line-gap"></span> Equipment: Retrieve 1. <span class="line-gap"></span> Obelisk: Activate 1 card from your Reserve (ignoring its cost). <span class="line-gap"></span> Rush: Draw 3, then discard 2. <span class="line-gap"></span> Reflex: Destroy 1 card in either Player's Arsenal.`,
+        text: `<span class="line-gap"></span> Champion: Destroy 1 card on the Zone. <span class="line-gap"></span> Action: Draw 1. <span class="line-gap"></span> Equipment: Retrieve 1. <span class="line-gap"></span> Obelisk: Activate 1 card from your Reserve (ignoring its cost). <span class="line-gap"></span> Rush: Draw 3, then discard 2. <span class="line-gap"></span> Reflex: Destroy 1 card in either Player's Arsenal.`,
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -2174,7 +2174,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `The attached Champion gains Deathtouch. <br><span class="line-gap"></span> During your End Phase, if the attached Champion did not attack this turn: Destroy both this card and its attached Champion. <span class="line-gap"></span><span class="line-gap"></span> If Destroyed: The controller of this card takes 5 Damage.`,
+        text: `The attached Champion gains Deathtouch. <br><span class="line-gap"></span> During your End Phase, if the attached Champion did not attack this turn: Destroy both this card and its attached Champion. <span class="line-gap"></span><span class="line-gap"></span> If Destroyed: The controller of this card takes 4 Damage.`,
         keywords: ["Deathtouch"],
         effect1name: "During your End Phase, if the attached Champion did not attack this turn",
         effect2name: "If Destroyed",
@@ -2697,8 +2697,8 @@ export const cards = [
     condition: "",
     cost: "Rally 1 Scrap Token to your Opponent's Zone",
     tags: ["Clockwork", "Mechanic", "Specialist"],
-    damage: 6,
-    life: 4,
+    damage: 3,
+    life: 5,
     damageThreshold: 2,
     abilities: [
       {
@@ -3357,9 +3357,9 @@ export const cards = [
     condition: "",
     cost: "Bury 2 Equipments",
     tags: ["Clockwork", "Marshall","Protector","Marksman"],
-    damage: 8,
-    life: 5,
-    damageThreshold: "4",
+    damage: 5,
+    life: 3,
+    damageThreshold: "3",
     abilities: [
       {
         text: `Bloodrage, Duelist, Priority <br><span class="line-gap"></span> Fan the Hammer (Exhaustion): Discard any number of cards, and send the same number of cards from your Zone to the Tomb, then Target that many cards on the Zone; Destroy Targets.`,
@@ -3377,7 +3377,7 @@ export const cards = [
     rarity: "Common",
     type: "Champion",
     condition: "",
-    cost: "Sacrifice 3, including 1 your Opponent controls",
+    cost: "Sacrifice 3, including (optionally) 1 your Opponent controls",
     tags: ["Clockwork", "Royal","Citizen"],
     damage: 6,
     life: 3,
@@ -4017,7 +4017,7 @@ export const cards = [
     condition: "",
     cost: "Basic",
     tags: ["Noble", "Knight"],
-    damage: 6,
+    damage: 5,
     life: 2,
     damageThreshold: "2",
     abilities: [
@@ -4396,8 +4396,8 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: `Bloodrage, Greedy <span class="line-gap"></span> Knightsbane: Knights, and their controllers, take no Damage from battles with this card. Knights deal triple battle Damage to this card. <span class="line-gap"></span> Furious Fire Breath (Exhaustion): Offer 6 Life and Target up to 3 Champions your Opponent controls; Destroy Targets, and if you do, draw 1 for each Champion destroyed by this effect. <span class="line-gap"></span> If Destroyed by Battle: Recruit 1 Royal.`,
-        keywords: ["Bloodrage","Greedy"],
+        text: `Greedy <span class="line-gap"></span> Knightsbane: Knights, and their controllers, take no Damage from battles with this card. Knights deal triple battle Damage to this card. <span class="line-gap"></span> Furious Fire Breath (Exhaustion): Offer 4 Life and Target up to 2 Champions your Opponent controls; Destroy Targets, and if you do, draw 1 for each Champion destroyed by this effect. <span class="line-gap"></span> If Destroyed by Battle: Recruit 1 Royal.`,
+        keywords: ["Greedy"],
         effect1name: "Knightsbane",
         effect2name: "Furious Fire Breath",
         effect3name: "If Destroyed by Battle",
@@ -5291,7 +5291,7 @@ export const cards = [
     rarity: "Legendary",
     type: "Champion",
     condition: "",
-    cost: "Your Opponent gains 20 Life",
+    cost: "Your Opponent gains 10 Life",
     tags: ["Vivisect", "Lifebinder","Professor"],
     damage: 0,
     life: 10,
@@ -5381,13 +5381,13 @@ export const cards = [
     condition: "",
     cost: "Sacrifice 4",
     tags: ["Vivisect", "Construct","Megalith"],
-    damage: 12,
-    life: 10,
+    damage: 9,
+    life: 8,
     damageThreshold: "1",
     abilities: [
       {
-        text: `Duelist <span class="line-gap"></span> Construct Fodder: Sacrifice 1; Destroy 1 card on the Zone.`,
-        keywords: ["Duelist"],
+        text: `Bloodrage, Duelist <span class="line-gap"></span> Construct Fodder: Sacrifice 1; Destroy 1 card on the Zone.`,
+        keywords: ["Bloodrage","Duelist"],
         effect1name: "Construct Fodder",
         effect2name: "",
         effect3name: "",
@@ -5401,10 +5401,10 @@ export const cards = [
     rarity: "Rare",
     type: "Champion",
     condition: "",
-    cost: "Your opponent gains 4 Life",
+    cost: "Your opponent gains 5 Life",
     tags: ["Vivisect", "Construct"],
-    damage: 6,
-    life: 6,
+    damage: 4,
+    life: 5,
     damageThreshold: "1",
     abilities: [
       {
@@ -5426,7 +5426,7 @@ export const cards = [
     cost: "Shuffle your Tomb into your deck (minimum of 1 card)",
     tags: ["Vivisect", "Assistant","Citizen"],
     damage: 1,
-    life: 9,
+    life: 3,
     damageThreshold: "3",
     abilities: [
       {
@@ -5513,7 +5513,7 @@ export const cards = [
     condition: "",
     cost: "All Damaged Champions your Opponent controls regain their missing Life (minimum of 1)",
     tags: ["Vivisect", "Lifebinder","Specialist"],
-    damage: 3,
+    damage: 2,
     life: 9,
     damageThreshold: "3",
     abilities: [
@@ -5694,7 +5694,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Deal 6 Damage to 1 Champion or Player.",
+        text: "Deal 6 Damage to 1 Champion or Player of your choice.",
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -6676,7 +6676,7 @@ export const cards = [
     image: `${cardArtFolder}/Champions/Silveredge.png`,
     rarity: "Legendary",
     type: "Champion",
-    condition: "This card is in your Hand, Reserve, Tomb, or Void and a Champion you control is Destroyed",
+    condition: "Reflex: This card is in your Hand, Reserve, Tomb, or Void and a Champion you control is Destroyed",
     cost: "Your Opponent Gains 4 Life",
     tags: ["Valiant","Protector","Centurion","Hero"],
     damage: 3,
@@ -6698,7 +6698,7 @@ export const cards = [
     image: `${cardArtFolder}/Champions/Solar.png`,
     rarity: "Legendary",
     type: "Champion",
-    condition: "This card is in your Hand or Reserve and an attack is declared against you",
+    condition: "Reflex: This card is in your Hand or Reserve and an attack is declared against you",
     cost: "All face-up Champions take 1 Damage",
     tags: ["Valiant","Protector","Centurion","Hero"],
     damage: 9,
@@ -6707,7 +6707,7 @@ export const cards = [
     abilities: [
       {
         text: `Defender, Duelist, Priority <span class="line-gap"></span> On Rally: Retrieve 1 Hero. <span class="line-gap"></span> Sunlight Blast (Reflex): If a card is Targeted by an effect: Target 1 face-up Champion; Destroy Target. <span class="line-gap"></span> Solar Blitz (Exhaustion): Deal 2 Damage to all face-up Champions your Opponent controls.`,
-        keywords: ["Defender","Duelist", "Priority"],
+        keywords: ["Defender","Duelist","Priority"],
         effect1name: "Sunlight Blast",
         effect2name: "Solar Blitz",
         effect3name: "On Rally",
@@ -6855,7 +6855,7 @@ export const cards = [
     condition: "",
     cost: "Rally 1 Grenade Token to your Zone",
     tags: ["Chrome","Inventor","Specialist"],
-    damage: 6,
+    damage: 5,
     life: 3,
     damageThreshold: "2",
     abilities: [
@@ -6877,8 +6877,8 @@ export const cards = [
     condition: "",
     cost: "Sacrifice 1 Champion your Opponent controls, Rally this card under their control",
     tags: ["Primordial","Megalith","Kaiju"],
-    damage: 9,
-    life: 10,
+    damage: 7,
+    life: 9,
     damageThreshold: "3",
     abilities: [
       {
@@ -6899,7 +6899,7 @@ export const cards = [
     condition: "",
     cost: "Sacrifice 2 Champions your Opponent controls, Rally this card under their control",
     tags: ["Primordial","Megalith","Kaiju"],
-    damage: 15,
+    damage: 13,
     life: 7,
     damageThreshold: "3",
     abilities: [
@@ -7146,7 +7146,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Priority, Veilbind <span class="line-gap"></span> On Rally: Offer up to 3 Life from this card; Increase this card's Damage by the amount offered. <span class="line-gap"></span> Pactbound (Reflex): If this card would be Destroyed (Mandatory): Offer 8 Life; It is not Destroyed.`,
+        text: `Priority, Veilbind <span class="line-gap"></span> On Rally: Offer up to 3 Life from this card; Increase this card's Damage by the amount offered. <span class="line-gap"></span> Pactbound (Reflex): If this card would be Destroyed (Mandatory): Offer 4 Life; It is not Destroyed.`,
         keywords: ["Priority","Veilbind"],
         effect1name: "On Rally",
         effect2name: "Pactbound",
