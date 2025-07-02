@@ -6891,6 +6891,72 @@ export const cards = [
     ]
   },
   {
+    id: "371",
+    name: "Apex, Superhuman Copycat",
+    image: `${cardArtFolder}/Champions/ApexSuperhumanCopycat.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "",
+    tags: ["Valiant","Protector","Hero"],
+    damage: 1,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Bulletproof, Duelist, Priority <span class="line-gap"></span> Copycat (Reflex): Target 1 face-up Champion on the Zone: Until that Champion leaves the Zone, or this ability is used again, this card's Damage, Life, and Damage Threshold become equal to that cards at the time of activation. <span class="line-gap"></span> If this card leaves the Zone: Recruit 1 "Apex" Champion.`,
+        keywords: ["Bulletproof","Duelist","Priority"],
+        effect1name: "Copycat",
+        effect2name: "If this card leaves the Zone",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "372",
+    name: "Apex, Herald of Madrog",
+    image: `${cardArtFolder}/Champions/ApexHeraldOfMadrog.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "Sacrifice 2",
+    tags: ["Valiant","Betrayer","Villain"],
+    damage: 3,
+    life: 2,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Parasite (Reflex): Target 1 face-up Champion on the Zone: Until that Champion leaves the Zone, or this ability is used again, this card's passives and effects become those of the Target's at the time of activation. <span class="line-gap"></span> If this card leaves the Zone: Recruit 1 "Apex" Champion.`,
+        keywords: ["blank"],
+        effect1name: "Parasite",
+        effect2name: "If this card leaves the Zone",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "373",
+    name: "Apex, Fallen Hero",
+    image: `${cardArtFolder}/Champions/ApexFallenHero.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "",
+    tags: ["Valiant","Outlaw","Villain"],
+    damage: 1,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Soul Eater (Reflex): Target 1 face-up Champion you control; Destroy Target, and if you do, this card's Damage, Life, and Damage Threshold become equal to that cards at the time of activation, also it gains its passives and effects until the end of the next turn. <span class="line-gap"></span> If this card leaves the Zone: Recruit 1 "Apex" Champion.`,
+        keywords: ["blank"],
+        effect1name: "Soul Eater",
+        effect2name: "If this card leaves the Zone",
+        effect3name: "",
+      }
+    ]
+  },
+  {
     id: "421",
     name: "Gimme That!",
     image: `${cardArtFolder}/Actions/GimmeThat.png`,
@@ -6975,6 +7041,28 @@ export const cards = [
         effect1name: "On Rally",
         effect2name: "Mine Now",
         effect3name: "Let's Bounce",
+      }
+    ]
+  },
+  {
+    id: "721",
+    name: "Alice Kazimir, Chronurgy Master",
+    image: `${cardArtFolder}/Champions/AliceKazimirChronurgistExtraordinaire.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "",
+    cost: "Discard 1 non-Champion",
+    tags: ["Arcanum","Chronurgist","Mage","Specialist"],
+    damage: 1,
+    life: 5,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Second Strike, Twitchy <span class="line-gap"></span> On Rally: Target 1 non-Champion in your Tomb; retrieve Target. <span class="line-gap"></span> Temporal Twin: Rally 1 Echo Token of this card. <span class="line-gap"></span> Temporal Reversal: If this card is sent to the Tomb: Oblierate Mill 10; Resurrect this card during the next Intermission.`,
+        keywords: ["Second Strike","Twitchy"],
+        effect1name: "On Rally",
+        effect2name: "Temporal Twin",
+        effect3name: "Temporal Reversal",
       }
     ]
   },
@@ -7260,6 +7348,28 @@ export const cards = [
         keywords: ["Duelist","Priority","Menace"],
         effect1name: "On Rally",
         effect2name: "If this Champion has at least l attached Equipment",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "961",
+    name: "Cinder, Heavy Metal Bard",
+    image: `${cardArtFolder}/Champions/CinderHeavyMetalBard.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "",
+    cost: "Discard 1 Champion",
+    tags: ["Crescendo","Blademaster","Mage","Specialist"],
+    damage: 7,
+    life: 3,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Bloodrage, Heavy Hands, Necrocharge <span class="line-gap"></span> On Rally (Mandatory): Target 1 face-up Champion on the Zone; Reduce Target to 1 Life. <span class="line-gap"></span> Live To Rock: If this card is in your Tomb: Obliterate 7 other Champions from your Tomb; Resurrect this card.`,
+        keywords: ["Bloodrage","Heavy Hands","Necrocharge"],
+        effect1name: "On Rally",
+        effect2name: "Live to Rock",
         effect3name: "",
       }
     ]
