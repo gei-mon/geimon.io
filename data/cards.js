@@ -6904,7 +6904,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Bulletproof, Duelist, Priority <span class="line-gap"></span> Copycat (Reflex): Target 1 face-up Champion on the Zone: Until that Champion leaves the Zone, or this ability is used again, this card's Damage, Life, and Damage Threshold become equal to that cards at the time of activation. <span class="line-gap"></span> If this card leaves the Zone: Recruit 1 "Apex" Champion.`,
+        text: `Bulletproof, Duelist, Priority <span class="line-gap"></span> Copycat (Reflex): Target 1 face-up Champion on the Zone: Until that Champion leaves the Zone, or this ability is used again, this card's Damage, Life, and Damage Threshold become equal to that cards' at the time of activation. <span class="line-gap"></span> If this card leaves the Zone: Recruit 1 "Apex" Champion.`,
         keywords: ["Bulletproof","Duelist","Priority"],
         effect1name: "Copycat",
         effect2name: "If this card leaves the Zone",
@@ -6948,7 +6948,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Soul Eater (Reflex): Target 1 face-up Champion you control; Destroy Target, and if you do, this card's Damage, Life, and Damage Threshold become equal to that cards at the time of activation, also it gains its passives and effects until the end of the next turn. <span class="line-gap"></span> If this card leaves the Zone: Recruit 1 "Apex" Champion.`,
+        text: `Soul Eater (Reflex): Target 1 face-up Champion you control; Destroy Target, and if you do, this card's Damage, Life, and Damage Threshold become equal to that cards' at the time of activation, also it gains its passives and effects until the end of the next turn. <span class="line-gap"></span> If this card leaves the Zone: Recruit 1 "Apex" Champion.`,
         keywords: ["blank"],
         effect1name: "Soul Eater",
         effect2name: "If this card leaves the Zone",
