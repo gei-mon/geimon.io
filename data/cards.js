@@ -722,7 +722,7 @@ export const cards = [
     damageThreshold: "6",
     abilities: [
       {
-        text: "Dredgin' Time (Exhaustion): Target 1 card in your Void; Recover Target.",
+        text: "Dredgin' Time (Exhaustion): Target 1 card in your Void; Reclaim Target.",
         keywords: ["blank"],
         effect1name: "Dredgin' Time",
         effect2name: "",
@@ -1088,7 +1088,7 @@ export const cards = [
     image: `${cardArtFolder}/Obelisks/ImmortalBlood.png`,
     rarity: "Superior",
     type: "Obelisk",
-    condition: "You are at 10 or less Life",
+    condition: "",
     cost: "",
     tags: ["Obelisk"],
     damage: "",
@@ -1096,9 +1096,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "You cannot be Damaged.",
+        text: "While you are at 5 or less Life: You cannot be Damaged.",
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "While you are at 5 or less Life",
         effect2name: "",
         effect3name: "",
       }
@@ -2108,8 +2108,8 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `The attached Champion can make an additional attack each Battle Phase. <br><span class="line-gap"></span> If Destroyed: Offer 2 Life; Stack this card.`,
-        keywords: ["blank"],
+        text: `The attached Champion gains Second Strike. <br><span class="line-gap"></span> If Destroyed: Offer 2 Life; Stack this card.`,
+        keywords: ["Second Strike"],
         effect1name: "If Destroyed",
         effect2name: "",
         effect3name: "",
@@ -2218,7 +2218,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "All Champions on the Zone gain Priority. <br><br> Champions cannot declare an attack against a Player unless that Player controls no Champions.",
+        text: "All Champions on the Zone gain Priority. <br><br> Champions cannot declare a direct attack against a Player unless that Player controls no Champions.",
         keywords: ["Priority"],
         effect1name: "",
         effect2name: "",
@@ -2306,7 +2306,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "During each Player's End Phase: That Player's Champions each take 2 Damage.",
+        text: "During each Player's End Phase: That Player's face-up Champions each take 2 Damage.",
         keywords: ["blank"],
         effect1name: "During each Player's End Phase",
         effect2name: "",
@@ -2496,7 +2496,7 @@ export const cards = [
     image: `${cardArtFolder}/Reflex/MassiveBackfire.png`,
     rarity: "Superior",
     type: "Reflex",
-    condition: "You control at least 1 Champion whose current Damage is higher than their Life",
+    condition: "You control at least 1 face-up Champion whose current Damage is higher than their Life",
     cost: "Discard 1",
     tags: ["Reflex"],
     damage: 0,
@@ -2504,7 +2504,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "All Champions take Damage equal to their Damage.",
+        text: "All face-up Champions take Damage equal to their Damage.",
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -2541,7 +2541,7 @@ export const cards = [
     rarity: "Common",
     type: "Reflex",
     condition: "Your Opponent declares an attack",
-    cost: "All Champions your Opponent controls gain Priority until the end of this turn",
+    cost: "All face-up Champions your Opponent currently controls gain Priority until the end of this turn",
     tags: ["Reflex"],
     damage: 0,
     life: 0,
@@ -3318,8 +3318,8 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Decrease the attached Champion's Damage by 2. This card's attached Champion can make an extra attack during your Battle Phase.",
-        keywords: ["blank"],
+        text: "Decrease the attached Champion's Damage by 2. This card's attached Champion gains Second Strike.",
+        keywords: ["Second Strike"],
         effect1name: "",
         effect2name: "",
         effect3name: "",
@@ -4616,7 +4616,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Negate the activation, and if you do, destroy it.",
+        text: "Negate the activation, and if you do, Destroy it.",
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -5232,7 +5232,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "At the end of a battle in which the attached Champion dealt damage: Target 1 Equipment on the Zone; Destroy Target.",
+        text: "At the end of a battle in which the attached Champion dealt damage: Target 1 face-up Equipment on the Zone; Destroy Target.",
         keywords: ["blank"],
         effect1name: "At the end of a battle in which the attached Champion dealt damage",
         effect2name: "",
@@ -6642,7 +6642,7 @@ export const cards = [
       {
         text: `Lifetouch, Priority <span class="line-gap"></span> If a Champion increases to 10 or more Life by the effect of this card's Lifetouch: Destroy it. <span class="line-gap"></span> Radiant Burst (Reflex): Move this card to your Reserve. <span class="line-gap"></span> If this card is in your Reserve: Obliterate 1 Champion with a Flip effect from either your Hand or face-up Zone; Add this card to your Hand.`,
         keywords: ["Lifetouch","Priority"],
-        effect1name: "If a Champion is raised to have 10 or more Life by the effect of this card's",
+        effect1name: "If a Champion increases to 10 or more Life by the effect of this card's",
         effect2name: "Radiant Burst",
         effect3name: "If this card is in your Reserve",
       }
@@ -6948,7 +6948,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `During each of you Intermissions, roll a six-sided die, and apply the following effect: <span class="line-gap"></span> 1 • Discard 1. <span class="line-gap"></span> 2 • Draw 1. <span class="line-gap"></span> 3 • Double the Damage of 1 Champion you control until the end of this turn. <span class="line-gap"></span> 4 • Obliterate Mill 5. <span class="line-gap"></span> 5 • Set 1 non-Champion from your Tomb face-down into your Arsenal. </span><span class="line-gap"></span> 6 • Change control of this card to your Opponent.`,
+        text: `During each of your Intermissions, roll a six-sided die, and apply the following effect: <span class="line-gap"></span> 1 • Discard 1. <span class="line-gap"></span> 2 • Draw 1. <span class="line-gap"></span> 3 • Double the Damage of 1 Champion you control until the end of this turn. <span class="line-gap"></span> 4 • Obliterate Mill 5. <span class="line-gap"></span> 5 • Set 1 non-Champion from your Tomb face-down into your Arsenal. </span><span class="line-gap"></span> 6 • Change control of this card to your Opponent.`,
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -7150,6 +7150,28 @@ export const cards = [
         keywords: ["Reach","Taunt"],
         effect1name: "On Rally",
         effect2name: "Lightning Rider",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "789",
+    name: "Movie Monster Rampage",
+    image: `${cardArtFolder}/Actions/MovieMonsterRampage.png`,
+    rarity: "Superior",
+    type: "Action",
+    condition: "Both Players control at least 1 Champion",
+    cost: "Obliterate your Hand (minimum of 1 card)",
+    tags: ["Action"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Destroy all Champions on the Zone, and if you do, Recruit 1 Kaiju to each Player's Zone. The recruited Champions must always attack if able.`,
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
         effect3name: "",
       }
     ]

@@ -39,17 +39,43 @@
         .tab-button.active {
             background-color: rgb(159, 145, 253);
         }
+        .text-body {
+            font-family: 'Times New Roman';
+        }
+        #champExample1-card .card,
+        #champExample2-card .card,
+        #actionExample1-card .card,
+        #equipmentExample1-card .card,
+        #obeliskExample1-card .card,
+        #obeliskExample2-card .card,
+        #rushExample1-card .card,
+        #reflexExample1-card .card {
+            zoom: 0.7;               /* shrink layout metrics too */
+            transform-origin: top left;
+        }
+        #champExample1-card .card-text {
+            font-size: 20px !important;
+        }
+        #champExample2-card .card-text,
+        #champExample2-card .card-cost,
+        #champExample2-card .card-condition,
+        #champExample2-card .card-tags {
+            font-size: 13.25px !important;
+        }
+        #champExample2-card .card-name {
+            font-size: 20px !important;
+        }
     </style>
 </head>
-<body style="background-color:rgb(78, 78, 78);">
+<body style="background-color:rgb(184, 184, 184);">
     <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
     <div class="container">
         <p style="font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: 16px; margin-left: 10px;">
             <game-title>Geimon!</game-title>
         </p>
-        <button class="button buttonEvenSmaller" style="margin-top: -40px; margin-bottom: 60px; margin-left: 14px;" onclick="window.close()">Close Rules</button>
-        <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; margin-top: -28px;">
-            <game-title>Geimon!</game-title> (Pronounced: Game On!) is an Online-Only, Two-Player Competitive Card Game.
+        <button class="button buttonEvenSmaller" style="position: absolute; top: 40px; right: 40px; background-color: rgb(255, 82, 82);" onclick="window.close()">Close Rules</button>
+        <h2 style="color: black; margin-top: -28px;">
+            <game-title style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Geimon!</game-title> (Pronounced: Game On!) is an Online-Only, Two-Player Competitive Card Game.
             <br><br>
             From a worldspace teeming with life, cowboys, wizards, scientists, and knights all meet and clash within Geimon! Science is on the rise, but kings and castles, cowboys and outlaws, all still roam the wilds; and deep below, hidden in the histories lies a dark, ancient magic threatening to make a return.
             <br><br>
@@ -71,7 +97,7 @@
         </div>
 
         <div id="howToPlay" class="tab" style="display: block;">
-            <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; font-size: 1.5em;">
+            <text-body style="font-size: 1.5em; font-weight: bold;">
                 <span style="text-decoration: underline;">Each Player designs their own Deck to play, or chooses a Starter option.</span>
                 <br><br>
                 <span style="font-style: italic;">&emsp;&emsp;Decks must be between 60 and 100 cards. There is nothing else to worry about, no side cards or extra zones. And even simpler, every single card is limited to 1 copy in a Deck, so every single card you see will be unique.</span>
@@ -82,14 +108,14 @@
                 <br><br>
                 <span style="text-decoration: underline;">After redraws have been decided, a Totem is chosen.</span>
                 <br><br>
-                <span style="font-style: italic;">&emsp;&emsp;For the first game of a match, or the only game in a best of 1, a random Totem is rolled. Totems are a modification to the game's mechanics. The loser of the previous game in a match chooses the Totem for the next game from a shortlist of 3 randomly selected options, different to the one seen in game 1.</span>
+                <span style="font-style: italic;">&emsp;&emsp;For the first game of a match, or the only game in a best of 1, a random Totem is rolled. Totems are a modification to the game's mechanics. The loser of the previous game in a match chooses the Totem for the next game from a shortlist of 3 randomly selected options, different to the one seen in previous games.</span>
                 <br><br><br><br><br><br>
                 &nbsp;
-            </h2>
+            </text-body>
         </div>
 
         <div id="whatsInATurn" class="tab">
-            <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; font-size: 1.5em;">
+            <text-body style="font-size: 1.5em; font-weight: bold;">
                 <span style="text-decoration: underline;">On a Player's turn, there are 6 ‘Phases’: Intermission, Draw, Main 1, Battle, Main 2, and End.</span>
                 <br><br>
                 <span style="font-style: italic;">&emsp;&emsp;On the first Player's turn, Battle and Main 2 are skipped.</span>
@@ -113,29 +139,106 @@
                 <span style="text-decoration: underline;">And in the End Phase,</span> certain effects will resolve, and like in the Intermission, Players can make skillful plays before the start of the next turn.
                 <br><br><br><br><br><br>
                 &nbsp;
-            </h2>
+            </text-body>
         </div>
 
         <div id="boardAndCards" class="tab">
-            <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; font-size: 1.5em;">
+            <text-body style="font-size: 1.5em; font-weight: bold;">
                 <span style="text-decoration: underline;">The Types of Cards:</span>
                 <br><br>
                 <span style="text-decoration: underline;">Unless stated otherwise, only the turn Player can activate cards, and only during their main Phases.</span>
                 <br><br>
-                <span style="font-style: italic;">&emsp;&emsp;Each Player can only use each effect of a card once per turn; if a Champion is Rallied, you use its effect, and then it is Destroyed, but you Resurrect it, you cannot use its effect again (that turn). Every effect is a hard once-per-turn. Every effect is also Optional unless it is expressly stated to be Mandatory.</span>
+                <span style="font-style: italic;">&emsp;&emsp;Each Player can only use each effect of a card once per turn; if a Champion is Rallied, you use its effect, and then it is Destroyed, but you Resurrect it, you cannot use its effect again (that turn). Every effect is a hard once-per-turn. Every effect is also Optional unless it is expressly stated to be Mandatory. Mandatory effects are the only effects in the game that can be used more than once per turn, as they must ALWAYS trigger when given the opportunity to.</span>
                 <br><br>
                 <span style="font-style: italic;">• <span style="text-decoration: underline;">Champion:</span> Cards that are placed onto the Zone in the Champion Area and symbolize creatures. They are the primary actors in battle. You can only Rally 1 Champion without a Rally Cost per turn, this is referred to as a Basic Rally. Basic Champions can be Rallied face-up or face-down in the Champion Area. Starting the turn after you set a Champion face-down, you can flip them face-up during one of your main Phases. They are also flipped face-up during damage calculation if they are attacked, or used as a blocker.</span>
+                <br>
+
+                <div id="champExample1" style="display: flex; align-items: flex-start; gap: 16px; margin-top: 16px;">
+                    <div id="champExample1-card"></div>
+                    <div>
+                        <p style="font-weight: bold; margin: 0;">Here is an Example Champion card.</p>
+                        <p style="margin: 4px 0px 0;">You will notice that on a Champion card it has a few important things to take note of (From top to bottom): <br><br> <span style="text-decoration: underline;">1) Tags:</span> These are 'Cryptbound' and 'Undead' on this card, and these are used to anchor a card into an archetype and are referenced on support cards. For instance, even on this card, it says Retrieve 1 Other Undead when it enters the Tomb. That effect searches for all Champions with the Tag: Undead, and allows you to interact with them. <br><br> <span style="text-decoration: underline;">2) Passives:</span> These are effects like 'Deathward', and they apply unique effects to the cards they're on. Most of the time, these effects do not activate, they simple apply to the card or around the card. You can hover your mouse over a card's passives to read what they do. <br><br> <span style="text-decoration: underline;">3) Effects:</span> These effects trigger at specific times and are listed on a card after its passives. This card only has 1 effect, and that is when it is sent to the Tomb, from anywhere, you can optionally activate the effect to search through your Tomb and retrieve any 1 Undead other than this card. <br><br> <span style="text-decoration: underline;">4) Damage / Life / Damage Threshold:</span> In order on the bottom of a Champion are its Damage (in red), Life (in blue), and Damage Threshold (in lighter blue). These are explained in more depth in the 'What's In A Turn?' section above in the 'Battle Phase' section.</p>
+                    </div>
+                </div>
+
                 <br><br>
+                <div id="champExample2" style="display: flex; gap: 16px; margin-top: 24px;">
+                    <div id="champExample2-card"></div>
+                    <div>
+                        <p style="font-weight: bold; margin: 0;">Another Example Champion card, wow this one has a lot of text.</p>
+                        <p style="margin: 4px 0 0;">Importantly, there are a few new things not seen on the Skeleton Guard before: <br><br> <span style="text-decoration: underline;">1) Condition:</span> A card's condition must always be met before it can be rallied, very few cards bypass a card's condition. <br><br> <span style="text-decoration: underline;">2) Cost:</span> A card's cost must be paid before it can be normally activated, there are quite a few effects in the game that bypass a card's cost. <br><br> <span style="text-decoration: underline;">3) Declarable Effects:</span> Named effects on a card are declarable effects, to use a declarable effect, you first meet its condition (the part before a colon ':'), then you pay its cost (the part of the text before a semicolon ';'), then your Opponent is given a chance to respond, and then finally when you wind back to this card's effect on the Path (described elsewhere in the rules) you resolve the declared effect. <br><br> <span style="text-decoration: underline;">4) Exhaustion:</span> Exhaustion effects can only be used if the card has not already attacked or used an Exhaustion effect, Exhaustion effects mean that for the rest of the turn that card can no longer use other Exhaustion effects or declare attacks.</p>
+                    </div>
+                </div>
+
+                <br>
                 <span style="font-style: italic;">• <span style="text-decoration: underline;">Action:</span> Cards that are played on the Zone briefly within the Arsenal Area, but once their effects resolve they go to the Tomb.</span>
-                <br><br>
-                <span style="font-style: italic;">• <span style="text-decoration: underline;">Equipment:</span> Cards that must be kept on the Zone within the Arsenal Area and are attached to a Champion. If the Champion leaves the Champion Area, their Equipment goes to the Tomb.</span>
-                <br><br>
+                <br>
+
+                    <div id="actionExample1" style="display: flex; gap: 16px; margin-top: 24px;">
+                        <div id="actionExample1-card"></div>
+                        <div>
+                            <p style="font-weight: bold; margin: 0;">An Example Action card.</p>
+                            <p style="margin: 4px 0 0;">These cards can also have conditions, costs, and then you resolve their effect before they go to the Tomb.</p>
+                        </div>
+                    </div>
+
+                <br>
+                <span style="font-style: italic;">• <span style="text-decoration: underline;">Equipment:</span> Cards that must be kept on the Zone within the Arsenal Area and are attached to a face-up Champion. If the Champion leaves the Champion Area, even if they are flipped face-down, their Equipment goes to the Tomb.</span>
+                <br>
+
+                    <div id="equipmentExample1" style="display: flex; gap: 16px; margin-top: 24px;">
+                        <div id="equipmentExample1-card"></div>
+                        <div>
+                            <p style="font-weight: bold; margin: 0;">An Example Equipment card.</p>
+                            <p style="margin: 4px 0 0;">Can only be played when there is a Champion on the Zone, you must discard 1 to activate, then you Attach, yes unless it says otherwise, you can attach an Equipment to a face-up Champion on either Player's side.</p>
+                        </div>
+                    </div>
+
+                <br>
                 <span style="font-style: italic;">• <span style="text-decoration: underline;">Obelisk:</span> Cards that are played onto the Zone within the Arsenal Area and remain there until destroyed.</span>
-                <br><br>
+                <br>
+
+                    <div id="obeliskExample1" style="display: flex; gap: 16px; margin-top: 24px;">
+                        <div id="obeliskExample1-card"></div>
+                        <div>
+                            <p style="font-weight: bold; margin: 0;">An Example Obelisk card.</p>
+                            <p style="margin: 4px 0 0;">After paying the cost, this card remains on the Zone until removed. Its effect is passive and must be addressed in all instances of a Champion attempting to attack.</p>
+                        </div>
+                    </div>
+
+                    <div id="obeliskExample2" style="display: flex; gap: 16px; margin-top: 24px;">
+                        <div id="obeliskExample2-card"></div>
+                        <div>
+                            <p style="font-weight: bold; margin: 0;">An Example Commander Obelisk card.</p>
+                            <p style="margin: 4px 0 0;">As hovering over Mount describes, the subsequent 'Mounted' effects cannot be used unless this card has a Commander. But, when it does have one, then once per turn you can use each of a Commander Obelisk's effects.</p>
+                        </div>
+                    </div>
+
+                <br>
                 <span style="font-style: italic;">• <span style="text-decoration: underline;">Rush:</span> Cards that can be played in response to others by the turn Player from within their Hand. These cards go into the Arsenal Area before going to the Tomb. The turn Player can place these cards face-down in the Arsenal Area to activate them in response to an opponent's actions on their turn. Once a card is placed face-down, it cannot be used until the Intermission between their turn and the next Player's turn.</span>
-                <br><br>
+                <br>
+
+                    <div id="rushExample1" style="display: flex; gap: 16px; margin-top: 24px;">
+                        <div id="rushExample1-card"></div>
+                        <div>
+                            <p style="font-weight: bold; margin: 0;">An Example Rush card.</p>
+                            <p style="margin: 4px 0 0;"></p>
+                        </div>
+                    </div>
+
+                <br>
                 <span style="font-style: italic;">• <span style="text-decoration: underline;">Reflex:</span> Cards that must be placed face-down before they can be activated. They are mainly used to respond to an Opponent's actions. Once a card is placed face-down, it cannot be used until the Intermission between their turn and the next Player's turn.</span>
-                <br><br>
+                <br>
+
+                    <div id="reflexExample1" style="display: flex; gap: 16px; margin-top: 24px;">
+                        <div id="reflexExample1-card"></div>
+                        <div>
+                            <p style="font-weight: bold; margin: 0;">An Example Reflex card.</p>
+                            <p style="margin: 4px 0 0;"></p>
+                        </div>
+                    </div>
+
+                <br>
                 <span style="text-decoration: underline;">Before a card is activated, it goes on the path.</span>
                 <br><br>
                 <span style="font-style: italic;">&emsp;&emsp;Cards played in response to each other go on the path one after another. The Path is not a part of the Zone, but rather a line used to follow actions in order of resolution if used in response to each other. Effects that would be used also place cards on the Path. Effects go in sequence, responding to each other, before resolving in reverse backwards along the Path until reaching the card that started it.</span>
@@ -151,6 +254,8 @@
                 <br><br>
                 <span style="font-style: italic;">&emsp;&emsp;The Path and Players’ Hands are not considered parts of the Zone.</span>
                 <br><br>
+                <span style="font-style: italic;">&emsp;&emsp;When counting a Player's cards currently controlled, look only to the total sum of cards in their Champions Area and their Arsenal (face-up and face-down).</span>
+                <br><br>
                 <span style="text-decoration: underline;">The Champion Area is where Champions go after they are Rallied. The Arsenal Area is where nearly all other cards go after they are activated.</span>
                 <br><br>
                 <span style="text-decoration: underline;">The Reserve is where cards can come into play without entering the Zone.</span>
@@ -164,12 +269,12 @@
                 <span style="font-style: italic;">&emsp;&emsp;Most of the time cards in the Void cannot be interacted with or Reclaimed.</span>
                 <br><br><br><br><br><br>
                 &nbsp;
-            </h2>
+            </text-body>
         </div>
     </div>
 
     <div id="keywordDictionary" class="tab">
-        <h2 style="text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black; font-size: 1.5em;">
+        <text-body style="font-size: 1.5em; font-weight: bold;">
             • <span style="text-decoration: underline;">Add:</span> Select a card(s) from your Deck and place it into your Hand.
                 <br><br>
             • <span style="text-decoration: underline;">Bounce:</span> Return a card on the Zone to the Hand.
@@ -213,10 +318,40 @@
             • <span style="text-decoration: underline;">Unleash:</span> Rally from the Void (ignoring cost). You must still meet conditions.
                 <br><br><br><br><br><br>
                 &nbsp;
-        </h2>
+        </text-body>
     </div>
 
-    <script>
+    <script type="module">
+        import { cards } from './data/cards.js';
+        import { renderCard, addTooltipListeners, addTokenTooltipListeners } from './utils/cardRenderer.js';
+
+        document.addEventListener('DOMContentLoaded', () => {
+            function mountExample(cardName, containerId) {
+                const container = document.getElementById(containerId);
+                const card = cards.find(c =>
+                    c.name.toLowerCase() === cardName.toLowerCase()
+                );
+                if (!card) {
+                    container.textContent = `Card not found: "${cardName}"`;
+                    return;
+                }
+                const el = renderCard(card, container);
+                // remove clickable overlay so hover works
+                el.querySelectorAll('.card-button').forEach(b => b.remove());
+                addTooltipListeners(el);
+                addTokenTooltipListeners(el);
+            }
+
+            mountExample('Skeleton Guard',  'champExample1-card');
+            mountExample('Kaemorak, Lord of Pacts',    'champExample2-card');
+            mountExample('Plans within Plans',    'actionExample1-card');
+            mountExample('Two\'s Better Than One',    'equipmentExample1-card');
+            mountExample('Oppressive Ward',    'obeliskExample1-card');
+            mountExample('White Mustang',    'obeliskExample2-card');
+            mountExample('Soul Ignition',    'rushExample1-card');
+            mountExample('Parry!',    'reflexExample1-card');
+        });
+
         function openTab(evt, tabId) {
             const tabs = document.querySelectorAll('.tab');
             const buttons = document.querySelectorAll('.tab-button');
@@ -227,6 +362,12 @@
             document.getElementById(tabId).style.display = 'block';
             evt.currentTarget.classList.add('active');
         }
+        window.openTab = openTab;
     </script>
+
+    <div id="tooltip" class="tooltip"></div>
+    <div id="token-tooltip" style="display: none; position: absolute;">
+        <div class="token-tooltip-text"></div>
+    </div>
 </body>
 </html>

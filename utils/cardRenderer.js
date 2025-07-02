@@ -287,7 +287,7 @@ if (container) {
 return cardElement;
 }
 
-function adjustNameSize(cardElement) {
+export function adjustNameSize(cardElement) {
   const nameContainer = cardElement.querySelector(".card-name");
   const nameBoxHeight = nameContainer.offsetHeight;  // Get the fixed height of the name box
   let fontSize = parseFloat(window.getComputedStyle(nameContainer).fontSize);
@@ -305,7 +305,7 @@ function adjustNameSize(cardElement) {
   }
 }
 
-function adjustTextSize(cardElement) {
+export function adjustTextSize(cardElement) {
   const textContainer = cardElement.querySelector(".card-text");
   const maxHeight = textContainer.offsetHeight;
   let fontSize = parseFloat(window.getComputedStyle(textContainer).fontSize);
