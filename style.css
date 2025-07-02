@@ -244,6 +244,10 @@ text-decoration: underline;
   background-color: #410752;
   color: #e48dff;
 }
+.righteous {
+  background-color: #750027;
+  color: #fffdb7;
+}
 .nightveil {
   background-color: #1c0041;
   color: #e6e6e6;
@@ -272,9 +276,17 @@ text-decoration: underline;
   background-color: #780000;
   color: #ffadad;
 }
+.hellfire {
+  background-color: #811010;
+  color: #ff9b3e;
+}
 .arcanum {
   background-color: #002e52;
   color: #c1e4ff;
+}
+.frenzied {
+  background-color: #3e3e3e;
+  color: #ff4747;
 }
 .action {
   background-color: #ffac64;

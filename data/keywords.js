@@ -38,5 +38,6 @@ export const keywords = {
   "Non-Believer": "This Champion is unaffected by other cards and effects.",
   Taskmaster: "Increase this Champion&apos;s Damage by 1 for every Champion your Opponent controls.",
   Taunt: "This is the only card you control that your Opponent can Target for attacks and with effects. If you control 2 or more cards with this keyword, your Opponent can choose any of them to Target.",
-  "Second Strike": "This Champion can make two attacks during each of your Battle Phases."
+  "Second Strike": "This Champion can make two attacks during each of your Battle Phases.",
+  "Board Breaker": "This Champion cannot attack your Opponent directly"
 };

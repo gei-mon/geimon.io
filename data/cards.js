@@ -47,7 +47,7 @@ export const cards = [
   },
   {
     id: "3",
-    name: "Markerion, Magus Supreme",
+    name: "Markerion, Necromancy Master",
     image: `${cardArtFolder}/Champions/MarkerionSupreme.png`,
     rarity: "Legendary",
     type: "Champion",
@@ -587,7 +587,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Bloodrage, Deathward, Lifesteal, Undertaker <br><span class="line-gap"></span> Behold my Subjects: Offer 5 Life and Target 1 Undead in either Tomb; Resurrect Target. <span class="line-gap"></span> Crafted Brilliance (Exhaustion): Sacrifice 1; Destroy 1 Champion your Opponent controls. <span class="line-gap"></span> Rise Again!: If this card is in your Tomb while you control \"Markerion, Magus Supreme\" (Reflex): Resurrect this card.`,
+        text: `Bloodrage, Deathward, Lifesteal, Undertaker <br><span class="line-gap"></span> Behold my Subjects: Offer 5 Life and Target 1 Undead in either Tomb; Resurrect Target. <span class="line-gap"></span> Crafted Brilliance (Exhaustion): Sacrifice 1; Destroy 1 Champion your Opponent controls. <span class="line-gap"></span> Rise Again!: If this card is in your Tomb while you control \"Markerion, Necromancy Master\" (Reflex): Resurrect this card.`,
         keywords: ["Bloodrage","Deathward","Lifesteal","Undertaker"],
         effect1name: "Behold my Subjects",
         effect2name: "Crafted Brilliance",
@@ -2856,7 +2856,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Increase Target's Damage by 5. Destroy Target during the End Phase.",
+        text: "Increase Target's Damage by 5. <br><br> Destroy Target during the End Phase.",
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -6266,7 +6266,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Increase Target's Damage by 4, and it gains Menace. Destroy the Target during the End Phase.",
+        text: "Increase Target's Damage by 4, and it gains Menace. <br><br> Destroy Target during the End Phase.",
         keywords: ["Menace"],
         effect1name: "",
         effect2name: "",
@@ -6904,7 +6904,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Bulletproof, Duelist, Priority <span class="line-gap"></span> Copycat (Reflex): Target 1 face-up Champion on the Zone: Until that Champion leaves the Zone, or this ability is used again, this card's Damage, Life, and Damage Threshold become equal to that cards' at the time of activation. <span class="line-gap"></span> If this card leaves the Zone: Recruit 1 "Apex" Champion.`,
+        text: `Bulletproof, Duelist, Priority <span class="line-gap"></span> Copycat (Reflex): Target 1 face-up Champion on the Zone: Until that Champion leaves the Zone, or this ability is used again, this card's Damage, Life, and Damage Threshold become equal to the Target's at the time of activation. <span class="line-gap"></span> If this card leaves the Zone: Recruit 1 "Apex" Champion.`,
         keywords: ["Bulletproof","Duelist","Priority"],
         effect1name: "Copycat",
         effect2name: "If this card leaves the Zone",
@@ -6948,7 +6948,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Soul Eater (Reflex): Target 1 face-up Champion you control; Destroy Target, and if you do, this card's Damage, Life, and Damage Threshold become equal to that cards' at the time of activation, also it gains its passives and effects until the end of the next turn. <span class="line-gap"></span> If this card leaves the Zone: Recruit 1 "Apex" Champion.`,
+        text: `Soul Eater (Reflex): Target 1 face-up Champion you control; Destroy Target, and if you do, this card's Damage, Life, and Damage Threshold become equal to the Target's at the time of activation, also it gains the Target's passives and effects until the end of the next turn. <span class="line-gap"></span> If this card leaves the Zone: Recruit 1 "Apex" Champion.`,
         keywords: ["blank"],
         effect1name: "Soul Eater",
         effect2name: "If this card leaves the Zone",
@@ -7052,7 +7052,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Discard 1 non-Champion",
-    tags: ["Arcanum","Chronurgist","Mage","Specialist"],
+    tags: ["Arcanum","Chronurgist","Mage"],
     damage: 1,
     life: 5,
     damageThreshold: "2",
@@ -7063,6 +7063,28 @@ export const cards = [
         effect1name: "On Rally",
         effect2name: "Temporal Twin",
         effect3name: "Temporal Reversal",
+      }
+    ]
+  },
+  {
+    id: "722",
+    name: "Westra Abernathy, Evocation Master",
+    image: `${cardArtFolder}/Champions/WestraAbernathyEvocationMaster.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "",
+    cost: "All face-up Champions you control take 3 Damage (minimum of 1 Champion)",
+    tags: ["Arcanum","Evocation","Mage"],
+    damage: 5,
+    life: 1,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Warded <span class="line-gap"></span> On Rally: Add 1 Action. <span class="line-gap"></span> Fireball (Exhaustion): Deal 3 Damage to all face-up Champions your Opponent controls. <span class="line-gap"></span> Incendiary Demise: If this card is Destroyed by battle: Destroy the battling Champion.`,
+        keywords: ["Warded"],
+        effect1name: "On Rally",
+        effect2name: "Fireball",
+        effect3name: "Incendiary Demise",
       }
     ]
   },
@@ -7265,6 +7287,50 @@ export const cards = [
     ]
   },
   {
+    id: "841",
+    name: "Vice, Agent of Deception",
+    image: `${cardArtFolder}/Champions/ViceAgentOfDeception.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "",
+    tags: ["Hellfire","Trickster","Mage"],
+    damage: 3,
+    life: 3,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Menace <span class="line-gap"></span> False Face (Reflex): Offer 1 Life from this card and Target 1 face-up Champion on the Zone; Activate 1 of Target's effects.`,
+        keywords: ["Menace"],
+        effect1name: "False Face",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "842",
+    name: "Fie, Horseman of Death",
+    image: `${cardArtFolder}/Champions/FieHorsemanOfDeath.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "You control no Champions",
+    cost: "",
+    tags: ["Hellfire","Nightveil","Trickster","Blademaster"],
+    damage: 4,
+    life: 2,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Invisible, Unstoppable <span class="line-gap"></span> On Rally: Target 1 face-down Champion on the Zone; Destroy Target. <span class="line-gap"></span> Blend into the Crowd (Reflex): If this card is Targeted: Bounce this card, and if you do, discard 1.`,
+        keywords: ["Invisible","Unstoppable"],
+        effect1name: "On Rally",
+        effect2name: "Blend into the Crowd",
+        effect3name: "",
+      }
+    ]
+  },
+  {
     id: "901",
     name: "Get Your Game On!",
     image: `${cardArtFolder}/Rush/GameOn.png`,
@@ -7353,6 +7419,50 @@ export const cards = [
     ]
   },
   {
+    id: "905",
+    name: "Dinah, Battlerager",
+    image: `${cardArtFolder}/Champions/DinahBattlerager.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "Sacrifice 2",
+    tags: ["Frenzied","Blademaster","Protector"],
+    damage: 4,
+    life: 5,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Bloodrage, Board Breaker, Bulletproof, Priority <span class="line-gap"></span> Frenzied Rage (Mandatory): If this card Destroys an Opponent's Champion by battle: It must make another attack against a Champion they control. If there are no remaining Champions on your Opponent's side, this card takes 3 Damage.`,
+        keywords: ["Bloodrage","Bulletproof","Priority","Board Breaker"],
+        effect1name: "Frenzied Rage",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "906",
+    name: "Hearth, Paladin of Lathander",
+    image: `${cardArtFolder}/Champions/HearthPaladinOfLathander.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "Your Opponent controls more Champions than you",
+    cost: "",
+    tags: ["Righteous","Protector","Blademaster","Mage"],
+    damage: 5,
+    life: 5,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `Priority, Warded <span class="line-gap"></span> Divine Smite (Reflex): During damage calculation between this card and another Champion: Discard any number of cards; Increase this card's Damage by 2 per card discarded. If it is battling a Hellfire, then increase the Damage by 3 per discarded card instead.`,
+        keywords: ["Priority","Warded"],
+        effect1name: "Divine Smite",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
     id: "961",
     name: "Cinder, Heavy Metal Bard",
     image: `${cardArtFolder}/Champions/CinderHeavyMetalBard.png`,
@@ -7360,13 +7470,13 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Discard 1 Champion",
-    tags: ["Crescendo","Blademaster","Mage","Specialist"],
+    tags: ["Crescendo","Blademaster","Mage"],
     damage: 7,
     life: 3,
     damageThreshold: "1",
     abilities: [
       {
-        text: `Bloodrage, Heavy Hands, Necrocharge <span class="line-gap"></span> On Rally (Mandatory): Target 1 face-up Champion on the Zone; Reduce Target to 1 Life. <span class="line-gap"></span> Live To Rock: If this card is in your Tomb: Obliterate 7 other Champions from your Tomb; Resurrect this card.`,
+        text: `Bloodrage, Heavy Hands, Necrocharge <span class="line-gap"></span> On Rally (Mandatory): Target 1 face-up Champion on the Zone; Reduce Target to 1 Life. <span class="line-gap"></span> Live To Rock: If this card is in your Tomb: Obliterate 7 other Champions from your Tomb; Resurrect this card. <br><br>&nbsp;`,
         keywords: ["Bloodrage","Heavy Hands","Necrocharge"],
         effect1name: "On Rally",
         effect2name: "Live to Rock",
@@ -7382,7 +7492,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "",
-    tags: ["Driftmarked","Blademaster","Mage","Outlaw"],
+    tags: ["Driftmarked","Hellfire","Mage","Blademaster","Outlaw"],
     damage: 4,
     life: 4,
     damageThreshold: "1",
