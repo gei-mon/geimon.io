@@ -1597,13 +1597,13 @@ export const cards = [
     condition: "",
     cost: "Basic",
     tags: ["Frontier","Citizen"],
-    damage: 1,
-    life: 5,
-    damageThreshold: "5",
+    damage: 0,
+    life: 3,
+    damageThreshold: "3",
     abilities: [
       {
-        text: `Bulletproof, Warded <br> Good Morning (Flip): If flipped face-up by battle: Flip face-down the attacking Champion. <span class="line-gap"></span> Goodnight: Flip this card face-down. <span class="line-gap"></span> If Destroyed: Draw 1.`,
-        keywords: ["Bulletproof","Warded"],
+        text: `Bulletproof <br> Good Morning (Flip): If flipped face-up by battle: Flip face-down the attacking Champion. <span class="line-gap"></span> Goodnight: Flip this card face-down. <span class="line-gap"></span> If Destroyed: Draw 1.`,
+        keywords: ["Bulletproof"],
         effect1name: "Good Morning",
         effect2name: "Goodnight",
         effect3name: "If Destroyed",
@@ -2262,7 +2262,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Mount <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted: Mill 2; Draw 2.`,
+        text: `Mount <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted: Obliterate Mill 2; Draw 2.`,
         keywords: ["Mount","Shielded"],
         effect1name: "Mounted",
         effect2name: "",
@@ -3120,7 +3120,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Mount <span class="line-gap"></span> Mounted: This card's Commander gains Unstoppable. <span class="line-gap"></span> Mounted: If this card's Commander is Targeted by an attack or effect (Reflex): Sacrifice this card; Move this card's Commander into the Reserve, and if you do, draw 2. The moved Commander gains the effect: Reserve: Discard 2; activate this card.`,
+        text: `Mount <span class="line-gap"></span> Mounted: This card's Commander gains Unstoppable. <span class="line-gap"></span> Mounted: If this card's Commander is Targeted by an attack or effect (Reflex): Sacrifice this card; Move this card's Commander into the Reserve, and if you do, draw 1. The moved Commander gains the effect: Reserve: Discard 2; activate this card.`,
         keywords: ["Mount","Unstoppable"],
         effect1name: "Mounted",
         effect2name: "",
@@ -3142,7 +3142,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Maintenance <span class="line-gap"></span> Mount <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted: This card's Commander gains Bulletproof and Priority. <span class="line-gap"></span> Mounted: Discard 1 and Target 1 card on the Zone; Destroy Target.`,
+        text: `Maintenance <span class="line-gap"></span> Mount <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted: This card's Commander gains Bulletproof and Priority. <span class="line-gap"></span> Mounted: Discard 1 and Target 1 face-up card on the Zone; Destroy Target.`,
         keywords: ["Mount","Maintenance","Shielded","Bulletproof","Priority"],
         effect1name: "Mounted",
         effect2name: "",
@@ -3978,7 +3978,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Priority, Veilbind <span class="line-gap"></span> On Rally: Attach up to 3 Equipments to this Champion (ignoring costs), but only one each from your Hand, Deck, and Tomb. <span class="line-gap"></span> Sacrificial Blade: Bury 1 Equipment and Target 1 card on the Zone; Destroy Target. <span class="line-gap"></span> Reforged: If this card has no attached Equipments: Attach 1 Equipment to this card from your Tomb or Void (ignoring its cost).`,
+        text: `Priority, Veilbind <span class="line-gap"></span> On Rally: Attach 1 Equipment to this Champion from your Hand, Deck, or Tomb (ignoring its cost). <span class="line-gap"></span> Sacrificial Blade: Bury 1 Equipment and Target 1 card on the Zone; Destroy Target. <span class="line-gap"></span> Reforged: If this card has no attached Equipments: Attach 1 Equipment to this card from your Tomb or Void (ignoring its cost).`,
         keywords: ["Priority","Veilbind"],
         effect1name: "On Rally",
         effect2name: "Sacrificial Blade",
@@ -4396,7 +4396,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: `Greedy <span class="line-gap"></span> Knightsbane: Knights, and their controllers, take no Damage from battles with this card. Knights deal triple battle Damage to this card. <span class="line-gap"></span> Furious Fire Breath (Exhaustion): Offer 4 Life and Target up to 2 Champions your Opponent controls; Destroy Targets, and if you do, draw 1 for each Champion destroyed by this effect. <span class="line-gap"></span> If Destroyed by Battle: Recruit 1 Royal.`,
+        text: `Greedy <span class="line-gap"></span> Knightsbane: Knights, and their controllers, take no Damage from battles with this card. Knights deal double battle Damage to this card. <span class="line-gap"></span> Furious Fire Breath (Exhaustion): Offer 4 Life and Target up to 2 Champions your Opponent controls; Destroy Targets, and if you do, draw 1 for each Champion destroyed by this effect. <span class="line-gap"></span> If Destroyed by Battle: Recruit 1 Royal.`,
         keywords: ["Greedy"],
         effect1name: "Knightsbane",
         effect2name: "Furious Fire Breath",
@@ -4858,7 +4858,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Destroy Target, and if you do, both Players draw 2.",
+        text: "Destroy Target, and if you do, both Players draw 1.",
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -7171,7 +7171,7 @@ export const cards = [
         text: `Each time a card(s) is added: Place 1 K-Cell Counter on this card for each added card (max. 5 per instance). <br><br> You can remove 2 K-Cell Counters from this card and Target 1 Champion you control: Increase Target's Damage by 2.`,
         keywords: ["blank"],
         effect1name: "Each time a card(s) is added",
-        effect2name: "You can remove 2 K-Cell Counters from this card and Target 1 Frontier you control",
+        effect2name: "You can remove 2 K-Cell Counters from this card and Target 1 Champion you control",
         effect3name: "",
       }
     ]
