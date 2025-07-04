@@ -4947,8 +4947,35 @@ html, body {
             const dx = vx - cx;
             const dy = vy - cy;
 
+            // ── OPTION 2: opponent’s champion attack animation ─────────────────────────────
+            const inOppChampBox = !!cardEl.closest('#opponentChampionsBox');
+            if (inOppChampBox) {
+                const drop = 100;
+                // a) Move straight down (towards vertical center), then b) diagonally into center
+                const kfOpp = [
+                    { transform: startMatrix },
+                    { transform: `translateY(${drop}px) rotate(15deg) ${startMatrix}` },
+                    { transform: `translate(${dx}px, ${drop}px) rotate(15deg) ${startMatrix}` },
+                    { transform: startMatrix }
+                ];
+
+                const animOpp = cardEl.animate(kfOpp, {
+                    duration,
+                    easing: 'ease-in-out',
+                    fill: 'forwards'
+                });
+
+                animOpp.finished.then(() => {
+                    // restore any inline transform you had before
+                    cardEl.style.transform = origInline;
+                });
+
+                return animOpp;
+            }
+
+            // ── DEFAULT: your existing pivot + rotate + center animation ────────────────────
+
             // 4) Compute the angle so the TOP edge points at (dx,dy)
-            //    atan2(dy,dx) = angle of that vector; +90° makes the top face it
             const angle = Math.atan2(dy, dx) * 180/Math.PI + 90;
 
             // 5) Build our “pivot” translations
@@ -4997,9 +5024,36 @@ html, body {
                 cardElement.closest('.scaled-card')) {
                 return;
             }
+
             if (cardElement.dataset.hoverMenuAttached) return;
+
             cardElement.dataset.hoverMenuAttached = "true";
             cardElement.style.position = "relative";
+
+            if (!cardElement.closest('#viewing-window')) {
+                const targetOverlay = document.createElement('div');
+                targetOverlay.classList.add('target-overlay');
+                Object.assign(targetOverlay.style, {
+                    position:   'absolute',
+                    top:        '0',
+                    left:       '0',
+                    width:      '100%',
+                    height:     '100%',
+                    background: 'transparent',
+                    cursor:     'pointer',
+                    zIndex:     '220000'
+                });
+                // forward hover to show/hide your menu
+                targetOverlay.addEventListener('mouseenter', showMenu);
+                targetOverlay.addEventListener('mouseleave', () => hideTimer = setTimeout(hideMenu, 150));
+                // handle “target” clicks
+                targetOverlay.addEventListener('click', e => {
+                    e.stopPropagation();
+                    //flashTargetRing(cardData.id);
+                    socket.emit('toggle_target', { gameId, cardId: cardData.id });
+                });
+                cardElement.appendChild(targetOverlay);
+            }
 
             // ─── helper to move card in state + UI + server ───────────────────────────
             async function doMove(fromZone, toZoneKey, containerId, faceDown, placeOnTop = false) {
@@ -5019,13 +5073,12 @@ html, body {
 
                 const container = document.getElementById(containerId);
                 if (toZoneKey !== "Deck") {
-                const container = document.getElementById(containerId);
-                if (toZoneKey === "Deck" && placeOnTop) {
-                    // never, because Deck is skipped
-                    container.prepend(cardElement);
-                } else {
-                    container.appendChild(cardElement);
-                }
+                    const container = document.getElementById(containerId);
+                    if (toZoneKey === "Deck" && placeOnTop) {
+                        container.prepend(cardElement);
+                    } else {
+                        container.appendChild(cardElement);
+                    }
                 }
                 cardElement.dataset.zone     = toZoneKey;
                 cardElement.dataset.facedown = faceDown ? "true" : "false";
@@ -5151,154 +5204,171 @@ html, body {
                 marginBottom:   "0em",
             });
 
-            // decide options based on current zone
+            const ownerInfo = findCardOwnerAndZone(cardData.id);
+
+            if (cardData.tags?.includes("Token") && ownerInfo?.owner !== username) {
+                return;
+            }
+
             let opts = [];
 
-            if (zone === "Hand") {
-                opts = [
-                "Change Control","Reveal","Declare",
-                "To Champion (Face-Up)","To Champion (Face-Down)",
-                "To Arsenal (Face-Up)","To Arsenal (Face-Down)",
-                "To Reserve","To Tomb","To Void",
-                "To Top of Deck","To Bottom of Deck"
-                ];
-            } else if (zone === "Tomb" || zone === "Void") {
-                hoverMenu.style.fontSize = "3em";
-                opts = [
-                    zone === "Tomb" ? "To Void" : "To Tomb",
-                    "To Hand",
-                    "To Top of Deck",
-                    "To Bottom of Deck",
-                    "To Reserve",
-                    "To Champion (Face-Up)",
-                    "To Champion (Face-Down)",
-                    "To Arsenal (Face-Up)",
-                    "To Arsenal (Face-Down)",
-                    "Declare"
-                ];
-            } else if (zone === "Deck") {
-                hoverMenu.style.fontSize = "3em";
-                hoverMenu.style.gridTemplateColumns = "repeat(2,max-content)";
-                hoverMenu.style.gridGap = "4px 8px";
-                hoverMenu.style.justifyContent = "center";
-                hoverMenu.style.flexDirection = "";
-                hoverMenu.style.columnCount = "";
-                hoverMenu.style.bottom = "90%";
-                opts = [
-                    "To Hand",
-                    "To Tomb",
-                    "To Void",
-                    "To Top of Deck",
-                    "To Bottom of Deck",
-                    "To Reserve",
-                    "To Champion (Face-Up)",
-                    "To Champion (Face-Down)",
-                    "To Arsenal (Face-Up)",
-                    "To Arsenal (Face-Down)"
-                ];
-            } else if (zone === "Zone (Champion)") {
-                hoverMenu.style.fontSize = "3em";
-                hoverMenu.style.gridTemplateColumns = "repeat(2,max-content)";
-                hoverMenu.style.gridGap = "4px 8px";
-                hoverMenu.style.justifyContent = "center";
-                hoverMenu.style.flexDirection = "";
-                hoverMenu.style.columnCount = "";
-                hoverMenu.style.bottom = "90%";
+            if (cardData.tags?.includes("Token")) {
                 opts = [
                     "Change Control",
                     "Add 1 Counter",
-                    //"Add 5 Counters",
-                    "To Tomb",
                     "Remove 1 Counter",
-                    "To Void",
-                    //"Remove All Counters",
-                    "To Hand",
-                    "To Top of Deck",
-                    "To Bottom of Deck",
-                    "To Reserve",
-                    "To Champion (Face-Down)",
-                    "To Arsenal (Face-Up)",
-                    "To Arsenal (Face-Down)",
                     "Change Stats",
                     "Declare",
                     "Attack",
-                    "Block"
+                    "Block",
+                    "Remove"
                 ];
-            } else if (zone === "Zone (Arsenal)") {
-                hoverMenu.style.fontSize = "3.5em";
-                opts = [
-                    "Change Control",
-                    "Add 1 Counter",
-                    "Add 5 Counters",
-                    "Remove 1 Counter",
-                    "Remove All Counters",
-                    "To Hand",
-                    "To Tomb",
-                    "To Void",
-                    "To Top of Deck",
-                    "To Bottom of Deck",
-                    "To Reserve",
-                    "To Champion (Face-Up)",
-                    "To Champion (Face-Down)",
-                    "To Arsenal (Face-Down)",
-                    "Declare"
-                ];
-                const hasAttachment = attachments.some(a => a.sourceId === cardData.id);
-                if (hasAttachment) {
-                    opts.unshift("Remove Attachment");
-                } else {
-                    opts.unshift("Attach / Mount");
+            } else {
+                if (zone === "Hand") {
+                    opts = [
+                    "Change Control","Reveal","Declare",
+                    "To Champion (Face-Up)","To Champion (Face-Down)",
+                    "To Arsenal (Face-Up)","To Arsenal (Face-Down)",
+                    "To Reserve","To Tomb","To Void",
+                    "To Top of Deck","To Bottom of Deck"
+                    ];
+                } else if (zone === "Tomb" || zone === "Void") {
+                    hoverMenu.style.fontSize = "3em";
+                    opts = [
+                        zone === "Tomb" ? "To Void" : "To Tomb",
+                        "To Hand",
+                        "To Top of Deck",
+                        "To Bottom of Deck",
+                        "To Reserve",
+                        "To Champion (Face-Up)",
+                        "To Champion (Face-Down)",
+                        "To Arsenal (Face-Up)",
+                        "To Arsenal (Face-Down)",
+                        "Declare"
+                    ];
+                } else if (zone === "Deck") {
+                    hoverMenu.style.fontSize = "3em";
+                    hoverMenu.style.gridTemplateColumns = "repeat(2,max-content)";
+                    hoverMenu.style.gridGap = "4px 8px";
+                    hoverMenu.style.justifyContent = "center";
+                    hoverMenu.style.flexDirection = "";
+                    hoverMenu.style.columnCount = "";
+                    hoverMenu.style.bottom = "90%";
+                    opts = [
+                        "To Hand",
+                        "To Tomb",
+                        "To Void",
+                        "To Top of Deck",
+                        "To Bottom of Deck",
+                        "To Reserve",
+                        "To Champion (Face-Up)",
+                        "To Champion (Face-Down)",
+                        "To Arsenal (Face-Up)",
+                        "To Arsenal (Face-Down)"
+                    ];
+                } else if (zone === "Zone (Champion)") {
+                    hoverMenu.style.fontSize = "3em";
+                    hoverMenu.style.gridTemplateColumns = "repeat(2,max-content)";
+                    hoverMenu.style.gridGap = "4px 8px";
+                    hoverMenu.style.justifyContent = "center";
+                    hoverMenu.style.flexDirection = "";
+                    hoverMenu.style.columnCount = "";
+                    hoverMenu.style.bottom = "90%";
+                    opts = [
+                        "Change Control",
+                        "Add 1 Counter",
+                        //"Add 5 Counters",
+                        "To Tomb",
+                        "Remove 1 Counter",
+                        "To Void",
+                        //"Remove All Counters",
+                        "To Hand",
+                        "To Top of Deck",
+                        "To Bottom of Deck",
+                        "To Reserve",
+                        "To Champion (Face-Down)",
+                        "To Arsenal (Face-Up)",
+                        "To Arsenal (Face-Down)",
+                        "Change Stats",
+                        "Declare",
+                        "Attack",
+                        "Block"
+                    ];
+                } else if (zone === "Zone (Arsenal)") {
+                    hoverMenu.style.fontSize = "3.5em";
+                    opts = [
+                        "Change Control",
+                        "Add 1 Counter",
+                        "Add 5 Counters",
+                        "Remove 1 Counter",
+                        "Remove All Counters",
+                        "To Hand",
+                        "To Tomb",
+                        "To Void",
+                        "To Top of Deck",
+                        "To Bottom of Deck",
+                        "To Reserve",
+                        "To Champion (Face-Up)",
+                        "To Champion (Face-Down)",
+                        "To Arsenal (Face-Down)",
+                        "Declare"
+                    ];
+                    const hasAttachment = attachments.some(a => a.sourceId === cardData.id);
+                    if (hasAttachment) {
+                        opts.unshift("Remove Attachment");
+                    } else {
+                        opts.unshift("Attach / Mount");
+                    }
+                } else if (zone === "Reserve") {
+                    hoverMenu.style.fontSize = "3.5em";
+                    opts = [
+                        "Change Control",
+                        "Add 1 Counter",
+                        "Add 5 Counters",
+                        "Remove 1 Counter",
+                        "Remove All Counters",
+                        "To Hand",
+                        "To Tomb",
+                        "To Void",
+                        "To Top of Deck",
+                        "To Bottom of Deck",
+                        "To Champion (Face-Up)",
+                        "To Champion (Face-Down)",
+                        "To Arsenal (Face-Up)",
+                        "To Arsenal (Face-Down)",
+                        "Declare"
+                    ];
+                } else if (zone === "FaceDownZone") {
+                    hoverMenu.style.fontSize = "3.5em";
+                    opts = [
+                        "Change Control",
+                        "To Hand",
+                        "To Tomb",
+                        "To Void",
+                        "To Top of Deck",
+                        "To Bottom of Deck",
+                        "To Reserve",
+                        "To Champion (Face-Up)",
+                        "To Arsenal (Face-Up)",
+                        "To Arsenal (Face-Down)",
+                        "Block"
+                    ];
+                } else if (zone === "FaceDownArsenalZone") {
+                    hoverMenu.style.fontSize = "3.5em";
+                    opts = [
+                        "Change Control",
+                        "To Hand",
+                        "To Tomb",
+                        "To Void",
+                        "To Top of Deck",
+                        "To Bottom of Deck",
+                        "To Reserve",
+                        "To Champion (Face-Up)",
+                        "To Champion (Face-Down)",
+                        "To Arsenal (Face-Up)"
+                    ];
                 }
-            } else if (zone === "Reserve") {
-                hoverMenu.style.fontSize = "3.5em";
-                opts = [
-                    "Change Control",
-                    "Add 1 Counter",
-                    "Add 5 Counters",
-                    "Remove 1 Counter",
-                    "Remove All Counters",
-                    "To Hand",
-                    "To Tomb",
-                    "To Void",
-                    "To Top of Deck",
-                    "To Bottom of Deck",
-                    "To Champion (Face-Up)",
-                    "To Champion (Face-Down)",
-                    "To Arsenal (Face-Up)",
-                    "To Arsenal (Face-Down)",
-                    "Declare"
-                ];
-            } else if (zone === "FaceDownZone") {
-                hoverMenu.style.fontSize = "3.5em";
-                opts = [
-                    "Change Control",
-                    "To Hand",
-                    "To Tomb",
-                    "To Void",
-                    "To Top of Deck",
-                    "To Bottom of Deck",
-                    "To Reserve",
-                    "To Champion (Face-Up)",
-                    "To Arsenal (Face-Up)",
-                    "To Arsenal (Face-Down)",
-                    "Block"
-                ];
-            } else if (zone === "FaceDownArsenalZone") {
-                hoverMenu.style.fontSize = "3.5em";
-                opts = [
-                    "Change Control",
-                    "To Hand",
-                    "To Tomb",
-                    "To Void",
-                    "To Top of Deck",
-                    "To Bottom of Deck",
-                    "To Reserve",
-                    "To Champion (Face-Up)",
-                    "To Champion (Face-Down)",
-                    "To Arsenal (Face-Up)"
-                ];
             }
-            if (cardData.tags?.includes("Token")) opts.push("Remove");
 
             // populate buttons
             opts.forEach(text => {
@@ -5721,31 +5791,6 @@ html, body {
                     cardElement.style.zIndex  = "";
                     cardElement.style.outline = "";
                 }, 150);
-            }
-
-            if (!cardElement.closest('#viewing-window')) {
-                const targetOverlay = document.createElement('div');
-                targetOverlay.classList.add('target-overlay');
-                Object.assign(targetOverlay.style, {
-                    position:   'absolute',
-                    top:        '0',
-                    left:       '0',
-                    width:      '100%',
-                    height:     '100%',
-                    background: 'transparent',
-                    cursor:     'pointer',
-                    zIndex:     '220000'
-                });
-                // forward hover to show/hide your menu
-                targetOverlay.addEventListener('mouseenter', showMenu);
-                targetOverlay.addEventListener('mouseleave', () => hideTimer = setTimeout(hideMenu, 150));
-                // handle “target” clicks
-                targetOverlay.addEventListener('click', e => {
-                    e.stopPropagation();
-                    //flashTargetRing(cardData.id);
-                    socket.emit('toggle_target', { gameId, cardId: cardData.id });
-                });
-                cardElement.appendChild(targetOverlay);
             }
 
             // 6) event wiring
