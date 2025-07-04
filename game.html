@@ -5021,6 +5021,14 @@ html, body {
         }
 
         async function attachHoverMenu(cardElement, cardData) {
+            let ownerInfo = findCardOwnerAndZone(cardData.id);
+            const isOppToken = ownerInfo?.owner !== username
+                            && cardData.tags?.includes("Token");
+              if (isOppToken) {
+                attachTargetOverlay(cardElement, cardData);
+                return;
+            }
+
             const inOppTombOrVoid =
                 !!cardElement.closest('#opponentTombBox') ||
                 !!cardElement.closest('#opponentVoidBox');
@@ -5267,11 +5275,7 @@ html, body {
                     marginBottom:   "0em",
                 });
 
-                const ownerInfo = findCardOwnerAndZone(cardData.id);
-
-                if (cardData.tags?.includes("Token") && ownerInfo?.owner !== username) {
-                    return;
-                }
+                ownerInfo = findCardOwnerAndZone(cardData.id);
 
                 if (ownerInfo?.owner !== username && (zone === "Tomb" || zone === "Void")) {
                     return;
