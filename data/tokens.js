@@ -452,7 +452,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Deathward <br><br> Knights who declare attacks must attack this Token. You, and this Token, take no battle Damage from Knights involving this Token. You can block with this Token only against Knights, but you can do so with no limit.",
+        text: `Deathward <span class="line-gap"></span> Knights who declare attacks must attack this Token. <span class="line-gap"></span> You, and this Token, take no battle Damage from Knights involving this Token. <span class="line-gap"></span> You can block with this Token only against Knights, but you can do so with no limit.`,
         keywords: ["Deathward"],
         effect1name: "",
       }

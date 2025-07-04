@@ -4200,7 +4200,8 @@ html, body {
                         scaledCard.style.margin = "5px";
                         scaledCard.style.position = "relative";
                     scaledCard.dataset.zone = "Void";
-                    attachHoverMenu(scaledCard, cardData);
+                    //attachHoverMenu(scaledCard, cardData);
+                    attachTargetOverlay(scaledCard, cardData);
 
                     const wrapper = document.createElement("div");
                         wrapper.style.width = `${240 * scale}px`;
@@ -5020,6 +5021,10 @@ html, body {
         }
 
         async function attachHoverMenu(cardElement, cardData) {
+            const inOppTombOrVoid =
+                !!cardElement.closest('#opponentTombBox') ||
+                !!cardElement.closest('#opponentVoidBox');
+
             if (cardElement.closest('#viewing-window') ||
                 cardElement.closest('.scaled-card')) {
                 return;
@@ -5029,6 +5034,61 @@ html, body {
 
             cardElement.dataset.hoverMenuAttached = "true";
             cardElement.style.position = "relative";
+
+            let hideTimer;
+            let hoverMenu;
+
+            function showMenu() {
+                clearTimeout(hideTimer);
+                cardElement.style.zIndex = "120000";
+                cardElement.style.outline = "4px solid yellow";
+                if (zone === "Zone (Champion)" || zone === "Deck") {
+                    hoverMenu.style.display = "grid";
+                }
+                else {
+                    hoverMenu.style.display = "flex";
+                }
+
+                if (isFaceDown) {
+                    // do your preview here
+                    const real = cards.find(c => String(c.id) === String(cardData.id));
+                    if (real) {
+                        const scaled = document.querySelector("#viewing-window .scaled-card");
+                        scaled.innerHTML = "";
+                        const preview = renderCard(real);
+                        Object.assign(preview.style,{
+                            width:"240px", height:"420px", transform:"scale(1.2)",
+                            marginLeft:"-15%", marginTop:"7%"
+                        });
+                        scaled.appendChild(preview);
+                    }
+                }
+
+                // force initial state
+                void hoverMenu.offsetWidth;
+                if (isFaceDown) {
+                    hoverMenu.style.transform = "translateX(0) translateY(-50%) rotate(90deg)";
+                    hoverMenu.style.opacity   = "1";
+                } else {
+                    hoverMenu.style.transform = "translate(-50%, 0)";
+                    hoverMenu.style.opacity   = "1";
+                }
+            }
+
+            // 5) hide menu
+            function hideMenu() {
+                if (isFaceDown) {
+                    hoverMenu.style.transform = "translateX(-10px) translateY(-50%) rotate(90deg)";
+                } else {
+                    hoverMenu.style.transform = "translate(-50%, 10px)";
+                }
+                hoverMenu.style.opacity = "0";
+                setTimeout(() => {
+                    hoverMenu.style.display   = "none";
+                    cardElement.style.zIndex  = "";
+                    cardElement.style.outline = "";
+                }, 150);
+            }
 
             if (!cardElement.closest('#viewing-window')) {
                 const targetOverlay = document.createElement('div');
@@ -5044,8 +5104,10 @@ html, body {
                     zIndex:     '220000'
                 });
                 // forward hover to show/hide your menu
-                targetOverlay.addEventListener('mouseenter', showMenu);
-                targetOverlay.addEventListener('mouseleave', () => hideTimer = setTimeout(hideMenu, 150));
+                if (!inOppTombOrVoid) {
+                    targetOverlay.addEventListener('mouseenter', showMenu);
+                    targetOverlay.addEventListener('mouseleave', () => hideTimer = setTimeout(hideMenu, 150));
+                }
                 // handle “target” clicks
                 targetOverlay.addEventListener('click', e => {
                     e.stopPropagation();
@@ -5175,627 +5237,579 @@ html, body {
             const zone = cardElement.dataset.zone;
             const isFaceDown = (zone === "FaceDownZone");
 
-            // build the hover menu
-            const hoverMenu = document.createElement("div");
-            hoverMenu.className = "hover-menu";
-            Object.assign(hoverMenu.style, {
-                position:       "absolute",
-                transform:      "translateX(-50%) scale(1)",
-                marginBottom:   "0em",
-                backgroundColor:"#111",
-                color:          "white",
-                border:         "6px solid yellow",
-                padding:        "6px",
-                display:        "none",
-                zIndex:         "550000",
-                flexDirection:  "column",
-                fontSize:       "2em",
-                whiteSpace:     "nowrap",
-                boxShadow:      "0 0 5px black",
+            if (!inOppTombOrVoid) {
+                // build the hover menu
+                hoverMenu = document.createElement("div");
+                hoverMenu.className = "hover-menu";
+                Object.assign(hoverMenu.style, {
+                    position:       "absolute",
+                    transform:      "translateX(-50%) scale(1)",
+                    marginBottom:   "0em",
+                    backgroundColor:"#111",
+                    color:          "white",
+                    border:         "6px solid yellow",
+                    padding:        "6px",
+                    display:        "none",
+                    zIndex:         "550000",
+                    flexDirection:  "column",
+                    fontSize:       "2em",
+                    whiteSpace:     "nowrap",
+                    boxShadow:      "0 0 5px black",
 
-                // position + transform: choose based on face-down
-                bottom:   isFaceDown ? ""       : "100%",
-                left:     isFaceDown ? ""       : "50%",
-                top:      isFaceDown ? "50%"    : "",
-                right:    isFaceDown ? "-200%"   : "",
-                transform: isFaceDown
-                    ? "translateY(-50%) scale(1) rotate(90deg)"
-                    : "translateX(-50%) scale(1)",
-                marginBottom:   "0em",
-            });
+                    // position + transform: choose based on face-down
+                    bottom:   isFaceDown ? ""       : "100%",
+                    left:     isFaceDown ? ""       : "50%",
+                    top:      isFaceDown ? "50%"    : "",
+                    right:    isFaceDown ? "-200%"   : "",
+                    transform: isFaceDown
+                        ? "translateY(-50%) scale(1) rotate(90deg)"
+                        : "translateX(-50%) scale(1)",
+                    marginBottom:   "0em",
+                });
 
-            const ownerInfo = findCardOwnerAndZone(cardData.id);
+                const ownerInfo = findCardOwnerAndZone(cardData.id);
 
-            if (cardData.tags?.includes("Token") && ownerInfo?.owner !== username) {
-                return;
-            }
+                if (cardData.tags?.includes("Token") && ownerInfo?.owner !== username) {
+                    return;
+                }
 
-            let opts = [];
+                if (ownerInfo?.owner !== username && (zone === "Tomb" || zone === "Void")) {
+                    return;
+                }
 
-            if (cardData.tags?.includes("Token")) {
-                opts = [
-                    "Change Control",
-                    "Add 1 Counter",
-                    "Remove 1 Counter",
-                    "Change Stats",
-                    "Declare",
-                    "Attack",
-                    "Block",
-                    "Remove"
-                ];
-            } else {
-                if (zone === "Hand") {
-                    opts = [
-                    "Change Control","Reveal","Declare",
-                    "To Champion (Face-Up)","To Champion (Face-Down)",
-                    "To Arsenal (Face-Up)","To Arsenal (Face-Down)",
-                    "To Reserve","To Tomb","To Void",
-                    "To Top of Deck","To Bottom of Deck"
-                    ];
-                } else if (zone === "Tomb" || zone === "Void") {
-                    hoverMenu.style.fontSize = "3em";
-                    opts = [
-                        zone === "Tomb" ? "To Void" : "To Tomb",
-                        "To Hand",
-                        "To Top of Deck",
-                        "To Bottom of Deck",
-                        "To Reserve",
-                        "To Champion (Face-Up)",
-                        "To Champion (Face-Down)",
-                        "To Arsenal (Face-Up)",
-                        "To Arsenal (Face-Down)",
-                        "Declare"
-                    ];
-                } else if (zone === "Deck") {
-                    hoverMenu.style.fontSize = "3em";
-                    hoverMenu.style.gridTemplateColumns = "repeat(2,max-content)";
-                    hoverMenu.style.gridGap = "4px 8px";
-                    hoverMenu.style.justifyContent = "center";
-                    hoverMenu.style.flexDirection = "";
-                    hoverMenu.style.columnCount = "";
-                    hoverMenu.style.bottom = "90%";
-                    opts = [
-                        "To Hand",
-                        "To Tomb",
-                        "To Void",
-                        "To Top of Deck",
-                        "To Bottom of Deck",
-                        "To Reserve",
-                        "To Champion (Face-Up)",
-                        "To Champion (Face-Down)",
-                        "To Arsenal (Face-Up)",
-                        "To Arsenal (Face-Down)"
-                    ];
-                } else if (zone === "Zone (Champion)") {
-                    hoverMenu.style.fontSize = "3em";
-                    hoverMenu.style.gridTemplateColumns = "repeat(2,max-content)";
-                    hoverMenu.style.gridGap = "4px 8px";
-                    hoverMenu.style.justifyContent = "center";
-                    hoverMenu.style.flexDirection = "";
-                    hoverMenu.style.columnCount = "";
-                    hoverMenu.style.bottom = "90%";
+                let opts = [];
+
+                if (cardData.tags?.includes("Token")) {
                     opts = [
                         "Change Control",
                         "Add 1 Counter",
-                        //"Add 5 Counters",
-                        "To Tomb",
                         "Remove 1 Counter",
-                        "To Void",
-                        //"Remove All Counters",
-                        "To Hand",
-                        "To Top of Deck",
-                        "To Bottom of Deck",
-                        "To Reserve",
-                        "To Champion (Face-Down)",
-                        "To Arsenal (Face-Up)",
-                        "To Arsenal (Face-Down)",
                         "Change Stats",
                         "Declare",
                         "Attack",
-                        "Block"
+                        "Block",
+                        "Remove"
                     ];
-                } else if (zone === "Zone (Arsenal)") {
-                    hoverMenu.style.fontSize = "3.5em";
-                    opts = [
-                        "Change Control",
-                        "Add 1 Counter",
-                        "Add 5 Counters",
-                        "Remove 1 Counter",
-                        "Remove All Counters",
-                        "To Hand",
-                        "To Tomb",
-                        "To Void",
-                        "To Top of Deck",
-                        "To Bottom of Deck",
-                        "To Reserve",
-                        "To Champion (Face-Up)",
-                        "To Champion (Face-Down)",
-                        "To Arsenal (Face-Down)",
-                        "Declare"
-                    ];
-                    const hasAttachment = attachments.some(a => a.sourceId === cardData.id);
-                    if (hasAttachment) {
-                        opts.unshift("Remove Attachment");
-                    } else {
-                        opts.unshift("Attach / Mount");
+                } else {
+                    if (zone === "Hand") {
+                        opts = [
+                        "Change Control","Reveal","Declare",
+                        "To Champion (Face-Up)","To Champion (Face-Down)",
+                        "To Arsenal (Face-Up)","To Arsenal (Face-Down)",
+                        "To Reserve","To Tomb","To Void",
+                        "To Top of Deck","To Bottom of Deck"
+                        ];
+                    } else if (zone === "Tomb" || zone === "Void") {
+                        hoverMenu.style.fontSize = "3em";
+                        opts = [
+                            zone === "Tomb" ? "To Void" : "To Tomb",
+                            "To Hand",
+                            "To Top of Deck",
+                            "To Bottom of Deck",
+                            "To Reserve",
+                            "To Champion (Face-Up)",
+                            "To Champion (Face-Down)",
+                            "To Arsenal (Face-Up)",
+                            "To Arsenal (Face-Down)",
+                            "Declare"
+                        ];
+                    } else if (zone === "Deck") {
+                        hoverMenu.style.fontSize = "3em";
+                        hoverMenu.style.gridTemplateColumns = "repeat(2,max-content)";
+                        hoverMenu.style.gridGap = "4px 8px";
+                        hoverMenu.style.justifyContent = "center";
+                        hoverMenu.style.flexDirection = "";
+                        hoverMenu.style.columnCount = "";
+                        hoverMenu.style.bottom = "90%";
+                        opts = [
+                            "To Hand",
+                            "To Tomb",
+                            "To Void",
+                            "To Top of Deck",
+                            "To Bottom of Deck",
+                            "To Reserve",
+                            "To Champion (Face-Up)",
+                            "To Champion (Face-Down)",
+                            "To Arsenal (Face-Up)",
+                            "To Arsenal (Face-Down)"
+                        ];
+                    } else if (zone === "Zone (Champion)") {
+                        hoverMenu.style.fontSize = "3em";
+                        hoverMenu.style.gridTemplateColumns = "repeat(2,max-content)";
+                        hoverMenu.style.gridGap = "4px 8px";
+                        hoverMenu.style.justifyContent = "center";
+                        hoverMenu.style.flexDirection = "";
+                        hoverMenu.style.columnCount = "";
+                        hoverMenu.style.bottom = "90%";
+                        opts = [
+                            "Change Control",
+                            "Add 1 Counter",
+                            //"Add 5 Counters",
+                            "To Tomb",
+                            "Remove 1 Counter",
+                            "To Void",
+                            //"Remove All Counters",
+                            "To Hand",
+                            "To Top of Deck",
+                            "To Bottom of Deck",
+                            "To Reserve",
+                            "To Champion (Face-Down)",
+                            "To Arsenal (Face-Up)",
+                            "To Arsenal (Face-Down)",
+                            "Change Stats",
+                            "Declare",
+                            "Attack",
+                            "Block"
+                        ];
+                    } else if (zone === "Zone (Arsenal)") {
+                        hoverMenu.style.fontSize = "3.5em";
+                        opts = [
+                            "Change Control",
+                            "Add 1 Counter",
+                            "Add 5 Counters",
+                            "Remove 1 Counter",
+                            "Remove All Counters",
+                            "To Hand",
+                            "To Tomb",
+                            "To Void",
+                            "To Top of Deck",
+                            "To Bottom of Deck",
+                            "To Reserve",
+                            "To Champion (Face-Up)",
+                            "To Champion (Face-Down)",
+                            "To Arsenal (Face-Down)",
+                            "Declare"
+                        ];
+                        const hasAttachment = attachments.some(a => a.sourceId === cardData.id);
+                        if (hasAttachment) {
+                            opts.unshift("Remove Attachment");
+                        } else {
+                            opts.unshift("Attach / Mount");
+                        }
+                    } else if (zone === "Reserve") {
+                        hoverMenu.style.fontSize = "3.5em";
+                        opts = [
+                            "Change Control",
+                            "Add 1 Counter",
+                            "Add 5 Counters",
+                            "Remove 1 Counter",
+                            "Remove All Counters",
+                            "To Hand",
+                            "To Tomb",
+                            "To Void",
+                            "To Top of Deck",
+                            "To Bottom of Deck",
+                            "To Champion (Face-Up)",
+                            "To Champion (Face-Down)",
+                            "To Arsenal (Face-Up)",
+                            "To Arsenal (Face-Down)",
+                            "Declare"
+                        ];
+                    } else if (zone === "FaceDownZone") {
+                        hoverMenu.style.fontSize = "3.5em";
+                        opts = [
+                            "Change Control",
+                            "To Hand",
+                            "To Tomb",
+                            "To Void",
+                            "To Top of Deck",
+                            "To Bottom of Deck",
+                            "To Reserve",
+                            "To Champion (Face-Up)",
+                            "To Arsenal (Face-Up)",
+                            "To Arsenal (Face-Down)",
+                            "Block"
+                        ];
+                    } else if (zone === "FaceDownArsenalZone") {
+                        hoverMenu.style.fontSize = "3.5em";
+                        opts = [
+                            "Change Control",
+                            "To Hand",
+                            "To Tomb",
+                            "To Void",
+                            "To Top of Deck",
+                            "To Bottom of Deck",
+                            "To Reserve",
+                            "To Champion (Face-Up)",
+                            "To Champion (Face-Down)",
+                            "To Arsenal (Face-Up)"
+                        ];
                     }
-                } else if (zone === "Reserve") {
-                    hoverMenu.style.fontSize = "3.5em";
-                    opts = [
-                        "Change Control",
-                        "Add 1 Counter",
-                        "Add 5 Counters",
-                        "Remove 1 Counter",
-                        "Remove All Counters",
-                        "To Hand",
-                        "To Tomb",
-                        "To Void",
-                        "To Top of Deck",
-                        "To Bottom of Deck",
-                        "To Champion (Face-Up)",
-                        "To Champion (Face-Down)",
-                        "To Arsenal (Face-Up)",
-                        "To Arsenal (Face-Down)",
-                        "Declare"
-                    ];
-                } else if (zone === "FaceDownZone") {
-                    hoverMenu.style.fontSize = "3.5em";
-                    opts = [
-                        "Change Control",
-                        "To Hand",
-                        "To Tomb",
-                        "To Void",
-                        "To Top of Deck",
-                        "To Bottom of Deck",
-                        "To Reserve",
-                        "To Champion (Face-Up)",
-                        "To Arsenal (Face-Up)",
-                        "To Arsenal (Face-Down)",
-                        "Block"
-                    ];
-                } else if (zone === "FaceDownArsenalZone") {
-                    hoverMenu.style.fontSize = "3.5em";
-                    opts = [
-                        "Change Control",
-                        "To Hand",
-                        "To Tomb",
-                        "To Void",
-                        "To Top of Deck",
-                        "To Bottom of Deck",
-                        "To Reserve",
-                        "To Champion (Face-Up)",
-                        "To Champion (Face-Down)",
-                        "To Arsenal (Face-Up)"
-                    ];
                 }
-            }
 
-            // populate buttons
-            opts.forEach(text => {
-                const btn = document.createElement("div");
-                btn.textContent = text;
-                Object.assign(btn.style, { padding:"2px 5px", cursor:"pointer" });
-                btn.addEventListener("click", async e => {
-                e.stopPropagation();
-                hoverMenu.style.display = "none";
-                switch (text) {
-                    case "To Champion (Face-Up)":
-                        playSoundEffect('activate');
-                        await doMove(zone,           "Zone (Champion)",         "playerChampionsBox",        false);
-                        //addGameLogEntry(`${username} rallied ${cardData.name}.`);
-                        break;
-                    case "To Champion (Face-Down)":
-                        playSoundEffect('set');
-                        await doMove(zone,           "FaceDownZone",            "playerFaceDownBox",         true);
-                        break;
-                    case "To Arsenal (Face-Up)":
-                        playSoundEffect('activate');
-                        await doMove(zone,           "Zone (Arsenal)",          "playerArsenalBox",          false);
-                        break;
-                    case "To Arsenal (Face-Down)":
-                        playSoundEffect('set');
-                        await doMove(zone,           "FaceDownArsenalZone",     "playerFaceDownArsenalBox",  true);
-                        break;
-                    case "To Reserve":
-                        playSoundEffect('reserve');
-                        await doMove(zone, "Reserve", "playerReserveBox", false);
-                        break;
-                    case "To Hand":
-                        playSoundEffect('draw');
-                        await doMove(zone, "Hand", "drawn-cards", false);
-                        break;
-                    case "To Tomb":
-                        playSoundEffect('tomb');
-                        await doMove(zone, "Tomb", "playerTombBox", false);
-                        break;
-                    case "To Void":
-                        playSoundEffect('tomb');
-                        await doMove(zone, "Void", "playerVoidBox", false);
-                        break;
-                    case "To Top of Deck":
-                        playSoundEffect('set');
-                        await doMove(zone, "Deck", "playerDeckBox", false, true);
-                        break;
-                    case "To Bottom of Deck":
-                        playSoundEffect('set');
-                        await doMove(zone, "Deck", "playerDeckBox", false, false);
-                        break;
-                    case "Declare":
-                        playSoundEffect('declare');
-                        // play the glow‐flash locally
-                        flashDeclareEffect(cardElement);
+                // populate buttons
+                opts.forEach(text => {
+                    const btn = document.createElement("div");
+                    btn.textContent = text;
+                    Object.assign(btn.style, { padding:"2px 5px", cursor:"pointer" });
+                    btn.addEventListener("click", async e => {
+                    e.stopPropagation();
+                    hoverMenu.style.display = "none";
+                    switch (text) {
+                        case "To Champion (Face-Up)":
+                            playSoundEffect('activate');
+                            await doMove(zone,           "Zone (Champion)",         "playerChampionsBox",        false);
+                            //addGameLogEntry(`${username} rallied ${cardData.name}.`);
+                            break;
+                        case "To Champion (Face-Down)":
+                            playSoundEffect('set');
+                            await doMove(zone,           "FaceDownZone",            "playerFaceDownBox",         true);
+                            break;
+                        case "To Arsenal (Face-Up)":
+                            playSoundEffect('activate');
+                            await doMove(zone,           "Zone (Arsenal)",          "playerArsenalBox",          false);
+                            break;
+                        case "To Arsenal (Face-Down)":
+                            playSoundEffect('set');
+                            await doMove(zone,           "FaceDownArsenalZone",     "playerFaceDownArsenalBox",  true);
+                            break;
+                        case "To Reserve":
+                            playSoundEffect('reserve');
+                            await doMove(zone, "Reserve", "playerReserveBox", false);
+                            break;
+                        case "To Hand":
+                            playSoundEffect('draw');
+                            await doMove(zone, "Hand", "drawn-cards", false);
+                            break;
+                        case "To Tomb":
+                            playSoundEffect('tomb');
+                            await doMove(zone, "Tomb", "playerTombBox", false);
+                            break;
+                        case "To Void":
+                            playSoundEffect('tomb');
+                            await doMove(zone, "Void", "playerVoidBox", false);
+                            break;
+                        case "To Top of Deck":
+                            playSoundEffect('set');
+                            await doMove(zone, "Deck", "playerDeckBox", false, true);
+                            break;
+                        case "To Bottom of Deck":
+                            playSoundEffect('set');
+                            await doMove(zone, "Deck", "playerDeckBox", false, false);
+                            break;
+                        case "Declare":
+                            playSoundEffect('declare');
+                            // play the glow‐flash locally
+                            flashDeclareEffect(cardElement);
 
-                        // log & broadcast so your opponent sees it too
-                        addGameLogEntry(`${cardData.name}'s effect was declared from the ${zone}.`);
-                        socket.emit('declare_event', { gameId, cardId: cardData.id });
-                        if (zone === "Hand") {
-                            socket.emit('temp_reveal_card', { gameId, from: username, cardId: cardData.id });
-                        }
-                        break;
-                    case "Reveal":
-                        playSoundEffect('set');
-                        addGameLogEntry(`${cardData.name} was revealed from the ${zone}.`);
-                        if (zone === "Hand") {
-                            socket.emit('temp_reveal_card', { gameId, from: username, cardId: cardData.id });
-                        }
-                        break;
-                    case "Change Stats":
-                        showChangeStatsPrompt(cardElement, cardData);
-                        break;
-                    case "Change Control": {
-                        playSoundEffect('set');
-                        const opponent = getOpponentUsername(username, gameState);
-
-                        /* 1️⃣  Tell the server to transfer ownership */
-                        socket.emit("change_control", {
-                            gameId,
-                            cardId: cardData.id,
-                            from:   username,          // current owner
-                            to:     opponent,          // new owner
-                            zone:   zone               // e.g. "FaceDownZone"
-                        });
-
-                        /* 2️⃣  Log immediately; the re-render comes back via sync event */
-                        addGameLogEntry(`${cardData.name} changed control to the opponent.`);
-                        break;
-                    }
-                    case "Attack": {
-                        playSoundEffect('attack');
-                        animateAttackToCenter(cardElement, 800)
-                            .finished.then(() => {
-                            // 1) Log locally and broadcast to room
-                            addGameLogEntry(`${cardData.name} declared an attack.`);
-                            socket.emit('attack_event', { gameId, cardId: cardData.id });
-                            });
-                        break;
-                    }
-                    case "Block": {
-                        playSoundEffect('block');
-                        const isFaceDown = cardData.boardState === 'FaceDownZone';
-                        animateBlock(cardElement, isFaceDown)
-                            .then(() => {
-                            addGameLogEntry(`${cardData.name} was declared as a blocker.`);
-                            socket.emit('block_event', { gameId, cardId: cardData.id, isFaceDown });
-                            });
-                        break;
-                    }
-                    case "Add 1 Counter": {
-                        playSoundEffect('tomb');
-
-                        const cardId = cardData.id;
-                        const info = findCardOwnerAndZone(cardId);
-                        if (!info) break;
-                        const { owner, zoneName } = info;
-
-                        const zone = gameState[owner][zoneName];
-                        const cardIndex = zone.findIndex(c => String(c.id) === String(cardId));
-
-                        let card = cardData;
-                        if (cardIndex !== -1) {
-                            card = zone[cardIndex];
-                            card.counters = (card.counters || 0) + 1;
-                        }
-
-                        updateCounterOverlay(cardElement, card);
-                        const name = card.name || `Card ${card.id}`;
-                        addGameLogEntry(`${name} gains 1 counter (now ${card.counters}).`);
-
-                        zone[cardIndex] = card; // make sure the updated card is in the zone array
-                        await sendZoneSpecificUpdate({ owner, zone: zoneName, cards: zone });
-                        break;
-                    }
-                    case "Add 5 Counters": {
-                        playSoundEffect('tomb');
-
-                        const cardId = cardData.id;
-                        const info = findCardOwnerAndZone(cardId);
-                        if (!info) break;
-                        const { owner, zoneName } = info;
-
-                        const zone = gameState[owner][zoneName];
-                        const cardIndex = zone.findIndex(c => String(c.id) === String(cardId));
-
-                        let card = cardData;
-                        if (cardIndex !== -1) {
-                            card = zone[cardIndex];
-                            card.counters = (card.counters || 0) + 5;
-                        }
-
-                        updateCounterOverlay(cardElement, card);
-                        const name = card.name || `Card ${card.id}`;
-                        addGameLogEntry(`${name} gains 5 counters (now ${card.counters}).`);
-
-                        zone[cardIndex] = card; // make sure the updated card is in the zone array
-                        await sendZoneSpecificUpdate({ owner, zone: zoneName, cards: zone });
-                        break;
-                    }
-                    case "Remove 1 Counter": {
-                        playSoundEffect('tomb');
-
-                        const cardId = cardData.id;
-                        const info = findCardOwnerAndZone(cardId);
-                        if (!info) break;
-                        const { owner, zoneName } = info;
-
-                        const zone = gameState[owner][zoneName];
-                        const cardIndex = zone.findIndex(c => String(c.id) === String(cardId));
-
-                        let card = cardData;
-                        if (cardIndex !== -1) {
-                            card = zone[cardIndex];
-                            card.counters = Math.max(0, (card.counters || 0) - 1);
-                        }
-
-                        updateCounterOverlay(cardElement, card);
-                        const name = card.name || `Card ${card.id}`;
-                        addGameLogEntry(`${name} loses 1 counter (now ${card.counters}).`);
-
-                        zone[cardIndex] = card; // make sure the updated card is in the zone array
-                        await sendZoneSpecificUpdate({ owner, zone: zoneName, cards: zone });
-                        break;
-                    }
-                    case "Remove All Counters": {
-                        playSoundEffect('tomb');
-
-                        const cardId = cardData.id;
-                        const info = findCardOwnerAndZone(cardId);
-                        if (!info) break;
-                        const { owner, zoneName } = info;
-
-                        const zone = gameState[owner][zoneName];
-                        const cardIndex = zone.findIndex(c => String(c.id) === String(cardId));
-
-                        let card = cardData;
-                        if (cardIndex !== -1) {
-                            card = zone[cardIndex];
-                            card.counters = 0;
-                        }
-
-                        updateCounterOverlay(cardElement, card);
-                        const name = card.name || `Card ${card.id}`;
-                        addGameLogEntry(`${name} loses all counters.`);
-
-                        zone[cardIndex] = card; // make sure the updated card is in the zone array
-                        await sendZoneSpecificUpdate({ owner, zone: zoneName, cards: zone });
-                        break;
-                    }
-                    case "Attach / Mount": {
-                        const colors = ['#e6194b','#3cb44b','#ffe119','#4363d8','#f58231','#911eb4'];
-                        const color = colors[Math.floor(Math.random() * colors.length)];
-                        placeCircle(cardData.id, color);
-
-                        // Create draggable circle for cursor
-                        const drag = document.createElement("div");
-                        drag.className = "attachment-drag";
-                        Object.assign(drag.style, {
-                            position: "fixed",
-                            width: "16px",
-                            height: "16px",
-                            backgroundColor: `${color}`,
-                            border: `2px solid ${color}`,
-                            borderRadius: "50%",
-                            pointerEvents: "none",
-                            zIndex: 300000
-                        });
-                        document.body.appendChild(drag);
-                        document.body.style.cursor = "none";
-
-                        function onMove(e) {
-                            drag.style.top = `${e.clientY - 8}px`;
-                            drag.style.left = `${e.clientX - 8}px`;
-                        }
-                        document.addEventListener("mousemove", onMove);
-
-                        // Modal builder with restored cursor over popup
-                        function showModal(message, onConfirm, onCancel) {
-                            const overlay = document.createElement("div");
-                            Object.assign(overlay.style, {
-                            position: "fixed",
-                            top: 0,
-                            left: 0,
-                            width: "100%",
-                            height: "100%",
-                            background: "rgba(0,0,0,0.5)",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            zIndex: 400000,
-                            cursor: "auto"  // show cursor over overlay
-                            });
-                            const box = document.createElement("div");
-                            Object.assign(box.style, {
-                            background: "#fff",
-                            padding: "20px",
-                            borderRadius: "8px",
-                            textAlign: "center",
-                            maxWidth: "300px",
-                            cursor: "auto"  // ensure cursor is visible on modal
-                            });
-                            const msg = document.createElement("p");
-                            msg.textContent = message;
-                            const btnConfirm = document.createElement("button");
-                            btnConfirm.textContent = "Confirm";
-                            const btnCancel = document.createElement("button");
-                            btnCancel.textContent = "Cancel";
-                            btnConfirm.style.margin = btnCancel.style.margin = "8px";
-                            box.append(msg, btnConfirm, btnCancel);
-                            overlay.appendChild(box);
-                            document.body.appendChild(overlay);
-
-                            btnConfirm.addEventListener("click", () => {
-                            onConfirm();
-                            cleanup();
-                            });
-                            btnCancel.addEventListener("click", () => {
-                            onCancel();
-                            cleanup();
-                            });
-
-                            function cleanup() {
-                            overlay.remove();
-                            document.removeEventListener("click", clickHandler, true);
-                            document.removeEventListener("mousemove", onMove);
-                            drag.remove();
-                            document.body.style.cursor = "";
+                            // log & broadcast so your opponent sees it too
+                            addGameLogEntry(`${cardData.name}'s effect was declared from the ${zone}.`);
+                            socket.emit('declare_event', { gameId, cardId: cardData.id });
+                            if (zone === "Hand") {
+                                socket.emit('temp_reveal_card', { gameId, from: username, cardId: cardData.id });
                             }
+                            break;
+                        case "Reveal":
+                            playSoundEffect('set');
+                            addGameLogEntry(`${cardData.name} was revealed from the ${zone}.`);
+                            if (zone === "Hand") {
+                                socket.emit('temp_reveal_card', { gameId, from: username, cardId: cardData.id });
+                            }
+                            break;
+                        case "Change Stats":
+                            showChangeStatsPrompt(cardElement, cardData);
+                            break;
+                        case "Change Control": {
+                            playSoundEffect('set');
+                            const opponent = getOpponentUsername(username, gameState);
+
+                            /* 1️⃣  Tell the server to transfer ownership */
+                            socket.emit("change_control", {
+                                gameId,
+                                cardId: cardData.id,
+                                from:   username,          // current owner
+                                to:     opponent,          // new owner
+                                zone:   zone               // e.g. "FaceDownZone"
+                            });
+
+                            /* 2️⃣  Log immediately; the re-render comes back via sync event */
+                            addGameLogEntry(`${cardData.name} changed control to the opponent.`);
+                            break;
                         }
+                        case "Attack": {
+                            playSoundEffect('attack');
+                            animateAttackToCenter(cardElement, 800)
+                                .finished.then(() => {
+                                // 1) Log locally and broadcast to room
+                                addGameLogEntry(`${cardData.name} declared an attack.`);
+                                socket.emit('attack_event', { gameId, cardId: cardData.id });
+                                });
+                            break;
+                        }
+                        case "Block": {
+                            playSoundEffect('block');
+                            const isFaceDown = cardData.boardState === 'FaceDownZone';
+                            animateBlock(cardElement, isFaceDown)
+                                .then(() => {
+                                addGameLogEntry(`${cardData.name} was declared as a blocker.`);
+                                socket.emit('block_event', { gameId, cardId: cardData.id, isFaceDown });
+                                });
+                            break;
+                        }
+                        case "Add 1 Counter": {
+                            playSoundEffect('tomb');
 
-                        // Only intercept clicks on cards; modal buttons will still receive events
-                        const clickHandler = ev => {
-                            const tgt = ev.target.closest(".card");
-                            if (!tgt) return;
-                            ev.stopPropagation();
-                            ev.preventDefault();
-                            const tgtId = tgt.dataset.cardId;
-                            const name = tgt.dataset.cardName || tgt.querySelector(".card-name")?.innerText || `#${tgtId}`;
-                            showModal(
-                            `Attach "${cardData.name}" to "${name}"?`,
-                            () => {
-                                socket.emit('attach_card', { gameId, sourceId: cardData.id, targetId: tgtId, color });
-                                // now update this card’s menu text:
-                                const menuBtn = document.querySelector(
-                                    `.card[data-card-id="${cardData.id}"] .hover-menu button[ data-action="Attach / Mount" ]`
+                            const cardId = cardData.id;
+                            const info = findCardOwnerAndZone(cardId);
+                            if (!info) break;
+                            const { owner, zoneName } = info;
+
+                            const zone = gameState[owner][zoneName];
+                            const cardIndex = zone.findIndex(c => String(c.id) === String(cardId));
+
+                            let card = cardData;
+                            if (cardIndex !== -1) {
+                                card = zone[cardIndex];
+                                card.counters = (card.counters || 0) + 1;
+                            }
+
+                            updateCounterOverlay(cardElement, card);
+                            const name = card.name || `Card ${card.id}`;
+                            addGameLogEntry(`${name} gains 1 counter (now ${card.counters}).`);
+
+                            zone[cardIndex] = card; // make sure the updated card is in the zone array
+                            await sendZoneSpecificUpdate({ owner, zone: zoneName, cards: zone });
+                            break;
+                        }
+                        case "Add 5 Counters": {
+                            playSoundEffect('tomb');
+
+                            const cardId = cardData.id;
+                            const info = findCardOwnerAndZone(cardId);
+                            if (!info) break;
+                            const { owner, zoneName } = info;
+
+                            const zone = gameState[owner][zoneName];
+                            const cardIndex = zone.findIndex(c => String(c.id) === String(cardId));
+
+                            let card = cardData;
+                            if (cardIndex !== -1) {
+                                card = zone[cardIndex];
+                                card.counters = (card.counters || 0) + 5;
+                            }
+
+                            updateCounterOverlay(cardElement, card);
+                            const name = card.name || `Card ${card.id}`;
+                            addGameLogEntry(`${name} gains 5 counters (now ${card.counters}).`);
+
+                            zone[cardIndex] = card; // make sure the updated card is in the zone array
+                            await sendZoneSpecificUpdate({ owner, zone: zoneName, cards: zone });
+                            break;
+                        }
+                        case "Remove 1 Counter": {
+                            playSoundEffect('tomb');
+
+                            const cardId = cardData.id;
+                            const info = findCardOwnerAndZone(cardId);
+                            if (!info) break;
+                            const { owner, zoneName } = info;
+
+                            const zone = gameState[owner][zoneName];
+                            const cardIndex = zone.findIndex(c => String(c.id) === String(cardId));
+
+                            let card = cardData;
+                            if (cardIndex !== -1) {
+                                card = zone[cardIndex];
+                                card.counters = Math.max(0, (card.counters || 0) - 1);
+                            }
+
+                            updateCounterOverlay(cardElement, card);
+                            const name = card.name || `Card ${card.id}`;
+                            addGameLogEntry(`${name} loses 1 counter (now ${card.counters}).`);
+
+                            zone[cardIndex] = card; // make sure the updated card is in the zone array
+                            await sendZoneSpecificUpdate({ owner, zone: zoneName, cards: zone });
+                            break;
+                        }
+                        case "Remove All Counters": {
+                            playSoundEffect('tomb');
+
+                            const cardId = cardData.id;
+                            const info = findCardOwnerAndZone(cardId);
+                            if (!info) break;
+                            const { owner, zoneName } = info;
+
+                            const zone = gameState[owner][zoneName];
+                            const cardIndex = zone.findIndex(c => String(c.id) === String(cardId));
+
+                            let card = cardData;
+                            if (cardIndex !== -1) {
+                                card = zone[cardIndex];
+                                card.counters = 0;
+                            }
+
+                            updateCounterOverlay(cardElement, card);
+                            const name = card.name || `Card ${card.id}`;
+                            addGameLogEntry(`${name} loses all counters.`);
+
+                            zone[cardIndex] = card; // make sure the updated card is in the zone array
+                            await sendZoneSpecificUpdate({ owner, zone: zoneName, cards: zone });
+                            break;
+                        }
+                        case "Attach / Mount": {
+                            const colors = ['#e6194b','#3cb44b','#ffe119','#4363d8','#f58231','#911eb4'];
+                            const color = colors[Math.floor(Math.random() * colors.length)];
+                            placeCircle(cardData.id, color);
+
+                            // Create draggable circle for cursor
+                            const drag = document.createElement("div");
+                            drag.className = "attachment-drag";
+                            Object.assign(drag.style, {
+                                position: "fixed",
+                                width: "16px",
+                                height: "16px",
+                                backgroundColor: `${color}`,
+                                border: `2px solid ${color}`,
+                                borderRadius: "50%",
+                                pointerEvents: "none",
+                                zIndex: 300000
+                            });
+                            document.body.appendChild(drag);
+                            document.body.style.cursor = "none";
+
+                            function onMove(e) {
+                                drag.style.top = `${e.clientY - 8}px`;
+                                drag.style.left = `${e.clientX - 8}px`;
+                            }
+                            document.addEventListener("mousemove", onMove);
+
+                            // Modal builder with restored cursor over popup
+                            function showModal(message, onConfirm, onCancel) {
+                                const overlay = document.createElement("div");
+                                Object.assign(overlay.style, {
+                                position: "fixed",
+                                top: 0,
+                                left: 0,
+                                width: "100%",
+                                height: "100%",
+                                background: "rgba(0,0,0,0.5)",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                zIndex: 400000,
+                                cursor: "auto"  // show cursor over overlay
+                                });
+                                const box = document.createElement("div");
+                                Object.assign(box.style, {
+                                background: "#fff",
+                                padding: "20px",
+                                borderRadius: "8px",
+                                textAlign: "center",
+                                maxWidth: "300px",
+                                cursor: "auto"  // ensure cursor is visible on modal
+                                });
+                                const msg = document.createElement("p");
+                                msg.textContent = message;
+                                const btnConfirm = document.createElement("button");
+                                btnConfirm.textContent = "Confirm";
+                                const btnCancel = document.createElement("button");
+                                btnCancel.textContent = "Cancel";
+                                btnConfirm.style.margin = btnCancel.style.margin = "8px";
+                                box.append(msg, btnConfirm, btnCancel);
+                                overlay.appendChild(box);
+                                document.body.appendChild(overlay);
+
+                                btnConfirm.addEventListener("click", () => {
+                                onConfirm();
+                                cleanup();
+                                });
+                                btnCancel.addEventListener("click", () => {
+                                onCancel();
+                                cleanup();
+                                });
+
+                                function cleanup() {
+                                overlay.remove();
+                                document.removeEventListener("click", clickHandler, true);
+                                document.removeEventListener("mousemove", onMove);
+                                drag.remove();
+                                document.body.style.cursor = "";
+                                }
+                            }
+
+                            // Only intercept clicks on cards; modal buttons will still receive events
+                            const clickHandler = ev => {
+                                const tgt = ev.target.closest(".card");
+                                if (!tgt) return;
+                                ev.stopPropagation();
+                                ev.preventDefault();
+                                const tgtId = tgt.dataset.cardId;
+                                const name = tgt.dataset.cardName || tgt.querySelector(".card-name")?.innerText || `#${tgtId}`;
+                                showModal(
+                                `Attach "${cardData.name}" to "${name}"?`,
+                                () => {
+                                    socket.emit('attach_card', { gameId, sourceId: cardData.id, targetId: tgtId, color });
+                                    // now update this card’s menu text:
+                                    const menuBtn = document.querySelector(
+                                        `.card[data-card-id="${cardData.id}"] .hover-menu button[ data-action="Attach / Mount" ]`
+                                    );
+                                    if (menuBtn) menuBtn.textContent = 'Remove Attachment';
+                                },
+                                () => { /* cancel: allow re-pick */ }
                                 );
-                                if (menuBtn) menuBtn.textContent = 'Remove Attachment';
-                            },
-                            () => { /* cancel: allow re-pick */ }
-                            );
-                        };
+                            };
 
-                        document.addEventListener("click", clickHandler, true);
-                    } break;
-                    case "Remove Attachment": {
-                        // find your attachment
-                        const att = attachments.find(a=>a.sourceId==cardData.id);
-                        if (!att) break;
-                        const { targetId, color } = att;
-                        socket.emit('remove_attachment', { gameId, sourceId:cardData.id, targetId, color });
-                        // swap menu entry back
-                        text = "Attach / Mount";
-                    } break;
-                    case "Remove": {
-                        playSoundEffect('tomb');
-                        /* remove the Token from its current zone and refresh that zone */
+                            document.addEventListener("click", clickHandler, true);
+                        } break;
+                        case "Remove Attachment": {
+                            // find your attachment
+                            const att = attachments.find(a=>a.sourceId==cardData.id);
+                            if (!att) break;
+                            const { targetId, color } = att;
+                            socket.emit('remove_attachment', { gameId, sourceId:cardData.id, targetId, color });
+                            // swap menu entry back
+                            text = "Attach / Mount";
+                        } break;
+                        case "Remove": {
+                            playSoundEffect('tomb');
+                            /* remove the Token from its current zone and refresh that zone */
 
-                        const zoneArr = gameState[username][zone] || [];
-                        const idx     = zoneArr.findIndex(c => String(c.id) === String(cardData.id));
-                        if (idx > -1) zoneArr.splice(idx, 1);        // take it out of state
+                            const zoneArr = gameState[username][zone] || [];
+                            const idx     = zoneArr.findIndex(c => String(c.id) === String(cardData.id));
+                            if (idx > -1) zoneArr.splice(idx, 1);        // take it out of state
 
-                        /* map the zone name to its DOM box so we can re-render it */
-                        const boxId = {
-                            "Hand":                   "drawn-cards",
-                            "Zone (Champion)":        "playerChampionsBox",
-                            "Zone (Arsenal)":         "playerArsenalBox",
-                            "Reserve":                "playerReserveBox",
-                            "FaceDownZone":           "playerFaceDownBox",
-                            "FaceDownArsenalZone":    "playerFaceDownArsenalBox",
-                            "Tomb":                   "playerTombBox",
-                            "Void":                   "playerVoidBox"
-                        }[zone];
+                            /* map the zone name to its DOM box so we can re-render it */
+                            const boxId = {
+                                "Hand":                   "drawn-cards",
+                                "Zone (Champion)":        "playerChampionsBox",
+                                "Zone (Arsenal)":         "playerArsenalBox",
+                                "Reserve":                "playerReserveBox",
+                                "FaceDownZone":           "playerFaceDownBox",
+                                "FaceDownArsenalZone":    "playerFaceDownArsenalBox",
+                                "Tomb":                   "playerTombBox",
+                                "Void":                   "playerVoidBox"
+                            }[zone];
 
-                        /* tell the server, then update the UI */
-                        await sendZoneUpdate([zone]);
-                        if (boxId) renderCardZone(zoneArr, boxId);
+                            /* tell the server, then update the UI */
+                            await sendZoneUpdate([zone]);
+                            if (boxId) renderCardZone(zoneArr, boxId);
 
-                        addGameLogEntry(`${cardData.name} was removed from ${zone}.`);
-                        break;
+                            addGameLogEntry(`${cardData.name} was removed from ${zone}.`);
+                            break;
+                        }
+                        default:
+                            console.warn("Unhandled action:", text);
                     }
-                    default:
-                        console.warn("Unhandled action:", text);
-                }
+                    });
+                    btn.addEventListener("mouseenter", () => btn.style.background = "#333");
+                    btn.addEventListener("mouseleave", () => btn.style.background = "transparent");
+                    hoverMenu.appendChild(btn);
                 });
-                btn.addEventListener("mouseenter", () => btn.style.background = "#333");
-                btn.addEventListener("mouseleave", () => btn.style.background = "transparent");
-                hoverMenu.appendChild(btn);
-            });
 
-            cardElement.appendChild(hoverMenu);
+                cardElement.appendChild(hoverMenu);
 
-            Object.assign(hoverMenu.style, {
-                transform:  isFaceDown
-                    ? "translateX(10px) translateY(-50%) rotate(90deg)"
-                    : "translate(-50%, 10px)",
-                opacity:    "0",
-                transition: "transform 150ms ease, opacity 150ms ease"
-            });
+                Object.assign(hoverMenu.style, {
+                    transform:  isFaceDown
+                        ? "translateX(10px) translateY(-50%) rotate(90deg)"
+                        : "translate(-50%, 10px)",
+                    opacity:    "0",
+                    transition: "transform 150ms ease, opacity 150ms ease"
+                });
 
-            let hideTimer;
-
-            function showMenu() {
-                clearTimeout(hideTimer);
-                cardElement.style.zIndex = "120000";
-                cardElement.style.outline = "4px solid yellow";
-                if (zone === "Zone (Champion)" || zone === "Deck") {
-                    hoverMenu.style.display = "grid";
-                }
-                else {
-                    hoverMenu.style.display = "flex";
-                }
-
-                if (isFaceDown) {
-                    // do your preview here
-                    const real = cards.find(c => String(c.id) === String(cardData.id));
-                    if (real) {
-                        const scaled = document.querySelector("#viewing-window .scaled-card");
-                        scaled.innerHTML = "";
-                        const preview = renderCard(real);
-                        Object.assign(preview.style,{
-                            width:"240px", height:"420px", transform:"scale(1.2)",
-                            marginLeft:"-15%", marginTop:"7%"
-                        });
-                        scaled.appendChild(preview);
-                    }
-                }
-
-                // force initial state
-                void hoverMenu.offsetWidth;
-                if (isFaceDown) {
-                    hoverMenu.style.transform = "translateX(0) translateY(-50%) rotate(90deg)";
-                    hoverMenu.style.opacity   = "1";
-                } else {
-                    hoverMenu.style.transform = "translate(-50%, 0)";
-                    hoverMenu.style.opacity   = "1";
-                }
+                // 6) event wiring
+                hoverMenu.addEventListener("mouseenter", () => clearTimeout(hideTimer));
+                hoverMenu.addEventListener("mouseleave", () => hideTimer = setTimeout(hideMenu, 150));
             }
-
-            // 5) hide menu
-            function hideMenu() {
-                if (isFaceDown) {
-                    hoverMenu.style.transform = "translateX(-10px) translateY(-50%) rotate(90deg)";
-                } else {
-                    hoverMenu.style.transform = "translate(-50%, 10px)";
-                }
-                hoverMenu.style.opacity = "0";
-                setTimeout(() => {
-                    hoverMenu.style.display   = "none";
-                    cardElement.style.zIndex  = "";
-                    cardElement.style.outline = "";
-                }, 150);
-            }
-
-            // 6) event wiring
-            hoverMenu.addEventListener("mouseenter", () => clearTimeout(hideTimer));
-            hoverMenu.addEventListener("mouseleave", () => hideTimer = setTimeout(hideMenu, 150));
         }
 
         function applyHoverMenus() {
@@ -6477,6 +6491,7 @@ html, body {
         overlay.addEventListener('click', e => {
             e.stopPropagation();
             socket.emit('toggle_target', { gameId, cardId: cardData.id });
+            flashTargetRing(cardData.id);
         });
 
         el.appendChild(overlay);
