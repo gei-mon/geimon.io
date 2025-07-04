@@ -6222,9 +6222,11 @@ html, body {
             if (!cardsArray || cardsArray.length === 0) return;
 
             const faceUpBoxes = new Set([
-            "playerChampionsBox",
-            "playerArsenalBox",
-            "playerReserveBox"
+                "playerChampionsBox",
+                "playerArsenalBox",
+                "playerReserveBox",
+                "opponentFaceDownBox",
+                "opponentFaceDownArsenalBox"
             ]);
 
             let ordered;
@@ -6271,7 +6273,7 @@ html, body {
                         marginLeft:"-33.8%", marginTop:"-16px",
                         width:"260px", height:"400px",
                         transform:"scale(0.3)", transformOrigin:"top center",
-                        pointerEvents:"auto", cursor:"pointer"
+                        pointerEvents:"auto", cursor:"default"
                     });
 
                     const sleeve = isOppSide
@@ -6297,6 +6299,9 @@ html, body {
                         border:"none", background:"transparent", opacity:"0",
                         cursor:"pointer", pointerEvents:"auto", zIndex:100100
                     });
+                    if (containerId === "playerFaceDownArsenalBox") {
+                        btn.style.top = "-400px";
+                    }
                     wrap.appendChild(btn);
                     if (typeof wrapCardButton === "function") wrapCardButton(btn, containerId);
 
@@ -6377,17 +6382,17 @@ html, body {
                     /* player’s own face-down cards still preview on hover */
                     if (!isOppSide) {
                         btn.addEventListener("mouseenter", () => {
-                        const real = cards.find(c => String(c.id) === String(cardData.id));
-                        if (!real) return;
-                        const scaled = document.querySelector("#viewing-window .scaled-card");
-                        if (!scaled) return;
-                        scaled.innerHTML = "";
-                        const preview = renderCard(real);
-                        Object.assign(preview.style,{
-                            width:"240px", height:"420px", transform:"scale(1.2)",
-                            marginLeft:"-15%", marginTop:"7%"
-                        });
-                        scaled.appendChild(preview);
+                            const real = cards.find(c => String(c.id) === String(cardData.id));
+                            if (!real) return;
+                                const scaled = document.querySelector("#viewing-window .scaled-card");
+                            if (!scaled) return;
+                            scaled.innerHTML = "";
+                            const preview = renderCard(real);
+                            Object.assign(preview.style,{
+                                width:"240px", height:"420px", transform:"scale(1.2)",
+                                marginLeft:"-15%", marginTop:"7%"
+                            });
+                            scaled.appendChild(preview);
                         });
                     }
                     wrap.appendChild(btn);
