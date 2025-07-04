@@ -6221,12 +6221,27 @@ html, body {
             container.innerHTML = "";            // wipe old cards
             if (!cardsArray || cardsArray.length === 0) return;
 
-            /* keep the nice ‘snake’ ordering you already had */
-            const half    = Math.floor(cardsArray.length / 2);
-            const ordered = [];
-            for (let i = 0; i < cardsArray.length; i++) {
-                const offset = i % 2 === 0 ? i / 2 : -(Math.ceil(i / 2));
-                ordered.push(cardsArray[half + offset] || cardsArray[half - offset]);
+            const faceUpBoxes = new Set([
+            "playerChampionsBox",
+            "playerArsenalBox",
+            "playerReserveBox"
+            ]);
+
+            let ordered;
+            if (faceUpBoxes.has(containerId)) {
+                ordered = cardsArray.slice();
+            } else {
+                const half    = Math.floor(cardsArray.length / 2);
+                ordered = [];
+                for (let i = 0; i < cardsArray.length; i++) {
+                    const offset = i % 2 === 0
+                    ?   i / 2
+                    :  -Math.ceil(i / 2);
+                    ordered.push(
+                        cardsArray[half + offset] ||
+                        cardsArray[half - offset]
+                    );
+                }
             }
 
             /* fetch the player’s sleeve once (opponent sleeve comes from their deck-box) */
