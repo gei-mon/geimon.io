@@ -438,5 +438,43 @@ export const tokens = [
         effect1name: "",
       }
     ]
+},
+{
+    id: "9024",
+    name: "Windmill Token",
+    image: `${tokenArtFolder}/Windmill.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Token"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: "Deathward <br><br> Knights who declare attacks must attack this Token. You, and this Token, take no battle Damage from Knights involving this Token. You can block with this Token only against Knights, but you can do so with no limit.",
+        keywords: ["Deathward"],
+        effect1name: "",
+      }
+    ]
+},
+{
+    id: "9025",
+    name: "Frog Token",
+    image: `${tokenArtFolder}/Frog.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Token"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: "Taunt",
+        keywords: ["Taunt"],
+        effect1name: "",
+      }
+    ]
 }
 ];

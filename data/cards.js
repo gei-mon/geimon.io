@@ -3971,7 +3971,7 @@ export const cards = [
     rarity: "Legendary",
     type: "Champion",
     condition: "",
-    cost: "Your Opponent draws 3",
+    cost: "Your Opponent draws 2",
     tags: ["Noble", "Protector","Knight"],
     damage: 5,
     life: 5,
@@ -4305,7 +4305,7 @@ export const cards = [
     tags: ["Noble", "Protector","Knight"],
     damage: 4,
     life: 4,
-    damageThreshold: "4",
+    damageThreshold: "2",
     abilities: [
       {
         text: `Deathward, Defender, Menace <span class="line-gap"></span> On Rally: Attach 1 Equipment to this card from your Hand, Reserve, or Tomb (ignoring its cost). <span class="line-gap"></span> If Destroyed: Add 1 Knight, and if you do, Add or Retrieve 1 Equipment.`,
@@ -6618,7 +6618,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Deathtouch, Duelist, Priority, Solitary <span class="line-gap"></span> Deadly Strike (Flip): Target 1 card on the Zone; Destroy Target.  <span class="line-gap"></span> Smoke Bomb (Reflex): Flip this card face-down. <span class="line-gap"></span> If this card is in your Tomb: Discard 1 Champion with a Flip effect; Retrieve this card.`,
+        text: `Deathtouch, Duelist, Priority, Solitary <span class="line-gap"></span> Deadly Strike (Flip): Target 1 card on the Zone; Destroy Target. <span class="line-gap"></span> Smoke Bomb (Reflex): Flip this card face-down. <span class="line-gap"></span> If this card is in your Tomb: Discard 1 Champion with a Flip effect; Retrieve this card.`,
         keywords: ["Deathtouch","Duelist","Priority","Solitary"],
         effect1name: "Deadly Strike",
         effect2name: "Smoke Bomb",
@@ -6640,7 +6640,7 @@ export const cards = [
     damageThreshold: "4",
     abilities: [
       {
-        text: `Lifetouch, Priority <span class="line-gap"></span> If a Champion increases to 10 or more Life by the effect of this card's Lifetouch: Destroy it. <span class="line-gap"></span> Radiant Burst (Reflex): Move this card to your Reserve. <span class="line-gap"></span> If this card is in your Reserve: Obliterate 1 Champion with a Flip effect from either your Hand or face-up Zone; Add this card to your Hand.`,
+        text: `Lifetouch, Priority <span class="line-gap"></span> If a Champion increases to 10 or more Life by the effect of this card's Lifetouch: Destroy it. <span class="line-gap"></span> Radiant Burst (Reflex): Move this card to your Reserve. <span class="line-gap"></span> If this card is in your Reserve: Obliterate 1 Champion with a Flip effect from either your Hand or face-up Zone; Bounce this card.`,
         keywords: ["Lifetouch","Priority"],
         effect1name: "If a Champion increases to 10 or more Life by the effect of this card's",
         effect2name: "Radiant Burst",
@@ -6666,6 +6666,72 @@ export const cards = [
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "304",
+    name: "Green Ninja",
+    image: `${cardArtFolder}/Champions/GreenNinja.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "",
+    tags: ["Nightveil","Ninja"],
+    damage: 2,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Deathward, Invisible <span class="line-gap"></span> From The Bushes (Flip): Target 1 card in either Player's Arsenal; Destroy Target. <span class="line-gap"></span> Smoke Bomb: Flip this card face-down.`,
+        keywords: ["Deathward","Invisible"],
+        effect1name: "From The Bushes",
+        effect2name: "Smoke Bomb",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "305",
+    name: "Blue Ninja",
+    image: `${cardArtFolder}/Champions/BlueNinja.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "",
+    tags: ["Nightveil","Ninja"],
+    damage: 2,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Deathward, Warded <span class="line-gap"></span> From The Docks (Flip): Target 1 face-down Champion; Destroy Target. <span class="line-gap"></span> Smoke Bomb: Flip this card face-down.`,
+        keywords: ["Deathward","Warded"],
+        effect1name: "From The Docks",
+        effect2name: "Smoke Bomb",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "306",
+    name: "Red Ninja",
+    image: `${cardArtFolder}/Champions/RedNinja.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "",
+    tags: ["Nightveil","Ninja"],
+    damage: 2,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Deathward, Unstoppable <span class="line-gap"></span> From The Rooftop (Flip): Target 1 face-up card on the Zone; Destroy Target. <span class="line-gap"></span> Smoke Bomb: Flip this card face-down.`,
+        keywords: ["Deathward","Unstoppable"],
+        effect1name: "From The Rooftop",
+        effect2name: "Smoke Bomb",
         effect3name: "",
       }
     ]
@@ -7089,6 +7155,94 @@ export const cards = [
     ]
   },
   {
+    id: "723",
+    name: "Masterful Battle",
+    image: `${cardArtFolder}/Reflex/MasterfulBattle.png`,
+    rarity: "Rare",
+    type: "Reflex",
+    condition: "You control a \"Master\" Mage",
+    cost: "",
+    tags: ["Reflex"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Deal 3 Damage to all face-up Champions your Opponent controls.",
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "724",
+    name: "Ouroboros, Divination Master",
+    image: `${cardArtFolder}/Champions/OuroborosDivinationMaster.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "",
+    tags: ["Arcanum","Divination","Mage"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Non-Believer, Taunt <span class="line-gap"></span> Portent: Choose 1 Player; Excavate 3 from Player's Deck, and if you do, return the cards in an order of your choice. <span class="line-gap"></span> Almost Had Me! (Reflex): Move this card to the Reserve.`,
+        keywords: ["Taunt","Non-Believer"],
+        effect1name: "Portent",
+        effect2name: "Almost Had Me",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "725",
+    name: "Antwon, Conjuration Master",
+    image: `${cardArtFolder}/Champions/AntwonConjurationMaster.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "",
+    tags: ["Arcanum","Conjuration","Mage"],
+    damage: 1,
+    life: 2,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Menace <span class="line-gap"></span> Behold My Minions!: Rally 1 Frog Token to your Zone.`,
+        keywords: ["Menace"],
+        effect1name: "Behold My Minions",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "726",
+    name: "Elluin, Enchantress",
+    image: `${cardArtFolder}/Champions/ElluinEnchantress.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "",
+    tags: ["Arcanum","Enchantment","Mage"],
+    damage: 3,
+    life: 2,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Reach <span class="line-gap"></span> Yoo Hoo!: Target 1 face-up Champion on the Zone; Target cannot declare an attack or use its effects until the start of your next turn.`,
+        keywords: ["Reach"],
+        effect1name: "Yoo Hoo",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
     id: "781",
     name: "Skaridrex, the Mighty",
     image: `${cardArtFolder}/Champions/Skaridrex.png`,
@@ -7287,6 +7441,28 @@ export const cards = [
     ]
   },
   {
+    id: "790",
+    name: "Arena: Monster Island",
+    image: `${cardArtFolder}/Obelisks/ArenaMonsterIsland.png`,
+    rarity: "Legendary",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `On Activation: Destroy all other face-up "Arena" Obelisks on the Zone. <span class="line-gap"></span> Each time a card(s) is drawn: Place 1 K-Cell Counter on this card for each card drawn (max. 5 per instance). <span class="line-gap"></span> You can remove 2 K-Cell Counters from this card: Destroy all face-up "Arena" Obelisks on the Zone, then activate 1 "Arena" Obelisk from your Hand or Deck (ignoring its cost), and if you do, place 1 K-Cell Counter on that card.`,
+        keywords: ["blank"],
+        effect1name: "On Activation",
+        effect2name: "You can remove 2 K-Cell Counters from this card",
+        effect3name: "Each time a card(s) is drawn",
+      }
+    ]
+  },
+  {
     id: "841",
     name: "Vice, Agent of Deception",
     image: `${cardArtFolder}/Champions/ViceAgentOfDeception.png`,
@@ -7457,6 +7633,226 @@ export const cards = [
         text: `Priority, Warded <span class="line-gap"></span> Divine Smite (Reflex): During damage calculation between this card and another Champion: Discard any number of cards; Increase this card's Damage by 2 per card discarded. If it is battling a Hellfire, then increase the Damage by 3 per discarded card instead.`,
         keywords: ["Priority","Warded"],
         effect1name: "Divine Smite",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "907",
+    name: "Shelby",
+    image: `${cardArtFolder}/Obelisks/Shelby.png`,
+    rarity: "Legendary",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Commander","Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Mount <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted: Increase this card's Commander's Damage and Damage Threshold by 2. <span class="line-gap"></span> If Destroyed: Deal 1 Damage to all face-up Champions on the Zone.`,
+        keywords: ["Mount","Shielded"],
+        effect1name: "Mounted",
+        effect2name: "If Destroyed",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "908",
+    name: "Tall Horse",
+    image: `${cardArtFolder}/Obelisks/TallHorse.png`,
+    rarity: "Common",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Commander","Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Mount <span class="line-gap"></span> Mounted: This card's Commander gains Reach and Taunt.`,
+        keywords: ["Mount","Reach","Taunt"],
+        effect1name: "Mounted",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "909",
+    name: "Taller Horse",
+    image: `${cardArtFolder}/Obelisks/TallerHorse.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Commander","Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Mount <span class="line-gap"></span> Mounted: This card's Commander's Damage increases by 5 when battling a Champion who is also a Commander.`,
+        keywords: ["Mount"],
+        effect1name: "Mounted",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "910",
+    name: "Tallest Horse",
+    image: `${cardArtFolder}/Obelisks/TallestHorse.png`,
+    rarity: "Superior",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Commander","Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Mount <span class="line-gap"></span> Mounted: This card's Commander gains Duelist and Non-Believer.`,
+        keywords: ["Mount","Duelist","Non-Believer"],
+        effect1name: "Mounted",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "911",
+    name: "Small Horse",
+    image: `${cardArtFolder}/Obelisks/SmallHorse.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Commander","Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Mount <span class="line-gap"></span> Mounted: This card's Commander gains Invisible, also reduce this card's Commander's Damage by 2.`,
+        keywords: ["Mount","Invisible"],
+        effect1name: "Mounted",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "912",
+    name: "Jousting Lance",
+    image: `${cardArtFolder}/Equipments/JoustingLance.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `The attached Champion cannot declare an attack unless they are the Commander of an Obelisk. <span class="line-gap"></span> The attached Champion gains Duelist and Priority. <span class="line-gap"></span> If the attached Champion battles another with a lower Damage (not including Tokens): Instead of conducting Damage Calculation, move the other Champion to the Reserve.`,
+        keywords: ["Duelist","Priority"],
+        effect1name: "If the attached Champion battles another with a lower Damage",
+        effect2name: "not including tokens",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "913",
+    name: "Tilted Windmill",
+    image: `${cardArtFolder}/Obelisks/TiltedWindmill.png`,
+    rarity: "Common",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `On Activation: Rally 1 Windmill Token to your Zone. <span class="line-gap"></span> During each of your Intermissions: Destroy all Windmill Tokens you control, then Rally 1 Windmill Token to your Zone.`,
+        keywords: ["blank"],
+        effect1name: "During each of your Intermissions",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "914",
+    name: "Oinkers",
+    image: `${cardArtFolder}/Champions/Oinkers.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Frontier","Livestock"],
+    damage: 3,
+    life: 3,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: "Devourer of Oats: Discard 1; Increase this card's Damage by 2.",
+        keywords: ["blank"],
+        effect1name: "Devourer of Oats",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "915",
+    name: "99 Cows, 1 Bull",
+    image: `${cardArtFolder}/Actions/99Cows1Bull.png`,
+    rarity: "Rare",
+    type: "Action",
+    condition: "You control a Citizen, Livestock, or Token",
+    cost: "",
+    tags: ["Action"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Add 1 Citizen or Livestock.`,
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "916",
+    name: "Bull Rush",
+    image: `${cardArtFolder}/Rush/RideTheBull.png`,
+    rarity: "Rare",
+    type: "Rush",
+    condition: "You control at least 1 Livestock or Token",
+    cost: "Target 1 face-up Champion on the Zone",
+    tags: ["Rush"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Target takes 1 Damage for every Livestock and Token you control.`,
+        keywords: ["blank"],
+        effect1name: "",
         effect2name: "",
         effect3name: "",
       }
