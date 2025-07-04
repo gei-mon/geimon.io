@@ -7801,9 +7801,9 @@ export const cards = [
     condition: "",
     cost: "Basic",
     tags: ["Frontier","Livestock"],
-    damage: 3,
+    damage: 2,
     life: 3,
-    damageThreshold: "3",
+    damageThreshold: "2",
     abilities: [
       {
         text: "Devourer of Oats: Discard 1; Increase this card's Damage by 2.",
