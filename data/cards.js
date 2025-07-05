@@ -1800,7 +1800,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Herd the Herd: Rally 1 Cow Token.",
+        text: "Herd the Herd: Rally 1 Cow Token to your Zone.",
         keywords: ["blank"],
         effect1name: "Herd the Herd",
         effect2name: "",
@@ -7023,6 +7023,28 @@ export const cards = [
     ]
   },
   {
+    id: "374",
+    name: "Summoning Spotlight",
+    image: `${cardArtFolder}/Reflex/SummoningSpotlight.png`,
+    rarity: "Rare",
+    type: "Reflex",
+    condition: "A Champion you control is Destroyed by battle",
+    cost: "",
+    tags: ["Reflex"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Recruit 1 from your Deck with a matching Tag to, and equal or less Damage than, the Destroyed Champion in the Tomb.`,
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
     id: "421",
     name: "Gimme That!",
     image: `${cardArtFolder}/Actions/GimmeThat.png`,
@@ -7799,7 +7821,7 @@ export const cards = [
     rarity: "Rare",
     type: "Champion",
     condition: "",
-    cost: "Basic",
+    cost: "Sacrifice 1",
     tags: ["Frontier","Livestock"],
     damage: 2,
     life: 3,
@@ -7859,6 +7881,226 @@ export const cards = [
     ]
   },
   {
+    id: "917",
+    name: "Barbed Wire",
+    image: `${cardArtFolder}/Obelisks/BarbedWire.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Livestock you control cannot be Targeted for attacks or Destroyed by effects.`,
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "918",
+    name: "Dust-Up Diner",
+    image: `${cardArtFolder}/Obelisks/DustUpDiner.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `The turn Player must enter their Battle Phase on their turn (if possible), and if they do, every face-up Champion they control that can attack must declare an attack.`,
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "919",
+    name: "Hen Rietta",
+    image: `${cardArtFolder}/Champions/HenRietta.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Frontier","Livestock"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: "Prize Layer: Rally 1 Egg Token to your Zone.",
+        keywords: ["blank"],
+        effect1name: "Prize Layer",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "920",
+    name: "Cocky Rooster",
+    image: `${cardArtFolder}/Champions/CockyRooster.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Frontier","Livestock"],
+    damage: 1,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: "Alarm O'Clock: Target 1 face-down Champion on the Zone; Flip Target face-up (negate its Flip effects).",
+        keywords: ["blank"],
+        effect1name: "Alarm O'Clock",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "921",
+    name: "Goaten Ramsey",
+    image: `${cardArtFolder}/Champions/GoatenRamsey.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Frontier","Livestock"],
+    damage: 3,
+    life: 2,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: "Headbutt!: If this card battles another Champion (after Damage Calculation): Target 1 face-up Equipment or Obelisk on the Zone; Destroy Target.",
+        keywords: ["blank"],
+        effect1name: "Headbutt",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "922",
+    name: "Bessy",
+    image: `${cardArtFolder}/Champions/Bessy.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Frontier","Livestock"],
+    damage: 0,
+    life: 2,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: "Milk the Cow... Now: Target 1 Champion on the Zone; Target cannot block this turn.",
+        keywords: ["blank"],
+        effect1name: "Milk the Cow",
+        effect2name: "Now",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "923",
+    name: "Animal Magnetism",
+    image: `${cardArtFolder}/Actions/AnimalMagnetism.png`,
+    rarity: "Rare",
+    type: "Action",
+    condition: "",
+    cost: "Target 1 Livestock you control",
+    tags: ["Action"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Rally 1 Echo Token of Target to your Zone.`,
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "924",
+    name: "Processing Facility",
+    image: `${cardArtFolder}/Obelisks/ProcessingFacility.png`,
+    rarity: "Common",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Obliterate 1 Livestock from your Tomb; Draw 1.`,
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "925",
+    name: "Plowey McPlowerson",
+    image: `${cardArtFolder}/Equipments/PloweyMcPlowerson.png`,
+    rarity: "Superior",
+    type: "Equipment",
+    condition: "Attach only to a Livestock",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Target 1 card in your Arsenal; Destroy Target, and if you do, set face-down into your Arsenal another of card of the same type from your Deck.",
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "926",
+    name: "Barnaby Barn Cat",
+    image: `${cardArtFolder}/Champions/BarnabyBarnCat.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Sacrifice 1",
+    tags: ["Frontier","Livestock","Protector"],
+    damage: 3,
+    life: 3,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Bloodrage, Taskmaster <span class="line-gap"></span> Pest Control (Exhaustion): Target 1 face-up Champion on the Zone with 1 or less Damage; Destroy Target.`,
+        keywords: ["Bloodrage","Taskmaster"],
+        effect1name: "Pest Control",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
     id: "961",
     name: "Cinder, Heavy Metal Bard",
     image: `${cardArtFolder}/Champions/CinderHeavyMetalBard.png`,
@@ -7898,6 +8140,72 @@ export const cards = [
         keywords: ["Priority","Veilbind"],
         effect1name: "On Rally",
         effect2name: "Pactbound",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "1142",
+    name: "Sharkuterie",
+    image: `${cardArtFolder}/Champions/Sharkuterie.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Driftmarked","Trickster"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Chomp (Flip): Move this card to your Arsenal and Target 1 card on the Zone; Target's effects are negated, and Target cannot attack, block, be activated, or activate any of its effects, so long as this card remains face-up in your Arsenal. If flipped face-up by battle: Instead of being Destroyed, move this card to your Arsenal.`,
+        keywords: ["blank"],
+        effect1name: "Chomp",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "1143",
+    name: "Card Shark",
+    image: `${cardArtFolder}/Champions/CardShark.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Discard 1",
+    tags: ["Driftmarked","Outlaw"],
+    damage: 1,
+    life: 3,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `Blood in the Water: Increase this card's Damage by 1 for every face-up Champion on the Zone whose current Life is lower than their starting Life.`,
+        keywords: ["blank"],
+        effect1name: "Blood in the Water",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "1144",
+    name: "Pool Shark",
+    image: `${cardArtFolder}/Champions/PoolShark.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Driftmarked","Megalith"],
+    damage: 7,
+    life: 3,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `This card cannot declare attacks.`,
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
         effect3name: "",
       }
     ]
