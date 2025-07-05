@@ -490,7 +490,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Breakfast of Champions: Sacrifice this card and Target 1 Champion; Target gains 1 Life.",
+        text: "Breakfast of Champions: Sacrifice this card and Target 1 face-up Champion on the Zone; Target gains 1 Life.",
         keywords: ["blank"],
         effect1name: "",
       }
