@@ -1334,7 +1334,7 @@ export const cards = [
     cost: "Basic",
     tags: ["Frontier", "Citizen"],
     damage: 2,
-    life: 3,
+    life: 1,
     damageThreshold: "1",
     abilities: [
       {
@@ -4105,7 +4105,7 @@ export const cards = [
     condition: "You have at least 1 Knight in your Tomb",
     cost: "Basic",
     tags: ["Noble", "Undead","Knight"],
-    damage: 6,
+    damage: 3,
     life: 6,
     damageThreshold: "3",
     abilities: [
@@ -4462,8 +4462,8 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Forged <br><span class="line-gap"></span> If this card has at least 1 attached Equipment: This card gains Warded. <span class="line-gap"></span> If this card has at least 2 attached Equipments: This card gains Priority. <span class="line-gap"></span> If this card has at least 3 attached Equipments: This card gains Bulletproof.`,
-        keywords: ["Forged","Warded","Priority","Bulletproof"],
+        text: `Forged <br><span class="line-gap"></span> If this card has at least 1 attached Equipment: This card gains Warded. <span class="line-gap"></span> If this card has at least 2 attached Equipments: This card gains Priority. <span class="line-gap"></span> If this card has at least 3 attached Equipments: This card gains Bulletproof and Duelist.`,
+        keywords: ["Forged","Warded","Priority","Bulletproof","Duelist"],
         effect1name: "If this card has at least 1 attached Equipment",
         effect2name: "If this card has at least 2 attached Equipments",
         effect3name: "If this card has at least 3 attached Equipments",
@@ -6742,16 +6742,16 @@ export const cards = [
     image: `${cardArtFolder}/Champions/Silveredge.png`,
     rarity: "Legendary",
     type: "Champion",
-    condition: "Reflex: This card is in your Hand, Reserve, Tomb, or Void and a Champion you control is Destroyed",
+    condition: "Reflex: This card is in your Hand, Reserve, or Tomb and a Champion you control is Destroyed",
     cost: "Your Opponent Gains 4 Life",
     tags: ["Valiant","Protector","Centurion","Hero"],
-    damage: 3,
+    damage: 2,
     life: 8,
-    damageThreshold: "4",
+    damageThreshold: "2",
     abilities: [
       {
-        text: `Defender, Warded <span class="line-gap"></span> Moonlight Barrier (Reflex): If a card(s) on the Zone would be Destroyed: Offer 1 Life from this card; They are not Destroyed. <span class="line-gap"></span> Cosmic Crashdown: If this card is Resurrected or Unleashed: Deal 3 Damage to all face-up Champions your Opponent controls.`,
-        keywords: ["Defender","Warded"],
+        text: `Defender <span class="line-gap"></span> Moonlight Barrier (Reflex): If a card(s) on the Zone that you control would be Destroyed (Mandatory): Offer 2 Life from this card; They are not Destroyed. <span class="line-gap"></span> Cosmic Crashdown: If this card is Resurrected or Unleashed: Deal 2 Damage to all face-up Champions your Opponent controls.`,
+        keywords: ["Defender"],
         effect1name: "Moonlight Barrier",
         effect2name: "",
         effect3name: "Cosmic Crashdown",
@@ -6765,14 +6765,14 @@ export const cards = [
     rarity: "Legendary",
     type: "Champion",
     condition: "Reflex: This card is in your Hand or Reserve and an attack is declared against you",
-    cost: "All face-up Champions take 1 Damage",
+    cost: "All face-up Champions take 2 Damage",
     tags: ["Valiant","Protector","Centurion","Hero"],
-    damage: 9,
-    life: 3,
-    damageThreshold: "3",
+    damage: 8,
+    life: 2,
+    damageThreshold: "2",
     abilities: [
       {
-        text: `Defender, Duelist, Priority <span class="line-gap"></span> On Rally: Retrieve 1 Hero. <span class="line-gap"></span> Sunlight Blast (Reflex): If a card is Targeted by an effect: Target 1 face-up Champion; Destroy Target. <span class="line-gap"></span> Solar Blitz (Exhaustion): Deal 2 Damage to all face-up Champions your Opponent controls.`,
+        text: `Defender, Duelist, Priority <span class="line-gap"></span> On Rally: Retrieve 1 Hero. <span class="line-gap"></span> Sunlight Blast (Reflex): If a card is Targeted by an Opponent's card effect: Target 1 face-up Champion; Destroy Target. <span class="line-gap"></span> Solar Blitz (Exhaustion): Deal 2 Damage to all face-up Champions your Opponent controls.`,
         keywords: ["Defender","Duelist","Priority"],
         effect1name: "Sunlight Blast",
         effect2name: "Solar Blitz",
@@ -6789,7 +6789,7 @@ export const cards = [
     condition: "You have at least 1 Hero in your Tomb",
     cost: "Discard 1",
     tags: ["Valiant","Protector","Hero"],
-    damage: 5,
+    damage: 3,
     life: 5,
     damageThreshold: "2",
     abilities: [
@@ -6831,14 +6831,14 @@ export const cards = [
     rarity: "Legendary",
     type: "Champion",
     condition: "Reflex: A Champion effect is activated",
-    cost: "Discard 3",
+    cost: "Discard 2",
     tags: ["Valiant","Protector","Centurion","Hero"],
-    damage: 3,
-    life: 3,
-    damageThreshold: "3",
+    damage: 2,
+    life: 2,
+    damageThreshold: "2",
     abilities: [
       {
-        text: `Forged, Taskmaster <br> On Rally: Excavate 3, add 1 revealed. <span class="line-gap"></span> Rapid Creation (Reflex): If a card is Targeted by an attack or effect: Excavate 5, activate 1 revealed Equipment or Obelisk (ignoring its cost). <span class="line-gap"></span> Toys for Everyone! (Exhaustion): Attach 1 Equipment to another Champion you control from your Hand or Deck (ignoring its cost).`,
+        text: `Forged, Taskmaster <span class="line-gap"></span> On Rally: Excavate 2, add 1 revealed and obliterate the other. <span class="line-gap"></span> Rapid Creation (Reflex): If this card is Targeted: Excavate 5, activate 1 revealed Equipment or Obelisk (ignoring its cost). <span class="line-gap"></span> Toys for Everyone! (Exhaustion): Attach 1 Equipment to another Champion you control from your Hand or Deck (ignoring its cost).`,
         keywords: ["Taskmaster","Forged"],
         effect1name: "Rapid Creation",
         effect2name: "Toys for Everyone",
@@ -6904,7 +6904,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Bloodrage, Duelist, Priority <span class="line-gap"></span> On Rally: Target 1 Champion on the Zone; Target takes 3 Damage. <span class="line-gap"></span> Weakening Strike: Champions Damaged by this card in battle can no longer block.`,
+        text: `Bloodrage, Duelist, Priority <span class="line-gap"></span> On Rally: Target 1 face-up Champion on the Zone; Target takes 3 Damage. <span class="line-gap"></span> Weakening Strike: Champions Damaged by this card in battle can no longer block.`,
         keywords: ["Bloodrage","Priority","Duelist"],
         effect1name: "On Rally",
         effect2name: "Weakening Strike",
@@ -6970,8 +6970,8 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Bulletproof, Duelist, Priority <span class="line-gap"></span> Copycat (Reflex): Target 1 face-up Champion on the Zone: Until that Champion leaves the Zone, or this ability is used again, this card's Damage, Life, and Damage Threshold become equal to the Target's at the time of activation. <span class="line-gap"></span> If this card leaves the Zone: Recruit 1 "Apex" Champion.`,
-        keywords: ["Bulletproof","Duelist","Priority"],
+        text: `Duelist, Priority <span class="line-gap"></span> Copycat (Reflex): Target 1 face-up Champion on the Zone: Until that Champion leaves the Zone, or this ability is used again, this card's Damage, Life, and Damage Threshold become equal to the Target's at the time of activation. <span class="line-gap"></span> If this card leaves the Zone: Recruit 1 "Apex" Champion.`,
+        keywords: ["Duelist","Priority"],
         effect1name: "Copycat",
         effect2name: "If this card leaves the Zone",
         effect3name: "",
@@ -7046,15 +7046,15 @@ export const cards = [
   },
   {
     id: "375",
-    name: "Veilwalker",
+    name: "Veilwalker, Fallen And Returned",
     image: `${cardArtFolder}/Champions/Veilwalker.png`,
     rarity: "Superior",
     type: "Champion",
     condition: "",
     cost: "",
     tags: ["Valiant","Undead","Hero"],
-    damage: 2,
-    life: 5,
+    damage: 0,
+    life: 1,
     damageThreshold: "1",
     abilities: [
       {
