@@ -7380,7 +7380,7 @@ export const cards = [
     image: `${cardArtFolder}/Champions/GalandrelAbjurationMaster.png`,
     rarity: "Rare",
     type: "Champion",
-    condition: "Reflex: A Champion you control was Damaged or Destroyed",
+    condition: "Reflex: A Champion you control is Damaged or Destroyed",
     cost: "Basic",
     tags: ["Arcanum","Abjuration","Mage"],
     damage: 0,
