@@ -8290,9 +8290,9 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `This card cannot declare attacks.`,
+        text: `Poolbound: This card cannot declare attacks.`,
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "Poolbound",
         effect2name: "",
         effect3name: "",
       }
