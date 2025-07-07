@@ -7608,7 +7608,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Reach, Taunt <span class="line-gap"></span> On Rally (Mandatory): Obliterate Mill 2. <span class="line-gap"></span> Lightning Rider: If this card is Targeted by an attack or effect: You can remove 1 K-Cell Counter from anywhere on the Zone; Negate the triggering effect, and if you do, Obliterate that card and this card.`,
+        text: `Reach, Taunt <span class="line-gap"></span> On Rally (Mandatory): Obliterate Mill 2. <span class="line-gap"></span> Lightning Rider: If this card is Targeted by an attack or effect: You can remove 1 K-Cell Counter from anywhere on the Zone; Negate the triggering attack or effect, and if you do, Obliterate that triggering card and this card.`,
         keywords: ["Reach","Taunt"],
         effect1name: "On Rally",
         effect2name: "Lightning Rider",
@@ -7674,8 +7674,8 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Duelist <span class="line-gap"></span> Kaiju-Crusher: Kaiju deal no battle Damage to this card, and you take no battle Damage from battles involving this card and an Kaiju. Additionally, this card deals double battle Damage to Kaiju. <span class="line-gap"></span> Each time this card Destroys a Kaiju by battle: Add 1 K-Cell Counter to this card.`,
-        keywords: ["Duelist"],
+        text: `Duelist, Priority <span class="line-gap"></span> Kaiju-Crusher: Kaiju deal no battle Damage to this card, and you take no battle Damage from battles involving this card and an Kaiju. Additionally, this card deals double battle Damage to Kaiju. <span class="line-gap"></span> Each time this card Destroys a Kaiju by battle: Add 1 K-Cell Counter to this card.`,
+        keywords: ["Duelist","Priority"],
         effect1name: "Kaiju-Crusher",
         effect2name: "",
         effect3name: "Each time this card Destroys a Kaiju by battle",
