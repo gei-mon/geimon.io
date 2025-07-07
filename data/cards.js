@@ -653,7 +653,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Deathward <br><br> On Rally (Mandatory): Target 1 Champion; Target takes 2 Damage.",
+        text: "Deathward <br><br> On Rally (Mandatory): Target 1 face-up Champion; Target takes 2 Damage.",
         keywords: ["Deathward"],
         effect1name: "On Rally",
         effect2name: "",
@@ -1426,7 +1426,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "This card gains 6 Bullet Counters. Increase the attached Champion's Damage by 1 per Bullet Counter this card has. <br><br> After each time the attached Champion battles: Remove 1 Bullet Counter from this card. <br><br> If this card has no Bullet Counters (Reflex): Destroy this card; Deal 6 Damage to 1 Champion or Player of your choice.",
+        text: `<span class="line-gap"></span> This card gains 6 Bullet Counters. Increase the attached Champion's Damage by 1 per Bullet Counter this card has. <span class="line-gap"></span> After each time the attached Champion battles: Remove 1 Bullet Counter from this card. <span class="line-gap"></span> If this card has no Bullet Counters (Reflex): Destroy this card; Deal 6 Damage to 1 Champion or Player of your choice.`,
         keywords: ["blank"],
         effect1name: "If this card has no Bullet Counters",
         effect2name: "After each time the attached Champion battles",
@@ -3135,15 +3135,15 @@ export const cards = [
     rarity: "Rare",
     type: "Obelisk",
     condition: "",
-    cost: "Rally 3 Fuel Token to your Opponent's Zone",
+    cost: "Rally 2 Fuel Token to your Opponent's Zone",
     tags: ["Commander","Obelisk"],
     damage: 0,
     life: 0,
     damageThreshold: "",
     abilities: [
       {
-        text: `Maintenance <span class="line-gap"></span> Mount <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted: This card's Commander gains Bulletproof and Priority. <span class="line-gap"></span> Mounted: Discard 1 and Target 1 face-up card on the Zone; Destroy Target.`,
-        keywords: ["Mount","Maintenance","Shielded","Bulletproof","Priority"],
+        text: `Maintenance <span class="line-gap"></span> Mount <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted: This card's Commander gains Priority. <span class="line-gap"></span> Mounted: Discard 1 and Target 1 face-up card on the Zone; Destroy Target.`,
+        keywords: ["Mount","Maintenance","Shielded","Priority"],
         effect1name: "Mounted",
         effect2name: "",
         effect3name: "",
@@ -7045,6 +7045,28 @@ export const cards = [
     ]
   },
   {
+    id: "375",
+    name: "Veilwalker",
+    image: `${cardArtFolder}/Champions/Veilwalker.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "",
+    tags: ["Valiant","Undead","Hero"],
+    damage: 2,
+    life: 5,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Deathtouch <span class="line-gap"></span> If this card battles: Destroy this card after Damage Calculation. <span class="line-gap"></span> If this card is sent to the Tomb: Obliterate this card. <span class="line-gap"></span> If this card is Obliterated: Target 1 other card in your Void; Reclaim Target.`,
+        keywords: ["Deathtouch"],
+        effect1name: "If this card is Obliterated",
+        effect2name: "If this card battles",
+        effect3name: "If this card is sent to the Tomb",
+      }
+    ]
+  },
+  {
     id: "421",
     name: "Gimme That!",
     image: `${cardArtFolder}/Actions/GimmeThat.png`,
@@ -7080,7 +7102,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Depending on the number of unique card types revealed, you can activate the following effects: <span class="line-gap"></span> 1 • Draw 1. <span class="line-gap"></span> 2 • Retrieve 1 non-Champion. <span class="line-gap"></span> 3 • Look at your Opponent's Hand. <span class="line-gap"></span> 4 • Destroy up to 2 cards from your Opponent's Arsenal. <span class="line-gap"></span> 5 • Take control of 1 of your Opponent's Champions. </span><span class="line-gap"></span> 6 • Skip your Opponent's next turn.`,
+        text: `Depending on the number of unique card types revealed, you gain the following effects: <span class="line-gap"></span> 1 • Draw 1. <span class="line-gap"></span> 2 • Retrieve 1 non-Champion. <span class="line-gap"></span> 3 • Look at your Opponent's Hand. <span class="line-gap"></span> 4 • Destroy up to 2 cards from your Opponent's Arsenal. <span class="line-gap"></span> 5 • Take control of 1 of your Opponent's Champions. </span><span class="line-gap"></span> 6 • Skip your Opponent's next turn.`,
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -7512,7 +7534,7 @@ export const cards = [
     image: `${cardArtFolder}/Champions/FieHorsemanOfDeath.png`,
     rarity: "Superior",
     type: "Champion",
-    condition: "You control no Champions",
+    condition: "",
     cost: "",
     tags: ["Hellfire","Nightveil","Trickster","Blademaster"],
     damage: 4,
@@ -7520,8 +7542,8 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Invisible, Unstoppable <span class="line-gap"></span> On Rally: Target 1 face-down Champion on the Zone; Destroy Target. <span class="line-gap"></span> Blend into the Crowd (Reflex): If this card is Targeted: Bounce this card, and if you do, discard 1.`,
-        keywords: ["Invisible","Unstoppable"],
+        text: `Invisible, Solitary, Unstoppable <span class="line-gap"></span> On Rally: Target 1 face-down Champion on the Zone; Destroy Target. <span class="line-gap"></span> Blend into the Crowd (Reflex): If this card is Targeted: Bounce this card, and if you do, discard 1.`,
+        keywords: ["Invisible","Solitary","Unstoppable"],
         effect1name: "On Rally",
         effect2name: "Blend into the Crowd",
         effect3name: "",
@@ -8082,7 +8104,7 @@ export const cards = [
     id: "926",
     name: "Barnaby Barn Cat",
     image: `${cardArtFolder}/Champions/BarnabyBarnCat.png`,
-    rarity: "Rare",
+    rarity: "Superior",
     type: "Champion",
     condition: "",
     cost: "Sacrifice 1",
@@ -8096,6 +8118,72 @@ export const cards = [
         keywords: ["Bloodrage","Taskmaster"],
         effect1name: "Pest Control",
         effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "927",
+    name: "Get Off Your High Horse",
+    image: `${cardArtFolder}/Rush/GetOffYourHighHorse.png`,
+    rarity: "Common",
+    type: "Rush",
+    condition: "",
+    cost: "",
+    tags: ["Rush"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `All Champions who are currently Commanders of Obelisks become dismounted from their Obelisks.`,
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "928",
+    name: "Scales of Judgement",
+    image: `${cardArtFolder}/Reflex/ScalesOfJudgement.png`,
+    rarity: "Rare",
+    type: "Reflex",
+    condition: "You control no Champions (not counting Tokens)",
+    cost: "Declare 1 Champion Tag from those that are currently face-up on the Zone",
+    tags: ["Reflex"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `If your Opponent controls 7 or more face-up Champions with the declared Tag: Destroy all face-up Champions with that tag.`,
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "929",
+    name: "Red Light, Green Light",
+    image: `${cardArtFolder}/Obelisks/RedLightGreenLight.png`,
+    rarity: "Common",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `If you control at least 1 Champion: Champions your Opponent controls no longer gain the benefits of Priority. <span class="line-gap"></span><span class="line-gap"></span> If your Opponent declares an attack while you control at least 1 Champion: You must block all of their attacks (if you are able to).`,
+        keywords: ["Priority"],
+        effect1name: "If you control at least 1 Champion",
+        effect2name: "If your Opponent declares an attack while you control at least 1 Champion",
         effect3name: "",
       }
     ]

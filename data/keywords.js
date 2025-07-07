@@ -10,7 +10,7 @@ export const keywords = {
   Duelist: "This Champion cannot deal Damage to a Player.",
   Gravekeeper: "Cards that would be Retrieved or Resurrected are not.",
   Greedy: "If this Champion deals Damage to a Player by battle: Draw 1.",
-  "Heavy Hands": "Decrease this card&apos;s Damage by 2 for each card in your hand.",
+  "Heavy Hands": "Decrease this card&apos;s Damage by 2 for each card in your Hand.",
   Invisible: "This Champion cannot be Targeted for attacks.",
   Lifebalance: "This card gains Damage equal to the difference between yours and your Opponent&apos;s Life.",
   Lifetouch: "Instead of damaging Champions, heal them by your Damage amount instead.",
@@ -39,5 +39,5 @@ export const keywords = {
   Taskmaster: "Increase this Champion&apos;s Damage by 1 for every Champion your Opponent controls.",
   Taunt: "This is the only card you control that your Opponent can Target for attacks and with effects. If you control 2 or more cards with this keyword, your Opponent can choose any of them to Target.",
   "Second Strike": "This Champion can make two attacks during each of your Battle Phases.",
-  "Board Breaker": "This Champion cannot attack your Opponent directly"
+  "Board Breaker": "This Champion cannot attack your Opponent directly."
 };

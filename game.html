@@ -536,6 +536,8 @@ html, body {
                 gameId = localStorage.getItem("gameId") || Math.random().toString(36).substr(2, 9);
                 localStorage.setItem("gameId", gameId);
             }
+            const attachmentsKey = `attachments_${gameId}`;
+            localStorage.removeItem(attachmentsKey);
 
             let username = null;
             let hasDrawnInitialHand = false;
@@ -613,14 +615,17 @@ html, body {
 
             let attachments = []; // { sourceId, targetId, color }
             try {
-                const saved = JSON.parse(localStorage.getItem('attachments') || '[]');
+                const saved = JSON.parse(localStorage.getItem(attachmentsKey) || '[]');
                 if (Array.isArray(saved)) attachments = saved;
             } catch(e) {
-                console.warn("Could not parse saved attachments:", e);
+                console.warn("Could not parse saved attachments for", attachmentsKey, e);
             }
 
             // Once the DOM is ready, stamp any you loaded
             window.addEventListener('DOMContentLoaded', () => {
+                document.querySelectorAll('.attachment-circle').forEach(el => el.remove());
+                clearAttachmentLines();
+
                 attachments.forEach(({ sourceId, targetId, color }) => {
                     placeCircle(sourceId, color);
                     placeCircle(targetId, color);
@@ -628,7 +633,7 @@ html, body {
             });
 
             function saveAttachments() {
-                localStorage.setItem('attachments', JSON.stringify(attachments));
+                localStorage.setItem(attachmentsKey, JSON.stringify(attachments));
             }
 
             socket.on('attach_card', ({ gameId: g, sourceId, targetId, color }) => {
@@ -1712,6 +1717,11 @@ html, body {
                 pointerEvents: "all"
             });
             document.body.appendChild(blocker);
+
+            attachments = [];
+            saveAttachments();
+            document.querySelectorAll('.attachment-circle').forEach(el => el.remove());
+            clearAttachmentLines();
 
             // Only the loser in a match sees the next‐game prompt
             if (gameType === "match" && mainText === "You Lose") {
@@ -6300,7 +6310,7 @@ html, body {
                         cursor:"pointer", pointerEvents:"auto", zIndex:100100
                     });
                     if (containerId === "playerFaceDownArsenalBox") {
-                        btn.style.top = "-400px";
+                        btn.style.top = "-320px";
                     }
                     wrap.appendChild(btn);
                     if (typeof wrapCardButton === "function") wrapCardButton(btn, containerId);

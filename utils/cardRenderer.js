@@ -307,23 +307,39 @@ export function adjustNameSize(cardElement) {
 
 export function adjustTextSize(cardElement) {
   const textContainer = cardElement.querySelector(".card-text");
-  const maxHeight = textContainer.offsetHeight;
-  let fontSize = parseFloat(window.getComputedStyle(textContainer).fontSize);
-
-  // Ensure the text fits vertically within the container
-  while (textContainer.scrollHeight > maxHeight && fontSize > 6) {
-    fontSize -= 4.8;
-    textContainer.style.fontSize = `${fontSize}px`;
-  }
-
-  // Ensure that the damage and life text are not resized
+  const isChampion = cardElement.classList.contains("champion");
   const bottomBar = cardElement.querySelector(".bottom-bar");
-  if (bottomBar) {
+
+  // === Champion logic (unchanged) ===
+  if (isChampion && bottomBar) {
+    let fontSize = parseFloat(window.getComputedStyle(textContainer).fontSize);
+    const minSize = 6;
+    const maxHeight = textContainer.offsetHeight;
+
+    while (textContainer.scrollHeight > maxHeight && fontSize > minSize) {
+      fontSize -= 1;
+      textContainer.style.fontSize = `${fontSize}px`;
+    }
+
     bottomBar.querySelectorAll(".damage, .life").forEach(el => {
       el.style.fontSize = "1.6em";
     });
+
+    return; // done with champions
+  }
+
+  // === Non-champion logic ===
+  let fontSize = parseFloat(window.getComputedStyle(textContainer).fontSize);
+  const minSize = 6;
+
+  // Temporarily force the max-height for accurate evaluation
+  const maxHeight = textContainer.clientHeight || 200; // fallback in px
+  while (textContainer.scrollHeight > textContainer.clientHeight && fontSize > minSize) {
+    fontSize -= 1;
+    textContainer.style.fontSize = `${fontSize}px`;
   }
 }
+
 
 function getTokenByName(name) {
   return tokens.find(token => token.name.toLowerCase() === name.toLowerCase());
