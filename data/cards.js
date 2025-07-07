@@ -4851,7 +4851,7 @@ export const cards = [
     rarity: "Common",
     type: "Rush",
     condition: "",
-    cost: "Target 1 Megalith on the Zone",
+    cost: "Target 1 face-up Megalith on the Zone",
     tags: ["Rush"],
     damage: 0,
     life: 0,
@@ -8184,6 +8184,28 @@ export const cards = [
         keywords: ["Priority"],
         effect1name: "If you control at least 1 Champion",
         effect2name: "If your Opponent declares an attack while you control at least 1 Champion",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "930",
+    name: "Desperate Gambler",
+    image: `${cardArtFolder}/Champions/DesperateGambler.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "",
+    tags: ["Dealt","Citizen"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `On Rally (Mandatory): Flip a coin until you get Tails. Discard cards equal to the number of Heads flipped, then increase this card's Damage by the number of cards you discarded. <span class="line-gap"></span> Just One More Spin: If this card is sent from the Zone to the Tomb: Flip a coin and call the result. If you guessed correctly, Obliterate Mill 15 and Resurrect this card.`,
+        keywords: ["blank"],
+        effect1name: "Just One More Spin",
+        effect2name: "If this card is send from the Zone to the Tomb",
         effect3name: "",
       }
     ]
