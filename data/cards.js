@@ -7133,6 +7133,28 @@ export const cards = [
     ]
   },
   {
+    id: "424",
+    name: "Desperate Gambler",
+    image: `${cardArtFolder}/Champions/DesperateGambler.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "",
+    tags: ["Dealt","Citizen"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `On Rally (Mandatory): Flip a coin until you get Tails. Discard cards equal to the number of Heads flipped, then increase this card's Damage by the number of cards you discarded. <span class="line-gap"></span> Just One More Spin: If this card is sent from the Zone to the Tomb: Flip a coin and call the result. If you guessed correctly, Obliterate Mill 15 and Resurrect this card.`,
+        keywords: ["blank"],
+        effect1name: "Just One More Spin",
+        effect2name: "If this card is sent from the Zone to the Tomb",
+        effect3name: "",
+      }
+    ]
+  },
+  {
     id: "661",
     name: "Carly, Brightest Burnout",
     image: `${cardArtFolder}/Champions/CarlyBrightestBurnout.png`,
@@ -7151,6 +7173,28 @@ export const cards = [
         effect1name: "On Rally",
         effect2name: "Mine Now",
         effect3name: "Let's Bounce",
+      }
+    ]
+  },
+  {
+    id: "662",
+    name: "Cyber Angel, Silicon Soul",
+    image: `${cardArtFolder}/Champions/CyberAngelSiliconSoul.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Chrome", "Mechanic", "Specialist","Outlaw"],
+    damage: 3,
+    life: 2,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Repair Specialist <span class="line-gap"></span> On Rally: Activate 1 Obelisk from your Reserve (ignoring its cost).`,
+        keywords: ["Repair Specialist"],
+        effect1name: "On Rally",
+        effect2name: "",
+        effect3name: "",
       }
     ]
   },
@@ -7503,6 +7547,28 @@ export const cards = [
         effect1name: "On Activation",
         effect2name: "You can remove 2 K-Cell Counters from this card",
         effect3name: "Each time a card(s) is drawn",
+      }
+    ]
+  },
+  {
+    id: "791",
+    name: "Mechadrex, Kaiju-Crusher",
+    image: `${cardArtFolder}/Champions/Mechadrex.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "Your Opponent controls a Kaiju",
+    cost: "",
+    tags: ["Primordial","Chrome","Megalith","Kaiju","Construct"],
+    damage: 5,
+    life: 7,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Duelist <span class="line-gap"></span> Kaiju-Crusher: Kaiju deal no battle Damage to this card, and you take no battle Damage from battles involving this card and an Kaiju. Additionally, this card deals double battle Damage to Kaiju. <span class="line-gap"></span> Each time this card Destroys a Kaiju by battle: Add 1 K-Cell Counter to this card.`,
+        keywords: ["Duelist"],
+        effect1name: "Kaiju-Crusher",
+        effect2name: "",
+        effect3name: "Each time this card Destroys a Kaiju by battle",
       }
     ]
   },
@@ -8184,28 +8250,6 @@ export const cards = [
         keywords: ["Priority"],
         effect1name: "If you control at least 1 Champion",
         effect2name: "If your Opponent declares an attack while you control at least 1 Champion",
-        effect3name: "",
-      }
-    ]
-  },
-  {
-    id: "930",
-    name: "Desperate Gambler",
-    image: `${cardArtFolder}/Champions/DesperateGambler.png`,
-    rarity: "Rare",
-    type: "Champion",
-    condition: "",
-    cost: "",
-    tags: ["Dealt","Citizen"],
-    damage: 0,
-    life: 1,
-    damageThreshold: "1",
-    abilities: [
-      {
-        text: `On Rally (Mandatory): Flip a coin until you get Tails. Discard cards equal to the number of Heads flipped, then increase this card's Damage by the number of cards you discarded. <span class="line-gap"></span> Just One More Spin: If this card is sent from the Zone to the Tomb: Flip a coin and call the result. If you guessed correctly, Obliterate Mill 15 and Resurrect this card.`,
-        keywords: ["blank"],
-        effect1name: "Just One More Spin",
-        effect2name: "If this card is send from the Zone to the Tomb",
         effect3name: "",
       }
     ]
