@@ -3450,7 +3450,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `On Rally: Attach 1 Equipment to this card from your Hand, Deck, or Tomb (ignoring its cost). <br><span class="line-gap"></span> Backup Contingent (Reflex): If this card would be reduced to 0 Life: Rally 1 Dust Token to your Opponent's Zone; Move this card to your Reserve. <span class="line-gap"></span><span class="line-gap"></span> Triumphant Return: If this card is in your Reserve: Sacrifice 1 Token controlled by either Player; Rally this card (ignoring its cost).`,
+        text: `On Rally: Attach 1 Equipment to this card from your Hand, Deck, or Tomb (ignoring its cost). <br><span class="line-gap"></span> Backup Contingent (Reflex): If this card would be reduced to 0 Life: Rally 1 Dust Token to your Opponent's Zone; Move this card to your Reserve. <span class="line-gap"></span> Triumphant Return: If this card is in your Reserve: Sacrifice 1 Token controlled by either Player; Rally this card (ignoring its cost).`,
         keywords: ["blank"],
         effect1name: "On Rally",
         effect2name: "Backup Contingent",
@@ -7749,6 +7749,28 @@ export const cards = [
     ]
   },
   {
+    id: "792",
+    name: "Jiunkyu, Rebuilt Terror",
+    image: `${cardArtFolder}/Champions/JiunkyuRebuiltTerror.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Sacrifice 1 Champion your Opponent controls, Rally this card under their control",
+    tags: ["Primordial","Megalith","Kaiju"],
+    damage: 10,
+    life: 4,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Duelist, Priority <span class="line-gap"></span> On Rally (Mandatory): All other face-up Champions you control take 1 Damage. <span class="line-gap"></span> Slice and Dice (Reflex): You can remove 1 K-Cell Counter from anywhere on the Zone and Target 1 face-up Champion on the Zone; Target takes 3 Damage.`,
+        keywords: ["Duelist","Priority"],
+        effect1name: "On Rally",
+        effect2name: "Slice and Dice",
+        effect3name: "",
+      }
+    ]
+  },
+  {
     id: "841",
     name: "Vice, Agent of Deception",
     image: `${cardArtFolder}/Champions/ViceAgentOfDeception.png`,
@@ -7788,6 +7810,28 @@ export const cards = [
         keywords: ["Invisible","Solitary","Unstoppable"],
         effect1name: "On Rally",
         effect2name: "Blend into the Crowd",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "843",
+    name: "Desperate Deal",
+    image: `${cardArtFolder}/Obelisks/DesperateDeal.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Reflex: Either Player can Obliterate Mill 15; Then activate 1 of the following effects: <span class="line-gap"></span> • Draw 2. <span class="line-gap"></span> • Rally 1 Blocker Token to your Zone. <span class="line-gap"></span> • Target 1 face-up Champion on the Zone; Negate Target's passives and effects until the end of this turn.`,
+        keywords: ["blank"],
+        effect1name: "Reflex",
+        effect2name: "",
         effect3name: "",
       }
     ]
@@ -8532,9 +8576,9 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Poolbound: This card cannot declare attacks.`,
-        keywords: ["blank"],
-        effect1name: "Poolbound",
+        text: `Contained`,
+        keywords: ["Contained"],
+        effect1name: "",
         effect2name: "",
         effect3name: "",
       }
