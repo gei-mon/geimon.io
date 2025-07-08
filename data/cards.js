@@ -1360,7 +1360,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Heavy Hands <span class="line-gap"></span> On Rally: Draw 2. <span class="line-gap"></span> Deadeye (Reflex): Discard 1 and Target 1 card on the Zone; Destroy Target.`,
+        text: `Heavy Hands <span class="line-gap"></span> On Rally: Draw 2. <span class="line-gap"></span> Deadeye (Exhaustion, Reflex): Discard 1 and Target 1 card on the Zone; Destroy Target.`,
         keywords: ["Heavy Hands"],
         effect1name: "On Rally",
         effect2name: "Deadeye",
@@ -5114,7 +5114,7 @@ export const cards = [
     image: `${cardArtFolder}/Equipments/CursedBasiliskHideCloak.png`,
     rarity: "Rare",
     type: "Equipment",
-    condition: "",
+    condition: "Attach only to a Champion you control",
     cost: "",
     tags: ["Equipment"],
     damage: "",
@@ -5122,10 +5122,10 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `The attached Champion gains Invisible. <br><span class="line-gap"></span> During each of your End Phases (Mandatory): Discard 1.`,
+        text: `The attached Champion gains Invisible. <span class="line-gap"></span> During each of your End Phases (Mandatory): Discard 1 or, if you are unable to, Destroy this card. <span class="line-gap"></span> If Destroyed While Attached: Destroy the attached Champion.`,
         keywords: ["Invisible"],
         effect1name: "During each of your End Phases",
-        effect2name: "",
+        effect2name: "While Attached",
         effect3name: "",
       }
     ]
@@ -5188,7 +5188,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attached Champion deals double battle Damage to Constructs, Dragons, and Megaliths.",
+        text: "The attached Champion deals double battle Damage to Constructs, Dragons, Kaiju, and Megaliths.",
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -7048,7 +7048,7 @@ export const cards = [
     id: "375",
     name: "Veilwalker, Fallen And Returned",
     image: `${cardArtFolder}/Champions/Veilwalker.png`,
-    rarity: "Superior",
+    rarity: "Rare",
     type: "Champion",
     condition: "",
     cost: "Basic",
@@ -7063,6 +7063,28 @@ export const cards = [
         effect1name: "If this card is Obliterated",
         effect2name: "If this card battles",
         effect3name: "If this card is sent to the Tomb",
+      }
+    ]
+  },
+  {
+    id: "376",
+    name: "Lady Dawn, the Platinum Maiden",
+    image: `${cardArtFolder}/Champions/LadyDawn.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Valiant","Dealt","Trickster","Specialist"],
+    damage: 1,
+    life: 3,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Fortified, Twitchy <span class="line-gap"></span> Immortality: During each End Phase: This card gains 1 Life. <span class="line-gap"></span> If Destroyed: Offer 5 Life; Resurrect this card.`,
+        keywords: ["Fortified","Twitchy"],
+        effect1name: "Immortality",
+        effect2name: "During each End Phase",
+        effect3name: "If Destroyed",
       }
     ]
   },
@@ -7194,6 +7216,50 @@ export const cards = [
         keywords: ["Repair Specialist"],
         effect1name: "On Rally",
         effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "663",
+    name: "Vulture Bot",
+    image: `${cardArtFolder}/Champions/VultureBot.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "Discard 1",
+    tags: ["Chrome","Construct"],
+    damage: 2,
+    life: 2,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `On Rally: Target 1 Construct with 1 or less Damage in your Tomb; Resurrect Target, but negate its effects. <span class="line-gap"></span> Combination Transformation: Sacrifice this card and 1 other Construct you control; Activate 1 Commander Obelisk from your Hand, Deck, Reserve, or Tomb (ignoring its cost).`,
+        keywords: ["blank"],
+        effect1name: "On Rally",
+        effect2name: "Combination Transformation",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "664",
+    name: "Pinchy",
+    image: `${cardArtFolder}/Champions/Pinchy.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Chrome","Construct"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `If Sent from the Zone to the Tomb (Mandatory): Rally 1 Scrap Token to your Zone.`,
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "If Sent from the Zone to the Tomb",
         effect3name: "",
       }
     ]

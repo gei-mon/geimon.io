@@ -20,5 +20,6 @@ export const rules = {
   Stack: "Place a designated card on top of the Deck.",
   Target: "Select a card to be the recipient of an effect.",
   Unleash: "Rally from the Void (ignoring cost). You must still meet conditions.",
-  "Cards Controlled": "The total number of cards between a Player's Champions and cards in their Arsenal."
+  "Cards Controlled": "The total number of cards between a Player's Champions and cards in their Arsenal.",
+  Exhaustion: "Exhaustion effects can only be used if the card has not already attacked or used an Exhaustion effect, Exhaustion effects mean that for the rest of the turn that card can no longer use other Exhaustion effects or declare attacks."
 }
