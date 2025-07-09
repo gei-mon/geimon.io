@@ -4000,10 +4000,10 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Arm Thy Knight: If you control a Knight: Activate 1 Equipment from your Hand, Deck, or Tomb (ignoring its cost), attaching the card to a Knight you control. <span class="line-gap"></span> Awaken Allies: If this is the only Champion you control: Sacrifice this card; Recruit 2 Nobles. <span class="line-gap"></span> Helping Hand: If this card is in your Tomb: Obliterate this card and Target 1 Noble or Helper in your Tomb; Resurrect Target.`,
+        text: `Arm Thy Knight: If you control a Knight: Activate 1 Equipment from your Hand, Deck, or Tomb (ignoring its cost), attaching the card to a Knight you control. <span class="line-gap"></span> Awaken Ally: If this is the only Champion you control (not counting Tokens): Sacrifice this card; Recruit 1 Noble. <span class="line-gap"></span> Helping Hand: If this card is in your Tomb: Obliterate this card and Target 1 Noble or Helper in your Tomb; Resurrect Target.`,
         keywords: ["blank"],
         effect1name: "Arm Thy Knight",
-        effect2name: "Awaken Allies",
+        effect2name: "Awaken Ally",
         effect3name: "Helping Hand",
       }
     ]
@@ -7859,6 +7859,28 @@ export const cards = [
     ]
   },
   {
+    id: "844",
+    name: "Pactless Imp",
+    image: `${cardArtFolder}/Champions/PactlessImp.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Hellfire","Trickster"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Desperate for a Deal: Either Player can Offer 2 Life from a Champion they control; then that Champion gains 1 of the following Passives until the End Phase: <span class="line-gap"></span> • Greedy <span class="line-gap"></span> • Lifesteal <span class="line-gap"></span> • Warded`,
+        keywords: ["Greedy","Lifesteal","Warded"],
+        effect1name: "Desperate for a Deal",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
     id: "901",
     name: "Get Your Game On!",
     image: `${cardArtFolder}/Rush/GameOn.png`,
@@ -8519,6 +8541,116 @@ export const cards = [
     ]
   },
   {
+    id: "931",
+    name: "Throw the Sword",
+    image: `${cardArtFolder}/Rush/ThrowTheSword.png`,
+    rarity: "Rare",
+    type: "Rush",
+    condition: "",
+    cost: "Destroy 1 face-up Equipment you control and Target 1 face-up Champion on the Zone",
+    tags: ["Rush"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Target takes 3 Damage.",
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "932",
+    name: "Dark / Light - Fight!",
+    image: `${cardArtFolder}/Rush/DarkLightFight.png`,
+    rarity: "Rare",
+    type: "Rush",
+    condition: "",
+    cost: "Target 1 face-up Champion you control and 1 face-up Champion your Opponent controls",
+    tags: ["Rush"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "Targets immediately battle.",
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "933",
+    name: "Hafira, the Stoneblade Slayer",
+    image: `${cardArtFolder}/Champions/HafiraStonebladeSlayer.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Sacrifice 1",
+    tags: ["Frenzied","Blademaster"],
+    damage: 3,
+    life: 3,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Bloodrage <span class="line-gap"></span> During your End Phase: If this card did not declare an attack this turn: This card gains Invisible until the start of your next turn.`,
+        keywords: ["Bloodrage","Invisible"],
+        effect1name: "During your End Phase",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "934",
+    name: "Reth, Shadow Dweller",
+    image: `${cardArtFolder}/Champions/RethShadowDweller.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Oldblood","Mage"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Deathward <span class="line-gap"></span> If this card is in your Tomb: Obliterate this card and Target 1 card in your Tomb; Retrieve Target.`,
+        keywords: ["Deathward"],
+        effect1name: "If this card is in your Tomb",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "935",
+    name: "Bryce, Midnight Fang",
+    image: `${cardArtFolder}/Champions/BryceMidnightFang.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Offer 4 Life",
+    tags: ["Oldblood","Outlaw","Blademaster","Mage"],
+    damage: 4,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Deathward, Reach <span class="line-gap"></span> Shadow Slice (Exhaustion): Deal 2 Damage to your Opponent.`,
+        keywords: ["Deathward","Reach"],
+        effect1name: "Shadow Slice",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
     id: "961",
     name: "Cinder, Heavy Metal Bard",
     image: `${cardArtFolder}/Champions/CinderHeavyMetalBard.png`,
@@ -8532,10 +8664,32 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Bloodrage, Heavy Hands, Necrocharge <span class="line-gap"></span> On Rally (Mandatory): Target 1 face-up Champion on the Zone; Reduce Target to 1 Life. <span class="line-gap"></span> Live To Rock: If this card is in your Tomb: Obliterate 7 other Champions from your Tomb; Resurrect this card. <br><br>&nbsp;`,
+        text: `Bloodrage, Heavy Hands, Necrocharge <span class="line-gap"></span> On Rally (Mandatory): Target 1 face-up Champion on the Zone; Reduce Target to 1 Life. <span class="line-gap"></span> Live To Rock: If this card is in your Tomb: Obliterate 7 other Champions from your Tomb; Resurrect this card.`,
         keywords: ["Bloodrage","Heavy Hands","Necrocharge"],
         effect1name: "On Rally",
         effect2name: "Live to Rock",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "1021",
+    name: "Guardian Angel",
+    image: `${cardArtFolder}/Champions/GuardianAngel.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Radiant","Protector"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Deathward <span class="line-gap"></span> Holy Barrier: If this card is in your Tomb (Reflex): Obliterate this card; Negate your Opponent's next attack.`,
+        keywords: ["Deathward"],
+        effect1name: "Holy Barrier",
+        effect2name: "",
         effect3name: "",
       }
     ]
@@ -8624,6 +8778,50 @@ export const cards = [
         keywords: ["Contained"],
         effect1name: "",
         effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "1145",
+    name: "Melody, Pactbroken Bard",
+    image: `${cardArtFolder}/Champions/MelodyPactbrokenBard.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Obliterate Mill 6",
+    tags: ["Driftmarked","Crescendo","Blademaster","Trickster","Mage"],
+    damage: 0,
+    life: 4,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Taunt <span class="line-gap"></span> Song of Power: Increase the Damage of all other face-up Champions you control by 1. <span class="line-gap"></span> Pactbroken (Reflex): If this card is Targeted; Bounce this card, and if you do, Obliterate Mill 6.`,
+        keywords: ["Taunt"],
+        effect1name: "Song of Power",
+        effect2name: "Pactbroken",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "1146",
+    name: "Lootin' Pirate Gary",
+    image: `${cardArtFolder}/Champions/LootinPirateGary.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Driftmarked","Outlaw"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Offload the Looter: Discard 1; Transfer control of this card to your Opponent. <span class="line-gap"></span> During the End Phase (Mandatory): Add the top card of your Deck to your Opponent's Hand.`,
+        keywords: ["blank"],
+        effect1name: "Offload the Looter",
+        effect2name: "During the End Phase",
         effect3name: "",
       }
     ]
