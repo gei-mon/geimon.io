@@ -385,6 +385,11 @@ text-decoration: underline;
   display: block !important;
   width: 100%;
 }
+
+.basic-cost .card-cost {
+  font-size: 0.9em !important;
+}
+
 .card-condition {
   font-size: 0.8em;      /* Base font size */
   padding-top: 4px;

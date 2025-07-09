@@ -79,6 +79,10 @@ export function renderCard(card, container) {
     cardElement.classList.add("reflex");
   }
 
+  if (card.type === "Champion" && card.cost === "Basic") {
+    cardElement.classList.add("basic-cost");
+  }
+
   const tags = (card.tags || []).filter(tag => tag !== "").join(" ");
 
   const abilitiesHTML = card.abilities.map(ability => {
@@ -136,7 +140,7 @@ export function renderCard(card, container) {
     </div>
     <div class="card-tags">${tags}</div>
     ${card.condition ? `<div class="card-condition"><strong>Condition:</strong> ${card.condition}</div>` : ""}
-    ${card.cost && card.cost !== "Basic" ? 
+    ${card.cost ?
       `<div class="card-cost"><strong>Cost:</strong> ${renderTextWithTokens(card.cost)}</div>` : ""}
     <div class="card-text">${abilitiesHTML}</div>
     ${card.type === "Champion" ? `
