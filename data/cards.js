@@ -125,7 +125,7 @@ export const cards = [
     damageThreshold: 4,
     abilities: [
       {
-        text: `Deathward <br><span class="line-gap"></span> On Rally: Bury 1. <span class="line-gap"></span> Rend Soul (Exhaustion): Obliterate 1 card you control; Obliterate 1 card on the Zone. <span class="line-gap"></span> If Obliterated: During the next Intermission Phase, Unleash 1 Undead.`,
+        text: `Deathward <br><span class="line-gap"></span> On Rally: Bury 1. <span class="line-gap"></span> Rend Soul (Exhaustion): Obliterate 1 card you control; Obliterate 1 card on the Zone. <span class="line-gap"></span> If Obliterated: During the next Intermission Phase: Unleash 1 Undead.`,
         keywords: ["Deathward"],
         effect1name: "On Rally",
         effect2name: "Rend Soul",
@@ -7058,11 +7058,11 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Deathtouch <span class="line-gap"></span> If this card battles: Destroy this card after Damage Calculation. <span class="line-gap"></span> If this card is sent to the Tomb: Obliterate this card. <span class="line-gap"></span> If this card is Obliterated: Target 1 other card in your Void; Reclaim Target.`,
+        text: `Deathtouch <span class="line-gap"></span> If this card battles: Destroy this card after Damage Calculation. <span class="line-gap"></span> If Sent to Tomb: Obliterate this card. <span class="line-gap"></span> If Obliterated: Target 1 other card in your Void; Reclaim Target.`,
         keywords: ["Deathtouch"],
-        effect1name: "If this card is Obliterated",
+        effect1name: "If Obliterated",
         effect2name: "If this card battles",
-        effect3name: "If this card is sent to the Tomb",
+        effect3name: "If Sent to Tomb",
       }
     ]
   },
@@ -8510,7 +8510,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `If you control at least 1 Champion: Champions your Opponent controls no longer gain the benefits of Priority. <span class="line-gap"></span><span class="line-gap"></span> If your Opponent declares an attack while you control at least 1 Champion: You must block all of their attacks (if you are able to).`,
+        text: `If you control at least 1 Champion: Champions your Opponent controls no longer gain the benefits of Priority. <span class="line-gap"></span><span class="line-gap"></span> If your Opponent declares an attack while you control at least 1 Champion: You must block that attack (if you are able to).`,
         keywords: ["Priority"],
         effect1name: "If you control at least 1 Champion",
         effect2name: "If your Opponent declares an attack while you control at least 1 Champion",
