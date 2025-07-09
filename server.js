@@ -430,6 +430,52 @@ io.on('connection', (socket) => {
     io.to(gameId).emit('sync_zone', { owner: to,   zone, cards: gs[to][zone]   });
   });
 
+    // 1️⃣ Broadcast the excavation request so both clients open the modal
+  socket.on('excavate_cards', ({ gameId, player, count }) => {
+    io.to(gameId).emit('excavate_cards', { player, count });
+  });
+
+  // 2️⃣ Handle moving a card from the excavator’s deck into the opponent’s hand
+  socket.on('excavate_move', ({ gameId, cardId, to }) => {
+    const user = userMap.get(socket.id);
+    if (!user) return;
+    const { username: player, roomId } = user;
+    const state = gameStates.get(gameId);
+    if (!state) return;
+
+    // 2a) Remove from excavator’s Deck
+    const deck = state[player].Deck;
+    const idx  = deck.findIndex(c => String(c.id) === String(cardId));
+    if (idx === -1) return;
+    const [card] = deck.splice(idx, 1);
+
+    // 2b) Determine recipient (opponent) if sending to “Hand”
+    let recipient = player;
+    if (to === 'Hand') {
+      // pick the other socket in the room
+      const sockets = openRooms.get(roomId) || [];
+      const oppId   = sockets.find(id => id !== socket.id);
+      const oppUser = userMap.get(oppId);
+      if (oppUser) recipient = oppUser.username;
+    }
+
+    // 2c) Update the card’s zone state
+    card.boardState = to;
+    state[recipient][to].push(card);
+
+    // 2d) Broadcast the updated zones to both players
+    io.to(gameId).emit('sync_zone', {
+      owner: player,
+      zone:  'Deck',
+      cards: state[player].Deck
+    });
+    io.to(gameId).emit('sync_zone', {
+      owner: recipient,
+      zone:  to,
+      cards: state[recipient][to]
+    });
+  });
+
   socket.on(
     "phase_change_request",
     ({ gameId, username: actor, phase }, ack) => {

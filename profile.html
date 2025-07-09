@@ -167,13 +167,25 @@
             imgEl.style.marginTop = '-64px';
             imgEl.style.marginBottom = '-64px';
             // only shift left if it's not the first sleeve
-            if (idx > 0) {
-              imgEl.style.marginLeft = '-96px';
-            }
+            //if (idx > 0) {
+              //imgEl.style.marginLeft = '-96px';
+            //}
             imageGridSleeves.appendChild(imgEl);
           });
+          adjustSleeves();
       });
 
+      function adjustSleeves() {
+        const sleeves = imageGridSleeves.querySelectorAll('.thumbnail');
+        let lastTop = null;
+        sleeves.forEach((el, i) => {
+          const thisTop = el.offsetTop;
+          const isFirstInRow = i === 0 || thisTop !== lastTop;
+          el.style.marginLeft = isFirstInRow ? '96px' : '-96px';
+          lastTop = thisTop;
+        });
+      }
+      window.addEventListener('resize', adjustSleeves);
 
       fetch('https://geimon-app-833627ba44e0.herokuapp.com/zone-images')
         .then(res => res.json())
