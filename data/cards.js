@@ -125,11 +125,11 @@ export const cards = [
     damageThreshold: 4,
     abilities: [
       {
-        text: `Deathward <br><span class="line-gap"></span> On Rally: Bury 1. <span class="line-gap"></span> Rend Soul (Exhaustion): Obliterate 1 card you control; Obliterate 1 card on the Zone. <span class="line-gap"></span> If Obliterated: During the next Intermission Phase: Unleash 1 Undead.`,
+        text: `Deathward <br><span class="line-gap"></span> On Rally: Bury 1. <span class="line-gap"></span> Rend Soul (Exhaustion): Obliterate 1 card you control; Obliterate 1 card on the Zone. <span class="line-gap"></span> If Sent to Void: During the next Intermission Phase: Unleash 1 Undead.`,
         keywords: ["Deathward"],
         effect1name: "On Rally",
         effect2name: "Rend Soul",
-        effect3name: "If Obliterated",
+        effect3name: "If Sent to Void",
       }
     ]
   },
@@ -235,7 +235,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Offer 3 Life; then Excavate 3, and add 1 revealed. <br><span class="line-gap"></span> If this card is in your Tomb: Obliterate this card; Resurrect 1 Undead from either Tomb.`,
+        text: `Offer 3 Life; then Excavate 3, and add 1 revealed. <br><span class="line-gap"></span> If this card is in your Tomb: Obliterate this card and Target 1 Undead in either Tomb; Resurrect Target.`,
         keywords: ["blank"],
         effect1name: "If this card is in your Tomb",
         effect2name: "",
@@ -6750,7 +6750,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Defender <span class="line-gap"></span> Moonlight Barrier (Reflex): Once per turn if a card(s) on the Zone that you control would be Destroyed (Mandatory): Offer 2 Life from this card; They are not Destroyed. <span class="line-gap"></span> Cosmic Crashdown: If this card is Resurrected or Unleashed: Deal 2 Damage to all face-up Champions your Opponent controls.`,
+        text: `Defender <span class="line-gap"></span> Moonlight Barrier (Reflex): Once per turn if a card(s) on the Zone that you control would be Destroyed (Mandatory): Offer 2 Life from this card; They are not Destroyed. <span class="line-gap"></span> Cosmic Crashdown: If Resurrected or Unleashed: Deal 2 Damage to all face-up Champions your Opponent controls.`,
         keywords: ["Defender"],
         effect1name: "Moonlight Barrier",
         effect2name: "",
@@ -7058,9 +7058,9 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Deathtouch <span class="line-gap"></span> If this card battles: Destroy this card after Damage Calculation. <span class="line-gap"></span> If Sent to Tomb: Obliterate this card. <span class="line-gap"></span> If Obliterated: Target 1 other card in your Void; Reclaim Target.`,
+        text: `Deathtouch <span class="line-gap"></span> If this card battles: Destroy this card after Damage Calculation. <span class="line-gap"></span> If Sent to Tomb: Obliterate this card. <span class="line-gap"></span> If Sent to Void: Target 1 other card in your Void; Reclaim Target.`,
         keywords: ["Deathtouch"],
-        effect1name: "If Obliterated",
+        effect1name: "If Sent to Void",
         effect2name: "If this card battles",
         effect3name: "If Sent to Tomb",
       }
@@ -7300,7 +7300,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Second Strike, Twitchy <span class="line-gap"></span> On Rally: Target 1 non-Champion in your Tomb; retrieve Target. <span class="line-gap"></span> Temporal Twin: Rally 1 Echo Token of this card. <span class="line-gap"></span> Temporal Reversal: If this card is sent to the Tomb: Oblierate Mill 10; Resurrect this card during the next Intermission.`,
+        text: `Second Strike, Twitchy <span class="line-gap"></span> On Rally: Target 1 non-Champion in your Tomb; retrieve Target. <span class="line-gap"></span> Temporal Twin: Rally 1 Echo Token of this card. <span class="line-gap"></span> Temporal Reversal: If Sent to Tomb: Oblierate Mill 10; Resurrect this card during the next Intermission.`,
         keywords: ["Second Strike","Twitchy"],
         effect1name: "On Rally",
         effect2name: "Temporal Twin",
@@ -8796,7 +8796,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Taunt <span class="line-gap"></span> Song of Power: Increase the Damage of all other face-up Champions you control by 1. <span class="line-gap"></span> Pactbroken (Reflex): If this card is Targeted; Bounce this card, and if you do, Obliterate Mill 6.`,
+        text: `Taunt <span class="line-gap"></span> Song of Power: Increase the Damage of all other face-up Champions you control by 1. <span class="line-gap"></span> Pactbroken: If this card is Targeted (Reflex): Bounce this card, and if you do, Obliterate Mill 6.`,
         keywords: ["Taunt"],
         effect1name: "Song of Power",
         effect2name: "Pactbroken",
