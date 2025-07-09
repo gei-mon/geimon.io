@@ -26,7 +26,7 @@ export const keywords = {
   Unstoppable: "This Champion&apos;s attacks cannot be blocked.",
   Veilbind: "This Champion&apos;s Equipment cannot be Targeted by your Opponent&apos;s card effects.",
   Warded: "This Champion cannot be Targeted by effects.",
-  Maintenance: "During your End Phase (Mandatory): Mill 1.",
+  Maintenance: "During your End Phase (Mandatory): Mill 2.",
   Mount: "On Activation: Designate 1 Champion you control as this card&apos;s Commander. If you control no Champions, you can use this effect to designate one during your Main Phase. \n\n The Mounted effects on this card cannot be used if it has no designated Commander. If this card&apos;s Commander leaves the zone, you can use this effect during your Main Phase to declare a new Commander. A Champion can only be the Commander of one Obelisk at a time.",
   Shielded: "If this card&apos;s Commander would be destroyed: Destroy this card instead.",
   Lifesteal: "You gain Life equal to the battle Damage dealt by this Champion.",

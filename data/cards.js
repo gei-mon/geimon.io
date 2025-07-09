@@ -3225,7 +3225,7 @@ export const cards = [
     condition: "",
     cost: "Flip 1 Champion you control face-down",
     tags: ["Clockwork", "Construct","Helper"],
-    damage: 3,
+    damage: 2,
     life: 2,
     damageThreshold: "1",
     abilities: [
@@ -7265,6 +7265,28 @@ export const cards = [
     ]
   },
   {
+    id: "665",
+    name: "Harlan, Dead on Arrival",
+    image: `${cardArtFolder}/Champions/HarlanDOA.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Obliterate Mill 2",
+    tags: ["Chrome","Outlaw","Construct"],
+    damage: 2,
+    life: 2,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Maintenance, Necrocharge, Priority <span class="line-gap"></span> On Rally (Mandatory): Target 1 Commander Obelisk in your Tomb; Activate Target (ignoring its cost) and declare this card as its Commander. If you are unable to Target, or Activate, a card, then Destroy this card. <span class="line-gap"></span> If This Card is not a Commander (Mandatory): Destroy this card.`,
+        keywords: ["Maintenance","Priority","Necrocharge"],
+        effect1name: "On Rally",
+        effect2name: "If This Card is not a Commander",
+        effect3name: "",
+      }
+    ]
+  },
+  {
     id: "721",
     name: "Alice Kazimir, Chronurgy Master",
     image: `${cardArtFolder}/Champions/AliceKazimirChronurgistExtraordinaire.png`,
@@ -7734,7 +7756,7 @@ export const cards = [
     type: "Champion",
     condition: "Your Opponent controls a Kaiju",
     cost: "Basic",
-    tags: ["Primordial","Chrome","Megalith","Kaiju","Construct"],
+    tags: ["Primordial","Megalith","Kaiju","Construct"],
     damage: 5,
     life: 7,
     damageThreshold: "2",
@@ -7756,7 +7778,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Sacrifice 1 Champion your Opponent controls, Rally this card under their control",
-    tags: ["Primordial","Megalith","Kaiju"],
+    tags: ["Primordial","Megalith","Kaiju","Construct"],
     damage: 10,
     life: 4,
     damageThreshold: "2",
