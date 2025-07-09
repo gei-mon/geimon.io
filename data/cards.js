@@ -7168,10 +7168,10 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `On Rally (Mandatory): Flip a coin until you get Tails. Discard cards equal to the number of Heads flipped, then increase this card's Damage by the number of cards you discarded. <span class="line-gap"></span> Just One More Spin: If this card is sent from the Zone to the Tomb: Flip a coin and call the result. If you guessed correctly, Obliterate Mill 15 and Resurrect this card.`,
+        text: `On Rally (Mandatory): Flip a coin until you get Tails. Discard cards equal to the number of Heads flipped, then increase this card's Damage by 2 for each card you discarded. <span class="line-gap"></span> Just One More Spin: If this card is sent from the Zone to the Tomb: Flip a coin and call the result. If you guessed correctly, Obliterate Mill 15 and Resurrect this card.`,
         keywords: ["blank"],
         effect1name: "Just One More Spin",
-        effect2name: "If this card is sent from the Zone to the Tomb",
+        effect2name: "",
         effect3name: "",
       }
     ]
@@ -7256,8 +7256,8 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `If Sent from the Zone to the Tomb (Mandatory): Rally 1 Scrap Token to your Zone.`,
-        keywords: ["blank"],
+        text: `Deathward <span class="line-gap"></span> If Sent from the Zone to the Tomb (Mandatory): Rally 1 Scrap Token to your Zone.`,
+        keywords: ["Deathward"],
         effect1name: "",
         effect2name: "If Sent from the Zone to the Tomb",
         effect3name: "",
@@ -7498,7 +7498,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Lead to Gold (Exhaustion): Obliterate 1 card from your Hand; Add 1 card of the same type.`,
+        text: `Lead to Gold (Exhaustion): Obliterate 1 face-up card you control (other than this card); Activate 1 card of the same type from your Hand (ignoring its cost).`,
         keywords: ["blank"],
         effect1name: "Lead to Gold",
         effect2name: "",
@@ -7830,7 +7830,7 @@ export const cards = [
       {
         text: `Reflex: Either Player can Obliterate Mill 15; Then activate 1 of the following effects: <span class="line-gap"></span> • Draw 2. <span class="line-gap"></span> • Rally 1 Blocker Token to your Zone. <span class="line-gap"></span> • Target 1 face-up Champion on the Zone; Negate Target's passives and effects until the end of this turn.`,
         keywords: ["blank"],
-        effect1name: "Reflex",
+        effect1name: "",
         effect2name: "",
         effect3name: "",
       }
@@ -8470,6 +8470,28 @@ export const cards = [
         keywords: ["Priority"],
         effect1name: "If you control at least 1 Champion",
         effect2name: "If your Opponent declares an attack while you control at least 1 Champion",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "930",
+    name: "The City's Bear Cage",
+    image: `${cardArtFolder}/Equipments/CityBearCage.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "The attached Champion gains Contained, Invisible, and Warded.",
+        keywords: ["Contained","Invisible","Warded"],
+        effect1name: "",
+        effect2name: "",
         effect3name: "",
       }
     ]
