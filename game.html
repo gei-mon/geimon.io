@@ -5499,6 +5499,10 @@
                                 });
                                 // locally remove from the popup
                                 cardElement.remove();
+                                socket.emit('excavate_card_removed', {
+                                    gameId,
+                                    cardId: cardData.id
+                                });
                                 break;
                             }
                         case "To Tomb":
@@ -6761,6 +6765,7 @@
                     el.style.margin = '5px';
                     el.style.pointerEvents = 'auto';
                     el.dataset.zone = 'Deck';
+                    el.dataset.cardId     = String(cardData.id);
 
                 // excavator gets the full hover menu; opponent only the click-overlay
                 if (player === username) {
@@ -6812,6 +6817,15 @@
 
             document.body.appendChild(overlay);
         }
+
+        socket.on('excavate_card_removed', ({ cardId }) => {
+            // find any excavated-card popup elements matching that ID
+            document.querySelectorAll('[data-excavation="true"]').forEach(el => {
+                if (el.dataset.cardId === String(cardId)) {
+                el.remove();
+                }
+            });
+        });
 
         socket.on("lifeFlash", ({ player, life, delta, from }) => {
             const isSelf = player === username;
