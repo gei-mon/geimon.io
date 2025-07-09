@@ -2746,7 +2746,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Bloodrage, Priority <br><span class="line-gap"></span> Ride: Target 1 Equipment or Obelisk in your Tomb; Retrieve Target. <span class="line-gap"></span> Or Die (Mandatory): If it is your End Phase and this Champion is not designated as a Commander: Destroy this card.`,
+        text: `Bloodrage, Priority <span class="line-gap"></span> Ride: Target 1 Equipment or Obelisk in your Tomb; Retrieve Target. <span class="line-gap"></span> Or Die (Mandatory): If it is your End Phase and this Champion is not designated as a Commander: Destroy this card.`,
         keywords: ["Bloodrage","Priority"],
         effect1name: "Ride",
         effect2name: "Or Die",
@@ -6750,7 +6750,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Defender <span class="line-gap"></span> Moonlight Barrier (Reflex): If a card(s) on the Zone that you control would be Destroyed (Mandatory): Offer 2 Life from this card; They are not Destroyed. <span class="line-gap"></span> Cosmic Crashdown: If this card is Resurrected or Unleashed: Deal 2 Damage to all face-up Champions your Opponent controls.`,
+        text: `Defender <span class="line-gap"></span> Moonlight Barrier (Reflex): Once per turn if a card(s) on the Zone that you control would be Destroyed (Mandatory): Offer 2 Life from this card; They are not Destroyed. <span class="line-gap"></span> Cosmic Crashdown: If this card is Resurrected or Unleashed: Deal 2 Damage to all face-up Champions your Opponent controls.`,
         keywords: ["Defender"],
         effect1name: "Moonlight Barrier",
         effect2name: "",
@@ -8554,7 +8554,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Priority, Veilbind <span class="line-gap"></span> On Rally: Offer up to 3 Life from this card; Increase this card's Damage by the amount offered. <span class="line-gap"></span> Pactbound (Reflex): If this card would be Destroyed (Mandatory): Offer 4 Life; It is not Destroyed.`,
+        text: `Priority, Veilbind <span class="line-gap"></span> On Rally: Offer up to 3 Life from this card; Increase this card's Damage by the amount offered. <span class="line-gap"></span> Pactbound (Reflex): Once per turn if this card would be Destroyed (Mandatory): Offer 4 Life; It is not Destroyed.`,
         keywords: ["Priority","Veilbind"],
         effect1name: "On Rally",
         effect2name: "Pactbound",
