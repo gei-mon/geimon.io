@@ -5049,6 +5049,7 @@
             }
 
             if (cardElement.dataset.hoverMenuAttached) return;
+            //if (cardElement.dataset.excavation !== 'true') return;
 
             cardElement.dataset.hoverMenuAttached = "true";
             cardElement.style.position = "relative";
@@ -5448,6 +5449,9 @@
                             "To Champion (Face-Down)",
                             "To Arsenal (Face-Up)"
                         ];
+                    }
+                    if (cardElement.dataset.excavation === 'true') {
+                        hoverMenu.style.fontSize = '1.5em';
                     }
                 }
 
@@ -6710,10 +6714,22 @@
             // backdrop
             const overlay = document.createElement('div');
             Object.assign(overlay.style, {
-                position:'fixed', top:0, left:0, width:'100%', height:'100%',
-                background:'rgba(0,0,0,0.85)', display:'flex',
-                flexDirection:'column', alignItems:'center',
-                padding:'20px', boxSizing:'border-box', zIndex:400000
+                position:        'fixed',
+                top:             '50%',
+                left:            '50%',
+                transform:       'translate(-50%,-50%)',
+                width:           '60vw',
+                maxHeight:       '80vh',
+                overflowY:       'auto',
+                backgroundColor: '#333',
+                border:          '3px solid white',
+                borderRadius:    '12px',
+                padding:         '16px',
+                zIndex:          '400000',
+                display:         'flex',
+                flexDirection:   'column',
+                alignItems:      'center',
+                textAlign:       'center'
             });
 
             // title & subtitle
@@ -6731,27 +6747,46 @@
             const container = document.createElement('div');
             Object.assign(container.style, {
                 display:'flex', flexWrap:'wrap', justifyContent:'center',
-                gap:'10px', overflowY:'auto', maxHeight:'70vh', marginBottom:'15px'
+                gap:'10px', overflowY:'auto', maxHeight:'70vh', marginBottom:'15px',
+                alignSelf:    'stretch', width:         '100%'
             });
 
             cardsToShow.forEach(cardData => {
-                // find full card info
-                const c = cards.find(x => String(x.id) === String(cardData.id));
-                if (!c) return;
+                const base    = cards.find(x => String(x.id) === String(cardData.id));
+                if (!base) return;
+                const enriched = { ...base, ...cardData };
 
-                // render & scale
-                const el = renderCard(c);
-                el.style.transform = 'scale(0.6)';
-                el.style.margin = '5px';
-                el.style.pointerEvents = 'auto';
-                el.dataset.zone = 'Deck';
+                const el      = renderCard(enriched);
+                    el.style.transform = 'scale(0.6)';
+                    el.style.margin = '5px';
+                    el.style.pointerEvents = 'auto';
+                    el.dataset.zone = 'Deck';
 
                 // excavator gets the full hover menu; opponent only the click-overlay
                 if (player === username) {
-                attachHoverMenu(el, cardData);
+                    el.dataset.excavation = 'true';
+                    attachHoverMenu(el, cardData);
                 } else {
-                attachTargetOverlay(el, cardData);
+                    attachTargetOverlay(el, cardData);
                 }
+
+                el.addEventListener('mouseenter', () => {
+                    const scaled = document.querySelector('#viewing-window .scaled-card');
+                    if (!scaled) return;
+                    scaled.innerHTML = '';                       // clear old preview
+                    const preview   = renderCard(enriched);      // new big card
+                        preview.style.width        = '240px';
+                        preview.style.height       = '420px';
+                        preview.style.transform    = 'scale(1.2)';
+                        preview.style.marginLeft   = '-15%';
+                        preview.style.marginTop    = '7%';
+                        preview.style.pointerEvents= 'none';
+                    scaled.appendChild(preview);
+                });
+                el.addEventListener('mouseleave', () => {
+                    const scaled = document.querySelector('#viewing-window .scaled-card');
+                    //if (scaled) scaled.innerHTML = '';
+                });
 
                 container.appendChild(el);
             });
@@ -6770,7 +6805,7 @@
             const closeBtn = document.createElement('button');
             closeBtn.textContent = 'Close';
             Object.assign(closeBtn.style, {
-                padding:'8px 16px', fontSize:'1em', cursor:'pointer'
+                padding:'8px 16px', fontSize:'1em', cursor:'pointer', marginTop:   '12px'
             });
             closeBtn.onclick = () => overlay.remove();
             overlay.appendChild(closeBtn);
