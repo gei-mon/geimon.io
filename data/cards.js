@@ -7300,7 +7300,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Second Strike, Twitchy <span class="line-gap"></span> On Rally: Target 1 non-Champion in your Tomb; retrieve Target. <span class="line-gap"></span> Temporal Twin: Rally 1 Echo Token of this card. <span class="line-gap"></span> Temporal Reversal: If Sent to Tomb: Oblierate Mill 10; Resurrect this card during the next Intermission.`,
+        text: `Second Strike, Twitchy <span class="line-gap"></span> On Rally: Target 1 non-Champion in your Tomb; Retrieve Target. <span class="line-gap"></span> Temporal Twin: Rally 1 Echo Token of this card. <span class="line-gap"></span> Temporal Reversal: If Sent to Tomb: Oblierate Mill 10; Resurrect this card during the next Intermission.`,
         keywords: ["Second Strike","Twitchy"],
         effect1name: "On Rally",
         effect2name: "Temporal Twin",
@@ -7476,7 +7476,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: `Warded <span class="line-gap"></span> Force Field (Reflex): Target 1 other face-up Champion you control; Increase Target's Damage Threshold by 3 until the End Phase.`,
+        text: `Warded <span class="line-gap"></span> Force Field (Reflex): Target 1 other face-up non-Token Champion you control; Increase Target's Damage Threshold by 3 until the End Phase.`,
         keywords: ["Warded"],
         effect1name: "Force Field",
         effect2name: "",
