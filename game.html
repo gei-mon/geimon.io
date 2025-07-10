@@ -5452,7 +5452,7 @@
                     }
                     if (cardElement.dataset.excavation === 'true') {
                         opts.unshift("To Opponent's Hand");
-                        hoverMenu.style.fontSize = "1.5em";
+                        hoverMenu.style.fontSize = "1.15em";
                     }
                 }
 
@@ -5469,26 +5469,68 @@
                             playSoundEffect('activate');
                             await doMove(zone,           "Zone (Champion)",         "playerChampionsBox",        false);
                             //addGameLogEntry(`${username} rallied ${cardData.name}.`);
+                            if (cardElement.dataset.excavation === 'true') {
+                                cardElement.remove();
+                                socket.emit('excavate_card_removed', {
+                                    gameId,
+                                    cardId: cardData.id
+                                });
+                            }
                             break;
                         case "To Champion (Face-Down)":
                             playSoundEffect('set');
                             await doMove(zone,           "FaceDownZone",            "playerFaceDownBox",         true);
+                            if (cardElement.dataset.excavation === 'true') {
+                                cardElement.remove();
+                                socket.emit('excavate_card_removed', {
+                                    gameId,
+                                    cardId: cardData.id
+                                });
+                            }
                             break;
                         case "To Arsenal (Face-Up)":
                             playSoundEffect('activate');
                             await doMove(zone,           "Zone (Arsenal)",          "playerArsenalBox",          false);
+                            if (cardElement.dataset.excavation === 'true') {
+                                cardElement.remove();
+                                socket.emit('excavate_card_removed', {
+                                    gameId,
+                                    cardId: cardData.id
+                                });
+                            }
                             break;
                         case "To Arsenal (Face-Down)":
                             playSoundEffect('set');
                             await doMove(zone,           "FaceDownArsenalZone",     "playerFaceDownArsenalBox",  true);
+                            if (cardElement.dataset.excavation === 'true') {
+                                cardElement.remove();
+                                socket.emit('excavate_card_removed', {
+                                    gameId,
+                                    cardId: cardData.id
+                                });
+                            }
                             break;
                         case "To Reserve":
                             playSoundEffect('reserve');
                             await doMove(zone, "Reserve", "playerReserveBox", false);
+                            if (cardElement.dataset.excavation === 'true') {
+                                cardElement.remove();
+                                socket.emit('excavate_card_removed', {
+                                    gameId,
+                                    cardId: cardData.id
+                                });
+                            }
                             break;
                         case "To Hand":
                             playSoundEffect('draw');
                             await doMove(zone, "Hand", "drawn-cards", false);
+                            if (cardElement.dataset.excavation === 'true') {
+                                cardElement.remove();
+                                socket.emit('excavate_card_removed', {
+                                    gameId,
+                                    cardId: cardData.id
+                                });
+                            }
                             break;
                         case "To Opponent's Hand": {
                                 playSoundEffect('draw');
@@ -5496,27 +5538,61 @@
                                 await socket.emit('excavate_move', {
                                     gameId,
                                     cardId: cardData.id,
-                                    to: 'Hand'
+                                    to: 'OpponentHand'
                                 });
                                 // locally remove from the popup
-                                cardElement.remove();
+                                if (cardElement.dataset.excavation === 'true') {
+                                    cardElement.remove();
+                                    socket.emit('excavate_card_removed', {
+                                        gameId,
+                                        cardId: cardData.id
+                                    });
+                                }
                                 break;
                             }
                         case "To Tomb":
                             playSoundEffect('tomb');
                             await doMove(zone, "Tomb", "playerTombBox", false);
+                            if (cardElement.dataset.excavation === 'true') {
+                                cardElement.remove();
+                                socket.emit('excavate_card_removed', {
+                                    gameId,
+                                    cardId: cardData.id
+                                });
+                            }
                             break;
                         case "To Void":
                             playSoundEffect('tomb');
                             await doMove(zone, "Void", "playerVoidBox", false);
+                            if (cardElement.dataset.excavation === 'true') {
+                                cardElement.remove();
+                                socket.emit('excavate_card_removed', {
+                                    gameId,
+                                    cardId: cardData.id
+                                });
+                            }
                             break;
                         case "To Top of Deck":
                             playSoundEffect('set');
                             await doMove(zone, "Deck", "playerDeckBox", false, true);
+                            if (cardElement.dataset.excavation === 'true') {
+                                cardElement.remove();
+                                socket.emit('excavate_card_removed', {
+                                    gameId,
+                                    cardId: cardData.id
+                                });
+                            }
                             break;
                         case "To Bottom of Deck":
                             playSoundEffect('set');
                             await doMove(zone, "Deck", "playerDeckBox", false, false);
+                            if (cardElement.dataset.excavation === 'true') {
+                                cardElement.remove();
+                                socket.emit('excavate_card_removed', {
+                                    gameId,
+                                    cardId: cardData.id
+                                });
+                            }
                             break;
                         case "Declare":
                             playSoundEffect('declare');
@@ -6033,7 +6109,6 @@
                         break;
                     case "Excavate":
                         {
-                            playSoundEffect('draw');
                             console.log("Run excavateCards");
                             const max = gameState[username].Deck.length;
                             const count = await new Promise(resolve => {
@@ -6065,8 +6140,9 @@
                             overlay.querySelector('#excavate-confirm').onclick = () => {
                                 const n = parseInt(box.querySelector('#excavate-count').value, 10);
                                 if (!n || n < 1 || n > max) {
-                                return alert(`Enter 1–${max}`);
+                                    return alert(`Enter 1–${max}`);
                                 }
+                                playSoundEffect('draw');
                                 document.body.removeChild(overlay);
                                 resolve(n);
                             };
@@ -6808,11 +6884,27 @@
             Object.assign(closeBtn.style, {
                 padding:'8px 16px', fontSize:'1em', cursor:'pointer', marginTop:   '12px'
             });
-            closeBtn.onclick = () => overlay.remove();
+            closeBtn.onclick = () => {
+                document
+                    .querySelectorAll('[data-excavation="true"]')
+                    .forEach(el => delete el.dataset.excavation);
+                overlay.remove();
+            }
             overlay.appendChild(closeBtn);
 
             document.body.appendChild(overlay);
         }
+
+        socket.on('excavate_card_removed', ({ cardId }) => {
+            // find any excavated‐window cards with that ID and strip them out
+            document
+                .querySelectorAll('[data-excavation="true"][data-card-id]')
+                .forEach(el => {
+                if (el.dataset.cardId === String(cardId)) {
+                    el.remove();
+                }
+                });
+        });
 
         socket.on("lifeFlash", ({ player, life, delta, from }) => {
             const isSelf = player === username;

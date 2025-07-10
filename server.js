@@ -450,13 +450,17 @@ io.on('connection', (socket) => {
     const [card] = deck.splice(idx, 1);
 
     // 2b) Determine recipient (opponent) if sending to “Hand”
-    let recipient = player;
-    if (to === 'Hand') {
-      // pick the other socket in the room
+    let recipient, destZone;
+    if (to === 'OpponentHand') {
       const sockets = openRooms.get(roomId) || [];
       const oppId   = sockets.find(id => id !== socket.id);
       const oppUser = userMap.get(oppId);
-      if (oppUser) recipient = oppUser.username;
+      if (!oppUser) return;
+      recipient = oppUser.username;
+      destZone  = 'Hand';
+    } else {
+      recipient = player;
+      destZone  = to;
     }
 
     // 2c) Update the card’s zone state
@@ -474,6 +478,7 @@ io.on('connection', (socket) => {
       zone:  to,
       cards: state[recipient][to]
     });
+    io.to(gameId).emit('excavate_card_removed', { cardId });
   });
 
   socket.on(
