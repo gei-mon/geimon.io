@@ -495,5 +495,24 @@ export const tokens = [
         effect1name: "",
       }
     ]
+},
+{
+    id: "9027",
+    name: "Shark Token",
+    image: `${tokenArtFolder}/Shark.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Shark","Token"],
+    damage: 5,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Deathward <span class="line-gap"></span> Tear it Down: If this Token reduces a Champion to 1 Life by battle: Destroy that Champion.`,
+        keywords: ["Deathward"],
+        effect1name: "Tear it Down",
+      }
+    ]
 }
 ];

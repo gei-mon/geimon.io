@@ -716,7 +716,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Mill 9",
-    tags: ["Cryptbound", "Hellfire","Specialist"],
+    tags: ["Cryptbound","Hellfire","Specialist"],
     damage: 0,
     life: 1,
     damageThreshold: "6",
@@ -738,7 +738,7 @@ export const cards = [
     type: "Champion",
     condition: "You are at 6 or less Life",
     cost: "Obliterate 6 cards you control",
-    tags: ["Cryptbound", "Hellfire","Megalith","Royal"],
+    tags: ["Cryptbound","Hellfire","Megalith","Royal"],
     damage: 6,
     life: 6,
     damageThreshold: "6",
@@ -5584,9 +5584,9 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Duelist, Priority <br> If this Champion battles (Reflex): Your Opponent gains X Life; Increase this card's Damage by X until the end of Damage Calculation.",
+        text: "Duelist, Priority <br> Steroids Save Lives: If this Champion battles (Reflex): Your Opponent gains X Life; Increase this card's Damage by X until the end of Damage Calculation.",
         keywords: ["Duelist","Priority"],
-        effect1name: "If this Champion battles",
+        effect1name: "Steroids Save Lives",
         effect2name: "",
         effect3name: "",
       }
@@ -7278,10 +7278,10 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Maintenance, Necrocharge, Priority <span class="line-gap"></span> On Rally (Mandatory): Target 1 Commander Obelisk in your Tomb; Activate Target (ignoring its cost) and declare this card as its Commander. If you are unable to Target, or Activate, a card, then Destroy this card. <span class="line-gap"></span> If This Card is not a Commander (Mandatory): Destroy this card.`,
+        text: `Maintenance, Necrocharge, Priority <span class="line-gap"></span> On Rally (Mandatory): Target 1 Commander Obelisk in your Tomb; Activate Target (ignoring its cost) and declare this card as its Commander. If you are unable to Target, or Activate, a card, then Destroy this card. <span class="line-gap"></span> Critical Malfunction: If This card is not a Commander (Mandatory): Destroy this card.`,
         keywords: ["Maintenance","Priority","Necrocharge"],
         effect1name: "On Rally",
-        effect2name: "If This Card is not a Commander",
+        effect2name: "Critical Malfunction",
         effect3name: "",
       }
     ]
@@ -7877,6 +7877,28 @@ export const cards = [
         effect1name: "Desperate for a Deal",
         effect2name: "",
         effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "845",
+    name: "Ashes, Wasteland Maiden",
+    image: `${cardArtFolder}/Champions/AshesWastelandMaiden.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "Offer 2 Life",
+    tags: ["Hellfire","Trickster","Mage"],
+    damage: 1,
+    life: 7,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Me or Him: Swap this card's current Damage and Life. <span class="line-gap"></span> Dark Deal: If this card's Life is currently higher than its Damage: Offer 2 Life; Draw 1. <span class="line-gap"></span> Burning Rage: If this card's Damage is currently higher than its Life: Offer 2 Life; Deal 1 Damage to all face-up Champions your Opponent controls.`,
+        keywords: ["blank"],
+        effect1name: "Me or Him",
+        effect2name: "Dark Deal",
+        effect3name: "Burning Rage",
       }
     ]
   },
@@ -8651,6 +8673,28 @@ export const cards = [
     ]
   },
   {
+    id: "936",
+    name: "Mara, Cleric of Ilmater",
+    image: `${cardArtFolder}/Champions/MaraClericOfIlmater.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Righteous","Protector","Blademaster","Mage"],
+    damage: 2,
+    life: 4,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Lifesteal, Menace <span class="line-gap"></span> Channel Divinity (Exhaustion): Target 1 face-up Champion on the Zone; Target Gains 3 Life.`,
+        keywords: ["Lifesteal","Menace"],
+        effect1name: "Channel Divinity",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
     id: "961",
     name: "Cinder, Heavy Metal Bard",
     image: `${cardArtFolder}/Champions/CinderHeavyMetalBard.png`,
@@ -8695,6 +8739,28 @@ export const cards = [
     ]
   },
   {
+    id: "1081",
+    name: "Bri, Elemental Master",
+    image: `${cardArtFolder}/Champions/BriElementalMaster.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "Reflex: A Champion you control left the Zone",
+    cost: "Offer 2 Life",
+    tags: ["Enlightened","Protector","Monk"],
+    damage: 5,
+    life: 3,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Taunt, Unstoppable <span class="line-gap"></span> Deflect Weapons: If this Champion battles another that has attached Equipments: Reduce the Damage this card takes from that battle by its Damage Threshold.`,
+        keywords: ["Taunt","Unstoppable"],
+        effect1name: "Deflect Weapons",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
     id: "1141",
     name: "Voyage, Pactbound Pirate",
     image: `${cardArtFolder}/Champions/Voyage.png`,
@@ -8724,7 +8790,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Basic",
-    tags: ["Driftmarked","Trickster"],
+    tags: ["Driftmarked","Trickster","Shark"],
     damage: 0,
     life: 1,
     damageThreshold: "1",
@@ -8746,7 +8812,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Discard 1",
-    tags: ["Driftmarked","Outlaw"],
+    tags: ["Driftmarked","Outlaw","Shark"],
     damage: 1,
     life: 3,
     damageThreshold: "3",
@@ -8768,7 +8834,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Basic",
-    tags: ["Driftmarked","Megalith"],
+    tags: ["Driftmarked","Megalith","Shark"],
     damage: 7,
     life: 3,
     damageThreshold: "1",
@@ -8818,10 +8884,32 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Offload the Looter: Discard 1; Transfer control of this card to your Opponent. <span class="line-gap"></span> During the End Phase (Mandatory): Add the top card of your Deck to your Opponent's Hand.`,
+        text: `Offload the Looter: Discard 1; Transfer control of this card to your Opponent. <span class="line-gap"></span> Pass It Back: During the End Phase (Mandatory): Add the top card of your Deck to your Opponent's Hand.`,
         keywords: ["blank"],
         effect1name: "Offload the Looter",
-        effect2name: "During the End Phase",
+        effect2name: "Pass It Back",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "1147",
+    name: "Loan Shark",
+    image: `${cardArtFolder}/Champions/LoanShark.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Driftmarked","Outlaw","Shark"],
+    damage: 1,
+    life: 3,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `High-Interest Loan: Either Player can Offer 3 Life; Then Rally 1 Shark Token to their Zone, it is Destroyed during the End Phase.`,
+        keywords: ["blank"],
+        effect1name: "High-Interest Loan",
+        effect2name: "",
         effect3name: "",
       }
     ]
