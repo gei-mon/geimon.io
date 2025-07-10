@@ -6838,6 +6838,7 @@
                     el.style.margin = '5px';
                     el.style.pointerEvents = 'auto';
                     el.dataset.zone = 'Deck';
+                    el.dataset.cardId = String(cardData.id);
 
                 // excavator gets the full hover menu; opponent only the click-overlay
                 if (player === username) {
@@ -6897,13 +6898,11 @@
 
         socket.on('excavate_card_removed', ({ cardId }) => {
             // find any excavated‐window cards with that ID and strip them out
-            document
-                .querySelectorAll('[data-excavation="true"][data-card-id]')
-                .forEach(el => {
+            document.querySelectorAll('[data-card-id]').forEach(el => {
                 if (el.dataset.cardId === String(cardId)) {
                     el.remove();
                 }
-                });
+            });
         });
 
         socket.on("lifeFlash", ({ player, life, delta, from }) => {
