@@ -481,6 +481,10 @@ io.on('connection', (socket) => {
     io.to(gameId).emit('excavate_card_removed', { cardId });
   });
 
+  socket.on('excavate_card_removed', ({ gameId, cardId }) => {
+    io.to(gameId).emit('excavate_card_removed', { cardId });
+  });
+
   socket.on(
     "phase_change_request",
     ({ gameId, username: actor, phase }, ack) => {
