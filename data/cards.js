@@ -8598,7 +8598,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Targets immediately battle.",
+        text: "Targets immediately battle, with you deciding who is attacking and who is blocking.",
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
