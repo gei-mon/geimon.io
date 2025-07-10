@@ -2391,6 +2391,7 @@
         }
 
         function wrapCardButton(btn, containerId) {
+            if (btn.closest('#excavation-popup') && !btn.closest('[data-excavation="true"]')) return;
             const id      = btn.dataset.cardId;
             const cardData = cards.find(c => String(c.id) === id);
             if (!cardData) return;
@@ -5049,7 +5050,10 @@
             }
 
             if (cardElement.dataset.hoverMenuAttached) return;
-            //if (cardElement.dataset.excavation !== 'true') return;
+            if (cardElement.closest('#excavation-popup')
+                && cardElement.dataset.excavation !== 'true') {
+                return;
+            }
 
             cardElement.dataset.hoverMenuAttached = "true";
             cardElement.style.position = "relative";
@@ -5295,6 +5299,7 @@
                 let opts = [];
 
                 if (cardData.tags?.includes("Token")) {
+                    hoverMenu.style.fontSize = "3em";
                     opts = [
                         "Change Control",
                         "Add 1 Counter",
@@ -6110,7 +6115,6 @@
                         break;
                     case "Excavate":
                         {
-                            console.log("Run excavateCards");
                             const max = gameState[username].Deck.length;
                             const count = await new Promise(resolve => {
                             const overlay = document.createElement('div');
@@ -6843,10 +6847,12 @@
                     el.dataset.cardId = String(cardData.id);
 
                 // excavator gets the full hover menu; opponent only the click-overlay
+                el.dataset.noHover = 'true';
                 if (player === username) {
                     el.dataset.excavation = 'true';
                     attachHoverMenu(el, cardData);
                 } else {
+                    el.dataset.noHover = 'true';
                     attachTargetOverlay(el, cardData);
                 }
 
