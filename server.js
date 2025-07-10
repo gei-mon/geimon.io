@@ -452,11 +452,8 @@ io.on('connection', (socket) => {
     // 2b) Determine recipient (opponent) if sending to “Hand”
     let recipient, destZone;
     if (to === 'OpponentHand') {
-      const sockets = openRooms.get(roomId) || [];
-      const oppId   = sockets.find(id => id !== socket.id);
-      const oppUser = userMap.get(oppId);
-      if (!oppUser) return;
-      recipient = oppUser.username;
+      const other = state.player1 === player ? state.player2 : state.player1;
+      recipient = other;
       destZone  = 'Hand';
     } else {
       recipient = player;
