@@ -464,8 +464,8 @@ io.on('connection', (socket) => {
     }
 
     // 2c) Update the card’s zone state
-    card.boardState = to;
-    state[recipient][to].push(card);
+    card.boardState = destZone;
+    state[recipient][destZone].push(card);
 
     // 2d) Broadcast the updated zones to both players
     io.to(gameId).emit('sync_zone', {
@@ -475,8 +475,8 @@ io.on('connection', (socket) => {
     });
     io.to(gameId).emit('sync_zone', {
       owner: recipient,
-      zone:  to,
-      cards: state[recipient][to]
+      zone:  destZone,
+      cards: state[recipient][destZone]
     });
     io.to(gameId).emit('excavate_card_removed', { cardId });
   });
