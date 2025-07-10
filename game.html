@@ -5534,20 +5534,21 @@
                             break;
                         case "To Opponent's Hand": {
                                 playSoundEffect('draw');
-                                // move from your deck to their hand
-                                await socket.emit('excavate_move', {
+                                const idx = gameState[username].Deck.findIndex(c => c.id===cardData.id);
+                                const [moved] = gameState[username].Deck.splice(idx,1);
+                                moved.boardState = "Hand";
+                                const urlParams = new URLSearchParams(window.location.search);
+                                const opponentUsernameParam = urlParams.get("opponentUsername")  || (isSinglePlayer ? "Bot" : username);
+                                gameState[opponentUsernameParam].Hand.push(moved);
+                                renderOpponentHand();      // update the UI immediately
+
+                                // 2) Then tell the server
+                                socket.emit('excavate_move', {
                                     gameId,
                                     cardId: cardData.id,
                                     to: 'OpponentHand'
                                 });
-                                // locally remove from the popup
-                                if (cardElement.dataset.excavation === 'true') {
-                                    cardElement.remove();
-                                    socket.emit('excavate_card_removed', {
-                                        gameId,
-                                        cardId: cardData.id
-                                    });
-                                }
+                                socket.emit('excavate_card_removed', { gameId, cardId: cardData.id });
                                 break;
                             }
                         case "To Tomb":
