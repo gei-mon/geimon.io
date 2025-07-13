@@ -3978,7 +3978,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Priority, Veilbind <span class="line-gap"></span> On Rally: Attach 1 Equipment to this Champion from your Hand, Deck, or Tomb (ignoring its cost). <span class="line-gap"></span> Sacrificial Blade: Bury 1 Equipment and Target 1 card on the Zone; Destroy Target. <span class="line-gap"></span> Reforged: If this card has no attached Equipments: Attach 1 Equipment to this card from your Tomb or Void (ignoring its cost).`,
+        text: `Priority, Veilbind <span class="line-gap"></span> On Rally (Exhaustion): Attach 1 Equipment to this Champion from your Hand, Deck, or Tomb (ignoring its cost). <span class="line-gap"></span> Sacrificial Blade (Exhaustion): Bury 1 Equipment and Target 1 card on the Zone; Destroy Target. <span class="line-gap"></span> Reforged: If this card has no attached Equipments: Attach 1 Equipment to this card from your Tomb or Void (ignoring its cost).`,
         keywords: ["Priority","Veilbind"],
         effect1name: "On Rally",
         effect2name: "Sacrificial Blade",
@@ -5034,7 +5034,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Increase the attached Champion's Damage by 5. <br><span class="line-gap"></span> Each time the attached Champion declares an attack: Your Opponent draws 1.`,
+        text: `Increase the attached Champion's Damage by 4. <br><span class="line-gap"></span> Each time the attached Champion declares an attack: Your Opponent draws 1.`,
         keywords: ["Priority"],
         effect1name: "Each time the attached Champion declares an attack",
         effect2name: "",
