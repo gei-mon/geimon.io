@@ -7177,6 +7177,28 @@ export const cards = [
     ]
   },
   {
+    id: "481",
+    name: "Honeda, Silver-Suited Samurai",
+    image: `${cardArtFolder}/Champions/HonedaSilverSuitedSamurai.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "",
+    cost: "Rally 1 Bamboo Token to your Opponent's Zone",
+    tags: ["Honed","Protector","Blademaster","Samurai"],
+    damage: 5,
+    life: 3,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `Duelist, Forged, Priority <span class="line-gap"></span> Like Cutting Bamboo: If this Champion Destroys another by battle: Deal 3 Damage to your Opponent.`,
+        keywords: ["Duelist","Priority","Forged"],
+        effect1name: "Like Cutting Bamboo",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
     id: "661",
     name: "Carly, Brightest Burnout",
     image: `${cardArtFolder}/Champions/CarlyBrightestBurnout.png`,
@@ -7899,6 +7921,50 @@ export const cards = [
         effect1name: "Me or Him",
         effect2name: "Dark Deal",
         effect3name: "Burning Rage",
+      }
+    ]
+  },
+  {
+    id: "846",
+    name: "Rahzeel, Forever-Indebted Bus Driver",
+    image: `${cardArtFolder}/Champions/RahzeelForeverIndebtedBusDriver.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "Discard 1",
+    tags: ["Hellfire","Citizen"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `On Rally: Recruit 1 Basic Hellfire with 1 or less Damage.`,
+        keywords: ["blank"],
+        effect1name: "On Rally",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "847",
+    name: "Ieza, Chatty Passenger",
+    image: `${cardArtFolder}/Champions/IezaChattyPassenger.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Hellfire","Citizen"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `If Recruited: Draw 1. <span class="line-gap"></span> End of the Line: Sacrifice this card and 1 other face-up Hellfire you control; Recruit 1 Hellfire (ignoring its cost and conditions), and if you do, you lose the game during your next End Phase.`,
+        keywords: ["blank"],
+        effect1name: "If Recruited",
+        effect2name: "End of the Line",
+        effect3name: "",
       }
     ]
   },
@@ -8689,6 +8755,50 @@ export const cards = [
         text: `Lifesteal, Menace <span class="line-gap"></span> Channel Divinity (Exhaustion): Target 1 face-up Champion on the Zone; Target Gains 3 Life.`,
         keywords: ["Lifesteal","Menace"],
         effect1name: "Channel Divinity",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "937",
+    name: "Good Boy Guard Dog",
+    image: `${cardArtFolder}/Champions/GoodBoyGuardDog.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Frontier","Livestock","Protector","Helper"],
+    damage: 1,
+    life: 2,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Taskmaster <span class="line-gap"></span> Big Boy Bark: If an attack is declared (Reflex): Negate that attack, and if you do, reduce the attacking Champion's Damage by 1.`,
+        keywords: ["Taskmaster"],
+        effect1name: "Big Boy Bark",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "938",
+    name: "Cottonball",
+    image: `${cardArtFolder}/Champions/Cottonball.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Frontier","Livestock"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "4",
+    abilities: [
+      {
+        text: `If Destroyed: Increase the Damage Threshold of all face-up non-Token Champions you control by 1.`,
+        keywords: ["blank"],
+        effect1name: "If Destroyed",
         effect2name: "",
         effect3name: "",
       }

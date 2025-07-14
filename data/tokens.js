@@ -514,5 +514,24 @@ export const tokens = [
         effect1name: "Tear it Down",
       }
     ]
+},
+{
+    id: "9028",
+    name: "Bamboo Token",
+    image: `${tokenArtFolder}/Bamboo.png`,
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Construct","Token"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Deathward <span class="line-gap"></span> Armor Up: Sacrifice this Token; Add 1 Equipment.`,
+        keywords: ["Deathward"],
+        effect1name: "Armor Up",
+      }
+    ]
 }
 ];
