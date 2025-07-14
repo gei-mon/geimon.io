@@ -7177,6 +7177,72 @@ export const cards = [
     ]
   },
   {
+    id: "425",
+    name: "Rock",
+    image: `${cardArtFolder}/Champions/Rock.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Dealt","Construct"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "8",
+    abilities: [
+      {
+        text: `It's a Really Big Rock: While you control this Champion: The number of Champions you control cannot be increased, only decreased.`,
+        keywords: ["blank"],
+        effect1name: "It's a Really Big Rock",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "426",
+    name: "Paper",
+    image: `${cardArtFolder}/Equipments/Paper.png`,
+    rarity: "Common",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: "The attached Champion gains Contained, and their Damage Threshold is reduced to 1.",
+        keywords: ["Contained"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "427",
+    name: "Scissors",
+    image: `${cardArtFolder}/Actions/Scissors.png`,
+    rarity: "Common",
+    type: "Action",
+    condition: "",
+    cost: "Target 1 face-up Equipment on the Zone",
+    tags: ["Action"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Destroy Target.`,
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
     id: "481",
     name: "Honeda, Silver-Suited Samurai",
     image: `${cardArtFolder}/Champions/HonedaSilverSuitedSamurai.png`,
@@ -8865,6 +8931,50 @@ export const cards = [
         text: `If Destroyed: Increase the Damage Threshold of all face-up non-Token Champions you control by 1.`,
         keywords: ["blank"],
         effect1name: "If Destroyed",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "939",
+    name: "Big Ol' Barn",
+    image: `${cardArtFolder}/Obelisks/BigOlBarn.png`,
+    rarity: "Legendary",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Each time a Livestock is rallied to your Zone: Place 1 Produce Counter on this card for every card rallied (max. 5 per instance). <br><br> You can remove 5 Produce Counters from this card: Draw 2.`,
+        keywords: ["blank"],
+        effect1name: "You can remove 5 Produce Counters from this card",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "940",
+    name: "Stampede!",
+    image: `${cardArtFolder}/Reflex/Stampede.png`,
+    rarity: "Rare",
+    type: "Reflex",
+    condition: "An Opponent’s Champion declares an attack while you control 2 or more Livestock",
+    cost: "Sacrifice 1",
+    tags: ["Reflex"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Destroy the attacking Champion, and if you do, you cannot rally during your next turn.`,
+        keywords: ["blank"],
+        effect1name: "",
         effect2name: "",
         effect3name: "",
       }
