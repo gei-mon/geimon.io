@@ -3802,7 +3802,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Obliterate all Champions you control, and if you do, Unleash all Champions Obliterated by this effect",
+        text: "Obliterate all Champions you control, and if you do, Unleash all Champions Obliterated by this effect.",
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -5232,9 +5232,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "At the end of a battle in which the attached Champion dealt damage: Target 1 face-up Equipment on the Zone; Destroy Target.",
+        text: "At the end of a battle in which the attached Champion dealt Damage: Target 1 face-up Equipment on the Zone; Destroy Target.",
         keywords: ["blank"],
-        effect1name: "At the end of a battle in which the attached Champion dealt damage",
+        effect1name: "At the end of a battle in which the attached Champion dealt Damage",
         effect2name: "",
         effect3name: "",
       }
@@ -7551,6 +7551,50 @@ export const cards = [
     ]
   },
   {
+    id: "732",
+    name: "Power Swap",
+    image: `${cardArtFolder}/Actions/PowerSwap.png`,
+    rarity: "Rare",
+    type: "Action",
+    condition: "",
+    cost: "Obliterate 1 face-up Mage you control",
+    tags: ["Action"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Recruit 1 Mage.`,
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "733",
+    name: "Master-Level Spell",
+    image: `${cardArtFolder}/Rush/MasterLevelSpell.png`,
+    rarity: "Rare",
+    type: "Rush",
+    condition: "",
+    cost: "Target 1 face-up \"Master\" Mage you control",
+    tags: ["Rush"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Exhaust the Target, and if you do, activate 1 of the following effects: <span class="line-gap"></span> • Deal 1 Damage to all face-up Champions your Opponent controls. <span class="line-gap"></span> • Excavate 2. Add 1 Revealed, and Obliterate the other. <span class="line-gap"></span> • Activate 1 of Target's non-Exhaustion effects.`,
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
     id: "781",
     name: "Skaridrex, the Mighty",
     image: `${cardArtFolder}/Champions/Skaridrex.png`,
@@ -7810,6 +7854,28 @@ export const cards = [
         keywords: ["Duelist","Priority"],
         effect1name: "On Rally",
         effect2name: "Slice and Dice",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "793",
+    name: "Kubringi, Venosect Monger",
+    image: `${cardArtFolder}/Champions/KubringiVenosectMonger.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Sacrifice 1 Champion your Opponent controls, Rally this card under their control",
+    tags: ["Primordial","Megalith","Kaiju"],
+    damage: 4,
+    life: 3,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Duelist, Priority, Second Strike <span class="line-gap"></span> Venom-Coated Fangs: You can remove 1 K-Cell Counter from anywhere on the Zone and Target 1 face-up Champion on the Zone; Target takes 1 Damage.`,
+        keywords: ["Duelist","Priority","Second Strike"],
+        effect1name: "Venom-Coated Fangs",
+        effect2name: "",
         effect3name: "",
       }
     ]
@@ -8865,6 +8931,50 @@ export const cards = [
         text: `Taunt, Unstoppable <span class="line-gap"></span> Deflect Weapons: If this Champion battles another that has attached Equipments: Reduce the Damage this card takes from that battle by its Damage Threshold.`,
         keywords: ["Taunt","Unstoppable"],
         effect1name: "Deflect Weapons",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "1082",
+    name: "Ahm, High-Kick Legend",
+    image: `${cardArtFolder}/Champions/AhmHighKickLegend.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Bounce 1 Champion you control",
+    tags: ["Enlightened","Monk"],
+    damage: 1,
+    life: 2,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Taskmaster <span class="line-gap"></span> Jump! (Reflex): Bounce this card.`,
+        keywords: ["Taskmaster"],
+        effect1name: "Jump",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "1083",
+    name: "Elemental Infusion: Fire",
+    image: `${cardArtFolder}/Equipments/ElementalInfusionFire.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "Attach only to a Monk, or a Champion with at least 1 other attached Equuipment",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Increase the attached Champion's Damage by 1. <span class="line-gap"></span> At the end of a battle in which the attached Champion dealt Damage: Target 1 face-up Equipment or Obelisk on the Zone; Destroy Target.`,
+        keywords: ["blank"],
+        effect1name: "At the end of a battle in which the attached Champion dealt Damage",
         effect2name: "",
         effect3name: "",
       }
