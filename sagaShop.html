@@ -38,30 +38,102 @@
 
     <script>
         const PACK_INFO = {
-        'Game On!': {
-            img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Rush/GameOn.png',
-            desc: 'Every card within Geimon can be found in this pack.'
-        },
-        'Ancient Scholar': {
-            img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/MarkerionSupreme.png',
-            desc: 'Cards for the Ancient Scholar Starter Deck are within here.'
-        },
-        'Brilliant Scientist': {
-            img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/CarlyBestBrightest.png',
-            desc: 'Cards for the Brilliant Scientist Starter Deck are within here.'
-        },
-        'Mad Doctor': {
-            img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/DrJeremiah.png',
-            desc: 'Cards for the Mad Doctor Starter Deck are within here.'
-        },
-        'Shining Knight': {
-            img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/AldredOathbound.png',
-            desc: 'Cards for the Shining Knight Starter Deck are within here.'
-        },
-        'Sunset Sharpshooter': {
-            img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/CyrusDustwalker.png',
-            desc: 'Cards for the Sunset Sharpshooter Starter Deck are within here.'
-        }
+            'Game On!': {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Rush/GameOn.png',
+                desc: 'Every card within Geimon can be found in this pack.'
+            },
+            'Ancient Scholar': {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/MarkerionSupreme.png',
+                desc: 'Cards for the Ancient Scholar Starter Deck are within here.'
+            },
+            'Brilliant Scientist': {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/CarlyBestBrightest.png',
+                desc: 'Cards for the Brilliant Scientist Starter Deck are within here.'
+            },
+            'Mad Doctor': {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/DrJeremiah.png',
+                desc: 'Cards for the Mad Doctor Starter Deck are within here.'
+            },
+            'Shining Knight': {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/AldredOathbound.png',
+                desc: 'Cards for the Shining Knight Starter Deck are within here.'
+            },
+            'Sunset Sharpshooter': {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/CyrusDustwalker.png',
+                desc: 'Cards for the Sunset Sharpshooter Starter Deck are within here.'
+            },
+            'Barnyard Brawl': {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/Bessy.png',
+                desc: 'Cards to support a Livestock Deck are within here.'
+            },
+            'Raging Berserker': {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/DinahBattlerager.png',
+                desc: 'Cards to support a Raging Barbarian Deck are within here.'
+            },
+            'Holy Deliverance': {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/HearthPaladinOfLathander.png',
+                desc: 'Cards to support a Holy Cleric and Paladin Deck are within here.'
+            },
+            'Mythic Slayer': {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/AlenaMonsterHunter.png',
+                desc: 'Cards to support a Monster Hunter Deck are within here.'
+            },
+            'Unseen Infiltrator': {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/KaidoDarkblade.png',
+                desc: 'Cards to support a Ninja Deck are within here.'
+            },
+            'Vigilant Protector': {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/Solar.png',
+                desc: 'Cards to support a Superhero Deck are within here.'
+            },
+            "Fortune's Frenzy": {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/DesperateGambler.png',
+                desc: 'Cards to support a Gambling Deck are within here.'
+            },
+            'Great Warrior': {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/HonedaSilverSuitedSamurai.png',
+                desc: 'Cards to support a Samurai Deck are within here.'
+            },
+            'Honorable Thief': {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/Bessy.png',
+                desc: 'Cards to support a Forest Ranger Deck are within here.'
+            },
+            'Verdant Defender': {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/Bessy.png',
+                desc: 'Cards to support a Druidic Deck are within here.'
+            },
+            'Cyber Savant': {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/CarlyBrightestBurnout.png',
+                desc: 'Cards to support a Cyberpunk Deck are within here.'
+            },
+            'Grand Council': {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/AliceKazimirChronurgistExtraordinaire.png',
+                desc: 'Cards to support a Most-Magical Deck are within here.'
+            },
+            'Worldbreaker Goliath': {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/Skaridrex.png',
+                desc: 'Cards to support a Movie Monster Deck are within here.'
+            },
+            'Obsidian Tormentor': {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/AshesWastelandMaiden.png',
+                desc: 'Cards to support a Devilish Deck are within here.'
+            },
+            'Whimsical Entertainer': {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/MelodyPactbrokenBard.png',
+                desc: 'Cards to support a Bardically-Inspired Deck are within here.'
+            },
+            'Golden Guardian': {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/GuardianAngel.png',
+                desc: 'Cards to support an Angelic Deck are within here.'
+            },
+            'Focused Strike': {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/BriElementalMaster.png',
+                desc: 'Cards to support a Martial Arts Deck are within here.'
+            },
+            'Swashbuckling Scoundrel': {
+                img: 'https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Card Assets/Champions/Voyage.png',
+                desc: 'Cards to support a Pirate Deck are within here.'
+            }
         };
 
     document.addEventListener('DOMContentLoaded', () => {

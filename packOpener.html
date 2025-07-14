@@ -18,7 +18,9 @@
                       font-size:1rem; font-weight:bold; cursor:pointer;
                       background:#222; color:#fff; border:2px solid #444;
                       box-shadow:2px 2px 4px #000; }
+
   .open-pack-btn:hover{ background:#333; }
+
   .rarity-badge{
         position:absolute;           /* sit over the card */
         top:-24px; right:-16px;
@@ -30,20 +32,25 @@
         border-radius:4px; pointer-events:none;
         text-shadow:1px 1px 2px #000;
     }
+
     .rarity-common    { background:#ff4444; }
     .rarity-rare  { background:#ff52ee; }
     .rarity-superior      { background:#d6ec10; }
     .rarity-legendary  { background:#9b27ff; }
+
    #packResults{
     position:absolute; top:90px; left:350px;            /* anchored right-hand side */
     max-width:75vw; max-height:88vh; overflow:auto;
     display:flex; flex-wrap:wrap; gap:12px;
     padding:6px;
   }
+
   #packResults .pack-card{
     opacity:0; transform:translateX(50px) scale(.9);
     transition:opacity .5s ease, transform .5s ease;
+    margin-right: -96px; margin-bottom: -128px;
   }
+
   #packResults .pack-card.show{ opacity:1; transform:translateX(0) scale(.6); }
   #card-popup-overlay {
     position: fixed;
@@ -51,15 +58,17 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.75);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1000;
   }
+
   #card-popup {
     position: relative;
   }
+
   #card-popup-close {
     position: fixed;
     bottom: 20px;
@@ -151,12 +160,43 @@
         function poolForPack(packName){
             const id = c => Number(c.id);
             switch (packName){
-            case 'Ancient Scholar':      return cards.filter(c=>id(c)>=1   && id(c)<=60 );
-            case 'Brilliant Scientist':  return cards.filter(c=>id(c)>=121  && id(c)<=180);
-            case 'Sunset Sharpshooter':  return cards.filter(c=>id(c)>=61 && id(c)<=120);
-            case 'Shining Knight':       return cards.filter(c=>id(c)>=181 && id(c)<=240);
-            case 'Mad Doctor':           return cards.filter(c=>id(c)>=241 && id(c)<=300);
-            default:                     return cards; // “Game On!” or unknown → full pool
+                case 'Ancient Scholar':      return cards.filter(c=>id(c)>=1   && id(c)<=60 );
+                case 'Brilliant Scientist':  return cards.filter(c=>id(c)>=121  && id(c)<=180);
+                case 'Sunset Sharpshooter':  return cards.filter(c=>id(c)>=61 && id(c)<=120);
+                case 'Shining Knight':       return cards.filter(c=>id(c)>=181 && id(c)<=240);
+                case 'Mad Doctor':           return cards.filter(c=>id(c)>=241 && id(c)<=300);
+                case 'Barnyard Brawl': {
+                    const allowedIds = [82,83,84,902,903,914,915,916,917,918,919,920,921,922,923,924,925,926,937,938];
+                    return cards.filter(c => allowedIds.includes(id(c)));
+                }
+                case 'Raging Berserker': {
+                    const allowedIds = [905,933];
+                    return cards.filter(c => allowedIds.includes(id(c)));
+                }
+                case 'Holy Deliverance': {
+                    const allowedIds = [906,936];
+                    return cards.filter(c => allowedIds.includes(id(c)));
+                }
+                case 'Mythic Slayer': {
+                    const allowedIds = [904,934,935];
+                    return cards.filter(c => allowedIds.includes(id(c)));
+                }
+                case 'Unseen Infiltrator':           return cards.filter(c=>id(c)>=301 && id(c)<=360);
+                case 'Vigilant Protector':           return cards.filter(c=>id(c)>=361 && id(c)<=420);
+                case 'Fortune\'s Frenzy':            return cards.filter(c=>id(c)>=421 && id(c)<=480);
+                case 'Great Warrior':                return cards.filter(c=>id(c)>=481 && id(c)<=540);
+                case 'Honorable Thief':              return cards.filter(c=>id(c)>=541 && id(c)<=600);
+                case 'Verdant Defender':             return cards.filter(c=>id(c)>=601 && id(c)<=660);
+                case 'Cyber Savant':                 return cards.filter(c=>id(c)>=661 && id(c)<=720);
+                case 'Grand Council':                return cards.filter(c=>id(c)>=721 && id(c)<=780);
+                case 'Worldbreaker Goliath':         return cards.filter(c=>id(c)>=781 && id(c)<=840);
+                case 'Obsidian Tormentor':           return cards.filter(c=>id(c)>=841 && id(c)<=900);
+                case 'Whimsical Entertainer':        return cards.filter(c=>id(c)>=961 && id(c)<=1020);
+                case 'Golden Guardian':              return cards.filter(c=>id(c)>=1021 && id(c)<=1080);
+                case 'Focused Strike':               return cards.filter(c=>id(c)>=1081 && id(c)<=1140);
+                case 'Swashbuckling Scoundrel':      return cards.filter(c=>id(c)>=1141 && id(c)<=1200);
+
+                default: return cards;
             }
         }
 
@@ -187,31 +227,49 @@
         /* ─── helper: open N packs (N×5 cards) ────────────────── */
         function openNPacks(nPacks, packName){
             results.innerHTML = '';                       // clear previous
+            if (nPacks === 1) {
+                results.style.padding = "0 48px 96px 0";  // top/bottom, left/right padding
+            }
             const pool = poolForPack(packName);
 
+            //console.log("Barnyard Brawl pool:", poolForPack("Barnyard Brawl"));
             let delay = 0;
-            for(let p=0; p<nPacks; p++){
-            const rarities = rarityArrayForOnePack();
-            rarities.forEach(rarity => {
-                const card = randomCard(pool, rarity);
-                const cardEl = renderCard(card);          // your existing renderer
-                const btn = cardEl.querySelector('.card-button');
-                if (btn) {
-                    btn.onclick = e => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        openCardPopup(cardEl);
-                    };
-                }
-                cardEl.dataset.cardId = card.id;
-                appendRarityBadge(cardEl, rarity);
-                cardEl.classList.add('pack-card');
-                results.appendChild(cardEl);
+            let cardCount = 0;
 
-                /* staggered reveal */
-                setTimeout(()=> cardEl.classList.add('show'), delay);
-                delay += (nPacks===1 ? 120 : 20);         // slower for showcase pack
-            });
+            for(let p=0; p<nPacks; p++){
+                const rarities = rarityArrayForOnePack();
+                rarities.forEach(rarity => {
+                    const card = randomCard(pool, rarity);
+                    if (!card) return;
+                    const cardEl = renderCard(card);          // your existing renderer
+                    const btn = cardEl.querySelector('.card-button');
+                    if (btn) {
+                        btn.onclick = e => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            openCardPopup(cardEl);
+                        };
+                    }
+                    cardEl.dataset.cardId = card.id;
+                    appendRarityBadge(cardEl, rarity);
+                    cardEl.classList.add('pack-card');
+                    results.appendChild(cardEl);
+
+                    cardCount++;  // increment actual card count
+
+                    // After every 5 cards, insert a line break
+                    if (cardCount % 5 === 0) {
+                        const breakEl = document.createElement('div');
+                        breakEl.style.flexBasis = '100%';
+                        breakEl.style.height = '0';
+                        breakEl.style.margin = '0';
+                        results.appendChild(breakEl);
+                    }
+
+                    /* staggered reveal */
+                    setTimeout(()=> cardEl.classList.add('show'), delay);
+                    delay += (nPacks===1 ? 120 : 20);         // slower for showcase pack
+                });
             }
         }
 
