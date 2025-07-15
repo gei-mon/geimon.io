@@ -1023,14 +1023,14 @@ export const cards = [
     rarity: "Common",
     type: "Obelisk",
     condition: "",
-    cost: "Offer 5 Life",
+    cost: "Offer 3 Life",
     tags: ["Obelisk"],
     damage: "",
     life: "",
     damageThreshold: "",
     abilities: [
       {
-        text: "If you take 5 or more Damage by an Opponent's card effect or their Champion's attack: Draw 1 for every 5 Damage you took.",
+        text: "If you take 3 or more Damage by an Opponent's card effect or their Champion's attack: Draw 1 for every 3 Damage you took.",
         keywords: ["blank"],
         effect1name: "",
         effect2name: "",
@@ -8101,6 +8101,28 @@ export const cards = [
     ]
   },
   {
+    id: "848",
+    name: "Glory, Demon Slayer",
+    image: `${cardArtFolder}/Champions/GloryDemonSlayer.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "",
+    cost: "Offer 5 Life",
+    tags: ["Hellfire","Frenzied","Blademaster"],
+    damage: 1,
+    life: 4,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Bloodrage, Necrocharge <span class="line-gap"></span> Legendary Slayer: If this Champion destroys a Hellfire by battle: Increase this card's Damage by 1.`,
+        keywords: ["Bloodrage","Necrocharge"],
+        effect1name: "Legendary Slayer",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
     id: "901",
     name: "Get Your Game On!",
     image: `${cardArtFolder}/Rush/GameOn.png`,
@@ -9086,6 +9108,94 @@ export const cards = [
         keywords: ["blank"],
         effect1name: "At the end of a battle in which the attached Champion dealt Damage",
         effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "1084",
+    name: "Elemental Infusion: Earth",
+    image: `${cardArtFolder}/Equipments/ElementalInfusionEarth.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "Attach only to a Monk, or a Champion with at least 1 other attached Equuipment",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Increase the attached Champion's Damage Threshold by 1. <span class="line-gap"></span> At the end of a battle involving the attached Champion: Target 1 face-up Champion on the Zone; Target takes 1 Damage.`,
+        keywords: ["blank"],
+        effect1name: "At the end of a battle involving the attached Champion",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "1085",
+    name: "Elemental Infusion: Water",
+    image: `${cardArtFolder}/Equipments/ElementalInfusionWater.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "Attach only to a Monk, or a Champion with at least 1 other attached Equuipment",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Reduce the Damage the attached Champion takes by 1. <span class="line-gap"></span> At the end of a battle involving the attached Champion: Target 1 face-up card on the Zone; Flip Target face-down.`,
+        keywords: ["blank"],
+        effect1name: "At the end of a battle involving the attached Champion",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "1086",
+    name: "Elemental Infusion: Air",
+    image: `${cardArtFolder}/Equipments/ElementalInfusionAir.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "Attach only to a Monk, or a Champion with at least 1 other attached Equuipment",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Until the attached Champion declares an attack: The attached Champion gains Veilbind and Warded. <span class="line-gap"></span> At the end of a battle in which the attached Champion dealt Damage: Target 1 face-up card on the Zone; Spin Target.`,
+        keywords: ["Veilbind","Warded"],
+        effect1name: "At the end of a battle in which the attached Champion dealt Damage",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "1087",
+    name: "Whisper, Devil's Demise",
+    image: `${cardArtFolder}/Champions/WhisperDevilsDemise.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "",
+    cost: "Destroy 1 Champion you control",
+    tags: ["Enlightened","Hellfire","Monk"],
+    damage: 3,
+    life: 2,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `One-Woman Army: If this is the only Champion you control: This card gains Taskmaster and Unstoppable. <span class="line-gap"></span> Broken Soul: Hellfire deal no battle Damage to this card, and you take no battle Damage from battles involving this card and a Hellfire.`,
+        keywords: ["Taskmaster","Unstoppable"],
+        effect1name: "One-Woman Army",
+        effect2name: "Broken Soul",
         effect3name: "",
       }
     ]
