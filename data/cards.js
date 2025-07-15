@@ -9173,7 +9173,7 @@ export const cards = [
         text: `Until the attached Champion declares an attack: The attached Champion gains Veilbind and Warded. <span class="line-gap"></span> At the end of a battle in which the attached Champion dealt Damage: Target 1 face-up card on the Zone; Spin Target.`,
         keywords: ["Veilbind","Warded"],
         effect1name: "At the end of a battle in which the attached Champion dealt Damage",
-        effect2name: "",
+        effect2name: "Until the attached Champion declares an attack",
         effect3name: "",
       }
     ]
