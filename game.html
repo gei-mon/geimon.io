@@ -2650,15 +2650,15 @@
             if (tombTop) {
                 const card = cards.find(c => String(c.id) === String(tombTop.id));
                 if (card) {
-                const miniCard = renderCard(card);
-                Object.assign(miniCard.style, {
-                    transform:       "scale(0.3)",
-                    transformOrigin: "top left",
-                    marginTop:       "-8%",
-                    marginLeft:      "0%",
-                    pointerEvents:   "none"
-                });
-                playerTombBox.appendChild(miniCard);
+                    const miniCard = renderCard(card);
+                    Object.assign(miniCard.style, {
+                        transform:       "scale(0.3)",
+                        transformOrigin: "top left",
+                        marginTop:       "-8%",
+                        marginLeft:      "0%",
+                        pointerEvents:   "none"
+                    });
+                    playerTombBox.appendChild(miniCard);
                 }
             }
 
@@ -3639,6 +3639,32 @@
         tombButton.style.cursor = "pointer";
         tombButton.title = "Tomb";
 
+        // Hovering top card displays card in viewing window
+        tombButton.addEventListener("mouseenter", () => {
+            const tombCards = gameState?.[username]?.Tomb || [];
+            const tombTop = tombCards[tombCards.length - 1];
+            if (!tombTop) return;
+
+            const fullCard = cards.find(c => String(c.id) === String(tombTop.id));
+            if (!fullCard) return;
+
+            const scaled = document.querySelector("#viewing-window .scaled-card");
+            if (!scaled) return;
+
+            scaled.innerHTML = "";
+
+            const preview = renderCard(fullCard);
+            Object.assign(preview.style, {
+                width: "240px",
+                height: "420px",
+                transform: "scale(1.2)",
+                marginLeft: "-15%",
+                marginTop: "7%"
+            });
+
+            scaled.appendChild(preview);
+        });
+
         // Add event listener for click
         tombButton.addEventListener("click", () => {
             const popup = document.createElement("div");
@@ -3821,6 +3847,32 @@
         voidButton.style.zIndex = "100800";
         voidButton.style.cursor = "pointer";
         voidButton.title = "Void";
+
+        // Hovering top card displays card in viewing window
+        voidButton.addEventListener("mouseenter", () => {
+            const voidCards = gameState?.[username]?.Void || [];
+            const voidTop = voidCards[voidCards.length - 1];
+            if (!voidTop) return;
+
+            const fullCard = cards.find(c => String(c.id) === String(voidTop.id));
+            if (!fullCard) return;
+
+            const scaled = document.querySelector("#viewing-window .scaled-card");
+            if (!scaled) return;
+
+            scaled.innerHTML = "";
+
+            const preview = renderCard(fullCard);
+            Object.assign(preview.style, {
+                width: "240px",
+                height: "420px",
+                transform: "scale(1.2)",
+                marginLeft: "-15%",
+                marginTop: "7%"
+            });
+
+            scaled.appendChild(preview);
+        });
 
         // Add event listener for click
         voidButton.addEventListener("click", () => {
@@ -4015,6 +4067,32 @@
         opponentTombButton.style.cursor = "pointer";
         opponentTombButton.title = "Tomb";
 
+        // Hovering top card displays card in viewing window
+        opponentTombButton.addEventListener("mouseenter", () => {
+            const tombCards = gameState?.[opponentName]?.Tomb || [];
+            const tombTop = tombCards[tombCards.length - 1];
+            if (!tombTop) return;
+
+            const fullCard = cards.find(c => String(c.id) === String(tombTop.id));
+            if (!fullCard) return;
+
+            const scaled = document.querySelector("#viewing-window .scaled-card");
+            if (!scaled) return;
+
+            scaled.innerHTML = "";
+
+            const preview = renderCard(fullCard);
+            Object.assign(preview.style, {
+                width: "240px",
+                height: "420px",
+                transform: "scale(1.2)",
+                marginLeft: "-15%",
+                marginTop: "7%"
+            });
+
+            scaled.appendChild(preview);
+        });
+
         // Add event listener for click
         opponentTombButton.addEventListener("click", () => {
             const popup = document.createElement("div");
@@ -4200,6 +4278,32 @@
         opponentVoidButton.style.zIndex = "100800";
         opponentVoidButton.style.cursor = "pointer";
         opponentVoidButton.title = "Void";
+
+        // Hovering top card displays card in viewing window
+        opponentVoidButton.addEventListener("mouseenter", () => {
+            const voidCards = gameState?.[opponentName]?.Void || [];
+            const voidTop = voidCards[voidCards.length - 1];
+            if (!voidTop) return;
+
+            const fullCard = cards.find(c => String(c.id) === String(voidTop.id));
+            if (!fullCard) return;
+
+            const scaled = document.querySelector("#viewing-window .scaled-card");
+            if (!scaled) return;
+
+            scaled.innerHTML = "";
+
+            const preview = renderCard(fullCard);
+            Object.assign(preview.style, {
+                width: "240px",
+                height: "420px",
+                transform: "scale(1.2)",
+                marginLeft: "-15%",
+                marginTop: "7%"
+            });
+
+            scaled.appendChild(preview);
+        });
 
         // Add event listener for click
         opponentVoidButton.addEventListener("click", () => {
@@ -6071,9 +6175,11 @@
             });
         }
 
-        document.getElementById('confirm-life-change').addEventListener('click', () => {
+        // 🔁 Reusable function for both button click and Enter key
+        function submitLifeChange() {
             const amt = parseInt(document.getElementById('life-amount').value, 10);
             if (isNaN(amt) || amt <= 0) return alert('Enter a positive number');
+
             const increase = document.getElementById('increase-life').classList.contains('active');
 
             changeLife(
@@ -6085,6 +6191,16 @@
             );
 
             document.getElementById('life-amount').value = '';
+        }
+
+        // 👇 Handle confirm button click
+        document.getElementById('confirm-life-change').addEventListener('click', submitLifeChange);
+
+        // 👇 Handle Enter key in the input box
+        document.getElementById('life-amount').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                submitLifeChange();
+            }
         });
 
         document.querySelectorAll('#increase-life, #decrease-life').forEach(btn => {

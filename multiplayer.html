@@ -59,6 +59,17 @@
     .buttonEvenSmaller:active {
         background-color: rgb(153, 153, 234);
     }
+    .lobby-status {
+        color: white;
+        font-size: 1.5em;
+        font-weight: bold;
+        font-family: Arial, sans-serif;
+        text-shadow:
+            -2px -2px 0 black,
+            2px -2px 0 black,
+            -2px  2px 0 black,
+            2px  2px 0 black;
+        }
 </style>
 <body style="background-color:rgb(78, 78, 78);">
   <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
@@ -73,11 +84,11 @@
         <div class="container">
             <div class="column left">
                 <button class="button" onclick="window.open('single.html', '_blank')" id="singleButton">Best of 1</button>
-                <div id="lobby-bestOf1" style="color: white; font-size: 1.5em;">Checking...</div>
+                <div id="lobby-bestOf1" class="lobby-status">Checking...</div>
             </div>
             <div class="column right">
                 <button class="button" onclick="window.open('match.html', '_blank')" id="matchButton">Best of 3</button>
-                <div id="lobby-bestOf3" style="color: white; font-size: 1.5em;">Checking...</div>
+                <div id="lobby-bestOf3" class="lobby-status">Checking...</div>
             </div>
         </div>
 
@@ -85,7 +96,7 @@
         <h2 style="text-align: center; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Mini Games</h2>
         <div style="text-align: center; margin-top: 0px;">
             <button class="button" onclick="window.open('saga.html', '_blank')" id="sagaButton">Pack Madness</button>
-            <div id="lobby-packMadness" style="color: white; font-size: 1.5em;">Checking...</div>
+            <div id="lobby-packMadness" class="lobby-status">Checking...</div>
         </div>
 
         <!-- <div class="container">
@@ -115,21 +126,22 @@
             const res = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/lobby-status");
             const data = await res.json();
 
-            document.getElementById("lobby-bestOf1").innerText =
-            data.bestOf1 > 0 ? "User Waiting in Lobby" : "No Users Waiting in Lobby";
-
-            document.getElementById("lobby-bestOf3").innerText =
-            data.bestOf3 > 0 ? "User Waiting in Lobby" : "No Users Waiting in Lobby";
-
-            document.getElementById("lobby-packMadness").innerText =
-            data.packMadness > 0 ? "User Waiting in Lobby" : "No Users Waiting in Lobby";
+            updateStatus("lobby-bestOf1", data.bestOf1);
+            updateStatus("lobby-bestOf3", data.bestOf3);
+            updateStatus("lobby-packMadness", data.packMadness);
         } catch (err) {
             console.error("Failed to fetch lobby status:", err);
         }
     }
 
+    function updateStatus(elementId, count) {
+        const el = document.getElementById(elementId);
+        el.innerText = count > 0 ? "User Waiting in Lobby" : "No Users Waiting in Lobby";
+        el.style.color = count > 0 ? "limegreen" : "red";
+    }
+
     updateLobbyStatus();
-    setInterval(updateLobbyStatus, 10000); // refresh every 10s
+    setInterval(updateLobbyStatus, 1000); // Refresh every 10s
 </script>
 </body>
 </html>
