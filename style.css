@@ -264,7 +264,7 @@ text-decoration: underline;
   background-color: #84004f;
   color: #ffbaee;
 }
-.primordial {
+.cinemonster {
   background-color: #321600;
   color: #ffd396;
 }
@@ -303,6 +303,14 @@ text-decoration: underline;
 .frenzied {
   background-color: #3e3e3e;
   color: #ff4747;
+}
+.gallant {
+  background-color: #135702;
+  color: #b0ffa2;
+}
+.verdant {
+  background-color: #138f0f;
+  color: #ffc2dc;
 }
 .action {
   background-color: #ffac64;

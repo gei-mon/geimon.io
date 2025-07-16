@@ -7058,10 +7058,10 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Deathtouch <span class="line-gap"></span> If this card battles: Destroy this card after Damage Calculation. <span class="line-gap"></span> If Sent to Tomb: Obliterate this card. <span class="line-gap"></span> If Sent to Void: Target 1 other card in your Void; Reclaim Target.`,
+        text: `Deathtouch <span class="line-gap"></span> Tentative Connection: If this card battles: Destroy this card after Damage Calculation. <span class="line-gap"></span> If Sent to Tomb: Obliterate this card. <span class="line-gap"></span> If Sent to Void: Target 1 other card in your Void; Reclaim Target.`,
         keywords: ["Deathtouch"],
         effect1name: "If Sent to Void",
-        effect2name: "If this card battles",
+        effect2name: "Tentative Connection",
         effect3name: "If Sent to Tomb",
       }
     ]
@@ -7085,6 +7085,72 @@ export const cards = [
         effect1name: "Immortality",
         effect2name: "During each End Phase",
         effect3name: "If Destroyed",
+      }
+    ]
+  },
+  {
+    id: "377",
+    name: "Magma Mauler",
+    image: `${cardArtFolder}/Champions/MagmaBurst.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "",
+    cost: "",
+    tags: ["Valiant","Hellfire","Outlaw","Villain"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Big Inflate Charge: Obliterate Mill 60; Increase this card's Damage by 20 until the End Phase.`,
+        keywords: ["blank"],
+        effect1name: "Big Inflate Charge",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "378",
+    name: "Heroic Emergence",
+    image: `${cardArtFolder}/Actions/HeroicFusion.png`,
+    rarity: "Common",
+    type: "Action",
+    condition: "",
+    cost: "Obliterate 2 Hero Champions from your Tomb",
+    tags: ["Action"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Recruit 1 Hero.`,
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "379",
+    name: "Beaten Not Broken",
+    image: `${cardArtFolder}/Reflex/BeatenNotBroken.png`,
+    rarity: "Superior",
+    type: "Reflex",
+    condition: "A Champion you control is Damaged by battle, but not Destroyed",
+    cost: "",
+    tags: ["Reflex"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Increase the Damaged Champion's Damage, Life, and Damage Threshold by 2.`,
+        keywords: ["blank"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
       }
     ]
   },
@@ -7265,6 +7331,50 @@ export const cards = [
     ]
   },
   {
+    id: "541",
+    name: "Xina, Forest Guardian",
+    image: `${cardArtFolder}/Champions/XinaForestGuardian.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "Your Opponent controls more Champions than you",
+    cost: "",
+    tags: ["Gallant","Protector","Blademaster","Ranger"],
+    damage: 4,
+    life: 2,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `If this card has at least 1 attached Equipment: This card gains Priority.`,
+        keywords: ["Priority"],
+        effect1name: "If this card has at least 1 attached Equipment",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "601",
+    name: "Laira, Meadow Frolicker",
+    image: `${cardArtFolder}/Champions/LairaMeadowFrolicker.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Verdant","Druid","Mage"],
+    damage: 0,
+    life: 5,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Pretty!: Reveal your Hand; Your Opponent then reveals their Hand, and if they do, both Players select 1 card in their Opponent's Hand to take for themselves.`,
+        keywords: ["blank"],
+        effect1name: "Pretty",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
     id: "661",
     name: "Carly, Brightest Burnout",
     image: `${cardArtFolder}/Champions/CarlyBrightestBurnout.png`,
@@ -7370,6 +7480,28 @@ export const cards = [
         keywords: ["Maintenance","Priority","Necrocharge"],
         effect1name: "On Rally",
         effect2name: "Critical Malfunction",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "666",
+    name: "Spitfire, Hellbent Assassin",
+    image: `${cardArtFolder}/Champions/SpitfireHellbentAssassin.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Discard 2",
+    tags: ["Chrome","Outlaw","Marksman","Specialist"],
+    damage: 6,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Board Breaker, Duelist, Priority`,
+        keywords: ["Board Breaker","Duelist","Priority"],
+        effect1name: "",
+        effect2name: "",
         effect3name: "",
       }
     ]
@@ -7661,6 +7793,28 @@ export const cards = [
     ]
   },
   {
+    id: "734",
+    name: "Ferg, The Frog",
+    image: `${cardArtFolder}/Champions/FergTheFrog.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Arcanum","Helper"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Ribbit (Reflex): If a Champion effect is activated: Discard 1; Negate that effect's activation. <span class="line-gap"></span> Hardly Ordinary: If this is the only Champion you control: Sacrifice this card; Recruit 1 Mage. <span class="line-gap"></span> Helping Hand: If this card is in your Tomb (Reflex): Obliterate this card and Target 1 face-up Mage on the Zone; Move Target to the Reserve.`,
+        keywords: ["blank"],
+        effect1name: "Ribbit",
+        effect2name: "Hardly Ordinary",
+        effect3name: "Helping Hand",
+      }
+    ]
+  },
+  {
     id: "781",
     name: "Skaridrex, the Mighty",
     image: `${cardArtFolder}/Champions/Skaridrex.png`,
@@ -7668,7 +7822,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Sacrifice 1 Champion your Opponent controls, Rally this card under their control",
-    tags: ["Primordial","Megalith","Kaiju"],
+    tags: ["Cinemonster","Megalith","Kaiju"],
     damage: 7,
     life: 9,
     damageThreshold: "3",
@@ -7690,7 +7844,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Sacrifice 2 Champions your Opponent controls, Rally this card under their control",
-    tags: ["Primordial","Megalith","Kaiju"],
+    tags: ["Cinemonster","Megalith","Kaiju"],
     damage: 13,
     life: 7,
     damageThreshold: "3",
@@ -7822,7 +7976,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Sacrifice 1 Champion your Opponent controls, Rally this card under their control",
-    tags: ["Primordial","Megalith","Kaiju"],
+    tags: ["Cinemonster","Megalith","Kaiju"],
     damage: 4,
     life: 6,
     damageThreshold: "2",
@@ -7888,7 +8042,7 @@ export const cards = [
     type: "Champion",
     condition: "Your Opponent controls a Kaiju",
     cost: "Basic",
-    tags: ["Primordial","Megalith","Kaiju","Construct"],
+    tags: ["Cinemonster","Megalith","Kaiju","Construct"],
     damage: 5,
     life: 7,
     damageThreshold: "2",
@@ -7910,7 +8064,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Sacrifice 1 Champion your Opponent controls, Rally this card under their control",
-    tags: ["Primordial","Megalith","Kaiju","Construct"],
+    tags: ["Cinemonster","Megalith","Kaiju","Construct"],
     damage: 10,
     life: 4,
     damageThreshold: "2",
@@ -7932,7 +8086,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Sacrifice 1 Champion your Opponent controls, Rally this card under their control",
-    tags: ["Primordial","Megalith","Kaiju"],
+    tags: ["Cinemonster","Megalith","Kaiju"],
     damage: 4,
     life: 3,
     damageThreshold: "1",
@@ -7941,6 +8095,160 @@ export const cards = [
         text: `Duelist, Priority, Second Strike <span class="line-gap"></span> Venom-Coated Fangs: You can remove 1 K-Cell Counter from anywhere on the Zone and Target 1 face-up Champion on the Zone; Target takes 1 Damage.`,
         keywords: ["Duelist","Priority","Second Strike"],
         effect1name: "Venom-Coated Fangs",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "794",
+    name: "Subject: Alpha - Rogue Experiment",
+    image: `${cardArtFolder}/Champions/SubjectAlphaEscapedExperiment.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Sacrifice 1",
+    tags: ["Cinemonster","Construct","Slasher","Villain"],
+    damage: 6,
+    life: 1,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `Contained, Taunt`,
+        keywords: ["Contained","Taunt"],
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "795",
+    name: "Jeff, Well-Versed Cinephile",
+    image: `${cardArtFolder}/Champions/JeffWellVersedCinephile.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Cinemonster","Protector","Blademaster","Hero"],
+    damage: 2,
+    life: 1,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Raider <span class="line-gap"></span> Seen This One Before: Cinemonsters deal no battle Damage to this card, and you take no battle Damage from battles involving this card and a Cinemonster.`,
+        keywords: ["Raider"],
+        effect1name: "Seen This One Before",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "796",
+    name: "Edgar, Misunderstood Monster",
+    image: `${cardArtFolder}/Champions/EdgarMisunderstoodMonster.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Cinemonster","Undead","Slasher","Protector"],
+    damage: 4,
+    life: 2,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Conscript, Taunt <span class="line-gap"></span> On Resurrection (Mandatory): Both Players can draw 1, then both Players discard 1.`,
+        keywords: ["Conscript","Taunt"],
+        effect1name: "On Resurrection",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "797",
+    name: "Heather, Willing Werewolf",
+    image: `${cardArtFolder}/Champions/HeatherWillingWerewolf.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "Sacrifice all Champions you control (minimum of 1)",
+    tags: ["Cinemonster","Slasher","Villain"],
+    damage: 6,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Solitary <span class="line-gap"></span> Revenge Arc (Exhaustion): Target 1 face-up Champion on the Zone; Destroy Target. <span class="line-gap"></span> If Sent from the Zone to the Tomb: You take 2 Damage.`,
+        keywords: ["Solitary"],
+        effect1name: "Revenge Arc",
+        effect2name: "If Sent from the Zone to the Tomb",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "798",
+    name: "Tryzten, Vampire Lord",
+    image: `${cardArtFolder}/Champions/TryztenVampireLord.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "",
+    cost: "Offer 5 Life",
+    tags: ["Cinemonster","Undead","Slasher","Villain"],
+    damage: 5,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Menace <span class="line-gap"></span> King of the Night: If your Life is lower than your Opponent's: This card gains Lifesteal. Otherwise, if your Life is higher, this card gains Naive.`,
+        keywords: ["Lifesteal","Menace","Naive"],
+        effect1name: "King of the Night",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "799",
+    name: "Rhafir, Mummy King",
+    image: `${cardArtFolder}/Champions/RhafirMummyKing.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "",
+    cost: "Mill 6",
+    tags: ["Cinemonster","Undead","Slasher","Villain"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Fortified, Necrocharge <span class="line-gap"></span> Ancient Ruler (Exhaustion, Reflex): Obliterate 3 Undead from your Tomb and Target 1 card on the Zone; Destroy Target.`,
+        keywords: ["Necrocharge","Fortified"],
+        effect1name: "Ancient Ruler",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "800",
+    name: "Rick, Creature From The Bog",
+    image: `${cardArtFolder}/Champions/RickCreatureOfTheBog.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Cinemonster","Slasher","Villain"],
+    damage: 2,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Deathward <span class="line-gap"></span> Until this Champion declares an attack: It gains Invisible and Warded. <span class="line-gap"></span> If Destroyed by battle: Add 1 Slasher.`,
+        keywords: ["Deathward","Invisible","Warded"],
+        effect1name: "Until this Champion declares an attack",
         effect2name: "",
         effect3name: "",
       }
@@ -8947,7 +9255,7 @@ export const cards = [
     tags: ["Frontier","Livestock","Protector","Helper"],
     damage: 1,
     life: 2,
-    damageThreshold: "2",
+    damageThreshold: "1",
     abilities: [
       {
         text: `Taskmaster <span class="line-gap"></span> Big Boy Bark: If an attack is declared (Reflex): Negate that attack, and if you do, reduce the attacking Champion's Damage by 1.`,
@@ -9019,6 +9327,116 @@ export const cards = [
         text: `Destroy the attacking Champion, and if you do, you cannot rally during your next turn.`,
         keywords: ["blank"],
         effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "941",
+    name: "Elise, Flourish Knight",
+    image: `${cardArtFolder}/Champions/EliseFlourishKnight.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Noble","Oldblood","Blademaster","Specialist"],
+    damage: 3,
+    life: 1,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `Reach, Warded <span class="line-gap"></span> Contingency Expert: This card gains Priority to attack Champions you are the original owner of, it also deals double battle Damage against such Champions.`,
+        keywords: ["Reach","Warded","Priority"],
+        effect1name: "Contingency Expert",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "942",
+    name: "Pollonius, Blissful Slayer",
+    image: `${cardArtFolder}/Champions/PollonusBlissfulSlayer.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Sacrifice 1 with at least 1 attached Equipment",
+    tags: ["Oldblood","Blademaster","Specialist"],
+    damage: 5,
+    life: 2,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Board Breaker, Duelist, Priority, Second Strike <span class="line-gap"></span> Big Ass Sword: If this Champion Destroys another by battle (Mandatory): Deal 1 Damage to your Opponent.`,
+        keywords: ["Board Breaker","Priority","Second Strike","Duelist"],
+        effect1name: "Big Ass Sword",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "943",
+    name: "Radkiel, Paladin of Tyr",
+    image: `${cardArtFolder}/Champions/RadkielPaladinOfTyr.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "Discard 2 Equipments",
+    tags: ["Righteous","Radiant","Blademaster","Protector"],
+    damage: 4,
+    life: 4,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Duelist, Priority <span class="line-gap"></span> On Rally: Activate 1 Equipment from your Tomb (ignoring its cost). <span class="line-gap"></span> Final Verdict: If this card battles another Champion (Reflex): Offer 10 Life; Obliterate the other Champion.`,
+        keywords: ["Priority","Duelist"],
+        effect1name: "Final Verdict",
+        effect2name: "On Rally",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "944",
+    name: "Aronan, Dungeon Delver",
+    image: `${cardArtFolder}/Champions/AronanDungeonDelver.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Righteous","Blademaster","Protector"],
+    damage: 2,
+    life: 2,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Deathward, Defender <span class="line-gap"></span> Reckless Abandon: If this card declares an attack: It gains Warded until the end of Damage Calculation.`,
+        keywords: ["Defender","Deathward","Warded"],
+        effect1name: "Reckless Abandon",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "945",
+    name: "Zee, The Sheepdog",
+    image: `${cardArtFolder}/Champions/ZeeTheSheepdog.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Frontier","Livestock","Protector","Helper"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Heavy Hands <span class="line-gap"></span> Guard the Herd: Increase this card's Damage by 1 for every Token you control. If this card's Damage is 8 or Higher, this is the only card you can declare an attack with during your Battle Phase.`,
+        keywords: ["Heavy Hands"],
+        effect1name: "Guard the Herd",
         effect2name: "",
         effect3name: "",
       }
@@ -9196,6 +9614,28 @@ export const cards = [
         keywords: ["Veilbind","Warded"],
         effect1name: "At the end of a battle in which the attached Champion dealt Damage",
         effect2name: "Until the attached Champion declares an attack",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "1087",
+    name: "Kaya, The Rose",
+    image: `${cardArtFolder}/Champions/KayaTheRose.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "Spin 2 cards you control of different types",
+    tags: ["Enlightened","Monk"],
+    damage: 3,
+    life: 3,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `Deathcurse, Lifetouch, Priority <span class="line-gap"></span> If Destroyed by Battle: Destroy the other battling Champion.`,
+        keywords: ["Priority","Deathcurse","Lifetouch"],
+        effect1name: "If Destroyed by Battle",
+        effect2name: "",
         effect3name: "",
       }
     ]

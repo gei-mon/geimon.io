@@ -38,8 +38,8 @@ export function renderCard(card, container) {
       cardElement.classList.add("chrome");}
     if (firstTag === "Arcanum") {
       cardElement.classList.add("arcanum");}
-    if (firstTag === "Primordial") {
-      cardElement.classList.add("primordial");}
+    if (firstTag === "Cinemonster") {
+      cardElement.classList.add("cinemonster");}
     if (firstTag === "Hellfire") {
       cardElement.classList.add("hellfire");}
     if (firstTag === "Frenzied") {
