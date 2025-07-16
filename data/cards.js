@@ -7117,7 +7117,7 @@ export const cards = [
     rarity: "Common",
     type: "Action",
     condition: "",
-    cost: "Obliterate 2 Hero Champions from your Tomb",
+    cost: "Obliterate 2 Heroes from your Tomb",
     tags: ["Action"],
     damage: "",
     life: "",
@@ -7337,7 +7337,7 @@ export const cards = [
     rarity: "Rare",
     type: "Champion",
     condition: "Your Opponent controls more Champions than you",
-    cost: "",
+    cost: "Basic",
     tags: ["Gallant","Protector","Blademaster","Ranger"],
     damage: 4,
     life: 2,
@@ -7806,7 +7806,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Ribbit (Reflex): If a Champion effect is activated: Discard 1; Negate that effect's activation. <span class="line-gap"></span> Hardly Ordinary: If this is the only Champion you control: Sacrifice this card; Recruit 1 Mage. <span class="line-gap"></span> Helping Hand: If this card is in your Tomb (Reflex): Obliterate this card and Target 1 face-up Mage on the Zone; Move Target to the Reserve.`,
+        text: `Ribbit (Reflex): If a Champion effect is activated: Sacrifice this card; Negate that effect's activation. <span class="line-gap"></span> Hardly Ordinary: If this is the only Champion you control: Sacrifice this card; Recruit 1 Mage. <span class="line-gap"></span> Helping Hand: If this card is in your Tomb (Reflex): Obliterate this card and Target 1 face-up Mage on the Zone; Move Target to the Reserve.`,
         keywords: ["blank"],
         effect1name: "Ribbit",
         effect2name: "Hardly Ordinary",
@@ -8176,8 +8176,8 @@ export const cards = [
     cost: "Sacrifice all Champions you control (minimum of 1)",
     tags: ["Cinemonster","Slasher","Villain"],
     damage: 6,
-    life: 1,
-    damageThreshold: "1",
+    life: 2,
+    damageThreshold: "3",
     abilities: [
       {
         text: `Solitary <span class="line-gap"></span> Revenge Arc (Exhaustion): Target 1 face-up Champion on the Zone; Destroy Target. <span class="line-gap"></span> If Sent from the Zone to the Tomb: You take 2 Damage.`,
@@ -8218,7 +8218,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Mill 6",
-    tags: ["Cinemonster","Undead","Slasher","Villain"],
+    tags: ["Cinemonster","Cryptbound","Undead","Slasher","Villain"],
     damage: 0,
     life: 1,
     damageThreshold: "2",
