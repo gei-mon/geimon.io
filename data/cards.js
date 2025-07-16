@@ -8123,6 +8123,28 @@ export const cards = [
     ]
   },
   {
+    id: "849",
+    name: "Whisper, Devil's Demise",
+    image: `${cardArtFolder}/Champions/WhisperDevilsDemise.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "",
+    cost: "Destroy 1 Champion you control",
+    tags: ["Hellfire","Protector","Monk"],
+    damage: 3,
+    life: 2,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `One-Woman Army: If this is the only Champion you control: This card gains Taskmaster and Unstoppable. <span class="line-gap"></span> Broken Soul: Hellfire deal no battle Damage to this card, and you take no battle Damage from battles involving this card and a Hellfire.`,
+        keywords: ["Taskmaster","Unstoppable"],
+        effect1name: "One-Woman Army",
+        effect2name: "Broken Soul",
+        effect3name: "",
+      }
+    ]
+  },
+  {
     id: "901",
     name: "Get Your Game On!",
     image: `${cardArtFolder}/Rush/GameOn.png`,
@@ -9174,28 +9196,6 @@ export const cards = [
         keywords: ["Veilbind","Warded"],
         effect1name: "At the end of a battle in which the attached Champion dealt Damage",
         effect2name: "Until the attached Champion declares an attack",
-        effect3name: "",
-      }
-    ]
-  },
-  {
-    id: "1087",
-    name: "Whisper, Devil's Demise",
-    image: `${cardArtFolder}/Champions/WhisperDevilsDemise.png`,
-    rarity: "Legendary",
-    type: "Champion",
-    condition: "",
-    cost: "Destroy 1 Champion you control",
-    tags: ["Enlightened","Hellfire","Monk"],
-    damage: 3,
-    life: 2,
-    damageThreshold: "2",
-    abilities: [
-      {
-        text: `One-Woman Army: If this is the only Champion you control: This card gains Taskmaster and Unstoppable. <span class="line-gap"></span> Broken Soul: Hellfire deal no battle Damage to this card, and you take no battle Damage from battles involving this card and a Hellfire.`,
-        keywords: ["Taskmaster","Unstoppable"],
-        effect1name: "One-Woman Army",
-        effect2name: "Broken Soul",
         effect3name: "",
       }
     ]

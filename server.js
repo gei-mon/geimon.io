@@ -259,6 +259,7 @@ app.set('view engine', 'ejs');
 
 const openRooms = new Map(); // roomId -> [socketIds]
 const userMap = new Map();
+const roomMeta = new Map();
 
 const defaultZones = () => ({
   Deck: [],
@@ -294,7 +295,7 @@ if (fs.existsSync(effectsDir)) {
 }
 
 io.on('connection', (socket) => {
-  socket.on('init', ({ username, roomId }) => {
+  socket.on('init', ({ username, roomId, gameType }) => {
     let joinedRoom = roomId;
 
     if (joinedRoom && openRooms.has(joinedRoom) && openRooms.get(joinedRoom).length < 2) {
@@ -313,6 +314,7 @@ io.on('connection', (socket) => {
       if (!joinedRoom) {
         joinedRoom = generateRoomId();
         openRooms.set(joinedRoom, [socket.id]);
+        roomMeta.set(joinedRoom, { gameType });
       }
     }
 
@@ -767,6 +769,25 @@ app.post('/updateGameState', (req, res) => {
     success: true,
     updatedPlayerZone: gameState[owner]
   });
+});
+
+app.get('/lobby-status', (req, res) => {
+  const counts = {
+    bestOf1: 0,
+    bestOf3: 0,
+    packMadness: 0
+  };
+
+  for (const [roomId, sockets] of openRooms.entries()) {
+    const meta = roomMeta.get(roomId);
+    if (sockets.length === 1 && meta) {
+      if (meta.gameType === 'bestOf1') counts.bestOf1++;
+      else if (meta.gameType === 'bestOf3') counts.bestOf3++;
+      else if (meta.gameType === 'packMadness') counts.packMadness++;
+    }
+  }
+
+  res.json(counts);
 });
 
 app.get('/getGameState/:gameId', (req, res) => {

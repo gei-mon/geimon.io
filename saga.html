@@ -120,7 +120,7 @@
 
             socket.on('connect', () => {
                 console.log('Connected to socket:', socket.id);
-                socket.emit('init', { username });
+                socket.emit("init", { username, roomId: null, gameType: "packMadness" });
             });
 
             let roomId = localStorage.getItem('roomId');

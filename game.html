@@ -1745,7 +1745,8 @@
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                padding: "30px",
+                width: "600px",
+                padding: "20px",
                 backgroundColor: "#333",
                 color: "white",
                 border: "2px solid white",
@@ -1760,65 +1761,115 @@
             const goFirstBtn = document.createElement("button");
             goFirstBtn.textContent = "Go First";
             goFirstBtn.style.margin = "10px";
-            goFirstBtn.onclick = () => showTotemOptions("first");
+            goFirstBtn.onclick = () => showTotemTabs("first");
 
             const goSecondBtn = document.createElement("button");
             goSecondBtn.textContent = "Go Second";
             goSecondBtn.style.margin = "10px";
-            goSecondBtn.onclick = () => showTotemOptions("second");
+            goSecondBtn.onclick = () => showTotemTabs("second");
 
             overlay.appendChild(goFirstBtn);
             overlay.appendChild(goSecondBtn);
+            document.body.appendChild(overlay);
 
-            function showTotemOptions(turnOrder) {
-                overlay.innerHTML = `<p style="font-size: 1.2em;">Now choose a Totem for Game ${gameNumber + 1}:</p>`;
+            function showTotemTabs(turnOrder) {
+                overlay.innerHTML = `<p style="font-size: 1.2em;">Choose a Totem for Game ${gameNumber + 1}:</p>`;
 
-                randomChoices.forEach(totem => {
-                    const button = document.createElement("button");
-                    button.textContent = totem;
-                    button.style.margin = "10px";
-                    button.onclick = async () => {
-                        const newGameId = Math.random().toString(36).substr(2, 9);
-                        const params       = new URLSearchParams(window.location.search);
-                        const isSingle     = params.get("isSinglePlayer") === "true";
-                        const opponentPull = params.get("opponentUsername");
-                        const gameNumber = (Number(sessionStorage.getItem(matchId+"_gameNum")) || 1) + 1;
-                        sessionStorage.setItem(matchId + "_gameNum", gameNumber);
+                const tabs = document.createElement("div");
+                tabs.className = "tabs";
 
-                        const settings = {
-                            prevGameId: params.get("gameId"),
-                            gameId: newGameId,
-                            playerDeck: params.get("playerDeck"),
-                            opponentDeck: params.get("opponentDeck"),
-                            gameType: "match",
-                            totem,
-                            totemText: allTotems[totem],
-                            turnOrder,
-                            isSinglePlayer: isSingle,
-                            playerUsername: params.get("playerUsername"),
-                            opponentUsername: params.get("opponentUsername"),
-                            goesFirst: turnOrder,
-                            matchId,
-                            gameNumber
-                        };
+                const contentContainer = document.createElement("div");
+                contentContainer.className = "tab-content-container";
 
-                        await fetch("https://geimon-app-833627ba44e0.herokuapp.com/startGame", {
-                            method: "POST",
-                            credentials: "include",
-                            headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(settings)
-                        });
+                let selectedTotem = randomChoices[0];
 
-                        socket.emit("match_next_game", settings);
+                randomChoices.forEach((totem, idx) => {
+                    const tabBtn = document.createElement("button");
+                    tabBtn.className = "tab-button" + (idx === 0 ? " active" : "");
+                    tabBtn.textContent = totem;
+                    tabBtn.dataset.totem = totem;
 
-                        const urlParams = new URLSearchParams(settings).toString();
-                        window.location.href = `game.html?${urlParams}`;
+                    tabBtn.onclick = () => {
+                        selectedTotem = totem;
+                        document.querySelectorAll(".tab-button").forEach(btn => btn.classList.remove("active"));
+                        tabBtn.classList.add("active");
+
+                        document.querySelectorAll(".tab-content").forEach(div => div.classList.remove("active"));
+                        document.getElementById(`content-${totem}`).classList.add("active");
                     };
-                    overlay.appendChild(button);
+                    tabs.appendChild(tabBtn);
+
+                    const content = document.createElement("div");
+                    content.className = "tab-content" + (idx === 0 ? " active" : "");
+                    content.id = `content-${totem}`;
+                    content.textContent = allTotems[totem];
+                    contentContainer.appendChild(content);
                 });
+
+                overlay.appendChild(tabs);
+                overlay.appendChild(contentContainer);
+
+                const confirmBtn = document.createElement("button");
+                confirmBtn.textContent = "Confirm";
+                confirmBtn.style.marginTop = "20px";
+                overlay.appendChild(confirmBtn);
+
+                confirmBtn.onclick = () => {
+                    showConfirmationDialog(selectedTotem, turnOrder);
+                };
             }
 
-            document.body.appendChild(overlay);
+            function showConfirmationDialog(totem, turnOrder) {
+                overlay.innerHTML = `<p style="font-size: 1.2em;">Are you sure you want <strong>${totem}</strong> as the next game's totem?</p>`;
+
+                const yesBtn = document.createElement("button");
+                yesBtn.textContent = "Yes";
+                yesBtn.style.margin = "10px";
+                yesBtn.onclick = () => startNextGame(totem, turnOrder);
+
+                const noBtn = document.createElement("button");
+                noBtn.textContent = "No";
+                noBtn.style.margin = "10px";
+                noBtn.onclick = () => showTotemTabs(turnOrder);
+
+                overlay.appendChild(yesBtn);
+                overlay.appendChild(noBtn);
+            }
+
+            async function startNextGame(totem, turnOrder) {
+                const newGameId = Math.random().toString(36).substr(2, 9);
+                const isSingle = params.get("isSinglePlayer") === "true";
+                const gameNumber = (Number(sessionStorage.getItem(matchId + "_gameNum")) || 1) + 1;
+                sessionStorage.setItem(matchId + "_gameNum", gameNumber);
+
+                const settings = {
+                    prevGameId: params.get("gameId"),
+                    gameId: newGameId,
+                    playerDeck: params.get("playerDeck"),
+                    opponentDeck: params.get("opponentDeck"),
+                    gameType: "match",
+                    totem,
+                    totemText: allTotems[totem],
+                    turnOrder,
+                    isSinglePlayer: isSingle,
+                    playerUsername: params.get("playerUsername"),
+                    opponentUsername: params.get("opponentUsername"),
+                    goesFirst: turnOrder,
+                    matchId,
+                    gameNumber
+                };
+
+                await fetch("https://geimon-app-833627ba44e0.herokuapp.com/startGame", {
+                    method: "POST",
+                    credentials: "include",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(settings)
+                });
+
+                socket.emit("match_next_game", settings);
+                const urlParams = new URLSearchParams(settings).toString();
+                window.location.href = `game.html?${urlParams}`;
+            }
         }
 
         function updateTurnDisplay(turnData) {
