@@ -452,7 +452,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Deathward <span class="line-gap"></span> Knights who declare attacks must attack this Token. <span class="line-gap"></span> You, and this Token, take no battle Damage from Knights involving this Token. <span class="line-gap"></span> You can block with this Token only against Knights, but you can do so with no limit.`,
+        text: "Deathward <br><br> Knights who declare attacks must attack this Token. <br><br> You, and this Token, take no battle Damage from Knights involving this Token. <br><br> You can block with this Token only against Knights, but you can do so with no limit.",
         keywords: ["Deathward"],
         effect1name: "",
       }
@@ -509,7 +509,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Deathward <span class="line-gap"></span> Tear it Down: If this Token reduces a Champion to 1 Life by battle: Destroy that Champion.`,
+        text: "Deathward <br><br> Tear it Down: If this Token reduces a Champion to 1 Life by battle: Destroy that Champion.",
         keywords: ["Deathward"],
         effect1name: "Tear it Down",
       }
@@ -528,7 +528,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Deathward <span class="line-gap"></span> Armor Up: Sacrifice this Token; Add 1 Equipment.`,
+        text: "Deathward <br><br> Armor Up: Sacrifice this Token; Add 1 Equipment.",
         keywords: ["Deathward"],
         effect1name: "Armor Up",
       }
