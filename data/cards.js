@@ -3942,7 +3942,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Non-Believer <span class="line-gap"></span> You're Not Real!: Undead deal no battle Damage to this card, and you take no battle Damage from battles involving this card and an Undead. <span class="line-gap"></span> Eat That Rock! (Exhaustion): Discard 1 and Target 1 Obelisk; Destroy Target.`,
+        text: `Non-Believer <span class="line-gap"></span> You're Not Real!: Undead deal no Battle Damage to this card, and you take no Battle Damage from battles involving this card and an Undead. <span class="line-gap"></span> Eat That Rock! (Exhaustion): Discard 1 and Target 1 Obelisk; Destroy Target.`,
         effect1name: "You're Not Real",
         effect2name: "Eat That Rock",
         effect3name: "",
@@ -4194,7 +4194,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: `Greedy <span class="line-gap"></span> Knightsbane: Knights, and their controllers, take no battle Damage from this card. Knights deal double battle Damage to this card. <span class="line-gap"></span> Furious Fire Breath (Exhaustion): Offer 4 Life and Target up to 2 Champions your Opponent controls; Destroy Targets, and if you do, draw 1 for each Champion destroyed. <span class="line-gap"></span> If Destroyed by Battle: Recruit 1 Royal.`,
+        text: `Greedy <span class="line-gap"></span> Knightsbane: Knights, and their controllers, take no Battle Damage from this card. Knights deal double Battle Damage to this card. <span class="line-gap"></span> Furious Fire Breath (Exhaustion): Offer 4 Life and Target up to 2 Champions your Opponent controls; Destroy Targets, and if you do, draw 1 for each Champion destroyed. <span class="line-gap"></span> If Destroyed by Battle: Recruit 1 Royal.`,
         effect1name: "Knightsbane",
         effect2name: "Furious Fire Breath",
         effect3name: "If Destroyed by Battle",
@@ -4908,8 +4908,8 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "If the attached Champion deals battle Damage: Target 1 face-up Champion on the Zone; Deal 2 Damage to Target.",
-        effect1name: "If the attached Champion deals battle Damage",
+        text: "If the attached Champion deals Battle Damage: Target 1 face-up Champion on the Zone; Deal 2 Damage to Target.",
+        effect1name: "If the attached Champion deals Battle Damage",
         effect2name: "",
         effect3name: "",
       }
@@ -4950,7 +4950,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attached Champion deals double battle Damage to Constructs, Dragons, Kaiju, and Megaliths.",
+        text: "The attached Champion deals double Battle Damage to Constructs, Dragons, Kaiju, and Megaliths.",
         effect1name: "",
         effect2name: "",
         effect3name: "",
@@ -5769,7 +5769,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Champions with the first declared tag deal double battle Damage against the second, and Champions with the second tag deal half battle Damage (rounded down) against the first. <br><br> Champions with both declared tags are unaffected by this card.",
+        text: "Champions with the first declared tag deal double Battle Damage against the second, and Champions with the second tag deal half Battle Damage (rounded down) against the first. <br><br> Champions with both declared tags are unaffected by this card.",
         effect1name: "",
         effect2name: "",
         effect3name: "",
@@ -7680,7 +7680,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Duelist, Priority <span class="line-gap"></span> Kaiju-Crusher: Kaiju deal no battle Damage to this card, and you take no battle Damage from battles involving this card and an Kaiju. Additionally, this card deals double battle Damage to Kaiju. <span class="line-gap"></span> Each time this card Destroys a Kaiju by battle (Mandatory): Add 1 K-Cell Counter to this card.`,
+        text: `Duelist, Priority <span class="line-gap"></span> Kaiju-Crusher: Kaiju deal no Battle Damage to this card, and you take no Battle Damage from battles involving this card and an Kaiju. Additionally, this card deals double Battle Damage to Kaiju. <span class="line-gap"></span> Each time this card Destroys a Kaiju by battle (Mandatory): Add 1 K-Cell Counter to this card.`,
         effect1name: "Kaiju-Crusher",
         effect2name: "",
         effect3name: "Each time this card Destroys a Kaiju by battle",
@@ -7764,7 +7764,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Raider <span class="line-gap"></span> Seen This One Before: Cinemonsters deal no battle Damage to this card, and you take no battle Damage from battles involving this card and a Cinemonster.`,
+        text: `Raider <span class="line-gap"></span> Seen This One Before: Cinemonsters deal no Battle Damage to this card, and you take no Battle Damage from battles involving this card and a Cinemonster.`,
         effect1name: "Seen This One Before",
         effect2name: "",
         effect3name: "",
@@ -8058,7 +8058,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `One-Woman Army: If this is the only Champion you control: This card gains Taskmaster and Unstoppable. <span class="line-gap"></span> Broken Soul: Hellfire deal no battle Damage to this card, and you take no battle Damage from battles involving this card and a Hellfire.`,
+        text: `One-Woman Army: If this is the only Champion you control: This card gains Taskmaster and Unstoppable. <span class="line-gap"></span> Broken Soul: Hellfire deal no Battle Damage to this card, and you take no Battle Damage from battles involving this card and a Hellfire.`,
         effect1name: "One-Woman Army",
         effect2name: "Broken Soul",
         effect3name: "",
@@ -8142,7 +8142,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Duelist, Priority <span class="line-gap"></span> On Rally: Declare 1 Champion Tag; This card deals double battle Damage against Champions with that Tag. <span class="line-gap"></span> If this Champion has at least l attached Equipment: This card loses Duelist and gains Menace.`,
+        text: `Duelist, Priority <span class="line-gap"></span> On Rally: Declare 1 Champion Tag; This card deals double Battle Damage against Champions with that Tag. <span class="line-gap"></span> If this Champion has at least l attached Equipment: This card loses Duelist and gains Menace.`,
         effect1name: "On Rally",
         effect2name: "If this Champion has at least l attached Equipment",
         effect3name: "",
@@ -8919,7 +8919,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: `Reach, Warded <span class="line-gap"></span> Contingency Expert: This card gains Priority to attack Champions you are the original owner of, it also deals double battle Damage against such Champions.`,
+        text: `Reach, Warded <span class="line-gap"></span> Contingency Expert: This card gains Priority to attack Champions you are the original owner of, it also deals double Battle Damage against such Champions.`,
         effect1name: "Contingency Expert",
         effect2name: "",
         effect3name: "",

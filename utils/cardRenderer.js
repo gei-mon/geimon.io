@@ -343,7 +343,7 @@ export function addTooltipListeners(container) {
 
     if (description) {
       el.addEventListener("mouseenter", () => {
-        tooltip.innerHTML = description;
+        tooltip.innerHTML = `<strong>${keywordText}</strong><br>${description}`;
         tooltip.style.display = "block";
       });
 
@@ -389,7 +389,7 @@ export function addTokenTooltipListeners(container) {
         const tooltipText = tooltip.querySelector(".token-tooltip-text");
         if (tooltipText) {
           const abilityText = token.abilities?.[0]?.text?.trim() || "No effect.";
-          const stats = `<br>( ${token.damage} / ${token.life} )`;
+          const stats = `<br>( ${token.damage} / ${token.life} [ ${token.damageThreshold} ] )`;
           tooltipText.innerHTML = `
             <strong>${token.name} ${stats}</strong><br>${abilityText}
           `;

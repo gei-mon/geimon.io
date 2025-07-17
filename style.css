@@ -339,21 +339,20 @@ text-decoration: underline;
 }
 
 #token-tooltip {
-    position: absolute;
-    display: none;
-    padding: 8px;
-    background: #ffffff;
-    border: 1px solid #000000;
-    font-family: "Times New Roman", serif;
-    font-size: 14px;
-    max-width: 220px;
-    z-index: 9999;
-    pointer-events: none;
-    box-shadow: 2px 2px 10px rgba(0,0,0,0.2);
+  position: absolute;
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  padding: 8px;
+  pointer-events: none;
+  z-index: 1000;
+  display: none;
+  max-width: 350px;
+  word-wrap: break-word;
 }
-.token-tooltip-text {
+/* .token-tooltip-text {
     text-align: center;
-}
+} */
 
 .keyword {
   font-weight: bold;

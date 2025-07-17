@@ -11,7 +11,7 @@ export const totems = [
         "Caught in your Underwear": "No Damage Thresholds.",
         "Shared Interest": "Neither Player can deal damage to any other until the start of Turn 7.",
         "Single File": "Turn Player can only attack with 1 Champion during their Battle Phase.",
-        "Terrifying Toddlers": "Champions with a Damage of 2 or lower deal double battle Damage.",
+        "Terrifying Toddlers": "Double the Damage of battling Champions with a current Damage of 2 or lower (During Damage Calculation only).",
         "Fists Only": "Damage can only be dealt by attack.",
         "All or Nothing": "The Damage a Champion takes from a single event must Destroy it or the Damage does nothing.",
         "Fair Play": "Both Players play with their Hands revealed."
