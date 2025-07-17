@@ -1379,7 +1379,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: `Priority <br> On Rally: Draw 1. <span class="line-gap"></span> If Discarded: Add 1 Equipment or Rush.`,
+        text: `Priority <span class="line-gap"></span> On Rally: Draw 1. <span class="line-gap"></span> If Discarded: Add 1 Equipment or Rush.`,
 
         effect1name: "On Rally",
         effect2name: "If Discarded",
@@ -1489,7 +1489,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Deathward <br> Gotcha! (Flip): If flipped face-up by battle: Increase this Champion's Damage by half the Damage of the Champion that it is battling (rounded up). <span class="line-gap"></span> If Discarded: Deal 3 Damage to 1 Champion or Player.`,
+        text: `Deathward <span class="line-gap"></span> Gotcha! (Flip): If flipped face-up by battle: Increase this Champion's Damage by half the Damage of the Champion that it is battling (rounded up). <span class="line-gap"></span> If Discarded: Deal 3 Damage to 1 Champion or Player.`,
 
         effect1name: "Gotcha",
         effect2name: "If Discarded",
@@ -1511,7 +1511,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Deathward <br> Surrender Now! (Flip): If flipped face-up by battle: Reduce the attacking Champion's Damage to 0.",
+        text: `Deathward <span class="line-gap"></span> Surrender Now! (Flip): If flipped face-up by battle: Reduce the attacking Champion's Damage to 0.`,
 
         effect1name: "Surrender Now",
         effect2name: "",
@@ -1533,7 +1533,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Raider, Reach <br> Train Sniffer (Exhaustion): Your Opponent can activate 1 Commander Obelisk from their Deck (ignoring its cost); Then, if they did, your Opponent chooses whether: You Draw 2 for every Commander Obelisk your Opponent controls, or Your Opponent discards 1 for every Commander Obelisk they control.`,
+        text: `Raider, Reach <span class="line-gap"></span> Train Sniffer (Exhaustion): Your Opponent can activate 1 Commander Obelisk from their Deck (ignoring its cost); Then, if they did, your Opponent chooses whether: You Draw 2 for every Commander Obelisk your Opponent controls, or Your Opponent discards 1 for every Commander Obelisk they control.`,
 
         effect1name: "Train Sniffer",
         effect2name: "",
@@ -1577,7 +1577,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: `Defender, Lifebalance, Priority, Warded <br> Foretell my Fate: Excavate 2; return the cards in an order of your choice. <span class="line-gap"></span> Decisive Plan (Exhaustion): Mill 1; Draw 1.`,
+        text: `Defender, Duelist, Priority, Warded <span class="line-gap"></span> Foretell my Fate: Excavate 2; return the cards in an order of your choice. <span class="line-gap"></span> Decisive Plan (Exhaustion): Mill 1; Draw 1.`,
 
         effect1name: "Foretell my Fate",
         effect2name: "Decisive Plan",
@@ -1599,7 +1599,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: `Bulletproof <br> Good Morning (Flip): If flipped face-up by battle: Flip face-down the attacking Champion. <span class="line-gap"></span> Goodnight: Flip this card face-down. <span class="line-gap"></span> If Destroyed: Draw 1.`,
+        text: `Bulletproof <span class="line-gap"></span> Good Morning (Flip): If flipped face-up by battle: Flip face-down the attacking Champion. <span class="line-gap"></span> Goodnight: Flip this card face-down. <span class="line-gap"></span> If Destroyed: Draw 1.`,
 
         effect1name: "Good Morning",
         effect2name: "Goodnight",
@@ -1731,7 +1731,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Rally 1 Tumbleweed Token to your Zone. <br><span class="line-gap"></span> During each End Phase, switch control of the Token.`,
+        text: `Rally 1 Tumbleweed Token to your Zone. <span class="line-gap"></span> During each End Phase, switch control of the Token.`,
 
         effect1name: "",
         effect2name: "",
@@ -1753,7 +1753,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Hostile Negotiations (Reflex): If this card is Targeted by an attack or effect (Mandatory): Destroy this card and the card that Targeted it, and if you do, the Player who Targeted this card draws 2. <br><span class="line-gap"></span> If Destroyed: Target 1 Equipment in your Tomb; Retrieve Target.`,
+        text: `Hostile Negotiations (Reflex): If this card is Targeted by an attack or effect (Mandatory): Destroy this card and the card that Targeted it, and if you do, the Player who Targeted this card draws 2. <span class="line-gap"></span> If Destroyed: Target 1 Equipment in your Tomb; Retrieve Target.`,
 
         effect1name: "Hostile Negotiations",
         effect2name: "If Destroyed",
@@ -1907,7 +1907,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Excavate 6. If any of the revealed cards are a Champion, take 2 Damage. Return the revealed cards in the same order they were in.",
+        text: `Excavate 6. <span class="line-gap"></span> If any of the revealed cards are a Champion, you take 2 Damage. <span class="line-gap"></span> Return the revealed cards in the same order they were in.`,
 
         effect1name: "",
         effect2name: "",
@@ -2017,9 +2017,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Excavate 1. <br> If the revealed card's type matches the type you declared: Add the excavated card; Otherwise, Obliterate it.",
+        text: `Excavate 1. <span class="line-gap"></span> If the revealed card's type matches the type you declared: Add the excavated card. Otherwise, Obliterate it.`,
 
-        effect1name: "",
+        effect1name: "If the revealed card's type matches the type you declared",
         effect2name: "",
         effect3name: "",
       }
@@ -2105,7 +2105,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `The attached Champion gains Second Strike. <br><span class="line-gap"></span> If Destroyed: Offer 2 Life; Stack this card.`,
+        text: `The attached Champion gains Second Strike. <span class="line-gap"></span> If Destroyed: Offer 2 Life; Stack this card.`,
 
         effect1name: "If Destroyed",
         effect2name: "",
@@ -2149,7 +2149,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `In order to attack with the attached Champion: You must discard 1. <br><span class="line-gap"></span> The attached Champion's Damage is increased by 2.`,
+        text: `In order to attack with the attached Champion: You must discard 1. <span class="line-gap"></span> The attached Champion's Damage is increased by 2.`,
 
         effect1name: "In order to attack with the attached Champion",
         effect2name: "",
@@ -2171,7 +2171,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `The attached Champion gains Deathtouch. <br><span class="line-gap"></span> During your End Phase, if the attached Champion did not attack this turn: Destroy both this card and its attached Champion. <span class="line-gap"></span><span class="line-gap"></span> If Destroyed: The controller of this card takes 4 Damage.`,
+        text: `The attached Champion gains Deathtouch. <span class="line-gap"></span> During your End Phase, if the attached Champion did not attack this turn: Destroy both this card and its attached Champion. <span class="line-gap"></span><span class="line-gap"></span> If Destroyed: You take 4 Damage.`,
 
         effect1name: "During your End Phase, if the attached Champion did not attack this turn",
         effect2name: "If Destroyed",
@@ -3579,9 +3579,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Until the end of this turn, each time a Token(s) is Rallied to your Opponent's Zone, they must discard 1.",
+        text: "Until the end of this turn, each time a Token(s) is Rallied to your Opponent's Zone: They must discard 1.",
 
-        effect1name: "",
+        effect1name: "Until the end of this turn, each time a Token(s) is Rallied to your Opponent's Zone",
         effect2name: "",
         effect3name: "",
       }
@@ -5031,7 +5031,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Increase the attached Champion's Damage by 4. <br><span class="line-gap"></span> Each time the attached Champion declares an attack: Your Opponent draws 1.`,
+        text: `Increase the attached Champion's Damage by 4. <br><span class="line-gap"></span> Each time the attached Champion declares an attack (Mandatory): Your Opponent draws 1.`,
 
         effect1name: "Each time the attached Champion declares an attack",
         effect2name: "",
@@ -5163,7 +5163,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `The attached Champion's Damage Threshold is increased by 2. <br><span class="line-gap"></span> Each time the attached Champion battles: Your Opponent draws 1.`,
+        text: `The attached Champion's Damage Threshold is increased by 2. <br><span class="line-gap"></span> Each time the attached Champion battles (Mandatory): Your Opponent draws 1.`,
 
         effect1name: "Each time the attached Champion battles",
         effect2name: "",
@@ -5317,7 +5317,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Rescind Anasthesia: Target 1 other Champion you control; Target can use its non-Exhaustion abilities an additional time this turn. <span class="line-gap"></span> Defibrillate: Sacrifice this card and Target 1 other Champion in your Tomb; Resurrect Target, but reduce its Life to 1. <span class="line-gap"></span> Helping Hand: If this card is in your Tomb: Obliterate this card and Target up to 2 cards in your Tomb; Retrieve Targets.`,
+        text: `Rescind Anasthesia: Target 1 other Champion you control; Target can use all of its non-Exhaustion abilities an additional time this turn. <span class="line-gap"></span> Defibrillate: Sacrifice this card and Target 1 other Champion in your Tomb; Resurrect Target, but reduce its Life to 1. <span class="line-gap"></span> Helping Hand: If this card is in your Tomb: Obliterate this card and Target up to 2 cards in your Tomb; Retrieve Targets.`,
 
         effect1name: "Rescind Anasthesia",
         effect2name: "Defibrillate",
@@ -7825,7 +7825,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: `Bloodrage, Menace <span class="line-gap"></span> On Rally (Mandatory): Your Opponent draws 1. <span class="line-gap"></span> City Breaker: If this card successfully attacks: You can remove 1 K-Cell Counter from anywhere on the Zone and Target 1 card on the Zone; Destroy Target. <span class="line-gap"></span> If Destroyed by Battle: Add 1 Kaiju.`,
+        text: `Bloodrage, Menace <span class="line-gap"></span> On Rally (Mandatory): Your Opponent draws 1. <span class="line-gap"></span> City Breaker: If this card successfully attacks: Remove 1 K-Cell Counter from anywhere on the Zone and Target 1 card on the Zone; Destroy Target. <span class="line-gap"></span> If Destroyed by Battle: Add 1 Kaiju.`,
 
         effect1name: "On Rally",
         effect2name: "City Breaker",
@@ -7869,7 +7869,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Each time a card(s) is sent from the Zone to the Tomb: Place 1 K-Cell Counter on this card for each sent card (max. 5 per instance). <br><br> You can remove 3 K-Cell Counters from this card; Add 1 Clockwork.`,
+        text: `Each time a card(s) is sent from the Zone to the Tomb: Place 1 K-Cell Counter on this card for each sent card (max. 5 per instance). <br><br> Remove 3 K-Cell Counters from this card; Add 1 Clockwork.`,
 
         effect1name: "Each time a card(s) is sent from the Zone to the Tomb",
         effect2name: "",
@@ -7891,7 +7891,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Each time a card(s) is added: Place 1 K-Cell Counter on this card for each added card (max. 5 per instance). <br><br> You can remove 2 K-Cell Counters from this card and Target 1 Champion you control; Increase Target's Damage by 2.`,
+        text: `Each time a card(s) is added: Place 1 K-Cell Counter on this card for each added card (max. 5 per instance). <br><br> Remove 2 K-Cell Counters from this card and Target 1 Champion you control; Increase Target's Damage by 2.`,
 
         effect1name: "Each time a card(s) is added",
         effect2name: "",
@@ -7913,7 +7913,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Each time an Equipment card(s) is activated: Place 1 K-Cell Counter on this card for each card activated (max. 5 per instance). <br><br> You can remove 3 K-Cell Counters from this card and Target 1 Noble in either Tomb; Resurrect Target.`,
+        text: `Each time an Equipment card(s) is activated: Place 1 K-Cell Counter on this card for each card activated (max. 5 per instance). <br><br> Remove 3 K-Cell Counters from this card and Target 1 Noble in either Tomb; Resurrect Target.`,
 
         effect1name: "Each time an Equipment card(s) is activated",
         effect2name: "",
@@ -7935,7 +7935,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Each time an attack is declared: Place 1 K-Cell Counter on this card. <br><br> You can remove 5 K-Cell Counters from this card and Target 1 Champion on the Zone; Destroy Target. <br><br> If Destroyed: Recruit 1 Hero.`,
+        text: `Each time an attack is declared: Place 1 K-Cell Counter on this card. <br><br> Remove 5 K-Cell Counters from this card and Target 1 Champion on the Zone; Destroy Target. <br><br> If Destroyed: Recruit 1 Hero.`,
 
         effect1name: "Each time an attack is declared",
         effect2name: "",
@@ -7957,7 +7957,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `You can remove X K-Cell Counters from any one location on the Zone and Target 1 Champion you control; Increase Target's Damage by X.`,
+        text: `Remove X K-Cell Counters from any one card on the Zone and Target 1 Champion you control; Increase Target's Damage by X.`,
 
         effect1name: "",
         effect2name: "",
@@ -7979,7 +7979,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Reach, Taunt <span class="line-gap"></span> On Rally (Mandatory): Obliterate Mill 2. <span class="line-gap"></span> Lightning Rider: If this card is Targeted by an attack or effect: You can remove 1 K-Cell Counter from anywhere on the Zone; Negate the triggering attack or effect, and if you do, Obliterate that triggering card and this card.`,
+        text: `Reach, Taunt <span class="line-gap"></span> On Rally (Mandatory): Obliterate Mill 2. <span class="line-gap"></span> Lightning Rider: If this card is Targeted by an attack or effect: Remove 1 K-Cell Counter from anywhere on the Zone; Negate the triggering attack or effect, and if you do, Obliterate that triggering card and this card.`,
 
         effect1name: "On Rally",
         effect2name: "Lightning Rider",
@@ -8023,7 +8023,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Upon Activation: Destroy all other face-up "Arena" Obelisks on the Zone. <span class="line-gap"></span> Each time a card(s) is drawn: Place 1 K-Cell Counter on this card for each card drawn (max. 5 per instance). <span class="line-gap"></span> You can remove 2 K-Cell Counters from this card; Destroy all face-up "Arena" Obelisks on the Zone, then activate 1 "Arena" Obelisk from your Hand or Deck (ignoring its cost), and if you do, place 1 K-Cell Counter on that card.`,
+        text: `Upon Activation: Destroy all other face-up "Arena" Obelisks on the Zone. <span class="line-gap"></span> Each time a card(s) is drawn: Place 1 K-Cell Counter on this card for each card drawn (max. 5 per instance). <span class="line-gap"></span> Remove 2 K-Cell Counters from this card; Destroy all face-up "Arena" Obelisks on the Zone, then activate 1 "Arena" Obelisk from your Hand or Deck (ignoring its cost), and if you do, place 1 K-Cell Counter on that card.`,
 
         effect1name: "Upon Activation",
         effect2name: "",
@@ -8045,7 +8045,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Duelist, Priority <span class="line-gap"></span> Kaiju-Crusher: Kaiju deal no battle Damage to this card, and you take no battle Damage from battles involving this card and an Kaiju. Additionally, this card deals double battle Damage to Kaiju. <span class="line-gap"></span> Each time this card Destroys a Kaiju by battle: Add 1 K-Cell Counter to this card.`,
+        text: `Duelist, Priority <span class="line-gap"></span> Kaiju-Crusher: Kaiju deal no battle Damage to this card, and you take no battle Damage from battles involving this card and an Kaiju. Additionally, this card deals double battle Damage to Kaiju. <span class="line-gap"></span> Each time this card Destroys a Kaiju by battle (Mandatory): Add 1 K-Cell Counter to this card.`,
 
         effect1name: "Kaiju-Crusher",
         effect2name: "",
@@ -8067,7 +8067,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Duelist, Priority <span class="line-gap"></span> On Rally (Mandatory): All other face-up Champions you control take 1 Damage. <span class="line-gap"></span> Slice and Dice (Reflex): You can remove 1 K-Cell Counter from anywhere on the Zone and Target 1 face-up Champion on the Zone; Target takes 3 Damage.`,
+        text: `Duelist, Priority <span class="line-gap"></span> On Rally (Mandatory): All other face-up Champions you control take 1 Damage. <span class="line-gap"></span> Slice and Dice (Reflex): Remove 1 K-Cell Counter from anywhere on the Zone and Target 1 face-up Champion on the Zone; Target takes 3 Damage.`,
 
         effect1name: "On Rally",
         effect2name: "Slice and Dice",
@@ -8089,7 +8089,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Duelist, Priority, Second Strike <span class="line-gap"></span> Venom-Coated Fangs: You can remove 1 K-Cell Counter from anywhere on the Zone and Target 1 face-up Champion on the Zone; Target takes 1 Damage.`,
+        text: `Duelist, Priority, Second Strike <span class="line-gap"></span> Venom-Coated Fangs: Remove 1 K-Cell Counter from anywhere on the Zone and Target 1 face-up Champion on the Zone; Target takes 1 Damage.`,
 
         effect1name: "Venom-Coated Fangs",
         effect2name: "",
@@ -9299,9 +9299,9 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Each time a Livestock is rallied to your Zone: Place 1 Produce Counter on this card for every card rallied (max. 5 per instance). <br><br> You can remove 5 Produce Counters from this card: Draw 2.`,
+        text: `Each time a Livestock is rallied to your Zone: Place 1 Produce Counter on this card for every card rallied (max. 5 per instance). <br><br> Remove 5 Produce Counters from this card; Draw 2.`,
 
-        effect1name: "You can remove 5 Produce Counters from this card",
+        effect1name: "Each time a Livestock is rallied to your Zone",
         effect2name: "",
         effect3name: "",
       }
