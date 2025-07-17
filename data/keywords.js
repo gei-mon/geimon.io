@@ -14,7 +14,7 @@ export const keywords = {
   Invisible: "This Champion cannot be Targeted for attacks.",
   Lifebalance: "This card gains Damage equal to the difference between yours and your Opponent&apos;s Life.",
   Lifetouch: "Instead of damaging Champions, heal them by your Damage amount instead.",
-  "Might of the Small": "If your Opponent&apos;s Life is higher than yours: Double this card&apos;s Damage.",
+  Smallfry: "If your Opponent&apos;s Life is higher than yours: Double this card&apos;s Damage.",
   Naive: "This Champion takes double battle Damage.",
   Necrocharge: "This card deals 1 additional Damage for every Champion in your Tomb.",
   Priority: "When you declare an attack with this Champion, you can choose to Target a specific Champion controlled by your Opponent with the attack. Other Champions cannot block this attack.",

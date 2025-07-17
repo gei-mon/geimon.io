@@ -223,94 +223,7 @@ text-decoration: underline;
 .champion {
   border: 6px solid black;
   font-family: 'Times New Roman', sans-serif;
-}
-.cryptbound {
-  background-color: #293b30;
-  color: #67aa71;
-}
-.frontier {
-  background-color: #c87500;
-  color: #fff265;
-}
-.clockwork {
-  background-color: #15229a;
-  color: #9ae2ff;
-}
-.vivisect {
-  background-color: #7f3010;
-  color: #ffa97e;
-}
-.noble {
-  background-color: #410752;
-  color: #e48dff;
-}
-.righteous {
-  background-color: #750027;
-  color: #fffdb7;
-}
-.nightveil {
-  background-color: #1c0041;
-  color: #e6e6e6;
-}
-.valiant {
-  background-color: #0c58da;
-  color: #d9d8ff;
-}
-.chrome {
-  background-color: #35344e;
-  color: #ffffff;
-}
-.crescendo {
-  background-color: #84004f;
-  color: #ffbaee;
-}
-.cinemonster {
-  background-color: #321600;
-  color: #ffd396;
-}
-.driftmarked {
-  background-color: #037389;
-  color: #d8f7ff;
-}
-.honed {
-  background-color: #484848;
-  color: #cccccc;
-}
-.oldblood {
-  background-color: #780000;
-  color: #ffadad;
-}
-.hellfire {
-  background-color: #811010;
-  color: #ff9b3e;
-}
-.enlightened {
-  background-color: #bc6808;
-  color: #fff894;
-}
-.arcanum {
-  background-color: #002e52;
-  color: #c1e4ff;
-}
-.dealt {
-  background-color: #004718;
-  color: #a2ffa7;
-}
-.radiant {
-  background-color: #ffc534;
-  color: #f2ff7b;
-}
-.frenzied {
-  background-color: #3e3e3e;
-  color: #ff4747;
-}
-.gallant {
-  background-color: #135702;
-  color: #b0ffa2;
-}
-.verdant {
-  background-color: #138f0f;
-  color: #ffc2dc;
+  color: #000000;
 }
 .action {
   background-color: #ffac64;
@@ -333,6 +246,74 @@ text-decoration: underline;
   background-color: #c77fff;
   color: #000000;
 }
+
+.cryptbound {
+  background-color: #a9ffb6;
+}
+.frontier {
+  background-color: #ffc965;
+}
+.clockwork {
+  background-color: #99a7ff;
+}
+.vivisect {
+  background-color: #ff6886;
+}
+.noble {
+  background-color: #b38dff;
+}
+.righteous {
+  background-color: #ff607a;
+}
+.radiant {
+  background-color: #efff5f;
+}
+.nightveil {
+  background-color: #9077e5;
+}
+.valiant {
+  background-color: #d9d8ff;
+}
+.chrome {
+  background-color: #bababa;
+}
+.crescendo {
+  background-color: #ff83c3;
+}
+.cinemonster {
+  background-color: #ff5e3e;
+}
+.driftmarked {
+  background-color: #00cdc3;
+}
+.honed {
+  background-color: #9c9c9c;
+}
+.oldblood {
+  background-color: #ff7e7e;
+}
+.hellfire {
+  background-color: #ff993a;
+}
+.enlightened {
+  background-color: #f7a062;
+}
+.arcanum {
+  background-color: #ba6af0;
+}
+.dealt {
+  background-color: #90ff95;
+}
+.frenzied {
+  background-color: #f02c2c;
+}
+.gallant {
+  background-color: #5dea4a;
+}
+.verdant {
+  background-color: #97ff68;
+}
+
 .token {
   background-color: #eaeaea;
   color: #000000;
@@ -342,13 +323,21 @@ text-decoration: underline;
 .token.champion .card-text {
   text-shadow: none;
 }
+
 .token-name {
-  text-shadow: 1px 1px 2px black, -1px -1px 2px black, 1px -1px 2px black, -1px 1px 2px black;
-  color: #919191;
+  font-weight: bold;
+  color: black;
   cursor: help;
+  text-shadow:
+    0px    -0.2px 0.3px rgba(255, 255, 255, 0.65),
+   -0.5px  0.5px  0.4px rgba(255, 255, 255, 0.65),
+    0.5px  0.5px  0.4px rgba(255, 255, 255, 0.65),
+    0px    1px    0.4px rgba(255, 255, 255, 0.65),
+    0px    0.3px  0.4px rgba(255, 255, 255, 0.65);
   display: inline-block;
   text-align: center;
 }
+
 #token-tooltip {
     position: absolute;
     display: none;
@@ -366,6 +355,18 @@ text-decoration: underline;
     text-align: center;
 }
 
+.keyword {
+  font-weight: bold;
+  color: black;
+  cursor: help;
+  text-shadow:
+    0px    -0.2px 0.3px rgba(255, 255, 255, 0.65),
+   -0.5px  0.5px  0.4px rgba(255, 255, 255, 0.65),
+    0.5px  0.5px  0.4px rgba(255, 255, 255, 0.65),
+    0px    1px    0.4px rgba(255, 255, 255, 0.65),
+    0px    0.3px  0.4px rgba(255, 255, 255, 0.65);
+}
+
 .card-name {
   width: 100%;
   height: 1.8em; /* limit height */
@@ -375,10 +376,12 @@ text-decoration: underline;
   justify-content: center;
   text-align: center;
   padding: 0;
+  font-weight: bold;
   box-sizing: border-box;
   white-space: nowrap;
   position: relative;
   text-shadow: 1px 1px 2px black, -1px -1px 2px black, 1px -1px 2px black, -1px 1px 2px black;
+  font-size: 0.92em;
 }
 
 .card-name span {
@@ -477,6 +480,18 @@ text-decoration: underline;
     padding-bottom: 0 !important;
 }
 
+.champion .card-text {
+  text-shadow: none;
+}
+.champion .card-name {
+  text-shadow: none;
+}
+.champion .card-cost {
+  text-shadow: none;
+}
+.champion .card-condition {
+  text-shadow: none;
+}
 .action .card-text {
   text-shadow: none;
 }

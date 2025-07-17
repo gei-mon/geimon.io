@@ -88,50 +88,39 @@ export function renderCard(card, container) {
   const abilitiesHTML = card.abilities.map(ability => {
     let abilityText = ability.text;
 
-    // Process keywords first
-    ability.keywords.forEach(keyword => {
-      const keywordRegex = new RegExp(`\\b${keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "gi");
-      const keywordDescription = (keywords[keyword] || 'No description').replace(/<\/?[^>]+(>|$)/g, "");
-      // Replace keyword with span, store only the description text in the tooltip (no HTML)
-      abilityText = abilityText.replace( keywordRegex, 
-        `<span class='keyword' data-description='${keywordDescription.replace(/<\/?[^>]+(>|$)/g, "")}'>${keyword}</span>`
-        );
-    });
-
-    // Define key phrases to format
-    const keyPhrases = cards.flatMap(card => card.abilities.flatMap(ability => [ability.effect1name, ability.effect2name, ability.effect3name].filter(name => name)));
-
-    // Format key phrases and keywords
-    keyPhrases.forEach(phrase => {
-      const phraseRegex = new RegExp(`\\b${phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "gi");
+    // === 1. Highlight keywords dynamically ===
+    const keywordNames = Object.keys(keywords).sort((a, b) => b.length - a.length); // Longest first
+    keywordNames.forEach(keyword => {
+      const safeKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const regex = new RegExp(`\\b${safeKeyword}\\b`, "gi");
+      const description = keywords[keyword].replace(/<\/?[^>]+(>|$)/g, ""); // Strip HTML
       abilityText = abilityText.replace(
-        phraseRegex,
-        `<strong>${phrase}</strong>`
+        regex,
+        `<span class="keyword" data-description="${description}">${keyword}</span>`
       );
     });
 
-    // Format keywords with tooltip spans
-    ability.keywords.forEach(keyword => {
-      const keywordRegex = new RegExp(`\\b${keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "gi");
-      const keywordDescription = (keywords[keyword] || 'No description').replace(/<\/?[^>]+(>|$)/g, "");
-      abilityText = abilityText.replace(
-        keywordRegex,
-        `<strong><span class='keyword' data-description='${keywordDescription}'>${keyword}</span></strong>`
-      );
+    // === 2. Highlight key effect names (Jump, Phase Out, etc.) ===
+    const effectNames = [ability.effect1name, ability.effect2name, ability.effect3name].filter(Boolean);
+    effectNames.forEach(name => {
+      const safeName = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const nameRegex = new RegExp(`\\b${safeName}\\b`, "g");
+      abilityText = abilityText.replace(nameRegex, `<strong>${name}</strong>`);
     });
 
-    const tokenNames = tokens.map(t => t.name);
-    tokenNames.forEach(tokenName => {
-      const tokenRegex = new RegExp(`\\b${tokenName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "gi");
+    // === 3. Highlight tokens ===
+    tokens.forEach(token => {
+      const safeName = token.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const tokenRegex = new RegExp(`\\b${safeName}\\b`, "gi");
       abilityText = abilityText.replace(
         tokenRegex,
-        `<span class='token-name' data-token='${tokenName}'>${tokenName}</span>`
+        `<span class='token-name' data-token='${token.name}'>${token.name}</span>`
       );
     });
 
-    return `<div class="keyword">${abilityText}</div>`;
+    return `<div>${abilityText}</div>`;
+  }).join(" ");
 
-  }).join(" ");  // Use a single space to join the final abilities HTML string
 
   cardElement.innerHTML = `
     <div class="card-name">${card.name}</div>
@@ -344,39 +333,49 @@ export function adjustTextSize(cardElement) {
   }
 }
 
+export function addTooltipListeners(container) {
+  const keywordElements = container.querySelectorAll(".keyword");
+  const tooltip = document.getElementById("tooltip");
+
+  keywordElements.forEach(el => {
+    const keywordText = el.textContent.trim();
+    const description = keywords[keywordText];
+
+    if (description) {
+      el.addEventListener("mouseenter", () => {
+        tooltip.innerHTML = description;
+        tooltip.style.display = "block";
+      });
+
+      el.addEventListener("mousemove", (e) => {
+        tooltip.style.left = `${e.pageX + 10}px`;
+        tooltip.style.top = `${e.pageY - 40}px`;
+      });
+
+      el.addEventListener("mouseleave", () => {
+        tooltip.style.display = "none";
+      });
+    }
+  });
+}
+
+export function renderTextWithKeywords(text) {
+  const keywordNames = Object.keys(keywords).sort((a, b) => b.length - a.length); // Longest first to prevent partial matches
+  keywordNames.forEach(name => {
+    const safeName = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const regex = new RegExp(`\\b${safeName}\\b`, "gi");
+    text = text.replace(
+      regex,
+      `<span class='keyword'>${name}</span>`
+    );
+  });
+  return text;
+}
 
 function getTokenByName(name) {
   return tokens.find(token => token.name.toLowerCase() === name.toLowerCase());
 }
 
-export function addTooltipListeners(container) {
-    const keywords = container.querySelectorAll(".keyword");
-
-    const tooltip = document.getElementById("tooltip");
-
-    keywords.forEach(keyword => {
-        const description = keyword.dataset.description;
-
-        if (description && description.trim() !== "") {
-
-            keyword.addEventListener("mouseenter", (e) => {
-                tooltip.textContent = description;
-                tooltip.style.display = "block";
-            });
-
-            keyword.addEventListener("mouseleave", () => {
-                tooltip.style.display = "none";
-            });
-
-            keyword.addEventListener("mousemove", (e) => {
-                if (tooltip.style.display === "block") {
-                    tooltip.style.left = `${e.pageX + 10}px`;
-                    tooltip.style.top = `${e.pageY - 40}px`;
-                }
-            });
-        }
-    });
-  }
 export function addTokenTooltipListeners(container) {
   const tokenElements = container.querySelectorAll(".token-name");
   const tooltip = document.getElementById("token-tooltip");
