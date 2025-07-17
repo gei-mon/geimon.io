@@ -6436,7 +6436,7 @@
                         if (!count) break;
 
                         const cardsToObliterate = gameState[username].Deck.splice(0, count);
-                        cardsToObliterate.reverse().forEach(card => {
+                        cardsToObliterate.forEach(card => {
                             card.boardState = "Void";
                             gameState[username].Void.push(card);
                         });

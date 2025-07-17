@@ -7872,10 +7872,10 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Each time a card(s) is sent from the Zone to the Tomb: Place 1 K-Cell Counter on this card for each sent card (max. 5 per instance). <br><br> You can remove 3 K-Cell Counters from this card: Add 1 Clockwork.`,
+        text: `Each time a card(s) is sent from the Zone to the Tomb: Place 1 K-Cell Counter on this card for each sent card (max. 5 per instance). <br><br> You can remove 3 K-Cell Counters from this card; Add 1 Clockwork.`,
         keywords: ["blank"],
         effect1name: "Each time a card(s) is sent from the Zone to the Tomb",
-        effect2name: "You can remove 3 K-Cell Counters from this card",
+        effect2name: "",
         effect3name: "",
       }
     ]
@@ -7894,10 +7894,10 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Each time a card(s) is added: Place 1 K-Cell Counter on this card for each added card (max. 5 per instance). <br><br> You can remove 2 K-Cell Counters from this card and Target 1 Champion you control: Increase Target's Damage by 2.`,
+        text: `Each time a card(s) is added: Place 1 K-Cell Counter on this card for each added card (max. 5 per instance). <br><br> You can remove 2 K-Cell Counters from this card and Target 1 Champion you control; Increase Target's Damage by 2.`,
         keywords: ["blank"],
         effect1name: "Each time a card(s) is added",
-        effect2name: "You can remove 2 K-Cell Counters from this card and Target 1 Champion you control",
+        effect2name: "",
         effect3name: "",
       }
     ]
@@ -7916,10 +7916,10 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Each time an Equipment card(s) is activated: Place 1 K-Cell Counter on this card for each card activated (max. 5 per instance). <br><br> You can remove 3 K-Cell Counters from this card and Target 1 Noble in either Tomb: Resurrect Target.`,
+        text: `Each time an Equipment card(s) is activated: Place 1 K-Cell Counter on this card for each card activated (max. 5 per instance). <br><br> You can remove 3 K-Cell Counters from this card and Target 1 Noble in either Tomb; Resurrect Target.`,
         keywords: ["blank"],
         effect1name: "Each time an Equipment card(s) is activated",
-        effect2name: "and Target 1 Noble in either Tomb",
+        effect2name: "",
         effect3name: "",
       }
     ]
@@ -7938,10 +7938,10 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Each time an attack is declared: Place 1 K-Cell Counter on this card. <br><br> You can remove 5 K-Cell Counters from this card and Target 1 Champion on the Zone: Destroy Target. <br><br> If Destroyed: Recruit 1 Hero.`,
+        text: `Each time an attack is declared: Place 1 K-Cell Counter on this card. <br><br> You can remove 5 K-Cell Counters from this card and Target 1 Champion on the Zone; Destroy Target. <br><br> If Destroyed: Recruit 1 Hero.`,
         keywords: ["blank"],
         effect1name: "Each time an attack is declared",
-        effect2name: "You can remove 5 K-Cell Counters from this card and Target 1 Champion on the Zone",
+        effect2name: "",
         effect3name: "If Destroyed",
       }
     ]
@@ -8026,10 +8026,10 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `On Activation: Destroy all other face-up "Arena" Obelisks on the Zone. <span class="line-gap"></span> Each time a card(s) is drawn: Place 1 K-Cell Counter on this card for each card drawn (max. 5 per instance). <span class="line-gap"></span> You can remove 2 K-Cell Counters from this card: Destroy all face-up "Arena" Obelisks on the Zone, then activate 1 "Arena" Obelisk from your Hand or Deck (ignoring its cost), and if you do, place 1 K-Cell Counter on that card.`,
+        text: `On Activation: Destroy all other face-up "Arena" Obelisks on the Zone. <span class="line-gap"></span> Each time a card(s) is drawn: Place 1 K-Cell Counter on this card for each card drawn (max. 5 per instance). <span class="line-gap"></span> You can remove 2 K-Cell Counters from this card; Destroy all face-up "Arena" Obelisks on the Zone, then activate 1 "Arena" Obelisk from your Hand or Deck (ignoring its cost), and if you do, place 1 K-Cell Counter on that card.`,
         keywords: ["blank"],
         effect1name: "On Activation",
-        effect2name: "You can remove 2 K-Cell Counters from this card",
+        effect2name: "",
         effect3name: "Each time a card(s) is drawn",
       }
     ]
