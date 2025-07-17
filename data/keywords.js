@@ -21,7 +21,7 @@ export const keywords = {
   Raider: "If this Champion deals Damage to a Player by battle: Retrieve 1 from either Tomb.",
   Reach: "If your Opponent controls more Champions than you: They cannot block this Champion&apos;s attacks.",
   "Repair Specialist": "The first time each of your Obelisks would be destroyed each turn, they are not destroyed.",
-  Solitary: "If you control another Champion: Destroy this card.",
+  Solitary: "If you control another non-Token Champion: Destroy this card.",
   Undertaker: "Each time a champion(s) is sent to the Tomb (Mandatory): Draw 1, then discard 1.",
   Unstoppable: "This Champion&apos;s attacks cannot be blocked.",
   Veilbind: "This Champion&apos;s Equipment cannot be Targeted by your Opponent&apos;s card effects.",
