@@ -1423,7 +1423,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `<span class="line-gap"></span> This card gains 6 Bullet Counters. Increase the attached Champion's Damage by 1 per Bullet Counter this card has. <span class="line-gap"></span> After each time the attached Champion battles: Remove 1 Bullet Counter from this card. <span class="line-gap"></span> If this card has no Bullet Counters (Reflex): Destroy this card; Deal 3 Damage to 1 Champion or Player of your choice.`,
+        text: `<span class="line-gap"></span> This card gains 6 Bullet Counters. Increase the attached Champion's Damage by 1 per Bullet Counter this card has. <span class="line-gap"></span> After each time the attached Champion battles: Remove 1 Bullet Counter from this card. <span class="line-gap"></span> If this card has no Bullet Counters (Reflex): Destroy this card; Deal 3 Damage to 1 face-up Champion or Player.`,
 
         effect1name: "If this card has no Bullet Counters",
         effect2name: "After each time the attached Champion battles",
