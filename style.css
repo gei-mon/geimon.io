@@ -627,10 +627,10 @@ text-decoration: underline;
 
 .bottom-bar {
   width: 70%;                  /* Reduced width */
-  height: 32px;
+  height: 28px;
   display: flex;
   position: absolute;
-  bottom: 6px;                /* Moves the bar up from the very bottom of the card */
+  bottom: 5px;                /* Moves the bar up from the very bottom of the card */
   left: 50%;
   transform: translateX(-50%); /* Center horizontally within the card */
   background-color: #000000;
@@ -663,11 +663,11 @@ text-decoration: underline;
 }
 
 .bottom-bar .damageThreshold {
-    font-size: 40px; /* Make larger */
+    font-size: 32px; /* Make larger */
     font-weight: bold;
     background-color: rgb(173, 240, 255);
     color: rgb(0, 0, 0);
-    padding: 1px 6px 6px 8px;
+    padding: 0px 6px 6px 8px;
     border-radius: 4px;
     line-height: 30px;
     text-shadow: none;
