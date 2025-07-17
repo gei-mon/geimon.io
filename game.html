@@ -6334,32 +6334,118 @@
                             count
                             });
                         } break;
-                    case "Mill":
-                        playSoundEffect('tomb');
-                        if (gameState[username].Deck.length === 0) return;
-                        {
-                            const [card] = gameState[username].Deck.splice(0,1);
+                    case "Mill": {
+                        const max = gameState[username].Deck.length;
+                        if (max === 0) break;
+
+                        const count = await new Promise(resolve => {
+                            const overlay = document.createElement('div');
+                            Object.assign(overlay.style, {
+                                position: 'fixed', top:0, left:0, width:'100%', height:'100%',
+                                background: 'rgba(0,0,0,0.5)', display:'flex',
+                                alignItems:'center', justifyContent:'center', zIndex:400000
+                            });
+
+                            const box = document.createElement('div');
+                            Object.assign(box.style, {
+                                background:'#333', padding:'20px', borderRadius:'8px',
+                                color:'white', textAlign:'center', minWidth:'260px'
+                            });
+                            box.innerHTML = `
+                                <h2>Mill How Many Cards?</h2>
+                                <input id="mill-count" type="number"
+                                min="1" max="${max}" value="1"
+                                style="width:60px;font-size:1em;margin:10px;" />
+                                <div style="margin-top:15px;">
+                                <button id="mill-confirm">Confirm</button>
+                                <button id="mill-cancel">Cancel</button>
+                                </div>`;
+
+                            overlay.appendChild(box);
+                            document.body.appendChild(overlay);
+
+                            overlay.querySelector('#mill-confirm').onclick = () => {
+                                const n = parseInt(box.querySelector('#mill-count').value, 10);
+                                if (!n || n < 1 || n > max) return alert(`Enter 1–${max}`);
+                                playSoundEffect('tomb');
+                                document.body.removeChild(overlay);
+                                resolve(n);
+                            };
+                            overlay.querySelector('#mill-cancel').onclick = () => {
+                                document.body.removeChild(overlay);
+                                resolve(null);
+                            };
+                        });
+
+                        if (!count) break;
+
+                        const cardsToMill = gameState[username].Deck.splice(0, count);
+                        cardsToMill.forEach(card => {
                             card.boardState = "Tomb";
                             gameState[username].Tomb.push(card);
-                            await sendZoneUpdate(["Deck","Tomb"]);
-                            renderLatestTombCard();
-                            updateDeckText();
-                            addGameLogEntry(`${username} milled the top card of their deck.`);
-                        }
-                        break;
-                    case "Obliterate Mill":
-                        playSoundEffect('tomb');
-                        if (gameState[username].Deck.length === 0) return;
-                        {
-                            const [card] = gameState[username].Deck.splice(0,1);
+                        });
+
+                        await sendZoneUpdate(["Deck", "Tomb"]);
+                        renderLatestTombCard();
+                        updateDeckText();
+                        addGameLogEntry(`${username} milled ${count} card${count > 1 ? "s" : ""} from their deck.`);
+                    } break;
+                    case "Obliterate Mill": {
+                        const max = gameState[username].Deck.length;
+                        if (max === 0) break;
+
+                        const count = await new Promise(resolve => {
+                            const overlay = document.createElement('div');
+                            Object.assign(overlay.style, {
+                                position: 'fixed', top:0, left:0, width:'100%', height:'100%',
+                                background: 'rgba(0,0,0,0.5)', display:'flex',
+                                alignItems:'center', justifyContent:'center', zIndex:400000
+                            });
+
+                            const box = document.createElement('div');
+                            Object.assign(box.style, {
+                                background:'#333', padding:'20px', borderRadius:'8px',
+                                color:'white', textAlign:'center', minWidth:'260px'
+                            });
+                            box.innerHTML = `
+                                <h2>Obliterate Mill How Many Cards?</h2>
+                                <input id="obl-mill-count" type="number"
+                                min="1" max="${max}" value="1"
+                                style="width:60px;font-size:1em;margin:10px;" />
+                                <div style="margin-top:15px;">
+                                <button id="obl-mill-confirm">Confirm</button>
+                                <button id="obl-mill-cancel">Cancel</button>
+                                </div>`;
+
+                            overlay.appendChild(box);
+                            document.body.appendChild(overlay);
+
+                            overlay.querySelector('#obl-mill-confirm').onclick = () => {
+                                const n = parseInt(box.querySelector('#obl-mill-count').value, 10);
+                                if (!n || n < 1 || n > max) return alert(`Enter 1–${max}`);
+                                playSoundEffect('tomb');
+                                document.body.removeChild(overlay);
+                                resolve(n);
+                            };
+                            overlay.querySelector('#obl-mill-cancel').onclick = () => {
+                                document.body.removeChild(overlay);
+                                resolve(null);
+                            };
+                        });
+
+                        if (!count) break;
+
+                        const cardsToObliterate = gameState[username].Deck.splice(0, count);
+                        cardsToObliterate.reverse().forEach(card => {
                             card.boardState = "Void";
                             gameState[username].Void.push(card);
-                            await sendZoneUpdate(["Deck","Void"]);
-                            renderLatestVoidCard();
-                            updateDeckText();
-                            addGameLogEntry(`${username} obliterated the top card of their deck.`);
-                        }
-                        break;
+                        });
+
+                        await sendZoneUpdate(["Deck", "Void"]);
+                        renderLatestVoidCard();
+                        updateDeckText();
+                        addGameLogEntry(`${username} obliterate milled ${count} card${count > 1 ? "s" : ""} from their deck.`);
+                    } break;
                     case "Surrender": {
                         const confirmBox = document.createElement("div");
                         Object.assign(confirmBox.style, {
