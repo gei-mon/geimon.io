@@ -1422,7 +1422,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Deathward <span class="line-gap"></span> Gotcha! (Flip): If flipped face-up by battle: Increase this Champion's Damage by half the Damage of the Champion that it is battling (rounded up). <span class="line-gap"></span> If Discarded: Deal 3 Damage to 1 Champion or Player.`,
+        text: `Deathward <span class="line-gap"></span> Gotcha! (Flip): If flipped face-up by battle: Increase this Champion's Damage by half the Damage of the Champion that it is battling (rounded up). <span class="line-gap"></span> If Discarded: Deal 3 Damage to 1 face-up Champion or Player.`,
         effect1name: "Gotcha",
         effect2name: "If Discarded",
         effect3name: "",
@@ -2619,7 +2619,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Bloodrage, Priority <span class="line-gap"></span> Ride: Target 1 Equipment or Obelisk in your Tomb; Retrieve Target. <span class="line-gap"></span> Or Die (Mandatory): If it is your End Phase and this Champion is not designated as a Commander: Destroy this card.`,
+        text: `Bloodrage, Priority <span class="line-gap"></span> Ride: Target 1 Equipment or Obelisk in your Tomb; Retrieve Target. <span class="line-gap"></span> Or Die: If it is your End Phase and this Champion is not designated as a Commander (Mandatory): Destroy this card.`,
         effect1name: "Ride",
         effect2name: "Or Die",
         effect3name: "",
@@ -3081,7 +3081,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Deathtouch <br><span class="line-gap"></span> Mulching Overdrive (Mandatory): If this card Destroys a Champion with its passive: Rally 1 Mulch Token to the controller of that Champion's Zone.`,
+        text: `Deathtouch <br><span class="line-gap"></span> Mulching Overdrive: If this card Destroys a Champion with its passive (Mandatory): Rally 1 Mulch Token to the controller of that Champion's Zone.`,
         effect1name: "Mulching Overdrive",
         effect2name: "",
         effect3name: "",
@@ -3921,7 +3921,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: `Bulletproof <span class="line-gap"></span> On Rally: Attach up to 2 Equipments from your Tomb to this card (ignoring their costs). <span class="line-gap"></span> Rotting Flesh (Mandatory): During your End Phase: This card takes 3 Damage. <span class="line-gap"></span> If Destroyed: Obliterate this card and Target 1 Knight in your Tomb; Resurrect Target, and if you do, you can attach to it 1 Equipment from your Hand, Deck, or Tomb (ignoring its cost).`,
+        text: `Bulletproof <span class="line-gap"></span> On Rally: Attach up to 2 Equipments from your Tomb to this card (ignoring their costs). <span class="line-gap"></span> Rotting Flesh: During your End Phase (Mandatory): This card takes 3 Damage. <span class="line-gap"></span> If Destroyed: Obliterate this card and Target 1 Knight in your Tomb; Resurrect Target, and if you do, you can attach to it 1 Equipment from your Hand, Deck, or Tomb (ignoring its cost).`,
         effect1name: "On Rally",
         effect2name: "Rotting Flesh",
         effect3name: "If Destroyed",
@@ -4173,7 +4173,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Fortified <span class="line-gap"></span> On Rally: Recruit or Resurrect 1 Knight. <span class="line-gap"></span> Royal Guard: This card gains Invisible and Non-Believer while you control a Knight. <span class="line-gap"></span> Royal Support: Your Knight's Damage Thresholds increase by 2, and the first time they would be Destroyed each turn, they are not Destroyed.`,
+        text: `Fortified <span class="line-gap"></span> On Rally: Recruit or Resurrect 1 Knight. <span class="line-gap"></span> Royal Support: Your Knight's Damage Thresholds increase by 1. <span class="line-gap"></span> Royal Guard: This card gains Invisible and Non-Believer while you control a Knight.`,
         effect1name: "On Rally",
         effect2name: "Royal Guard",
         effect3name: "Royal Support",
@@ -5832,7 +5832,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Mount <span class="line-gap"></span> Mounted (Mandatory): If this card, or its Commander, moves Zones: Move this card, or its Commander, to the same location. <span class="line-gap"></span> Mounted: If this card's Commander Destroys a Champion by Battle: This card's Commander gains 5 Life.`,
+        text: `Mount <span class="line-gap"></span> Mounted: If this card, or its Commander, moves Zones (Mandatory): Move this card, or its Commander, to the same location. <span class="line-gap"></span> Mounted: If this card's Commander Destroys a Champion by Battle: This card's Commander gains 5 Life.`,
         effect1name: "",
         effect2name: "",
         effect3name: "",
@@ -7785,7 +7785,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Conscript, Taunt <span class="line-gap"></span> On Resurrection (Mandatory): Both Players can draw 1, then both Players discard 1.`,
+        text: `Conscript, Taunt <span class="line-gap"></span> On Resurrection (Mandatory): Both Players draw 1, then both Players discard 1.`,
         effect1name: "On Resurrection",
         effect2name: "",
         effect3name: "",
@@ -7869,9 +7869,9 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Deathward <span class="line-gap"></span> Until this Champion declares an attack: It gains Invisible and Warded. <span class="line-gap"></span> If Destroyed by battle: Add 1 Slasher.`,
+        text: `Deathward <span class="line-gap"></span> Until this Champion declares an attack: It gains Invisible and Warded. <span class="line-gap"></span> If Destroyed by Battle: Add 1 Slasher.`,
         effect1name: "Until this Champion declares an attack",
-        effect2name: "",
+        effect2name: "If Destroyed by Battle",
         effect3name: "",
       }
     ]
@@ -8158,14 +8158,14 @@ export const cards = [
     condition: "",
     cost: "Sacrifice 2",
     tags: ["Frenzied","Blademaster","Protector"],
-    damage: 4,
-    life: 5,
+    damage: 3,
+    life: 2,
     damageThreshold: "1",
     abilities: [
       {
-        text: `Bloodrage, Board Breaker, Bulletproof, Priority <span class="line-gap"></span> Frenzied Rage (Mandatory): If this card Destroys an Opponent's Champion by battle: It must make another attack against a Champion they control. If there are no remaining Champions on your Opponent's side, this card takes 3 Damage.`,
+        text: `Bloodrage, Board Breaker, Bulletproof, Priority <span class="line-gap"></span> Front and Center: This is the only Champion you can attack with during your Battle Phase. <span class="line-gap"></span> Frenzied Rage: If this card Destroys an Opponent's Champion by battle (Mandatory): It must make another attack against a Champion they control. If there are no remaining Champions on your Opponent's side, this card takes 2 Damage.`,
         effect1name: "Frenzied Rage",
-        effect2name: "",
+        effect2name: "Front and Center",
         effect3name: "",
       }
     ]
