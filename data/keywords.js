@@ -20,7 +20,7 @@ export const keywords = {
   Priority: "When you declare an attack with this Champion: You can choose to Target a specific Champion controlled by your Opponent with the attack. Other Champions cannot block this attack.",
   Raider: "If this Champion deals Battle Damage to a Player: Target 1 card in either Tomb; Retrieve Target.",
   Reach: "If your Opponent controls more Champions than you: They cannot block this Champion&apos;s attacks.",
-  "Repair Specialist": "The first time each turn one of your Obelisks would be Destroyed: It is not Destroyed.",
+  "Repair Specialist": "The first time each turn your Obelisks would be Destroyed: They are not Destroyed.",
   Solitary: "If you control another non-Token Champion: Destroy this card. \n\n If you control 2 or more cards with this passive: You can choose which one is Destroyed.",
   Undertaker: "Each time a Champion(s) is sent to the Tomb (Mandatory): Draw 1, then discard 1.",
   Unstoppable: "This Champion&apos;s attacks cannot be blocked.",

@@ -128,9 +128,9 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Sacrifice this Token; Rally 1 Champion from your hand (ignoring its cost).",
+        text: "Springboard: Sacrifice this Token; Rally 1 Champion from your hand (ignoring its cost).",
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "Springboard",
       }
     ]
 },
@@ -185,9 +185,9 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Sacrifice this Token; Draw 1.",
+        text: "Recycling: Sacrifice this Token; Draw 1.",
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "Recycling",
       }
     ]
 },
@@ -261,9 +261,9 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "This Token can be counted for any number of Sacrifices for a single card or effect.",
+        text: "Jumpstart: This Token can be counted for any number of Sacrifices for a single card or effect.",
         keywords: ["blank"],
-        effect1name: "",
+        effect1name: "Jumpstart",
       }
     ]
 },
