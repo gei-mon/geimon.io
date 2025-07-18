@@ -4154,7 +4154,7 @@
                         scaledCard.style.margin = "5px";
                         scaledCard.style.position = "relative";
                     scaledCard.dataset.zone = "Tomb";
-                    attachHoverMenu(scaledCard, cardData);
+                    attachTargetOverlay(scaledCard, cardData);
 
                     const wrapper = document.createElement("div");
                         wrapper.style.width = `${260 * scale}px`;
@@ -4366,7 +4366,6 @@
                         scaledCard.style.margin = "5px";
                         scaledCard.style.position = "relative";
                     scaledCard.dataset.zone = "Void";
-                    //attachHoverMenu(scaledCard, cardData);
                     attachTargetOverlay(scaledCard, cardData);
 
                     const wrapper = document.createElement("div");
@@ -5190,7 +5189,7 @@
             let ownerInfo = findCardOwnerAndZone(cardData.id);
             const isOppToken = ownerInfo?.owner !== username
                             && cardData.tags?.includes("Token");
-              if (isOppToken) {
+            if (isOppToken) {
                 attachTargetOverlay(cardElement, cardData);
                 return;
             }
@@ -5446,10 +5445,6 @@
                 });
 
                 ownerInfo = findCardOwnerAndZone(cardData.id);
-
-                if (ownerInfo?.owner !== username && (zone === "Tomb" || zone === "Void")) {
-                    return;
-                }
 
                 let opts = [];
 
