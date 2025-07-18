@@ -90,7 +90,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Offer 1 Life; transfer control of this Token to your opponent. <br><br> If it becomes your End Phase while you control this Token (Mandatory): Destroy this Token; you take 10 Damage.",
+        text: "Offer 1 Life; Transfer control of this Token to your opponent. <br><br> If it becomes your End Phase while you control this Token (Mandatory): Destroy this Token; You take 10 Damage.",
         keywords: ["blank"],
         effect1name: "If it becomes your End Phase while you control this Token",
       }

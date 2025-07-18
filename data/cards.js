@@ -8976,7 +8976,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Basic",
-    tags: ["Righteous","Knight","Blademaster","Paladin","Protector"],
+    tags: ["Righteous","Paladin","Protector","Knight"],
     damage: 2,
     life: 2,
     damageThreshold: "2",
