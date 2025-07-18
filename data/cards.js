@@ -246,7 +246,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Destroy the other Champion.",
+        text: "Destroy the other battling Champion.",
         effect1name: "",
         effect2name: "",
         effect3name: "",
@@ -1312,9 +1312,9 @@ export const cards = [
     condition: "",
     cost: "Reveal this card, then your Opponent randomly chooses 1 card from your Hand which you discard. If the discarded card was not this card, it will be Rallied.",
     tags: ["Frontier", "Marshall", "Marksman"],
-    damage: 7,
-    life: 5,
-    damageThreshold: "3",
+    damage: 5,
+    life: 4,
+    damageThreshold: "2",
     abilities: [
       {
         text: `Priority <span class="line-gap"></span> On Rally: Draw 1. <span class="line-gap"></span> If Discarded: Add 1 Equipment or Rush.`,
@@ -2634,10 +2634,10 @@ export const cards = [
     type: "Champion",
     condition: "You have 5 or more cards in your Tomb",
     cost: "Basic",
-    tags: ["Clockwork", "Citizen"],
+    tags: ["Clockwork","Royal","Citizen"],
     damage: 1,
     life: 2,
-    damageThreshold: "2",
+    damageThreshold: "1",
     abilities: [
       {
         text: `Smallfry <br><span class="line-gap"></span> Garbage Lord: Bury 1. <span class="line-gap"></span> Trash Picker: Retrieve 1, and if you do, Obliterate the rest of the cards in your Tomb. <span class="line-gap"></span> On Resurrection: Target 1 Champion in your Tomb; Resurrect Target, but reduce its Life to 1, also it is Obliterated when it leaves the Zone.`,
@@ -5761,7 +5761,7 @@ export const cards = [
     image: `${cardArtFolder}/Obelisks/AdvantageousKnowledge.png`,
     rarity: "Superior",
     type: "Obelisk",
-    condition: "There are at least 2 Champions on the Zone, and your Opponent controls at least 1 Champion",
+    condition: "There are at least 2 face-up Champions on the Zone, and your Opponent controls at least 1 face-up Champion",
     cost: "Declare 2 Champion Tags",
     tags: ["Obelisk"],
     damage: "",
@@ -5769,7 +5769,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Champions with the first declared tag deal double Battle Damage against the second, and Champions with the second tag deal half Battle Damage (rounded down) against the first. <br><br> Champions with both declared tags are unaffected by this card.",
+        text: "Champions with the first declared tag deal double Battle Damage against the second, and Champions with the second tag deal half Battle Damage (rounded down) against the first. <br><br> Champions with both declared tags are unaffected by this card's effects.",
         effect1name: "",
         effect2name: "",
         effect3name: "",
@@ -5783,7 +5783,7 @@ export const cards = [
     rarity: "Rare",
     type: "Obelisk",
     condition: "",
-    cost: "You cannot perform your Basic Rally the turn you activate this card",
+    cost: "You cannot Basic Rally the turn you activate this card",
     tags: ["Obelisk"],
     damage: "",
     life: "",
@@ -5811,7 +5811,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "If a Champion(s) is Destroyed: Mill 1, if it is a Rush or Reflex, you can set it face-down in your Arsenal.",
+        text: "If a Champion(s) is Destroyed (Reflex): Mill 1, if it is a Rush or Reflex, you can set it face-down in your Arsenal.",
         effect1name: "If a Champion(s) is Destroyed",
         effect2name: "",
         effect3name: "",
@@ -5874,8 +5874,8 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Draw 1. If you have at least 3 Reflex in your Tomb, draw 1 more.",
-        effect1name: "",
+        text: "Draw 1. <br><br> If you have at least 3 Reflex in your Tomb: Draw 1 more.",
+        effect1name: "If you have at least 3 Reflex in your Tomb",
         effect2name: "",
         effect3name: "",
       }
@@ -5916,7 +5916,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "All Champions gain 10 Life.",
+        text: "All face-up Champions gain 10 Life.",
         effect1name: "",
         effect2name: "",
         effect3name: "",
@@ -6021,7 +6021,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "All Champions gain Forged until the end of this turn.",
+        text: "All currently face-up Champions gain Forged until the end of this turn.",
         effect1name: "",
         effect2name: "",
         effect3name: "",
@@ -6105,8 +6105,8 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Negate the Rally, and if you do, Destroy those Champions. <br><span class="line-gap"></span> After resolving successfully, set this card face-down to your Opponent's Arsenal.`,
-        effect1name: "",
+        text: `Negate the Rally, and if you do, Destroy those Champions. <br><span class="line-gap"></span> If this card resolves successfully: Set this card face-down in your Opponent's Arsenal.`,
+        effect1name: "If this card resolves successfully",
         effect2name: "",
         effect3name: "",
       }
@@ -6231,7 +6231,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Negate the activation, and if you do, set the card face-down in their Arsenal. It cannot be flipped face-up until the end of this turn.",
+        text: "Negate the activation, and if you do, set the triggering card face-down in their Arsenal. It cannot be flipped face-up until the end of this turn.",
         effect1name: "",
         effect2name: "",
         effect3name: "",
@@ -6609,7 +6609,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Duelist, Priority, Taunt <span class="line-gap"></span> On Rally: Target 1 Champion you control; Target gains Invisible until the start of your next turn. <span class="line-gap"></span> Thunderstruck (Exhaustion): Target 1 Champion on the Zone; Destroy Target.`,
+        text: `Duelist, Priority, Taunt <span class="line-gap"></span> On Rally: Target 1 face-up Champion you control; Target gains Invisible until the start of your next turn. <span class="line-gap"></span> Thunderstruck (Exhaustion): Target 1 Champion on the Zone; Destroy Target.`,
         effect1name: "On Rally",
         effect2name: "Thunderstruck",
         effect3name: "",
@@ -7190,14 +7190,14 @@ export const cards = [
     rarity: "Legendary",
     type: "Champion",
     condition: "",
-    cost: "All face-up Champions you control take 3 Damage (minimum of 1 Champion)",
+    cost: "All face-up Champions you control (minimum of 1) take 3 Damage",
     tags: ["Arcanum","Evocation","Mage"],
     damage: 5,
     life: 1,
     damageThreshold: "2",
     abilities: [
       {
-        text: `Warded <span class="line-gap"></span> On Rally: Add 1 Action. <span class="line-gap"></span> Fireball (Exhaustion): Deal 3 Damage to all face-up Champions your Opponent controls. <span class="line-gap"></span> Incendiary Demise: If this card is Destroyed by battle: Destroy the battling Champion.`,
+        text: `Warded <span class="line-gap"></span> On Rally: Add 1 Action. <span class="line-gap"></span> Fireball (Exhaustion): Deal 3 Damage to all face-up Champions your Opponent controls. <span class="line-gap"></span> Incendiary Demise: If Destroyed by Battle: Destroy the other battling Champion.`,
         effect1name: "On Rally",
         effect2name: "Fireball",
         effect3name: "Incendiary Demise",
@@ -7365,7 +7365,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Me, Myself, and I: Rally 1 Echo Token to your Zone of this card. <span class="line-gap"></span> Syke!: This card gains Invisible, Unstoppable, and Warded so long as there is a linked Token of this card on your side of the Zone.`,
+        text: `Me, Myself, and I: Rally 1 Echo Token to your Zone of this card. <span class="line-gap"></span> Syke!: While you control a linked Token of this card on your Zone: This card gains Invisible and Unstoppable.`,
         effect1name: "Me, Myself, and I",
         effect2name: "Syke",
         effect3name: "",
@@ -7386,7 +7386,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Lead to Gold (Exhaustion): Obliterate 1 face-up card you control (other than this card); Activate 1 card of the same type from your Hand (ignoring its cost).`,
+        text: `Lead to Gold (Exhaustion): Obliterate 1 other face-up card you control; Activate 1 card of the same type from your Hand (ignoring its cost).`,
         effect1name: "Lead to Gold",
         effect2name: "",
         effect3name: "",
