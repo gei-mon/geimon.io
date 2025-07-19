@@ -6441,7 +6441,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Defender <span class="line-gap"></span> Moonlight Barrier: The first time each turn a card(s) on your Zone would be Destroyed (Mandatory, Reflex): Offer 2 Life from this card; They are not Destroyed. <span class="line-gap"></span> Cosmic Crashdown: If Resurrected or Unleashed: Deal 2 Damage to all face-up Champions your Opponent controls.`,
+        text: `Defender <span class="line-gap"></span> Moonlight Barrier: The first time each turn a card(s) on your Zone would be Destroyed (Mandatory, Reflex): Offer 4 Life from this card; They are not Destroyed. <span class="line-gap"></span> Cosmic Crashdown: On Resurrection: Deal 2 Damage to all face-up Champions your Opponent controls.`,
         effect1name: "Moonlight Barrier",
         effect2name: "",
         effect3name: "Cosmic Crashdown",
@@ -6455,14 +6455,14 @@ export const cards = [
     rarity: "Legendary",
     type: "Champion",
     condition: "Reflex: This card is in your Hand or Reserve and an attack is declared against you",
-    cost: "All face-up Champions take 2 Damage",
+    cost: "All face-up Champions you control (minimum of 1) take 2 Damage",
     tags: ["Valiant","Protector","Centurion","Hero"],
     damage: 8,
     life: 2,
     damageThreshold: "2",
     abilities: [
       {
-        text: `Defender, Duelist, Priority <span class="line-gap"></span> On Rally: Retrieve 1 Hero. <span class="line-gap"></span> Sunlight Blast: If a card is Targeted by an Opponent's card effect (Reflex): Target 1 face-up Champion; Destroy Target. <span class="line-gap"></span> Solar Blitz (Exhaustion): Deal 2 Damage to all face-up Champions your Opponent controls.`,
+        text: `Defender, Duelist, Priority <span class="line-gap"></span> On Rally: Retrieve 1 Hero. <span class="line-gap"></span> Sunlight Blast: If a card on the Zone is Targeted by an Opponent's card effect (Mandatory, Reflex): Target 1 face-up Champion on the Zone; Destroy Target. <span class="line-gap"></span> Solar Blitz (Exhaustion): Deal 2 Damage to all face-up Champions your Opponent controls.`,
         effect1name: "Sunlight Blast",
         effect2name: "Solar Blitz",
         effect3name: "On Rally",
@@ -6483,7 +6483,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Duelist, Naive, Necrocharge, Priority <span class="line-gap"></span> On Rally: Add 1 Hero. <span class="line-gap"></span> Sunshine Sparkles: If an attack is declared (Reflex): Negate that attack.`,
+        text: `Duelist, Naive, Necrocharge, Priority <span class="line-gap"></span> On Rally: Add 1 Hero. <span class="line-gap"></span> Sunshine Sparkles: Once while this card is face-up on the Zone, if an attack is declared (Reflex): Negate that attack.`,
         effect1name: "Sunshine Sparkles",
         effect2name: "",
         effect3name: "On Rally",
@@ -6546,7 +6546,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Add 1 Centurion. <br><br> If this card is in your Tomb: Obliterate this card and 1 Centurion from your Tomb; Rally 1 Centurion from your Hand (ignoring its cost and conditions).",
+        text: "Add 1 Centurion. <br><br> If this card is in your Tomb: Obliterate this card and Discard 1 Centurion; Rally 1 Centurion from your Hand (ignoring its cost and conditions).",
         effect1name: "If this card is in your Tomb",
         effect2name: "",
         effect3name: "",
@@ -6564,7 +6564,7 @@ export const cards = [
     tags: ["Valiant","Protector","Centurion","Hero"],
     damage: 2,
     life: 6,
-    damageThreshold: "4",
+    damageThreshold: "3",
     abilities: [
       {
         text: `Lifesteal, Menace <span class="line-gap"></span> On Rally: Retrieve 1 Action or Rush. <span class="line-gap"></span> Ensnaring Strike: Target 1 Champion on the Zone; Target cannot declare attacks or block until the end of your next turn.`,
@@ -6604,12 +6604,12 @@ export const cards = [
     condition: "Reflex: A Champion or Player takes Damage from an effect",
     cost: "Obliterate Mill 10",
     tags: ["Valiant","Protector","Centurion","Hero"],
-    damage: 9,
+    damage: 6,
     life: 3,
     damageThreshold: "2",
     abilities: [
       {
-        text: `Duelist, Priority, Taunt <span class="line-gap"></span> On Rally: Target 1 face-up Champion you control; Target gains Invisible until the start of your next turn. <span class="line-gap"></span> Thunderstruck (Exhaustion): Target 1 Champion on the Zone; Destroy Target.`,
+        text: `Duelist, Priority, Taunt <span class="line-gap"></span> On Rally: Target 1 face-up Champion you control; Target gains Invisible until the start of your next turn. <span class="line-gap"></span> Thunderstruck (Exhaustion): Target 1 face-up Champion on the Zone; Destroy Target.`,
         effect1name: "On Rally",
         effect2name: "Thunderstruck",
         effect3name: "",
@@ -6625,12 +6625,12 @@ export const cards = [
     condition: "Reflex: An attack is declared",
     cost: "Obliterate 2 cards of different types from your Tomb",
     tags: ["Valiant","Protector","Centurion","Hero"],
-    damage: 4,
-    life: 7,
-    damageThreshold: "3",
+    damage: 3,
+    life: 6,
+    damageThreshold: "2",
     abilities: [
       {
-        text: `Defender, Duelist, Priority <span class="line-gap"></span> On Rally: Target 1 face-up Champion on the Zone; Flip Target face-down. <span class="line-gap"></span> Aqua Armor: Decrease the Damage this card takes by its Damage Threshold.`,
+        text: `Defender, Duelist, Priority <span class="line-gap"></span> On Rally (Exhaustion): Target 1 face-up Champion on the Zone; Flip Target face-down. <span class="line-gap"></span> Aqua Armor: Decrease the Damage this card takes by its Damage Threshold.`,
         effect1name: "On Rally",
         effect2name: "Aqua Armor",
         effect3name: "",
