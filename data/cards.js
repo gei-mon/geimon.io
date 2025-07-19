@@ -6441,7 +6441,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Defender <span class="line-gap"></span> Moonlight Barrier: The first time each turn a card(s) on your Zone would be Destroyed (Mandatory, Reflex): Offer 4 Life from this card; They are not Destroyed. <span class="line-gap"></span> Cosmic Crashdown: On Resurrection: Deal 2 Damage to all face-up Champions your Opponent controls.`,
+        text: `Defender <span class="line-gap"></span> Moonlight Barrier: The first time each turn a card(s) on your Zone would be Destroyed (Mandatory, Reflex): Offer 4 Life from this card; They are not Destroyed. <span class="line-gap"></span> Cosmic Crashdown: On Resurrection (Exhaustion): Deal 2 Damage to all face-up Champions your Opponent controls.`,
         effect1name: "Moonlight Barrier",
         effect2name: "",
         effect3name: "Cosmic Crashdown",
@@ -6462,7 +6462,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Defender, Duelist, Priority <span class="line-gap"></span> On Rally: Retrieve 1 Hero. <span class="line-gap"></span> Sunlight Blast: If a card on the Zone is Targeted by an Opponent's card effect (Mandatory, Reflex): Target 1 face-up Champion on the Zone; Destroy Target. <span class="line-gap"></span> Solar Blitz (Exhaustion): Deal 2 Damage to all face-up Champions your Opponent controls.`,
+        text: `Defender, Duelist, Priority <span class="line-gap"></span> On Rally (Exhaustion): Retrieve 1 Hero. <span class="line-gap"></span> Sunlight Blast: If a card on the Zone is Targeted by an Opponent's card effect (Mandatory, Reflex): Target 1 face-up Champion on the Zone; Destroy Target. <span class="line-gap"></span> Solar Blitz (Exhaustion): Deal 2 Damage to all face-up Champions your Opponent controls.`,
         effect1name: "Sunlight Blast",
         effect2name: "Solar Blitz",
         effect3name: "On Rally",
@@ -6483,7 +6483,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Duelist, Naive, Necrocharge, Priority <span class="line-gap"></span> On Rally: Add 1 Hero. <span class="line-gap"></span> Sunshine Sparkles: Once while this card is face-up on the Zone, if an attack is declared (Reflex): Negate that attack.`,
+        text: `Duelist, Naive, Necrocharge, Priority <span class="line-gap"></span> On Rally (Exhaustion): Add 1 Hero. <span class="line-gap"></span> Sunshine Sparkles: Once while this card is face-up on the Zone, if an attack is declared (Reflex): Negate that attack.`,
         effect1name: "Sunshine Sparkles",
         effect2name: "",
         effect3name: "On Rally",
@@ -6588,7 +6588,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Bloodrage, Duelist, Priority <span class="line-gap"></span> On Rally: Target 1 face-up Champion on the Zone; Target takes 3 Damage. <span class="line-gap"></span> Weakening Strike: Champions Damaged by this card in battle can no longer block.`,
+        text: `Bloodrage, Duelist, Priority <span class="line-gap"></span> On Rally (Exhaustion): Target 1 face-up Champion on the Zone; Target takes 3 Damage. <span class="line-gap"></span> Weakening Strike: Champions Damaged by this card in battle can no longer block.`,
         effect1name: "On Rally",
         effect2name: "Weakening Strike",
         effect3name: "",
@@ -6609,7 +6609,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Duelist, Priority, Taunt <span class="line-gap"></span> On Rally: Target 1 face-up Champion you control; Target gains Invisible until the start of your next turn. <span class="line-gap"></span> Thunderstruck (Exhaustion): Target 1 face-up Champion on the Zone; Destroy Target.`,
+        text: `Duelist, Priority, Taunt <span class="line-gap"></span> On Rally (Exhaustion): Target 1 face-up Champion you control; Target gains Invisible until the start of your next turn. <span class="line-gap"></span> Thunderstruck (Exhaustion): Target 1 face-up Champion on the Zone; Destroy Target.`,
         effect1name: "On Rally",
         effect2name: "Thunderstruck",
         effect3name: "",
