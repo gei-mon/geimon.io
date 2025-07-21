@@ -533,5 +533,24 @@ export const tokens = [
         effect1name: "Armor Up",
       }
     ]
+},
+{
+    id: "9029",
+    name: "Lollipop Token",
+    image: `${tokenArtFolder}/Lollipop.png`,
+    type: "Champion",
+    condition: "",
+    cost: "",
+    tags: ["Token"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: "",
+        keywords: ["blank"],
+        effect1name: "",
+      }
+    ]
 }
 ];

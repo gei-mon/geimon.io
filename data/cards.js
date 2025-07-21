@@ -7163,6 +7163,27 @@ export const cards = [
     ]
   },
   {
+    id: "667",
+    name: "Sidecar",
+    image: `${cardArtFolder}/Equipments/Sidecar.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "Attach only to a Commander Obelisk",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `The attached Obelisk can now have up to 2 Commanders at a time. <span class="line-gap"></span> Only 1 of the attached Obelisk's Commanders can declare an attack during each Battle Phase. <span class="line-gap"></span> When a Commander of the attached Obelisk leaves the Zone: Destroy this card.`,
+        effect1name: "When a Commander of the attached Obelisk leaves the Zone",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
     id: "721",
     name: "Alice Kazimir, Chronurgy Master",
     image: `${cardArtFolder}/Champions/AliceKazimirChronurgistExtraordinaire.png`,
@@ -7872,6 +7893,48 @@ export const cards = [
         text: `Deathward <span class="line-gap"></span> Until this Champion declares an attack: It gains Invisible and Warded. <span class="line-gap"></span> If Destroyed by Battle: Add 1 Slasher.`,
         effect1name: "Until this Champion declares an attack",
         effect2name: "If Destroyed by Battle",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "801",
+    name: "Skeleton Horse",
+    image: `${cardArtFolder}/Obelisks/SkeletonHorse.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "There is at least 1 Champion in your Tomb",
+    cost: "Obliterate 1 Commander Obelisk from your Tomb",
+    tags: ["Commander","Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `On Activation (Mandatory): Target 1 Champion in your Tomb; Resurrect Target, and if you do, it becomes this card's Commander. <span class="line-gap"></span> Mount <span class="line-gap"></span> Mounted: Negate this card's Commander's passives and effects, and if you do, it gains Duelist. <span class="line-gap"></span> Mounted: If this card's Commander declares an attack (Mandatory): Both Players take 1 Damage.`,
+        effect1name: "",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "802",
+    name: "Go For The Head!",
+    image: `${cardArtFolder}/Obelisks/GoForTheHead.png`,
+    rarity: "Superior",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `All Champions Destroyed by battle are Obliterated instead of being sent to the Tomb.`,
+        effect1name: "",
+        effect2name: "",
         effect3name: "",
       }
     ]
@@ -9011,6 +9074,27 @@ export const cards = [
     ]
   },
   {
+    id: "946",
+    name: "Diabetes",
+    image: `${cardArtFolder}/Equipments/Diabetes.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "",
+    cost: "Rally 1 Lollipop Token to your Opponent's Zone",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `During Your End Phase (Mandatory): Sacrifice 1 Token, of if you are unable to, Destroy the attached Champion.`,
+        effect1name: "During Your End Phase",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
     id: "961",
     name: "Cinder, Heavy Metal Bard",
     image: `${cardArtFolder}/Champions/CinderHeavyMetalBard.png`,
@@ -9341,6 +9425,27 @@ export const cards = [
       {
         text: `High-Interest Loan: Either Player can Offer 3 Life; Then Rally 1 Shark Token to their Zone, it is Destroyed during the End Phase.`,
         effect1name: "High-Interest Loan",
+        effect2name: "",
+        effect3name: "",
+      }
+    ]
+  },
+  {
+    id: "1148",
+    name: "Bull Shark",
+    image: `${cardArtFolder}/Champions/BullShark.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Driftmarked","Royal","Shark"],
+    damage: 2,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Market Opening: During each of you Intermissions (Mandatory): Declare 1 card type; Excavate 1. If the revealed card's type matches what you declared, add it. Otherwise, obliterate it.`,
+        effect1name: "Market Opening",
         effect2name: "",
         effect3name: "",
       }
