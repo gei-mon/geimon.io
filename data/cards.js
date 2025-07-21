@@ -7911,8 +7911,8 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `On Activation (Mandatory): Target 1 Champion in your Tomb; Resurrect Target, and if you do, it becomes this card's Commander. <span class="line-gap"></span> Mount <span class="line-gap"></span> Mounted: Negate this card's Commander's passives and effects, and if you do, it gains Duelist. <span class="line-gap"></span> Mounted: If this card's Commander declares an attack (Mandatory): Both Players take 1 Damage.`,
-        effect1name: "",
+        text: `On Activation (Mandatory): Target 1 Champion in your Tomb; Resurrect Target, and if you do, it becomes this card's Commander. <span class="line-gap"></span> Mount <span class="line-gap"></span> Mounted: Negate this card's Commander's passives and effects, and if you do, it gains Duelist. <span class="line-gap"></span> Mounted: If this card's Commander declares an attack (Mandatory): Both Players take 1 Damage. <span class="line-gap"></span> If this card, or its Commander, leaves the Zone: Obliterate both this card and its Commander.`,
+        effect1name: "If this card, or its Commander, leaves the Zone",
         effect2name: "",
         effect3name: "",
       }
