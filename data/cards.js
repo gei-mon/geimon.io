@@ -5978,6 +5978,24 @@ export const cards = [
     ]
   },
   {
+    id: "428",
+    name: "King of the Highway",
+    image: `${cardArtFolder}/Obelisks/KingOfTheHighway.png`,
+    rarity: "Superior",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Commander","Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Only an Opponent's existing Commander can be designated as this card's Commander. <span class="line-gap"></span> Mount <span class="line-gap"></span> Upon Being Mounted: Send the existing Commander Obelisk controlled by your Opponent to the Tomb, and if you do, transfer control of this card to your Opponent. <span class="line-gap"></span> Mounted: This card's Commander gains Menace.`
+      }
+    ]
+  },
+  {
     id: "481",
     name: "Honeda, Silver-Suited Samurai",
     image: `${cardArtFolder}/Champions/HonedaSilverSuitedSamurai.png`,
@@ -6177,8 +6195,8 @@ export const cards = [
   },
   {
     id: "668",
-    name: "Nanotech Revolution",
-    image: `${cardArtFolder}/Reflex/NanotechRevolution.png`,
+    name: "Cybernetic Revolution",
+    image: `${cardArtFolder}/Reflex/CyberneticRevolution.png`,
     rarity: "Rare",
     type: "Reflex",
     condition: "",
@@ -6759,7 +6777,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Offer 5 Life",
-    tags: ["Cinemonster","Undead","Slasher","Villain"],
+    tags: ["Cinemonster","Royal","Undead","Slasher","Villain"],
     damage: 5,
     life: 1,
     damageThreshold: "1",
@@ -6777,7 +6795,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Mill 6",
-    tags: ["Cinemonster","Cryptbound","Undead","Slasher","Villain"],
+    tags: ["Cinemonster","Cryptbound","Royal","Undead","Slasher","Villain"],
     damage: 0,
     life: 1,
     damageThreshold: "2",
@@ -7845,7 +7863,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Activate 1 Equipment or Obelisk from your Deck (ignoring its cost). Obliterate it when it leaves the Zone.`
+        text: `Activate 1 Equipment or Obelisk from your Deck (ignoring its cost). <br><br> Obliterate it when it leaves the Zone.`
       }
     ]
   },
