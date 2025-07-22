@@ -14,9 +14,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "",
-        keywords: ["blank"],
-        effect1name: "",
+        text: ""
       }
     ]
 },
@@ -33,9 +31,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "While you control this Token: You draw 1 additional card during each of your Draw Phases.",
-        keywords: ["blank"],
-        effect1name: "While you control this Token",
+        text: "While you control this Token: You draw 1 additional card during each of your Draw Phases."
       }
     ]
 },
@@ -52,9 +48,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "While you control this Token: You cannot activate Champion effects.",
-        keywords: ["blank"],
-        effect1name: "While you control this Token",
+        text: "While you control this Token: You cannot activate Champion effects."
       }
     ]
 },
@@ -71,9 +65,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "While you control this Token: You cannot Bury, Discard, Sacrifice, or Obliterate cards.",
-        keywords: ["blank"],
-        effect1name: "While you control this Token",
+        text: "While you control this Token: You cannot Bury, Discard, Sacrifice, or Obliterate cards."
       }
     ]
 },
@@ -90,9 +82,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Offer 1 Life; Transfer control of this Token to your opponent. <br><br> If it becomes your End Phase while you control this Token (Mandatory): Destroy this Token; You take 10 Damage.",
-        keywords: ["blank"],
-        effect1name: "If it becomes your End Phase while you control this Token",
+        text: "Offer 1 Life; Transfer control of this Token to your opponent. <br><br> If it becomes your End Phase while you control this Token (Mandatory): Destroy this Token; You take 10 Damage."
       }
     ]
 },
@@ -109,9 +99,7 @@ export const tokens = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "",
-        keywords: ["blank"],
-        effect1name: "",
+        text: ""
       }
     ]
 },
@@ -128,9 +116,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Springboard: Sacrifice this Token; Rally 1 Champion from your hand (ignoring its cost).",
-        keywords: ["blank"],
-        effect1name: "Springboard",
+        text: "Springboard: Sacrifice this Token; Rally 1 Champion from your hand (ignoring its cost)."
       }
     ]
 },
@@ -147,9 +133,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "While you control this Token: This is the only Champion you can attack with during your Battle Phase.",
-        keywords: ["blank"],
-        effect1name: "While you control this Token",
+        text: "While you control this Token: This is the only Champion you can attack with during your Battle Phase."
       }
     ]
 },
@@ -166,9 +150,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "While you control this Token: You skip your Main Phase 1 and immediately enter your Battle Phase.",
-        keywords: ["blank"],
-        effect1name: "While you control this Token",
+        text: "While you control this Token: You skip your Main Phase 1 and immediately enter your Battle Phase."
       }
     ]
 },
@@ -185,9 +167,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Recycling: Sacrifice this Token; Draw 1.",
-        keywords: ["blank"],
-        effect1name: "Recycling",
+        text: "Recycling: Sacrifice this Token; Draw 1."
       }
     ]
 },
@@ -204,9 +184,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "While you control this Token: You cannot declare attacks.",
-        keywords: ["blank"],
-        effect1name: "While you control this Token",
+        text: "While you control this Token: You cannot declare attacks."
       }
     ]
 },
@@ -223,9 +201,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "While you control this Token: Your Life cannot be increased or decreased.",
-        keywords: ["blank"],
-        effect1name: "While you control this Token",
+        text: "While you control this Token: Your Life cannot be increased or decreased."
       }
     ]
 },
@@ -242,9 +218,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "While you control this Token: You cannot declare attacks.",
-        keywords: ["blank"],
-        effect1name: "While you control this Token",
+        text: "While you control this Token: You cannot declare attacks."
       }
     ]
 },
@@ -261,9 +235,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Jumpstart: This Token can be counted for any number of Sacrifices for a single card or effect.",
-        keywords: ["blank"],
-        effect1name: "Jumpstart",
+        text: "Jumpstart: This Token can be counted for any number of Sacrifices for a single card or effect."
       }
     ]
 },
@@ -280,10 +252,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Reflex: When an Opponent declares an attack: Sacrifice this Token; Negate that attack.",
-        keywords: ["blank"],
-        effect1name: "Reflex",
-        effect2name: "When an Opponent declares an attack",
+        text: "Reflex: When an Opponent declares an attack: Sacrifice this Token; Negate that attack."
       }
     ]
 },
@@ -300,9 +269,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "While you control this Token: Decrease the Damage Threshold of all Champions on the Zone by 1.",
-        keywords: ["blank"],
-        effect1name: "While you control this Token",
+        text: "While you control this Token: Decrease the Damage Threshold of all Champions on the Zone by 1."
       }
     ]
 },
@@ -319,9 +286,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "This Token’s Damage and Life are equal to the linked Target’s at the time of its Rallying. <br><br> If the linked Target leaves the Zone: Destroy this Token.",
-        keywords: ["blank"],
-        effect1name: "If the linked Target leaves the Zone",
+        text: "This Token’s Damage and Life are equal to the linked Target’s at the time of its Rallying. <br><br> If the linked Target leaves the Zone: Destroy this Token."
       }
     ]
 },
@@ -338,9 +303,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Deathward",
-        keywords: ["Deathward"],
-        effect1name: "",
+        text: "Deathward"
       }
     ]
 },
@@ -357,9 +320,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "This Token’s Damage and Life are equal to the last remaining Damage and Life of the Champion it is replacing.",
-        keywords: ["blank"],
-        effect1name: "",
+        text: "This Token’s Damage and Life are equal to the last remaining Damage and Life of the Champion it is replacing."
       }
     ]
 },
@@ -376,9 +337,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Slice and Dice: Offer 1 Life from this Token; Rally 1 Bile Token to your Zone.",
-        keywords: ["blank"],
-        effect1name: "Slice and Dice",
+        text: "Slice and Dice: Offer 1 Life from this Token; Rally 1 Bile Token to your Zone."
       }
     ]
 },
@@ -395,9 +354,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "",
-        keywords: ["blank"],
-        effect1name: "",
+        text: ""
       }
     ]
 },
@@ -414,9 +371,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "This Token’s Damage and Life are equal to the Damage and Life of the Targeted Champion in the Tomb. <br><br> Destroy this Token if the Targeted Champion leaves the Tomb.",
-        keywords: ["blank"],
-        effect1name: "",
+        text: "This Token’s Damage and Life are equal to the Damage and Life of the Targeted Champion in the Tomb. <br><br> Destroy this Token if the Targeted Champion leaves the Tomb."
       }
     ]
 },
@@ -433,9 +388,7 @@ export const tokens = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "",
-        keywords: ["blank"],
-        effect1name: "",
+        text: ""
       }
     ]
 },
@@ -452,9 +405,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Deathward <br><br> Knights who declare attacks must attack this Token. <br><br> You, and this Token, take no Battle Damage from Knights involving this Token. <br><br> You can block with this Token only against Knights, but you can do so with no limit.",
-        keywords: ["Deathward"],
-        effect1name: "",
+        text: "Deathward <br><br> Knights who declare attacks must attack this Token. <br><br> You, and this Token, take no Battle Damage from Knights involving this Token. <br><br> You can block with this Token only against Knights, but you can do so with no limit."
       }
     ]
 },
@@ -471,9 +422,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Taunt",
-        keywords: ["Taunt"],
-        effect1name: "",
+        text: "Taunt"
       }
     ]
 },
@@ -490,9 +439,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Breakfast of Champions: Sacrifice this card and Target 1 face-up Champion on the Zone; Target gains 1 Life.",
-        keywords: ["blank"],
-        effect1name: "",
+        text: "Breakfast of Champions: Sacrifice this card and Target 1 face-up Champion on the Zone; Target gains 1 Life."
       }
     ]
 },
@@ -509,9 +456,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Deathward <br><br> Tear it Down: If this Token reduces a Champion to 1 Life by battle: Destroy that Champion.",
-        keywords: ["Deathward"],
-        effect1name: "Tear it Down",
+        text: "Deathward <br><br> Tear it Down: If this Token reduces a Champion to 1 Life by battle: Destroy that Champion."
       }
     ]
 },
@@ -528,9 +473,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Deathward <br><br> Armor Up: Sacrifice this Token; Add 1 Equipment.",
-        keywords: ["Deathward"],
-        effect1name: "Armor Up",
+        text: "Deathward <br><br> Armor Up: Sacrifice this Token; Add 1 Equipment."
       }
     ]
 },
@@ -547,9 +490,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "",
-        keywords: ["blank"],
-        effect1name: "",
+        text: ""
       }
     ]
 }
