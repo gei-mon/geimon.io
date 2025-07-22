@@ -88,7 +88,12 @@ export function renderCard(card, container) {
   const abilitiesHTML = card.abilities.map(ability => {
     let abilityText = ability.text;
 
-    // === 1. Highlight keywords dynamically ===
+    abilityText = abilityText.replace(
+      /(^|<span class="line-gap"><\/span>\s*|\n|<br\s*\/?>)\s*([^:\n<]+?):/g,
+      (_, prefix, label) => `${prefix}<strong>${label}:</strong>`
+    );
+
+    // === 2. Highlight keywords dynamically ===
     const keywordNames = Object.keys(keywords).sort((a, b) => b.length - a.length); // Longest first
     keywordNames.forEach(keyword => {
       const safeKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -98,14 +103,6 @@ export function renderCard(card, container) {
         regex,
         `<span class="keyword" data-description="${description}">${keyword}</span>`
       );
-    });
-
-    // === 2. Highlight key effect names (Jump, Phase Out, etc.) ===
-    const effectNames = [ability.effect1name, ability.effect2name, ability.effect3name].filter(Boolean);
-    effectNames.forEach(name => {
-      const safeName = name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      const nameRegex = new RegExp(`\\b${safeName}\\b`, "g");
-      abilityText = abilityText.replace(nameRegex, `<strong>${name}</strong>`);
     });
 
     // === 3. Highlight tokens ===
