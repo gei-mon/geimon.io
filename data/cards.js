@@ -7755,7 +7755,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: `Reach, Warded <span class="line-gap"></span> Contingency Expert: This card gains Priority to attack Champions you are the original owner of, it also deals double Battle Damage against such Champions.`
+        text: `Reach, Warded <span class="line-gap"></span> Contingency Expert: This card gains Priority to attack Champions you are the original owner of, it also deals double Battle Damage against such Champions. You, and this card, take no Battle Damage from battles involving Champions you are the original owner of.`
       }
     ]
   },
