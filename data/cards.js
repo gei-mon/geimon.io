@@ -1987,7 +1987,7 @@ export const cards = [
     image: `${cardArtFolder}/Rush/GunsToAGunfight.png`,
     rarity: "Rare",
     type: "Rush",
-    condition: "",
+    condition: "Both Players control at least 1 face-up Champion",
     cost: "",
     tags: ["Rush"],
     damage: 0,
@@ -1995,7 +1995,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Both Players attach 1 Equipment to a Champion they control from their Hand, Deck, or Tomb (ignoring its cost).`
+        text: `Both Players attach 1 Equipment to a face-up Champion they control from their Hand, Deck, or Tomb (ignoring its cost).`
       }
     ]
   },
@@ -2780,7 +2780,7 @@ export const cards = [
     rarity: "Common",
     type: "Rush",
     condition: "",
-    cost: "Send 1 Helper or Obelisk from your Hand, Zone, or Reserve to the Tomb",
+    cost: "Send 1 Helper or Obelisk from your Hand, Reserve, or face-up Zone to the Tomb",
     tags: ["Rush"],
     damage: 0,
     life: 0,
@@ -2895,7 +2895,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Retrieve 1 Clockwork or Helper, and if you do, also Add or Retrieve 1 Equipment, 1 Obelisk, or 1 Reflex.`
+        text: `Retrieve 1 Clockwork or Helper, and if you do, you can also Add 1 Equipment or 1 Obelisk.`
       }
     ]
   },
@@ -3345,7 +3345,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Defender, Naive <span class="line-gap"></span> While Equipped: This Champion is unaffected by its Passives. <span class="line-gap"></span> Hail Mary: Destroy 1 of this Champion's attached Equipments and Target 1 face-up Champion on the Zone; Target takes 3 Damage.`
+        text: `Defender, Naive <span class="line-gap"></span> While Equipped: This Champion is unaffected by its default Passives. <span class="line-gap"></span> Hail Mary: Destroy 1 of this Champion's attached Equipments and Target 1 face-up Champion on the Zone; Target takes 3 Damage.`
       }
     ]
   },
@@ -3885,7 +3885,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Attach 1 Equipment from your Hand, Deck, or Tomb to each Champion you control with a Damage of 2 or less (ignoring their costs). <br><span class="line-gap"></span> Destroy all Equipments attached this way during the End Phase.`
+        text: `Attach 1 Equipment from your Hand, Deck, or Tomb to each Champion you control with a Damage of 1 or less (ignoring their costs). <span class="line-gap"></span> Destroy all Equipments attached this way during the End Phase.`
       }
     ]
   },
@@ -4011,7 +4011,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Target Champion takes no Damage, and cannot be Destroyed, until the end of this turn.`
+        text: `Target takes no Damage, and cannot be Destroyed, until the end of this turn.`
       }
     ]
   },
@@ -4209,7 +4209,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `If the attached Champion deals Battle Damage: Target 1 face-up Champion on the Zone; Deal 2 Damage to Target.`
+        text: `If the attached Champion deals Battle Damage: Target 1 face-up Champion on the Zone; Target takes 2 Damage.`
       }
     ]
   },
@@ -4227,7 +4227,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `The attached Champion's Damage Threshold is increased by 2. <br><span class="line-gap"></span> Each time the attached Champion battles (Mandatory): Your Opponent draws 1.`
+        text: `The attached Champion's Damage Threshold is increased by 2. <br><span class="line-gap"></span> Each time the attached Champion battles another (Mandatory): Your Opponent draws 1.`
       }
     ]
   },
@@ -6171,7 +6171,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Board Breaker, Duelist, Priority`
+        text: `Board Breaker, Deathward, Duelist, Priority`
       }
     ]
   },
@@ -6207,7 +6207,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Activate 1 Equipment from your Hand (ignoring its cost), and if you do, attach it to the Target. <span class="line-gap"></span> If the attached Champion or Equipment leaves the Zone: Obliterate the other.`
+        text: `Activate 1 Equipment from your Hand (ignoring its cost), and if you do, attach it to the Target. You cannot Target a face-up Champion with this card that you cannot attach an Equipment from your Hand to. <span class="line-gap"></span> If the attached Champion or Equipment leaves the Zone: Obliterate the other.`
       }
     ]
   },
@@ -6225,7 +6225,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Second Strike, Twitchy <span class="line-gap"></span> On Rally: Target 1 non-Champion in your Tomb; Retrieve Target. <span class="line-gap"></span> Temporal Twin: Rally 1 Echo Token of this card. <span class="line-gap"></span> Temporal Reversal: If Sent to Tomb: Oblierate Mill 10; Resurrect this card during the next Intermission.`
+        text: `Second Strike, Twitchy <span class="line-gap"></span> On Rally (Exhaustion): Target 1 non-Champion in your Tomb; Retrieve Target. <span class="line-gap"></span> Temporal Twin (Exhaustion): Rally 1 Echo Token of this card. <span class="line-gap"></span> Temporal Reversal: If Sent to Tomb: Oblierate Mill 10; Resurrect this card during the next Intermission.`
       }
     ]
   },
@@ -6387,7 +6387,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Me, Myself, and I: Rally 1 Echo Token to your Zone of this card. <span class="line-gap"></span> Syke!: While you control a linked Token of this card on your Zone: This card gains Invisible and Unstoppable.`
+        text: `Me, Myself, and I (Exhaustion): Rally 1 Echo Token to your Zone of this card. <span class="line-gap"></span> Syke!: While you control a linked Token of this card on your Zone: This card gains Invisible and Unstoppable.`
       }
     ]
   },
@@ -6513,7 +6513,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Each time a card(s) is sent from the Zone to the Tomb: Place 1 K-Cell Counter on this card for each sent card (max. 5 per instance). <br><br> Remove 3 K-Cell Counters from this card; Add 1 Clockwork.`
+        text: `Each time a card(s) is sent from the Zone to the Tomb: Place 1 K-Cell Counter on this card for each sent card (max. 5 per instance). <br><br> Remove 5 K-Cell Counters from this card; Add 1 Clockwork.`
       }
     ]
   },
@@ -6724,7 +6724,7 @@ export const cards = [
     condition: "",
     cost: "Basic",
     tags: ["Cinemonster","Protector","Blademaster","Hero"],
-    damage: 2,
+    damage: 3,
     life: 1,
     damageThreshold: "2",
     abilities: [
@@ -7120,12 +7120,12 @@ export const cards = [
     condition: "Your Opponent controls more Champions than you",
     cost: "Basic",
     tags: ["Righteous","Protector","Blademaster","Mage"],
-    damage: 5,
-    life: 5,
+    damage: 2,
+    life: 4,
     damageThreshold: "3",
     abilities: [
       {
-        text: `Priority, Warded <span class="line-gap"></span> Divine Smite: During damage calculation between this card and another Champion (Reflex): Discard any number of cards; Increase this card's Damage by 2 per card discarded. If it is battling a Hellfire, then increase the Damage by 3 per discarded card instead.`
+        text: `Priority, Warded <span class="line-gap"></span> Divine Smite: During Damage Calculation between this card and another Champion (Reflex): Discard any number of cards; Increase this card's Damage by 2 per card discarded until the end of Damage Calculation. If it is battling a Hellfire, then increase the Damage by 3 per discarded card instead.`
       }
     ]
   },
@@ -7737,7 +7737,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Destroy the attacking Champion, and if you do, you cannot rally during your next turn.`
+        text: `Destroy the attacking Champion, and if you do, you cannot Rally during your next turn.`
       }
     ]
   },
