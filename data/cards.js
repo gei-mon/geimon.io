@@ -2220,8 +2220,8 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Stack 1 card from your Deck. <br><span class="line-gap"></span> During each of your Draw Phases, after you conduct your normal draw (Mandatory): Obliterate Mill 10.`,
-        effect1name: "During each of your Draw Phases, after you conduct your normal draw",
+        text: `Stack 1 card from your Deck. <br><span class="line-gap"></span> During your Draw Phase, after you conduct your normal draw (Mandatory): Obliterate Mill 10.`,
+        effect1name: "During your Draw Phase, after you conduct your normal draw",
         effect2name: "",
         effect3name: "",
       }
@@ -2913,7 +2913,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Mount <span class="line-gap"></span> If this card does not have a Commander (Reflex): Discard your entire Hand (minimum of 1 card); Resurrect 1 Champion, it becomes this card's commander. Obliterate that Champion when it leaves the Zone. <span class="line-gap"></span> Mounted: Sacrifice this card; Restore the use of 1 non-Exhaustion effect that a Champion used this turn.`,
+        text: `If this card does not have a Commander (Reflex): Discard your entire Hand (minimum of 1 card) and Target 1 Champion in your Tomb; Resurrect Target, and if you do, it becomes this card's Commander. Obliterate Target when it leaves the Zone. <span class="line-gap"></span> Mount <span class="line-gap"></span> Mounted: Sacrifice this card and Target 1 face-up Champion on the Zone; Restore the use of 1 of Target's non-Exhaustion effects.`,
         effect1name: "If this card does not have a Commander",
         effect2name: "",
         effect3name: "",
@@ -4761,8 +4761,8 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `The attached Champion can no longer declare attacks. <br><span class="line-gap"></span> During each of their Intermissions while this card is attached: The Champion’s controller draws 1.`,
-        effect1name: "During each of their Intermissions while this card is attached",
+        text: `The attached Champion can no longer declare attacks. <br><span class="line-gap"></span> During the Intermission Phase of the attached Champion's controller: The Champion’s controller draws 1.`,
+        effect1name: "During the Intermission Phase of the attached Champion's controller",
         effect2name: "",
         effect3name: "",
       }
@@ -4866,8 +4866,8 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `The attached Champion gains Non-Believer. <br><span class="line-gap"></span> During each of your End Phases: You take 4 Damage.`,
-        effect1name: "",
+        text: `The attached Champion gains Non-Believer. <br><span class="line-gap"></span> During your End Phase: You take 4 Damage.`,
+        effect1name: "During your End Phase",
         effect2name: "",
         effect3name: "",
       }
@@ -4887,8 +4887,8 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `The attached Champion gains Invisible. <span class="line-gap"></span> During each of your End Phases (Mandatory): Discard 1 or, if you are unable to, Destroy this card. <span class="line-gap"></span> If this card leaves the Zone: Destroy the attached Champion.`,
-        effect1name: "During each of your End Phases",
+        text: `The attached Champion gains Invisible. <span class="line-gap"></span> During your End Phase (Mandatory): Discard 1 or, if you are unable to, Destroy this card. <span class="line-gap"></span> If this card leaves the Zone: Destroy the attached Champion.`,
+        effect1name: "During your End Phase",
         effect2name: "If this card leaves the Zone",
         effect3name: "",
       }
@@ -6882,8 +6882,8 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `During each of your Intermissions, roll a six-sided die, and apply the following effect: <span class="line-gap"></span> 1 • Discard 1. <span class="line-gap"></span> 2 • Draw 1. <span class="line-gap"></span> 3 • Double the Damage of 1 Champion you control until the end of this turn. <span class="line-gap"></span> 4 • Obliterate Mill 5. <span class="line-gap"></span> 5 • Set 1 non-Champion from your Tomb face-down into your Arsenal. </span><span class="line-gap"></span> 6 • Change control of this card to your Opponent.`,
-        effect1name: "",
+        text: `During your Intermission Phase: Roll a six-sided die, and apply the following effect: <span class="line-gap"></span> 1 • Discard 1. <span class="line-gap"></span> 2 • Draw 1. <span class="line-gap"></span> 3 • Double the Damage of 1 Champion you control until the end of this turn. <span class="line-gap"></span> 4 • Obliterate Mill 5. <span class="line-gap"></span> 5 • Set 1 non-Champion from your Tomb face-down into your Arsenal. </span><span class="line-gap"></span> 6 • Change control of this card to your Opponent.`,
+        effect1name: "During your Intermission Phase",
         effect2name: "",
         effect3name: "",
       }
@@ -7932,7 +7932,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `All Champions Destroyed by battle are Obliterated instead of being sent to the Tomb.`,
+        text: `All Champions Destroyed by battle are sent to the Void instead of the Tomb.`,
         effect1name: "",
         effect2name: "",
         effect3name: "",
@@ -8394,8 +8394,8 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `On Activation: Rally 1 Windmill Token to your Zone. <span class="line-gap"></span> During each of your Intermissions: Destroy all Windmill Tokens you control, then Rally 1 Windmill Token to your Zone.`,
-        effect1name: "During each of your Intermissions",
+        text: `On Activation: Rally 1 Windmill Token to your Zone. <span class="line-gap"></span> During your Intermission Phase (Mandatory): Destroy all Windmill Tokens you control, then Rally 1 Windmill Token to your Zone.`,
+        effect1name: "During your Intermission Phase",
         effect2name: "",
         effect3name: "",
       }
@@ -9087,8 +9087,8 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `During Your End Phase (Mandatory): Sacrifice 1 Token, of if you are unable to, Destroy the attached Champion.`,
-        effect1name: "During Your End Phase",
+        text: `During the End Phase of the attached Champion's controller (Mandatory): The controller of the attached Champion must Sacrifice 1 Token, or if they are unable to, Destroy the attached Champion.`,
+        effect1name: "During the End Phase of the attached Champion's controller",
         effect2name: "",
         effect3name: "",
       }
@@ -9444,7 +9444,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Market Opening: During each of you Intermissions (Mandatory): Declare 1 card type; Excavate 1. If the revealed card's type matches what you declared, add it. Otherwise, obliterate it.`,
+        text: `Market Opening: During your Intermission Phase (Mandatory): Declare 1 card type; Excavate 1. If the revealed card's type matches what you declared, add it. Otherwise, obliterate it.`,
         effect1name: "Market Opening",
         effect2name: "",
         effect3name: "",
