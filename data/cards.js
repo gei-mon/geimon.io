@@ -123,7 +123,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Deathward, Necrocharge <br><br> On Rally (Mandatory): Mill 3."
+        text: `Deathward, Necrocharge <br><br> On Rally (Mandatory): Mill 3.`
       }
     ]
   },
@@ -159,7 +159,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Resurrect or Unleash up to a total of 3 Undead."
+        text: `Resurrect or Unleash up to a total of 3 Undead.`
       }
     ]
   },
@@ -177,7 +177,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Resurrect Target Champion and attach this card to it. If this card leaves the Zone, Destroy the attached Champion."
+        text: `Resurrect Target Champion and attach this card to it. If this card leaves the Zone, Destroy the attached Champion.`
       }
     ]
   },
@@ -213,7 +213,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Destroy the other battling Champion."
+        text: `Destroy the other battling Champion.`
       }
     ]
   },
@@ -231,7 +231,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Negate the Attack, and if you do, deal Damage to your Opponent equal to that Champion’s Damage."
+        text: `Negate the Attack, and if you do, deal Damage to your Opponent equal to that Champion’s Damage.`
       }
     ]
   },
@@ -267,7 +267,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Resurrect Target Champion to your Zone, it becomes an Undead."
+        text: `Resurrect Target Champion to your Zone, it becomes an Undead.`
       }
     ]
   },
@@ -285,7 +285,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "If the revealed card is a Champion, that Player can immediately Rally it (ignoring its cost)."
+        text: `If the revealed card is a Champion, that Player can immediately Rally it (ignoring its cost).`
       }
     ]
   },
@@ -303,7 +303,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Mill cards equal to the number of cards in your Opponent's Tomb."
+        text: `Mill cards equal to the number of cards in your Opponent's Tomb.`
       }
     ]
   },
@@ -339,7 +339,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Each Player must offer 1 Life to declare an attack."
+        text: `Each Player must offer 1 Life to declare an attack.`
       }
     ]
   },
@@ -357,7 +357,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Rally 1 Echo Token."
+        text: `Rally 1 Echo Token.`
       }
     ]
   },
@@ -393,7 +393,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Reveal 5 cards from your Deck. Your Opponent chooses 1 of them to add to your Hand. Obliterate the rest."
+        text: `Reveal 5 cards from your Deck. Your Opponent chooses 1 of them to add to your Hand. Obliterate the rest.`
       }
     ]
   },
@@ -411,7 +411,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Negate the triggering card or effect, and if you do, it becomes the End Phase. Other cards and effects cannot be activated in response to this card."
+        text: `Negate the triggering card or effect, and if you do, it becomes the End Phase. Other cards and effects cannot be activated in response to this card.`
       }
     ]
   },
@@ -429,7 +429,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Twitchy <br><br> Frantic Hoarding: Sacrifice 1; Bury up to 2 Reflex."
+        text: `Twitchy <br><br> Frantic Hoarding: Sacrifice 1; Bury up to 2 Reflex.`
       }
     ]
   },
@@ -447,7 +447,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Draw, Add, or Retrieve the same type and number of card(s)."
+        text: `Draw, Add, or Retrieve the same type and number of card(s).`
       }
     ]
   },
@@ -465,7 +465,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Add 1 Cryptbound."
+        text: `Add 1 Cryptbound.`
       }
     ]
   },
@@ -501,7 +501,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "If Destroyed: Both Players take 2 Damage."
+        text: `If Destroyed: Both Players take 2 Damage.`
       }
     ]
   },
@@ -537,7 +537,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Deathward <br><br> On Rally (Mandatory): Target 1 face-up Champion; Target takes 2 Damage."
+        text: `Deathward <br><br> On Rally (Mandatory): Target 1 face-up Champion; Target takes 2 Damage.`
       }
     ]
   },
@@ -555,7 +555,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Seance: Target 1 Champion in either Tomb; Rally 1 Ghost Token of Target. Destroy all Tokens Rallied this way if this card leaves the Zone."
+        text: `Seance: Target 1 Champion in either Tomb; Rally 1 Ghost Token of Target. Destroy all Tokens Rallied this way if this card leaves the Zone.`
       }
     ]
   },
@@ -591,7 +591,7 @@ export const cards = [
     damageThreshold: "6",
     abilities: [
       {
-        text: "Dredgin' Time (Exhaustion): Target 1 card in your Void; Reclaim Target."
+        text: `Dredgin' Time (Exhaustion): Target 1 card in your Void; Reclaim Target.`
       }
     ]
   },
@@ -627,7 +627,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: "Defender, Fortified"
+        text: `Defender, Fortified`
       }
     ]
   },
@@ -663,7 +663,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Target takes 3 Damage, and if it does, draw 1."
+        text: `Target takes 3 Damage, and if it does, draw 1.`
       }
     ]
   },
@@ -681,7 +681,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "All face-up Champions take 2 Damage."
+        text: `All face-up Champions take 2 Damage.`
       }
     ]
   },
@@ -717,7 +717,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Until your End Phase, your Offer effects instead heal you by that amount."
+        text: `Until your End Phase, your Offer effects instead heal you by that amount.`
       }
     ]
   },
@@ -735,7 +735,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Excavate 3 from your Opponent's Deck, return them in an order of your choice."
+        text: `Excavate 3 from your Opponent's Deck, return them in an order of your choice.`
       }
     ]
   },
@@ -753,7 +753,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Resurrect 1 Champion from either Tomb whose Life equals what you Offered, and if you do, destroy it during the End Phase."
+        text: `Resurrect 1 Champion from either Tomb whose Life equals what you Offered, and if you do, destroy it during the End Phase.`
       }
     ]
   },
@@ -771,7 +771,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Retrieve 2."
+        text: `Retrieve 2.`
       }
     ]
   },
@@ -825,7 +825,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Exhaustion: Excavate 3, add 1 revealed."
+        text: `Exhaustion: Excavate 3, add 1 revealed.`
       }
     ]
   },
@@ -843,7 +843,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "If you take 3 or more Damage by an Opponent's card effect or their Champion's attack: Draw 1 for every 3 Damage you took."
+        text: `If you take 3 or more Damage by an Opponent's card effect or their Champion's attack: Draw 1 for every 3 Damage you took.`
       }
     ]
   },
@@ -861,7 +861,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "All Champions on the Zone and in the Tomb are also now considered Undead."
+        text: `All Champions on the Zone and in the Tomb are also now considered Undead.`
       }
     ]
   },
@@ -879,7 +879,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Either Player can Offer 4 Life and Target 1 card in either Tomb; Retrieve Target."
+        text: `Either Player can Offer 4 Life and Target 1 card in either Tomb; Retrieve Target.`
       }
     ]
   },
@@ -897,7 +897,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "While you are at 5 or less Life: You cannot be Damaged."
+        text: `While you are at 5 or less Life: You cannot be Damaged.`
       }
     ]
   },
@@ -915,7 +915,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Increase Target's Damage by the amount Offered."
+        text: `Increase Target's Damage by the amount Offered.`
       }
     ]
   },
@@ -933,7 +933,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Decrease Target's Damage by 3, and if you do, it gains Non-Believer until the end of the turn."
+        text: `Decrease Target's Damage by 3, and if you do, it gains Non-Believer until the end of the turn.`
       }
     ]
   },
@@ -951,7 +951,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Targets take 1 Damage."
+        text: `Targets take 1 Damage.`
       }
     ]
   },
@@ -1005,7 +1005,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Retrieve Target."
+        text: `Retrieve Target.`
       }
     ]
   },
@@ -1023,7 +1023,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Activate that card (ignoring its cost)."
+        text: `Activate that card (ignoring its cost).`
       }
     ]
   },
@@ -1041,7 +1041,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Those Rallied Champion(s) become Exhausted."
+        text: `Those Rallied Champion(s) become Exhausted.`
       }
     ]
   },
@@ -1059,7 +1059,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Resurrect Target during the next Intermission."
+        text: `Resurrect Target during the next Intermission.`
       }
     ]
   },
@@ -1077,7 +1077,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Flip all Champions your Opponent controls face-down."
+        text: `Flip all Champions your Opponent controls face-down.`
       }
     ]
   },
@@ -1095,7 +1095,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Bulletproof, Deathcurse, Lifetouch, Priority"
+        text: `Bulletproof, Deathcurse, Lifetouch, Priority`
       }
     ]
   },
@@ -1275,7 +1275,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "I Found It! (Flip): Target 1 card in either Tomb; Retrieve Target."
+        text: `I Found It! (Flip): Target 1 card in either Tomb; Retrieve Target.`
       }
     ]
   },
@@ -1347,7 +1347,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "On Rally (Mandatory): Declare 1 card type; Excavate cards until you reveal a card of the declared type, add that card and Obliterate the rest."
+        text: `On Rally (Mandatory): Declare 1 card type; Excavate cards until you reveal a card of the declared type, add that card and Obliterate the rest.`
       }
     ]
   },
@@ -1365,7 +1365,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Bottoms Up!: Target 1 face-up Champion on the Zone with a Damage of 1 or Higher; Target's Damage is reduced by 1 and their Damage Threshold is increased by 1."
+        text: `Bottoms Up!: Target 1 face-up Champion on the Zone with a Damage of 1 or Higher; Target's Damage is reduced by 1 and their Damage Threshold is increased by 1.`
       }
     ]
   },
@@ -1383,7 +1383,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Target Champion can make an additional number of attacks this Battle Phase equal to the number of revealed non-Champions."
+        text: `Target Champion can make an additional number of attacks this Battle Phase equal to the number of revealed non-Champions.`
       }
     ]
   },
@@ -1455,7 +1455,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Rakestepping (Reflex): This card takes its own Damage; Your Opponent cannot declare an attack this turn."
+        text: `Rakestepping (Reflex): This card takes its own Damage; Your Opponent cannot declare an attack this turn.`
       }
     ]
   },
@@ -1473,7 +1473,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Herd the Herd: Rally 1 Cow Token to your Zone."
+        text: `Herd the Herd: Rally 1 Cow Token to your Zone.`
       }
     ]
   },
@@ -1491,7 +1491,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "First Impressions: Increase this card's Damage by 1 for every Cow Token on the Zone."
+        text: `First Impressions: Increase this card's Damage by 1 for every Cow Token on the Zone.`
       }
     ]
   },
@@ -1509,7 +1509,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Timid Showoff: Increase this card's Damage by 2 for every Cow Token on the Zone. Decrease this card's Damage by 1 for every Champion your Opponent controls."
+        text: `Timid Showoff: Increase this card's Damage by 2 for every Cow Token on the Zone. Decrease this card's Damage by 1 for every Champion your Opponent controls.`
       }
     ]
   },
@@ -1527,7 +1527,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Bootlicking (Flip): If flipped face-up by battle: Instead of being Destroyed, move this card to your Arsenal and attach it to the attacking Champion. If the attached Champion attempts to declare an attack or activate an effect, negate that attack or effect, and if you do, send it to the Tomb."
+        text: `Bootlicking (Flip): If flipped face-up by battle: Instead of being Destroyed, move this card to your Arsenal and attach it to the attacking Champion. If the attached Champion attempts to declare an attack or activate an effect, negate that attack or effect, and if you do, send it to the Tomb.`
       }
     ]
   },
@@ -1545,7 +1545,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Hungry Dog: Either Player Sacrifices 1 Token; Take control of this card, and if you do, increase its Damage by 1, and its Life by 2."
+        text: `Hungry Dog: Either Player Sacrifices 1 Token; Take control of this card, and if you do, increase its Damage by 1, and its Life by 2.`
       }
     ]
   },
@@ -1581,7 +1581,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Deal the same amount of Damage to your opponent."
+        text: `Deal the same amount of Damage to your opponent.`
       }
     ]
   },
@@ -1599,7 +1599,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Rally 1 Grenade Token to your Zone."
+        text: `Rally 1 Grenade Token to your Zone.`
       }
     ]
   },
@@ -1617,7 +1617,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Reveal the bottom 3 cards of your Deck. Add 1 of them, and Obliterate the other 2."
+        text: `Reveal the bottom 3 cards of your Deck. Add 1 of them, and Obliterate the other 2.`
       }
     ]
   },
@@ -1635,7 +1635,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Draw 3."
+        text: `Draw 3.`
       }
     ]
   },
@@ -1671,7 +1671,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Your Opponent reveals all face-down cards they control."
+        text: `Your Opponent reveals all face-down cards they control.`
       }
     ]
   },
@@ -1707,7 +1707,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Target 1 of your Opponent's Champions, and if you do, this card's attached Champion cannot attack this turn; Take control of the Target until the End Phase."
+        text: `Target 1 of your Opponent's Champions, and if you do, this card's attached Champion cannot attack this turn; Take control of the Target until the End Phase.`
       }
     ]
   },
@@ -1743,7 +1743,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Increase the attached Champion's Damage by 3."
+        text: `Increase the attached Champion's Damage by 3.`
       }
     ]
   },
@@ -1797,7 +1797,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "If an Opponent declares an attack with a Champion that has at least 1 attached Equipment: After that attack resolves, the attacking Champion takes this card's attached Champion's Damage plus 2."
+        text: `If an Opponent declares an attack with a Champion that has at least 1 attached Equipment: After that attack resolves, the attacking Champion takes this card's attached Champion's Damage plus 2.`
       }
     ]
   },
@@ -1815,7 +1815,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "All Champions on the Zone gain Priority. <br><br> Champions cannot declare a direct attack against a Player unless that Player controls no Champions."
+        text: `All Champions on the Zone gain Priority. <br><br> Champions cannot declare a direct attack against a Player unless that Player controls no Champions.`
       }
     ]
   },
@@ -1869,7 +1869,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Either Player can Discard 1; that Player then Draws an extra card during their next Draw Phase."
+        text: `Either Player can Discard 1; that Player then Draws an extra card during their next Draw Phase.`
       }
     ]
   },
@@ -1887,7 +1887,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "During each Player's End Phase: That Player's face-up Champions each take 2 Damage."
+        text: `During each Player's End Phase: That Player's face-up Champions each take 2 Damage.`
       }
     ]
   },
@@ -1959,7 +1959,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Flip all Champions face-down."
+        text: `Flip all Champions face-down.`
       }
     ]
   },
@@ -1995,7 +1995,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Both Players attach 1 Equipment to a Champion they control from their Hand, Deck, or Tomb (ignoring its cost)."
+        text: `Both Players attach 1 Equipment to a Champion they control from their Hand, Deck, or Tomb (ignoring its cost).`
       }
     ]
   },
@@ -2031,7 +2031,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Deal 2 Damage to your Opponent equal to this card's Step Number on the Path."
+        text: `Deal 2 Damage to your Opponent equal to this card's Step Number on the Path.`
       }
     ]
   },
@@ -2049,7 +2049,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "All face-up Champions take Damage equal to their Damage."
+        text: `All face-up Champions take Damage equal to their Damage.`
       }
     ]
   },
@@ -2067,7 +2067,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Draw cards equal to the number of cards your Opponent controls, and if you do, shuffle the same number of cards from your Hand into your Deck."
+        text: `Draw cards equal to the number of cards your Opponent controls, and if you do, shuffle the same number of cards from your Hand into your Deck.`
       }
     ]
   },
@@ -2085,7 +2085,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "You choose your Opponent's attack targets."
+        text: `You choose your Opponent's attack targets.`
       }
     ]
   },
@@ -2103,7 +2103,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Recruit 1 Helper."
+        text: `Recruit 1 Helper.`
       }
     ]
   },
@@ -2139,7 +2139,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Negate that attack, and if you do, end the Battle Phase, then both Players can activate 1 Obelisk from their Deck (ignoring its cost)."
+        text: `Negate that attack, and if you do, end the Battle Phase, then both Players can activate 1 Obelisk from their Deck (ignoring its cost).`
       }
     ]
   },
@@ -2157,7 +2157,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Your Opponent takes Damage equal to the Target's Damage."
+        text: `Your Opponent takes Damage equal to the Target's Damage.`
       }
     ]
   },
@@ -2283,7 +2283,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Place 1 Commander Obelisk from your Deck into your Reserve, and attach to it 1 appropriate Equipment from your Deck (ignoring its cost)."
+        text: `Place 1 Commander Obelisk from your Deck into your Reserve, and attach to it 1 appropriate Equipment from your Deck (ignoring its cost).`
       }
     ]
   },
@@ -2301,7 +2301,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attached Obelisk gains the effect: \"This card's Commander gains Second Strike.\""
+        text: `The attached Obelisk gains the effect: \"This card's Commander gains Second Strike.\"`
       }
     ]
   },
@@ -2319,7 +2319,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attached Obelisk gains the effect: \"This card's Commander's Damage Threshold increases by 2.\""
+        text: `The attached Obelisk gains the effect: \"This card's Commander's Damage Threshold increases by 2.\"`
       }
     ]
   },
@@ -2337,7 +2337,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Increase Target's Damage by 5. <br><br> Destroy Target during the End Phase."
+        text: `Increase Target's Damage by 5. <br><br> Destroy Target during the End Phase.`
       }
     ]
   },
@@ -2445,7 +2445,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Finger Guns (Exhaustion): Target 1 Champion on the Zone; Target cannot declare an attack, block, or use its effects until the start of your next turn."
+        text: `Finger Guns (Exhaustion): Target 1 Champion on the Zone; Target cannot declare an attack, block, or use its effects until the start of your next turn.`
       }
     ]
   },
@@ -2463,7 +2463,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Both Players set face-down 1 Reflex card from their Deck (without revealing what they are)."
+        text: `Both Players set face-down 1 Reflex card from their Deck (without revealing what they are).`
       }
     ]
   },
@@ -2607,7 +2607,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Obliterate all cards from your Opponent's Hand, Zone, and Tomb, then both players draw 6."
+        text: `Obliterate all cards from your Opponent's Hand, Zone, and Tomb, then both players draw 6.`
       }
     ]
   },
@@ -2697,7 +2697,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attached Obelisk gains the effect: \"This card's Commander gains Menace.\""
+        text: `The attached Obelisk gains the effect: \"This card's Commander gains Menace.\"`
       }
     ]
   },
@@ -2715,7 +2715,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Decrease the attached Champion's Damage by 2. The attached Champion gains Second Strike."
+        text: `Decrease the attached Champion's Damage by 2. The attached Champion gains Second Strike.`
       }
     ]
   },
@@ -2787,7 +2787,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Retrieve 1 Helper or Obelisk, and if you do, you can place 1 Helper or Obelisk from your Deck into your Reserve."
+        text: `Retrieve 1 Helper or Obelisk, and if you do, you can place 1 Helper or Obelisk from your Deck into your Reserve.`
       }
     ]
   },
@@ -2805,7 +2805,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Acquired Product: Either Player can Offer 2 Life from a Champion they control: Until the End Phase, that Champion gains Priority."
+        text: `Acquired Product: Either Player can Offer 2 Life from a Champion they control: Until the End Phase, that Champion gains Priority.`
       }
     ]
   },
@@ -2841,7 +2841,7 @@ export const cards = [
     damageThreshold: "4",
     abilities: [
       {
-        text: "Bloodrage, Defender, Forged, Fortified, Menace"
+        text: `Bloodrage, Defender, Forged, Fortified, Menace`
       }
     ]
   },
@@ -2859,7 +2859,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Recruit or Resurrect 1 Construct."
+        text: `Recruit or Resurrect 1 Construct.`
       }
     ]
   },
@@ -2877,7 +2877,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Destroy all Constructs on the Zone."
+        text: `Destroy all Constructs on the Zone.`
       }
     ]
   },
@@ -2895,7 +2895,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Retrieve 1 Clockwork or Helper, and if you do, also Add or Retrieve 1 Equipment, 1 Obelisk, or 1 Reflex."
+        text: `Retrieve 1 Clockwork or Helper, and if you do, also Add or Retrieve 1 Equipment, 1 Obelisk, or 1 Reflex.`
       }
     ]
   },
@@ -2913,7 +2913,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Retrieve 1 Action or Rush. You cannot activate Action or Rush cards for the remainder of this turn."
+        text: `Retrieve 1 Action or Rush. You cannot activate Action or Rush cards for the remainder of this turn.`
       }
     ]
   },
@@ -2931,7 +2931,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Until the end of this turn, each time a Token(s) is Rallied to your Opponent's Zone: They must discard 1."
+        text: `Until the end of this turn, each time a Token(s) is Rallied to your Opponent's Zone: They must discard 1.`
       }
     ]
   },
@@ -2949,7 +2949,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Draw 1 for every Token your Opponent controls."
+        text: `Draw 1 for every Token your Opponent controls.`
       }
     ]
   },
@@ -2967,7 +2967,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attached Obelisk gains the effect: \"Increase this card's Commander's Damage by 4, but they cannot declare more than one attack per Battle Phase.\""
+        text: `The attached Obelisk gains the effect: \"Increase this card's Commander's Damage by 4, but they cannot declare more than one attack per Battle Phase.\"`
       }
     ]
   },
@@ -2985,7 +2985,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Excavate 3, add 1 revealed Equipment or Obelisk."
+        text: `Excavate 3, add 1 revealed Equipment or Obelisk.`
       }
     ]
   },
@@ -3021,7 +3021,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attached Champion's Damage Threshold increases by 3."
+        text: `The attached Champion's Damage Threshold increases by 3.`
       }
     ]
   },
@@ -3039,7 +3039,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Target 1 Equipment in your Tomb; Retrieve Target."
+        text: `Target 1 Equipment in your Tomb; Retrieve Target.`
       }
     ]
   },
@@ -3057,7 +3057,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Attached Champion gains Duelist and Non-Believer."
+        text: `Attached Champion gains Duelist and Non-Believer.`
       }
     ]
   },
@@ -3111,7 +3111,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Obliterate all Champions you control, and if you do, Unleash all Champions Obliterated by this effect."
+        text: `Obliterate all Champions you control, and if you do, Unleash all Champions Obliterated by this effect.`
       }
     ]
   },
@@ -3129,7 +3129,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Take control of Target until the End Phase. It is Destroyed during the next turn's End Phase."
+        text: `Take control of Target until the End Phase. It is Destroyed during the next turn's End Phase.`
       }
     ]
   },
@@ -3147,7 +3147,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Destroy all Tokens, and if you do, deal 1 Damage per Token Destroyed to the Player that controlled it."
+        text: `Destroy all Tokens, and if you do, deal 1 Damage per Token Destroyed to the Player that controlled it.`
       }
     ]
   },
@@ -3183,7 +3183,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Negate the negating effect, and if you do, destroy that card."
+        text: `Negate the negating effect, and if you do, destroy that card.`
       }
     ]
   },
@@ -3201,7 +3201,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Destroy up to 3 cards your Opponent controls, including at least 1 Token."
+        text: `Destroy up to 3 cards your Opponent controls, including at least 1 Token.`
       }
     ]
   },
@@ -3219,7 +3219,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Flip face-down all Equipments your Opponent controls."
+        text: `Flip face-down all Equipments your Opponent controls.`
       }
     ]
   },
@@ -3237,7 +3237,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Negate that Champion's effect, and if you do, flip that Champion face-down."
+        text: `Negate that Champion's effect, and if you do, flip that Champion face-down.`
       }
     ]
   },
@@ -3291,7 +3291,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Conscript, Deathward <br><br> On Resurrection (Mandatory): Your Opponent draws 1."
+        text: `Conscript, Deathward <br><br> On Resurrection (Mandatory): Your Opponent draws 1.`
       }
     ]
   },
@@ -3309,7 +3309,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Undertaker"
+        text: `Undertaker`
       }
     ]
   },
@@ -3327,7 +3327,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Greedy, Reach"
+        text: `Greedy, Reach`
       }
     ]
   },
@@ -3561,7 +3561,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Fortified <br><br> If Sent to Tomb: Add 1 Obelisk."
+        text: `Fortified <br><br> If Sent to Tomb: Add 1 Obelisk.`
       }
     ]
   },
@@ -3633,7 +3633,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "On Rally: If this card has the highest Damage on the Zone: Draw 1."
+        text: `On Rally: If this card has the highest Damage on the Zone: Draw 1.`
       }
     ]
   },
@@ -3669,7 +3669,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "If Sent to Tomb: Add or Retrieve 1 Dragon."
+        text: `If Sent to Tomb: Add or Retrieve 1 Dragon.`
       }
     ]
   },
@@ -3687,7 +3687,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Draw 2. <br><br> During your Opponent's next Draw Phase: Your Opponent draws 2 additional cards."
+        text: `Draw 2. <br><br> During your Opponent's next Draw Phase: Your Opponent draws 2 additional cards.`
       }
     ]
   },
@@ -3741,7 +3741,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Recruit 1 Knight with 4 or less Damage."
+        text: `Recruit 1 Knight with 4 or less Damage.`
       }
     ]
   },
@@ -3759,7 +3759,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Resurrect that Champion, and if you do, your opponent draws 2."
+        text: `Resurrect that Champion, and if you do, your opponent draws 2.`
       }
     ]
   },
@@ -3777,7 +3777,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Negate the activation, and if you do, Destroy it."
+        text: `Negate the activation, and if you do, Destroy it.`
       }
     ]
   },
@@ -3813,7 +3813,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Bounce Target."
+        text: `Bounce Target.`
       }
     ]
   },
@@ -3831,7 +3831,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Negate the attack, and if you do, you can Rally 1 Champion from your Hand (ignoring its cost)."
+        text: `Negate the attack, and if you do, you can Rally 1 Champion from your Hand (ignoring its cost).`
       }
     ]
   },
@@ -3849,7 +3849,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Destroy all cards in your Opponent's Arsenal, then both players draw cards equal to the number of their cards that were destroyed."
+        text: `Destroy all cards in your Opponent's Arsenal, then both players draw cards equal to the number of their cards that were destroyed.`
       }
     ]
   },
@@ -3867,7 +3867,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "If 1 of the targeted Champions leaves the Zone, the other is sent to the same location."
+        text: `If 1 of the targeted Champions leaves the Zone, the other is sent to the same location.`
       }
     ]
   },
@@ -3903,7 +3903,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Destroy Target, and if you do, your Opponent can Recruit 1 that shares a tag with the Destroyed Champion, and has equal or less Damage than it does in the Tomb."
+        text: `Destroy Target, and if you do, your Opponent can Recruit 1 that shares a tag with the Destroyed Champion, and has equal or less Damage than it does in the Tomb.`
       }
     ]
   },
@@ -3921,7 +3921,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Ignore the cost of the next Action you activate this turn."
+        text: `Ignore the cost of the next Action you activate this turn.`
       }
     ]
   },
@@ -3939,7 +3939,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Both Players reveal their Hands and each Player chooses 1 card from their Opponent's Hand to discard."
+        text: `Both Players reveal their Hands and each Player chooses 1 card from their Opponent's Hand to discard.`
       }
     ]
   },
@@ -3957,7 +3957,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Both Players draw 1, then discard 1."
+        text: `Both Players draw 1, then discard 1.`
       }
     ]
   },
@@ -3975,7 +3975,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Destroy Target, and if you do, both Players draw 1."
+        text: `Destroy Target, and if you do, both Players draw 1.`
       }
     ]
   },
@@ -3993,7 +3993,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Look at your Opponent's Hand and select 1 card from it to Oblierate until the End Phase."
+        text: `Look at your Opponent's Hand and select 1 card from it to Oblierate until the End Phase.`
       }
     ]
   },
@@ -4011,7 +4011,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Target Champion takes no Damage, and cannot be Destroyed, until the end of this turn."
+        text: `Target Champion takes no Damage, and cannot be Destroyed, until the end of this turn.`
       }
     ]
   },
@@ -4029,7 +4029,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Set face-down 1 Rush or Reflex card from your Deck to your Arsenal."
+        text: `Set face-down 1 Rush or Reflex card from your Deck to your Arsenal.`
       }
     ]
   },
@@ -4065,7 +4065,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Increase the attached Champion’s Damage Threshold by 2, but it can no longer attack."
+        text: `Increase the attached Champion’s Damage Threshold by 2, but it can no longer attack.`
       }
     ]
   },
@@ -4209,7 +4209,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "If the attached Champion deals Battle Damage: Target 1 face-up Champion on the Zone; Deal 2 Damage to Target."
+        text: `If the attached Champion deals Battle Damage: Target 1 face-up Champion on the Zone; Deal 2 Damage to Target.`
       }
     ]
   },
@@ -4245,7 +4245,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attached Champion deals double Battle Damage to Constructs, Dragons, Kaiju, and Megaliths."
+        text: `The attached Champion deals double Battle Damage to Constructs, Dragons, Kaiju, and Megaliths.`
       }
     ]
   },
@@ -4263,7 +4263,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attached Champion gains Deathcurse."
+        text: `The attached Champion gains Deathcurse.`
       }
     ]
   },
@@ -4281,7 +4281,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "At the end of a battle in which the attached Champion dealt Damage: Target 1 face-up Equipment on the Zone; Destroy Target."
+        text: `At the end of a battle in which the attached Champion dealt Damage: Target 1 face-up Equipment on the Zone; Destroy Target.`
       }
     ]
   },
@@ -4299,7 +4299,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The first time each turn the attached Champion would be Damaged or Destroyed (Mandatory): Your Opponent draws 2; The attached Champion is not Damaged or Destroyed."
+        text: `The first time each turn the attached Champion would be Damaged or Destroyed (Mandatory): Your Opponent draws 2; The attached Champion is not Damaged or Destroyed.`
       }
     ]
   },
@@ -4317,7 +4317,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "During Damage Calculation: Increase the attached Champion's Damage to match the Champion it battles."
+        text: `During Damage Calculation: Increase the attached Champion's Damage to match the Champion it battles.`
       }
     ]
   },
@@ -4371,7 +4371,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Activate the Obliterated card."
+        text: `Activate the Obliterated card.`
       }
     ]
   },
@@ -4389,7 +4389,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Back Alley Doctor: Reduce 1 Champion you control's Life by any amount (to a minimum of 0); Increase 1 Champion you control's Life, other than this one or the one reduced, by the amount reduced."
+        text: `Back Alley Doctor: Reduce 1 Champion you control's Life by any amount (to a minimum of 0); Increase 1 Champion you control's Life, other than this one or the one reduced, by the amount reduced.`
       }
     ]
   },
@@ -4443,7 +4443,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: "Gravekeeper"
+        text: `Gravekeeper`
       }
     ]
   },
@@ -4479,7 +4479,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Lifesteal <br> Bloodsucker: Offer 1 Life; This Champion gains 2 Life."
+        text: `Lifesteal <br> Bloodsucker: Offer 1 Life; This Champion gains 2 Life.`
       }
     ]
   },
@@ -4497,7 +4497,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Split: This Champion takes 1 Damage; Rally 1 Meat Token to your Zone."
+        text: `Split: This Champion takes 1 Damage; Rally 1 Meat Token to your Zone.`
       }
     ]
   },
@@ -4533,7 +4533,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "On Rally: Increase this card's Damage and Life by the remaining Damage and Life of all Champions sacrificed for its Rally."
+        text: `On Rally: Increase this card's Damage and Life by the remaining Damage and Life of all Champions sacrificed for its Rally.`
       }
     ]
   },
@@ -4551,7 +4551,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "If Destroyed By Battle: You can choose any multiple (X) of 5 Life for your Opponent to gain; Add X Reflex."
+        text: `If Destroyed By Battle: You can choose any multiple (X) of 5 Life for your Opponent to gain; Add X Reflex.`
       }
     ]
   },
@@ -4569,7 +4569,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Duelist, Priority <br> Steroids Save Lives: If this Champion battles (Reflex): Your Opponent gains X Life; Increase this card's Damage by X until the end of Damage Calculation."
+        text: `Duelist, Priority <br> Steroids Save Lives: If this Champion battles (Reflex): Your Opponent gains X Life; Increase this card's Damage by X until the end of Damage Calculation.`
       }
     ]
   },
@@ -4587,7 +4587,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: "Forged"
+        text: `Forged`
       }
     ]
   },
@@ -4605,7 +4605,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: "Touch of Undeath (Exhaustion): Target 1 Champion in your Tomb; Resurrect Target, and if you do, it becomes an Undead and is reduced to 1 Life."
+        text: `Touch of Undeath (Exhaustion): Target 1 Champion in your Tomb; Resurrect Target, and if you do, it becomes an Undead and is reduced to 1 Life.`
       }
     ]
   },
@@ -4623,7 +4623,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Draw 1 for every 5 Life difference between you and your Opponent."
+        text: `Draw 1 for every 5 Life difference between you and your Opponent.`
       }
     ]
   },
@@ -4641,7 +4641,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Add 1 Vivisect."
+        text: `Add 1 Vivisect.`
       }
     ]
   },
@@ -4659,7 +4659,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Deal 4 Damage to 1 Champion or Player of your choice."
+        text: `Deal 4 Damage to 1 Champion or Player of your choice.`
       }
     ]
   },
@@ -4677,7 +4677,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Target is reduced to 1 Life and can no longer attack."
+        text: `Target is reduced to 1 Life and can no longer attack.`
       }
     ]
   },
@@ -4695,7 +4695,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Draw 3, and if you do, Obliterate 2 cards from your Hand."
+        text: `Draw 3, and if you do, Obliterate 2 cards from your Hand.`
       }
     ]
   },
@@ -4713,7 +4713,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "All Champions you control gain 4 Life."
+        text: `All Champions you control gain 4 Life.`
       }
     ]
   },
@@ -4731,7 +4731,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Your Opponent cannot activate any cards or effects until the end of this turn."
+        text: `Your Opponent cannot activate any cards or effects until the end of this turn.`
       }
     ]
   },
@@ -4749,7 +4749,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Destroy all Champions with 2 or less Damage."
+        text: `Destroy all Champions with 2 or less Damage.`
       }
     ]
   },
@@ -4767,7 +4767,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Excavate 3 from your Opponent's Deck, and if you do, Obliterate 1. Return the remaining cards in the order they were in."
+        text: `Excavate 3 from your Opponent's Deck, and if you do, Obliterate 1. Return the remaining cards in the order they were in.`
       }
     ]
   },
@@ -4785,7 +4785,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Swap their attached Equipments."
+        text: `Swap their attached Equipments.`
       }
     ]
   },
@@ -4803,7 +4803,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Destroy all Champions with that tag, and if you do, it becomes the End Phase."
+        text: `Destroy all Champions with that tag, and if you do, it becomes the End Phase.`
       }
     ]
   },
@@ -4821,7 +4821,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Your Opponent discards 1, and if they do, you draw 1."
+        text: `Your Opponent discards 1, and if they do, you draw 1.`
       }
     ]
   },
@@ -4839,7 +4839,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "While this card is attached, increase the attached Champion's Damage by 4."
+        text: `While this card is attached, increase the attached Champion's Damage by 4.`
       }
     ]
   },
@@ -4875,7 +4875,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attached Champion gains Priority. The attached Champion cannot Damage Players, they gain Life equal to the Damage amount instead."
+        text: `The attached Champion gains Priority. The attached Champion cannot Damage Players, they gain Life equal to the Damage amount instead.`
       }
     ]
   },
@@ -4893,7 +4893,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "If Destroyed: Set 1 Reflex face-down into your Arsenal from your Deck."
+        text: `If Destroyed: Set 1 Reflex face-down into your Arsenal from your Deck.`
       }
     ]
   },
@@ -4911,7 +4911,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Flip Target face-down."
+        text: `Flip Target face-down.`
       }
     ]
   },
@@ -4929,7 +4929,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Negate your Opponent's first block during each of your Battle Phases."
+        text: `Negate your Opponent's first block during each of your Battle Phases.`
       }
     ]
   },
@@ -4947,7 +4947,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Champions with the first declared tag deal double Battle Damage against the second, and Champions with the second tag deal half Battle Damage (rounded down) against the first. <br><br> Champions with both declared tags are unaffected by this card's effects."
+        text: `Champions with the first declared tag deal double Battle Damage against the second, and Champions with the second tag deal half Battle Damage (rounded down) against the first. <br><br> Champions with both declared tags are unaffected by this card's effects.`
       }
     ]
   },
@@ -4965,7 +4965,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "If your Opponent activates a Champion effect: Your Opponent gains 3 Life; Negate the effect, and if you do, stack the triggering Champion."
+        text: `If your Opponent activates a Champion effect: Your Opponent gains 3 Life; Negate the effect, and if you do, stack the triggering Champion.`
       }
     ]
   },
@@ -4983,7 +4983,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "If a Champion(s) is Destroyed (Reflex): Mill 1, if it is a Rush or Reflex, you can set it face-down in your Arsenal."
+        text: `If a Champion(s) is Destroyed (Reflex): Mill 1, if it is a Rush or Reflex, you can set it face-down in your Arsenal.`
       }
     ]
   },
@@ -5019,7 +5019,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Both Players gain 10 Life."
+        text: `Both Players gain 10 Life.`
       }
     ]
   },
@@ -5037,7 +5037,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Draw 1. <br><br> If you have at least 3 Reflex in your Tomb: Draw 1 more."
+        text: `Draw 1. <br><br> If you have at least 3 Reflex in your Tomb: Draw 1 more.`
       }
     ]
   },
@@ -5055,7 +5055,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Retrieve Target, and if you do, you take Damage equal to its Damage."
+        text: `Retrieve Target, and if you do, you take Damage equal to its Damage.`
       }
     ]
   },
@@ -5073,7 +5073,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "All face-up Champions gain 10 Life."
+        text: `All face-up Champions gain 10 Life.`
       }
     ]
   },
@@ -5091,7 +5091,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Rally 1 Champion from your Hand (ignoring its cost)."
+        text: `Rally 1 Champion from your Hand (ignoring its cost).`
       }
     ]
   },
@@ -5109,7 +5109,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Draw the same number of cards that they Retrieved."
+        text: `Draw the same number of cards that they Retrieved.`
       }
     ]
   },
@@ -5127,7 +5127,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Increase Target's Damage by 4, and it gains Menace. <br><br> Destroy Target during the End Phase."
+        text: `Increase Target's Damage by 4, and it gains Menace. <br><br> Destroy Target during the End Phase.`
       }
     ]
   },
@@ -5145,7 +5145,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Oblierate Target until the end of this turn."
+        text: `Oblierate Target until the end of this turn.`
       }
     ]
   },
@@ -5163,7 +5163,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "All currently face-up Champions gain Forged until the end of this turn."
+        text: `All currently face-up Champions gain Forged until the end of this turn.`
       }
     ]
   },
@@ -5181,7 +5181,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Recruit 1 Construct, but negate its effects."
+        text: `Recruit 1 Construct, but negate its effects.`
       }
     ]
   },
@@ -5199,7 +5199,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Change the Target to a different appropriate Target of your choice."
+        text: `Change the Target to a different appropriate Target of your choice.`
       }
     ]
   },
@@ -5217,7 +5217,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Destroy the attacking Champion, and if you do, your Opponent gains 4 Life."
+        text: `Destroy the attacking Champion, and if you do, your Opponent gains 4 Life.`
       }
     ]
   },
@@ -5253,7 +5253,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attacking Champion's effects are negated until the end of the turn."
+        text: `The attacking Champion's effects are negated until the end of the turn.`
       }
     ]
   },
@@ -5271,7 +5271,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Switch control of Targets until the End Phase, and if you do, both Targets become Exhausted."
+        text: `Switch control of Targets until the End Phase, and if you do, both Targets become Exhausted.`
       }
     ]
   },
@@ -5289,7 +5289,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Destroy all Champions your Opponent controls with 10 or more Life."
+        text: `Destroy all Champions your Opponent controls with 10 or more Life.`
       }
     ]
   },
@@ -5307,7 +5307,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Target can attack an additional time this turn. Target cannot block until the end of the next turn."
+        text: `Target can attack an additional time this turn. Target cannot block until the end of the next turn.`
       }
     ]
   },
@@ -5325,7 +5325,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Draw X."
+        text: `Draw X.`
       }
     ]
   },
@@ -5343,7 +5343,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Negate the activation, and if you do, set the triggering card face-down in their Arsenal. It cannot be flipped face-up until the end of this turn."
+        text: `Negate the activation, and if you do, set the triggering card face-down in their Arsenal. It cannot be flipped face-up until the end of this turn.`
       }
     ]
   },
@@ -5361,7 +5361,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Look at your Opponent's Hand and choose 1 card from it to shuffle back into their Deck."
+        text: `Look at your Opponent's Hand and choose 1 card from it to shuffle back into their Deck.`
       }
     ]
   },
@@ -5379,7 +5379,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Deal twice that in Damage back to your Opponent."
+        text: `Deal twice that in Damage back to your Opponent.`
       }
     ]
   },
@@ -5397,7 +5397,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Flip Target face-up (negate its Flip effects)."
+        text: `Flip Target face-up (negate its Flip effects).`
       }
     ]
   },
@@ -5577,7 +5577,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Target is the only Champion you can attack with this turn. Also, increase Target's Damage to be the sum of all Champions you control with the shared Tag."
+        text: `Target is the only Champion you can attack with this turn. Also, increase Target's Damage to be the sum of all Champions you control with the shared Tag.`
       }
     ]
   },
@@ -5613,7 +5613,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Add 1 Centurion. <br><br> If this card is in your Tomb: Obliterate this card and Discard 1 Centurion; Rally 1 Centurion from your Hand (ignoring its cost and conditions)."
+        text: `Add 1 Centurion. <br><br> If this card is in your Tomb: Obliterate this card and Discard 1 Centurion; Rally 1 Centurion from your Hand (ignoring its cost and conditions).`
       }
     ]
   },
@@ -5955,7 +5955,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attached Champion gains Contained, and their Damage Threshold is reduced to 1."
+        text: `The attached Champion gains Contained, and their Damage Threshold is reduced to 1.`
       }
     ]
   },
@@ -6261,7 +6261,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Deal 3 Damage to all face-up Champions your Opponent controls."
+        text: `Deal 3 Damage to all face-up Champions your Opponent controls.`
       }
     ]
   },
@@ -7035,7 +7035,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Recruit 1 Cryptbound, Vivisect, Clockwork, Noble, or Frontier Champion."
+        text: `Recruit 1 Cryptbound, Vivisect, Clockwork, Noble, or Frontier Champion.`
       }
     ]
   },
@@ -7269,7 +7269,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Devourer of Oats: Discard 1; Increase this card's Damage by 2."
+        text: `Devourer of Oats: Discard 1; Increase this card's Damage by 2.`
       }
     ]
   },
@@ -7359,7 +7359,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Prize Layer: Rally 1 Egg Token to your Zone."
+        text: `Prize Layer: Rally 1 Egg Token to your Zone.`
       }
     ]
   },
@@ -7377,7 +7377,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Alarm O'Clock: Target 1 face-down Champion on the Zone; Flip Target face-up (negate its Flip effects)."
+        text: `Alarm O'Clock: Target 1 face-down Champion on the Zone; Flip Target face-up (negate its Flip effects).`
       }
     ]
   },
@@ -7395,7 +7395,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Headbutt!: After Damage Calculation if this card battled another Champion: Target 1 face-up Equipment or Obelisk on the Zone; Destroy Target."
+        text: `Headbutt!: After Damage Calculation if this card battled another Champion: Target 1 face-up Equipment or Obelisk on the Zone; Destroy Target.`
       }
     ]
   },
@@ -7413,7 +7413,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: "Milk the Cow... Now: Target 1 Champion on the Zone; Target cannot block this turn."
+        text: `Milk the Cow... Now: Target 1 Champion on the Zone; Target cannot block this turn.`
       }
     ]
   },
@@ -7467,7 +7467,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Target 1 card in your Arsenal; Destroy Target, and if you do, set face-down into your Arsenal another of card of the same type from your Deck."
+        text: `Target 1 card in your Arsenal; Destroy Target, and if you do, set face-down into your Arsenal another of card of the same type from your Deck.`
       }
     ]
   },
@@ -7557,7 +7557,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "The attached Champion gains Contained, Invisible, and Warded."
+        text: `The attached Champion gains Contained, Invisible, and Warded.`
       }
     ]
   },
@@ -7575,7 +7575,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Target takes 3 Damage."
+        text: `Target takes 3 Damage.`
       }
     ]
   },
@@ -7593,7 +7593,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: "Targets immediately battle, with you deciding who is attacking and who is blocking."
+        text: `Targets immediately battle, with you deciding who is attacking and who is blocking.`
       }
     ]
   },
