@@ -15,7 +15,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Deathward <br><br> If Sent to Tomb: Retrieve 1 other Undead Champion.`
+        text: `Deathward <br><br> Crypt Recovery: If Sent to Tomb: Retrieve 1 other Undead Champion.`
       }
     ]
   },
@@ -33,7 +33,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Bloodrage, Deathward <br><br> If Sent to Tomb: Resurrect this card, but Obliterate it when it leaves the Zone.`
+        text: `Bloodrage, Deathward <br><br> Undead Fortitude: If Sent to Tomb: Resurrect this card, but Obliterate it when it leaves the Zone.`
       }
     ]
   },
@@ -1113,7 +1113,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Heavy Hands <span class="line-gap"></span> Outlaws Don't Pay Costs!: On Rally: Draw 2. <span class="line-gap"></span> Deadeye (Exhaustion): Discard 1 and Target 1 face-up card on the Zone; Destroy Target.`
+        text: `Heavy Hands <span class="line-gap"></span> Outlaws Don't Pay Costs: On Rally: Draw 2. <span class="line-gap"></span> Deadeye (Exhaustion): Discard 1 and Target 1 face-up card on the Zone; Destroy Target.`
       }
     ]
   },
@@ -3561,7 +3561,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Fortified <br><br> If Sent to Tomb: Add 1 Obelisk.`
+        text: `Fortified <br><br> Free Real Estate: If Sent to Tomb: Add 1 Obelisk.`
       }
     ]
   },
@@ -4461,7 +4461,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Deathward <span class="line-gap"></span> On Rally (Mandatory): Target 1 of your Opponent's face-up Champions; This card's Damage and Life become equal to that Champion's current Damage and Life.`
+        text: `Deathward <span class="line-gap"></span> Take Your Face: On Rally (Mandatory): Target 1 of your Opponent's face-up Champions; This card's Damage and Life become equal to that Champion's current Damage and Life.`
       }
     ]
   },
@@ -4551,7 +4551,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Deathward <span class="line-gap"></span> You've Fallen for my Trap: If Destroyed By Battle: Your Opponent gains 4 Life; Add 1 Reflex.`
+        text: `Deathward <span class="line-gap"></span> You've Fallen for My Trap: If Destroyed By Battle: Your Opponent gains 4 Life; Add 1 Reflex.`
       }
     ]
   },
@@ -7899,7 +7899,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Priority <span class="line-gap"></span> Pick Through Loot: If this Champion Destroys another by Battle: Excavate 3; Add 1 revealed Equipment, and if you do, obliterate the others.`
+        text: `Priority <span class="line-gap"></span> Pick Through Loot: If this Champion Destroys another by Battle: Excavate 3; Add 1 revealed Equipment, and if you do, Obliterate the others.`
       }
     ]
   },
