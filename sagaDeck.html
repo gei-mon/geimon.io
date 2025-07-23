@@ -269,6 +269,13 @@
 
     <div class="search-panel" id="search-panel">
         <p id="card-count" style="font-family: 'Racing Sans One', cursive; font-size: 18px; margin-bottom: 8px; margin-top: 8px;">Cards Found: 0</p>
+        <button id="clear-filters-btn"
+                style="float: right; margin-top: -31px; margin-right: 0px;
+                    background-color: #aa0000; color: white; font-family: 'Racing Sans One', cursive;
+                    border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer;">
+            Clear Filters
+        </button>
+        <div style="clear: both;"></div>
         <input type="search" id="search-input" placeholder="Search cards by name..." autocomplete="off" />
         <button id="toggle-options-btn" style="margin-bottom: 8px; font-family: 'Racing Sans One', cursive; cursor: pointer; width: 300px; display:block; margin:0 auto 8px;">
             Show More Options ▼
@@ -288,6 +295,31 @@
                 <button class="champ-filter-btn" data-champ="Basic">Basic Champions</button>
                 <button class="champ-filter-btn" data-champ="Elite">Elite Champions</button>
             </div>
+
+            <div id="champion-stats-toggle" style="display: none; flex-direction: column; gap: 8px; margin-bottom: 10px; font-family: 'Racing Sans One', cursive; color: white;">
+                <button id="toggle-stats-btn" style="font-family: 'Racing Sans One', cursive; margin: 0 auto;">Search Champion Stats ▼</button>
+
+                <div id="champion-stats-filter" style="display: none; flex-direction: column; gap: 10px;">
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <input type="number" id="min-damage" value="0" placeholder="Min" style="width: 25%; font-family: 'Racing Sans One', cursive;" />
+                        <span style="text-align: center; width: 50%;">Damage</span>
+                        <input type="number" id="max-damage" value="20" placeholder="Max" style="width: 25%; font-family: 'Racing Sans One', cursive;" />
+                    </div>
+
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <input type="number" id="min-life" value="0" placeholder="Min" style="width: 25%; font-family: 'Racing Sans One', cursive;" />
+                        <span style="text-align: center; width: 50%;">Life</span>
+                        <input type="number" id="max-life" value="20" placeholder="Max" style="width: 25%; font-family: 'Racing Sans One', cursive;" />
+                    </div>
+
+                    <div style="display: flex; align-items: center; justify-content: space-between;">
+                        <input type="number" id="min-threshold" value="0" placeholder="Min" style="width: 25%; font-family: 'Racing Sans One', cursive;" />
+                        <span style="text-align: center; width: 50%;">Damage Threshold</span>
+                        <input type="number" id="max-threshold" value="20" placeholder="Max" style="width: 25%; font-family: 'Racing Sans One', cursive;" />
+                    </div>
+                </div>
+            </div>
+
             <input type="search" id="tag-search-input" placeholder="Search cards by their tags..." />
             <input type="search" id="condition-search-input" placeholder="Search cards by their condition..." />
             <input type="search" id="cost-search-input" placeholder="Search cards by their cost..." />
@@ -345,8 +377,22 @@
 
                 function updateChampionSubfilterVisibility() {
                     const filter = document.getElementById("champion-filter");
-                    filter.style.display = selectedCardType === "Champion" ? "flex" : "none";
+                    const statsToggle = document.getElementById("champion-stats-toggle");
+                    const isChampion = selectedCardType === "Champion";
+                    filter.style.display = isChampion ? "flex" : "none";
+                    statsToggle.style.display = isChampion ? "flex" : "none";
+                    if (!isChampion) statsFilterDiv.style.display = "none";  // auto-close filter
                 }
+
+                const statsToggleContainer = document.getElementById("champion-stats-toggle");
+                const statsToggleBtn = document.getElementById("toggle-stats-btn");
+                const statsFilterDiv = document.getElementById("champion-stats-filter");
+
+                statsToggleBtn.addEventListener("click", () => {
+                    const isVisible = statsFilterDiv.style.display === "flex";
+                    statsFilterDiv.style.display = isVisible ? "none" : "flex";
+                    statsToggleBtn.textContent = isVisible ? "Search Champion Stats ▼" : "Hide Champion Stats ▲";
+                });
 
                 function appendRarityBadge(cardElement, rarity){
                     if(!rarity || cardElement.querySelector('.rarity-badge')) return;
@@ -386,6 +432,45 @@
                         renderSearchResults();
                     });
                 });
+
+            document.getElementById("clear-filters-btn").addEventListener("click", () => {
+                // Clear text-based inputs
+                document.getElementById("search-input").value = "";
+                document.getElementById("text-search-input").value = "";
+                document.getElementById("tag-search-input").value = "";
+                document.getElementById("condition-search-input").value = "";
+                document.getElementById("cost-search-input").value = "";
+
+                // Reset champion stat boxes
+                document.getElementById("min-damage").value = 0;
+                document.getElementById("max-damage").value = 20;
+                document.getElementById("min-life").value = 0;
+                document.getElementById("max-life").value = 20;
+                document.getElementById("min-threshold").value = 0;
+                document.getElementById("max-threshold").value = 20;
+
+                // Reset card type selection
+                document.querySelectorAll('.type-btn').forEach(btn => btn.classList.remove("active"));
+                selectedCardType = null;
+
+                // Reset champion tier selection
+                selectedChampionTier = "All";
+                document.querySelectorAll('.champ-filter-btn').forEach(btn => btn.classList.remove("active"));
+                const allBtn = document.querySelector('.champ-filter-btn[data-champ="All"]');
+                if (allBtn) allBtn.classList.add("active");
+
+                // Hide stat filters
+                const statsToggleDiv = document.getElementById("champion-stats-filter");
+                const statsToggleBtn = document.getElementById("toggle-stats-btn");
+                statsToggleDiv.style.display = "none";
+                if (statsToggleBtn) statsToggleBtn.textContent = "Show Champion Stats ▼";
+
+                // Hide champion subfilter and stat filter
+                updateChampionSubfilterVisibility();
+
+                // Re-render
+                renderSearchResults();
+            });
 
                 const container = document.getElementById("card-wrapper");
                 const emptyMessage = document.getElementById("empty-message");
@@ -818,40 +903,38 @@
 
                 // 3) Filter from the player's collectionPool
                 let filteredCards = collectionPool.filter(card => {
-                    // Name
-                    if (nameQuery && !card.name.toLowerCase().includes(nameQuery)) {
-                    return false;
-                    }
-                    // Text
-                    if (textQuery && !card.abilities.some(a => a.text.toLowerCase().includes(textQuery))) {
-                    return false;
-                    }
-                    // Tags
-                    if (tagQuery && !(card.tags && card.tags.some(t => t.toLowerCase().includes(tagQuery)))) {
-                    return false;
-                    }
-                    // Condition
-                    if (conditionQuery && !(card.condition && card.condition.toLowerCase().includes(conditionQuery))) {
-                    return false;
-                    }
-                    // Cost
-                    if (costQuery && !String(card.cost || "").toLowerCase().includes(costQuery)) {
-                    return false;
-                    }
-                    // Type
-                    if (selectedCardType && card.type !== selectedCardType) {
-                    return false;
-                    }
-                    // Champion tier (only when type is Champion)
-                    if (selectedCardType === "Champion" && selectedChampionTier !== "All") {
-                    if (selectedChampionTier === "Basic" && card.cost !== "Basic") {
-                        return false;
-                    }
-                    if (selectedChampionTier === "Elite" && card.cost === "Basic") {
-                        return false;
-                    }
-                    }
-                    return true;
+                    const nameMatches = !nameQuery || card.name.toLowerCase().includes(nameQuery);
+                    const textMatches = !textQuery || card.abilities.some(ability => ability.text.toLowerCase().includes(textQuery));
+                    const tagMatches = !tagQuery || (card.tags && card.tags.some(tag => tag.toLowerCase().includes(tagQuery)));
+                    const conditionMatches = !conditionQuery || (card.condition && card.condition.toLowerCase().includes(conditionQuery));
+                    const costMatches = !costQuery || (String(card.cost || "").toLowerCase().includes(costQuery));
+                    const typeMatches = !selectedCardType || card.type === selectedCardType;
+                    const champMatches =
+                        selectedCardType !== "Champion" || selectedChampionTier === "All" ||
+                        (selectedChampionTier === "Basic" && card.cost === "Basic") ||
+                        (selectedChampionTier === "Elite" && card.cost !== "Basic");
+
+                    const minDamage = parseFloat(document.getElementById("min-damage").value);
+                    const maxDamage = parseFloat(document.getElementById("max-damage").value);
+                    const minLife = parseFloat(document.getElementById("min-life").value);
+                    const maxLife = parseFloat(document.getElementById("max-life").value);
+                    const minThreshold = parseFloat(document.getElementById("min-threshold").value);
+                    const maxThreshold = parseFloat(document.getElementById("max-threshold").value);
+                    const isChampion = card.type === "Champion";
+                    const damageOk = !isChampion || (
+                        (isNaN(minDamage) || card.damage >= minDamage) &&
+                        (isNaN(maxDamage) || card.damage <= maxDamage)
+                    );
+                    const lifeOk = !isChampion || (
+                        (isNaN(minLife) || card.life >= minLife) &&
+                        (isNaN(maxLife) || card.life <= maxLife)
+                    );
+                    const thresholdOk = !isChampion || (
+                        (isNaN(minThreshold) || card.damageThreshold >= minThreshold) &&
+                        (isNaN(maxThreshold) || card.damageThreshold <= maxThreshold)
+                    );
+
+                    return nameMatches && textMatches && tagMatches && conditionMatches && costMatches && typeMatches && champMatches && damageOk && lifeOk && thresholdOk;
                 });
 
                 filteredCards.sort((a, b) =>
@@ -861,6 +944,9 @@
                 // 4) Update count display
                 document.getElementById("card-count").textContent =
                     `Cards Displayed: ${filteredCards.length}`;
+
+                ["min-damage", "max-damage", "min-life", "max-life", "min-threshold", "max-threshold"]
+                    .forEach(id => document.getElementById(id).addEventListener("input", renderSearchResults));
 
                 // 5) Render each filtered card
                 filteredCards.forEach(card => {
