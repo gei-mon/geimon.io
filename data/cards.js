@@ -5906,6 +5906,24 @@ export const cards = [
     ]
   },
   {
+    id: "380",
+    name: "Good Gone Bad",
+    image: `${cardArtFolder}/Equipments/GoodGoneBad.png`,
+    rarity: "Superior",
+    type: "Equipment",
+    condition: "Attach only to a Hero",
+    cost: "Obliterate all but 1 Hero that you control (minimum of 1)",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `The attached Champion loses Duelist, and if they do, increase their Damage by 1.`
+      }
+    ]
+  },
+  {
     id: "421",
     name: "Gimme That!",
     image: `${cardArtFolder}/Actions/GimmeThat.png`,
@@ -6262,6 +6280,24 @@ export const cards = [
     abilities: [
       {
         text: `Activate 1 Equipment from your Hand (ignoring its cost), and if you do, attach it to the Target. You cannot Target a face-up Champion with this card that you cannot attach an Equipment from your Hand to. <span class="line-gap"></span> If the attached Champion or Equipment leaves the Zone: Obliterate the other.`
+      }
+    ]
+  },
+  {
+    id: "669",
+    name: "I Have No Idea What's Going On...",
+    image: `${cardArtFolder}/Reflex/NoIdeaWhatsHappening.png`,
+    rarity: "Rare",
+    type: "Reflex",
+    condition: "Must be Path Step 4 or greater",
+    cost: "Discard 1",
+    tags: ["Reflex"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Negate all effects resolving after this card on the current Path.`
       }
     ]
   },
@@ -7173,7 +7209,7 @@ export const cards = [
     type: "Champion",
     condition: "Your Opponent controls more Champions than you",
     cost: "Basic",
-    tags: ["Righteous","Protector","Blademaster","Mage"],
+    tags: ["Righteous","Paladin","Protector","Blademaster","Mage"],
     damage: 2,
     life: 4,
     damageThreshold: "3",
@@ -7977,7 +8013,7 @@ export const cards = [
   },
   {
     id: "951",
-    name: "Watching Paint Dry",
+    name: "Caution! Wet Paint",
     image: `${cardArtFolder}/Equipments/WatchingPaintDry.png`,
     rarity: "Common",
     type: "Equipment",
@@ -8170,6 +8206,24 @@ export const cards = [
     abilities: [
       {
         text: `Deathcurse, Lifetouch, Priority <span class="line-gap"></span> Rose's Thorns: If Destroyed by Battle: Destroy the other battling Champion.`
+      }
+    ]
+  },
+  {
+    id: "1088",
+    name: "Hyup, Palm-Strike Striker",
+    image: `${cardArtFolder}/Champions/HyupPalmStrikeStriker.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Bounce 1 card you control",
+    tags: ["Enlightened","Monk"],
+    damage: 2,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Taunt <span class="line-gap"></span> Knock Back: If this card is Targeted for an attack (Reflex): Negate that attack.`
       }
     ]
   },
