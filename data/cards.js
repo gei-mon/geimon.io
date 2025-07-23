@@ -573,7 +573,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `On Rally: This card's Damage and Life increase by the amount of Life Offered to Rally it. <span class="line-gap"></span> Thrice-Burned (Exhaustion): Offer Life equal to this card's Damage; Draw 3, then Discard 2.`
+        text: `Lifecharge: On Rally: This card's Damage and Life increase by the amount of Life Offered to Rally it. <span class="line-gap"></span> Thrice-Burned (Exhaustion): Offer Life equal to this card's Damage; Draw 3, then Discard 2.`
       }
     ]
   },
@@ -2211,7 +2211,7 @@ export const cards = [
     damageThreshold: 2,
     abilities: [
       {
-        text: `Repair Specialist <span class="line-gap"></span> On Rally: Place 1 Obelisk from your Deck into your Reserve. That Obelisk gains \"Reserve (Reflex): Discard 1; Activate this card (ignoring its cost)\". <span class="line-gap"></span> Garage Baby: Attach 1 appropriate Equipment from your Hand or Deck to an Obelisk in your Reserve (ignoring its cost). <span class="line-gap"></span> Secret Weapon (Exhaustion): Destroy 1 Obelisk you control; Destroy 1 card on the Zone.`
+        text: `Repair Specialist <span class="line-gap"></span> In The Shop: On Rally: Place 1 Obelisk from your Deck into your Reserve. That Obelisk gains \"Reserve (Reflex): Discard 1; Activate this card (ignoring its cost)\". <span class="line-gap"></span> Garage Baby: Attach 1 appropriate Equipment from your Hand or Deck to an Obelisk in your Reserve (ignoring its cost). <span class="line-gap"></span> Secret Weapon (Exhaustion): Destroy 1 Obelisk you control; Destroy 1 card on the Zone.`
       }
     ]
   },
@@ -2265,7 +2265,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Smallfry <span class="line-gap"></span> Garbage Lord: Bury 1. <span class="line-gap"></span> Trash Picker: Retrieve 1, and if you do, Obliterate the rest of the cards in your Tomb. <span class="line-gap"></span> On Resurrection: Target 1 Champion in your Tomb; Resurrect Target, but reduce its Life to 1, also it is Obliterated when it leaves the Zone.`
+        text: `Smallfry <span class="line-gap"></span> Garbage Lord: Bury 1. <span class="line-gap"></span> Trash Picker: Retrieve 1, and if you do, Obliterate the rest of the cards in your Tomb. <span class="line-gap"></span> Tried to Kill the Metal: On Resurrection: Target 1 Champion in your Tomb; Resurrect Target, but reduce its Life to 1, also it is Obliterated when it leaves the Zone.`
       }
     ]
   },
@@ -3255,7 +3255,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Priority, Veilbind <span class="line-gap"></span> On Rally (Exhaustion): Attach 1 Equipment to this Champion from your Hand, Deck, or Tomb (ignoring its cost). <span class="line-gap"></span> Sacrificial Smite (Exhaustion): Destroy 1 Equipment attached to this card and Target 1 Champion on the Zone; Destroy Target. <span class="line-gap"></span> Reforged: If this card has no attached Equipments (Exhaustion): Attach 1 Equipment to this card from your Tomb (ignoring its cost).`
+        text: `Priority, Veilbind <span class="line-gap"></span> To Arms!: On Rally (Exhaustion): Attach 1 Equipment to this Champion from your Hand, Deck, or Tomb (ignoring its cost). <span class="line-gap"></span> Sacrificial Smite (Exhaustion): Destroy 1 Equipment attached to this card and Target 1 Champion on the Zone; Destroy Target. <span class="line-gap"></span> Reforged: If this card has no attached Equipments (Exhaustion): Attach 1 Equipment to this card from your Tomb (ignoring its cost).`
       }
     ]
   },
@@ -3291,7 +3291,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Conscript, Deathward <br><br> On Resurrection (Mandatory): Your Opponent draws 1.`
+        text: `Conscript, Deathward <br><br> Winning-Team Enthusiast: On Resurrection (Mandatory): Your Opponent draws 1.`
       }
     ]
   },
@@ -3345,7 +3345,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Defender, Naive <span class="line-gap"></span> While Equipped: This Champion is unaffected by its default Passives. <span class="line-gap"></span> Hail Mary: Destroy 1 Equipment attached to this card and Target 1 face-up Champion on the Zone; Target takes 3 Damage.`
+        text: `Defender, Naive <span class="line-gap"></span> Security Blanket: While Equipped: This Champion is unaffected by its default Passives. <span class="line-gap"></span> Hail Mary: Destroy 1 Equipment attached to this card and Target 1 face-up Champion on the Zone; Target takes 3 Damage.`
       }
     ]
   },
@@ -3363,7 +3363,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: `Bulletproof <span class="line-gap"></span> Grave Goods: On Rally: Attach up to 2 Equipments from your Tomb to this card (ignoring their costs). <span class="line-gap"></span> Rotting Flesh: During your End Phase (Mandatory): This card takes 3 Damage. <span class="line-gap"></span> Miraculous Recovery: If Destroyed: Obliterate this card and Target 1 Knight in your Tomb; Resurrect Target, and if you do, you can attach to it 1 Equipment from your Hand, Deck, or Tomb (ignoring its cost).`
+        text: `Bulletproof <span class="line-gap"></span> Grave Goods: On Rally: Attach up to 2 Equipments from your Tomb to this card (ignoring their costs). <span class="line-gap"></span> Rotting Flesh: During your End Phase (Mandatory): This card takes 3 Damage. <span class="line-gap"></span> Miraculous Recovery: If Destroyed: Obliterate this card and Target 1 Knight in your Tomb; Resurrect Target, and if you do, attach to it 1 Equipment from your Hand, Deck, or Tomb (ignoring its cost).`
       }
     ]
   },
@@ -3525,7 +3525,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Deathward, Defender, Menace <span class="line-gap"></span> On Rally (Exhaustion): Attach 1 Equipment to this card from your Hand, Reserve, or Tomb (ignoring its cost). <span class="line-gap"></span> Call to Arms: If Destroyed: Add 1 Knight, and if you do, you can retrieve 1 Equipment.`
+        text: `Deathward, Defender, Menace <span class="line-gap"></span> Second-Hand Arms: On Rally (Exhaustion): Attach 1 Equipment to this card from your Hand, Reserve, or Tomb (ignoring its cost). <span class="line-gap"></span> Call to Arms: If Destroyed: Add 1 Knight, and if you do, you can retrieve 1 Equipment.`
       }
     ]
   },
@@ -3597,7 +3597,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: `Greedy <span class="line-gap"></span> Knightsbane: Knights, and their controllers, take no Battle Damage from this card. Knights deal double Battle Damage to this card. <span class="line-gap"></span> Furious Fire Breath (Exhaustion): Offer 4 Life and Target up to 2 Champions your Opponent controls; Destroy Targets, and if you do, draw 1 for each Champion destroyed. <span class="line-gap"></span> If Destroyed by Battle: Recruit 1 Royal.`
+        text: `Greedy <span class="line-gap"></span> Knightsbane: Knights, and their controllers, take no Battle Damage from this card. Knights deal double Battle Damage to this card. <span class="line-gap"></span> Furious Fire Breath (Exhaustion): Offer 4 Life and Target up to 2 Champions your Opponent controls; Destroy Targets, and if you do, draw 1 for each Champion destroyed. <span class="line-gap"></span> Save the Princess: If Destroyed by Battle: Recruit 1 Royal.`
       }
     ]
   },
@@ -3651,7 +3651,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Forged <span class="line-gap"></span> Feed the Addiction: Depending on the number of attached Equipments this card has, it gains the following features: <span class="line-gap"></span> 1 • Warded <span class="line-gap"></span> 2 • Priority <span class="line-gap"></span> 3 • Bulletproof and Duelist`
+        text: `Forged <span class="line-gap"></span> Feed the Addiction: Depending on the number of attached Equipments this card has, it gains the following passives: <span class="line-gap"></span> 1 • Warded <span class="line-gap"></span> 2 • Priority <span class="line-gap"></span> 3 • Bulletproof and Duelist`
       }
     ]
   },
@@ -5510,6 +5510,60 @@ export const cards = [
     ]
   },
   {
+    id: "307",
+    name: "Naptime!",
+    image: `${cardArtFolder}/Obelisks/Naptime.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Champions that declare attacks are flipped face-down after Damage Calculation.`
+      }
+    ]
+  },
+  {
+    id: "308",
+    name: "Six-Season Coma",
+    image: `${cardArtFolder}/Obelisks/SixSeasonComa.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "Flip 2 face-up Champions you control face-down",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Face-down Champions cannot be flipped face-up or used to block.`
+      }
+    ]
+  },
+  {
+    id: "309",
+    name: "Earthquake!",
+    image: `${cardArtFolder}/Actions/Earthquake.png`,
+    rarity: "Rare",
+    type: "Action",
+    condition: "Your Opponent controls at least 1 face-down Champion",
+    cost: "",
+    tags: ["Action"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Flip all face-down Champions on the Zone face-up.`
+      }
+    ]
+  },
+  {
     id: "361",
     name: "Silveredge, Envoy of the Moon",
     image: `${cardArtFolder}/Champions/Silveredge.png`,
@@ -5703,7 +5757,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Duelist, Priority <span class="line-gap"></span> Copycat (Reflex): Target 1 face-up Champion on the Zone; Until that Champion leaves the Zone, or this ability is used again, this card's Damage, Life, and Damage Threshold become equal to the Target's at the time of activation. <span class="line-gap"></span> That' Life: If this card leaves the Zone: Recruit 1 "Apex" Champion.`
+        text: `Duelist, Priority <span class="line-gap"></span> Copycat (Reflex): Target 1 face-up Champion on the Zone; Until that Champion leaves the Zone, or this ability is used again, this card's Damage, Life, and Damage Threshold become equal to the Target's at the time of activation. <span class="line-gap"></span> That's Life: If this card leaves the Zone: Recruit 1 "Apex" Champion.`
       }
     ]
   },
@@ -5721,7 +5775,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Parasitic Drain (Reflex): Target 1 face-up Champion on the Zone; Until that Champion leaves the Zone, or this ability is used again, this card's passives and effects become those of the Target's at the time of activation. <span class="line-gap"></span> That' Life: If this card leaves the Zone: Recruit 1 "Apex" Champion.`
+        text: `Parasitic Drain (Reflex): Target 1 face-up Champion on the Zone; Until that Champion leaves the Zone, or this ability is used again, this card's passives and effects become those of the Target's at the time of activation. <span class="line-gap"></span> That's Life: If this card leaves the Zone: Recruit 1 "Apex" Champion.`
       }
     ]
   },
@@ -5739,7 +5793,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Soul Eater (Reflex): Target 1 face-up Champion you control; Destroy Target, and if you do, this card's Damage, Life, and Damage Threshold become equal to the Target's at the time of activation, also it gains the Target's passives and effects until the end of the next turn. <span class="line-gap"></span> That' Life: If this card leaves the Zone: Recruit 1 "Apex" Champion.`
+        text: `Soul Eater (Reflex): Target 1 face-up Champion you control; Destroy Target, and if you do, this card's Damage, Life, and Damage Threshold become equal to the Target's at the time of activation, also it gains the Target's passives and effects until the end of the next turn. <span class="line-gap"></span> That's Life: If this card leaves the Zone: Recruit 1 "Apex" Champion.`
       }
     ]
   },
@@ -6891,7 +6945,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Invisible, Solitary, Unstoppable <span class="line-gap"></span> Blade for Hire: On Rally: Target 1 face-down Champion on the Zone; Destroy Target. <span class="line-gap"></span> Blend into the Crowd: If this card is Targeted (Reflex): Bounce this card, and if you do, discard 1.`
+        text: `Invisible, Solitary, Unstoppable <span class="line-gap"></span> Perchance to Dream: On Rally: Target 1 face-down Champion on the Zone; Destroy Target. <span class="line-gap"></span> Blend into the Crowd: If this card is Targeted (Reflex): Bounce this card, and if you do, discard 1.`
       }
     ]
   },
@@ -7900,6 +7954,60 @@ export const cards = [
     abilities: [
       {
         text: `Priority <span class="line-gap"></span> Pick Through Loot: If this Champion Destroys another by Battle: Excavate 3; Add 1 revealed Equipment, and if you do, Obliterate the others.`
+      }
+    ]
+  },
+  {
+    id: "950",
+    name: "Tree-Chucking Woodchuck",
+    image: `${cardArtFolder}/Champions/TreeChuckingWoodchuck.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Frontier","Protector","Helper"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Woodchuck Chucking Wood: Destroy 1 face-up Obelisk you control and Target 1 face-up card on the Zone; Destroy Target.`
+      }
+    ]
+  },
+  {
+    id: "951",
+    name: "Watching Paint Dry",
+    image: `${cardArtFolder}/Equipments/WatchingPaintDry.png`,
+    rarity: "Common",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `The attached Champion gains Contained. <span class="line-gap"></span> If the attached Champion battles another (after Damage Calculation): Attach this card to the other battling Champion.`
+      }
+    ]
+  },
+  {
+    id: "952",
+    name: "No, It's My Birthday!",
+    image: `${cardArtFolder}/Rush/NoMyBirthday.png`,
+    rarity: "Rare",
+    type: "Rush",
+    condition: "2 or more Champions have been Rallied this Phase",
+    cost: "Target 2 Champions Rallied this Phase",
+    tags: ["Rush"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Targets immediately battle, with you deciding who is attacking and who is blocking.`
       }
     ]
   },
