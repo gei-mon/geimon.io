@@ -70,7 +70,7 @@
             color: white;
             font-family: sans-serif;
             z-index: 999;
-            display: flex;
+            display: none;
             flex-direction: column;
         }
         .tabs {
@@ -109,15 +109,14 @@
 </head>
 <body>
     <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
+    <p style="text-align:center; font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;"><game-title>Geimon!</game-title></p>
     <div class="page-wrapper">
-        <h1 style="text-align:center; font-size: 260%; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Welcome to <game-title>Geimon!</game-title></h1>
-        <br>
         <div class="profile-pic-wrapper">
             <img id="profilePic" class="profile-pic" src="" alt="Profile Picture" style="display: none;">
         </div>
         <br>
         <h2 id="welcomeMessage" style="font-size: 24px; text-align:center; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;"></h2>
-        <h2 style="text-align:center; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Home Page</h2>
+        <h2 id="homePageMessage" style="text-align:center; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;"></h2>
 
         <div class="container">
             <div class="column left">
@@ -143,7 +142,7 @@
                 <p><strong>July 2025:</strong> v1.1 Alpha Released! <br><br> With significant quality of life features such as Mill X Cards and a better formatting method for Champions, we hope you enjoy the latest improvements to Geimon! </p>
             </div>
             <div id="issues" class="tab-content">
-                <p><strong>You There!</strong> <br> Email 'geimon-help@gmail.com' to submit bugs as well as request features or recommend cards to add!</p>
+                <p><strong>You There!</strong> <br> Email 'geimon.help@gmail.com' to submit bugs as well as request features or recommend cards to add!</p>
                 <br><br>
                 <p><strong>Known Bug:</strong> All cards within games are targeted by ID, not UUID, which means that clicking to target, attack, or block with 1 card mirrors the action for all cards of the same kind. Issue is only really noticeable with Tokens as all other cards are 1 per Deck.</p>
                 <p><strong>Known Bug:</strong> Facedown Arsenal cards do not hover perfectly, temporary fix implemented, just hover the space below them to see which one is which.</p>
@@ -194,6 +193,8 @@
                         location.reload();
                     };
                     document.getElementById('welcomeMessage').textContent = `Welcome, ${data.username}!`;
+                    document.getElementById('homePageMessage').textContent = `Home Page`;
+                    document.getElementById('infoBox').style.display = "Flex";
                     if (data.profilePic) {
                             profilePic.src = `https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Profile Pictures/${data.profilePic}`;  // Set profile picture URL
                             profilePic.style.display = 'inline';  // Show profile picture
