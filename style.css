@@ -65,6 +65,7 @@ text-decoration: underline;
   border-collapse: collapse;
   width: 440px;
   transition: all 0.3s ease;
+  border-radius: 10px;
 }
 
 .button:hover {
@@ -75,31 +76,6 @@ text-decoration: underline;
 
 .button:active {
   background-color: rgb(170, 170, 243);
-}
-
-.buttonDisabled, .buttonDisabled:link, .buttonDisabled:visited {
-  border: 5px solid rgb(0, 0, 0);
-  background-color: rgb(113, 113, 114);
-  color: black;
-  padding: 15px 15px;
-  text-align: center;
-  text-decoration: none;
-  display: inline-block;
-  font-family: 'Arial';
-  font-size: 48px;
-  margin: 10px;
-  cursor: pointer;
-  table-layout: fixed;
-  border-collapse: collapse;
-  width: 440px;
-}
-
-.buttonDisabled:hover {
-  background-color: rgb(81, 81, 81);
-}
-
-.buttonDisabled:active {
-  background-color: rgb(200, 200, 200);
 }
 
 .buttonSmall, .buttonSmall:link, .buttonSmall:visited {
@@ -117,6 +93,7 @@ text-decoration: underline;
   table-layout: fixed;
   border-collapse: collapse;
   width: 130px;
+  border-radius: 10px;
 }
 
 .buttonSmall:hover {
@@ -142,6 +119,7 @@ text-decoration: underline;
   table-layout: fixed;
   border-collapse: collapse;
   width: 130px;
+  border-radius: 10px;
 }
 
 .buttonEvenSmaller:hover {
@@ -168,6 +146,7 @@ text-decoration: underline;
   border-collapse: collapse;
   width: 6%;
   margin-top: -1px;
+  border-radius: 10px;
 }
 
 .buttonEvenSmallerCrimped:hover {
