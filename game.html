@@ -1202,7 +1202,6 @@
             drawnCards.forEach(card => {
                 card.lastBoardState = card.boardState;
                 card.boardState = "Hand";
-                card.owner = card.owner || username;
             });
             gameState[username].Hand.push(...drawnCards);
 
@@ -1257,10 +1256,7 @@
 
                         // 1️⃣ Move original hand to bottom and sync that first
                         const oldHand = player.Hand.splice(0);
-                        oldHand.forEach(card => {
-                            const owner = card.owner || username;
-                            gameState[owner].Deck.push(card);
-                        });
+                        gameState[username].Deck.push(...oldHand);
                         addGameLogEntry(`${username} elected to redraw their Starting Hand.`);
                         await sendZoneUpdate(["Deck", "Hand"]);
 
@@ -2926,20 +2922,10 @@
             if (playerDeckCardIds.length === 0) {
                 return alert(`Could not load your deck "${playerDeckName}" (owner: ${playerUsernameParam}).`);
             }
-            const playerDeckByOwner = playerDeckCardIds.map(id => {
-                const card = allCards.find(c => c.id == id);
-                if (card) card.owner = playerUsernameParam;
-                return card;
-            });
             const opponentDeckCardIds = await getDeckFromParam("opponentDeck");
             if (opponentDeckCardIds.length === 0) {
                 return alert(`Could not load opponent’s deck "${opponentDeckName}" (owner: ${opponentUsernameParam}).`);
             }
-            const opponentDeckByOwner = opponentDeckCardIds.map(id => {
-                const card = allCards.find(c => c.id == id);
-                if (card) card.owner = opponentUsernameParam;
-                return card;
-            });
             // Keep the background image visible
             const bgImage = document.querySelector(".bg-image");
 
@@ -3322,10 +3308,10 @@
                 return;
             }
 
-            const playerDeck = playerDeckByOwner.filter(c => !!c);
+            const playerDeck = playerDeckResult.card_ids;
             shuffleDeck(playerDeck);
 
-            const opponentDeck = opponentDeckByOwner.filter(c => !!c);
+            const opponentDeck = opponentDeckResult.card_ids;
             shuffleDeck(opponentDeck);
 
             const selectedTotem = params.get("totem");
@@ -5333,17 +5319,10 @@
                 const [moved] = zoneArr.splice(idx, 1);
                 moved.boardState = toZoneKey;
                 moved.faceDown   = faceDown;
-                let targetArr;
-                if (toZoneKey === "Deck") {
-                    const deckOwner = moved.owner || username;
-                    targetArr = gameState[deckOwner][toZoneKey];
-                    if (placeOnTop) {
-                        targetArr.unshift(moved);
-                    } else {
-                        targetArr.push(moved);
-                    }
+                const targetArr = gameState[username][toZoneKey];
+                if (toZoneKey === "Deck" && placeOnTop) {
+                    targetArr.unshift(moved);
                 } else {
-                    targetArr = gameState[username][toZoneKey];
                     targetArr.push(moved);
                 }
 
@@ -6414,8 +6393,7 @@
                         const cardsToMill = gameState[username].Deck.splice(0, count);
                         cardsToMill.forEach(card => {
                             card.boardState = "Tomb";
-                            const owner = card.owner || username;
-                            gameState[owner].Tomb.push(card);
+                            gameState[username].Tomb.push(card);
                         });
 
                         await sendZoneUpdate(["Deck", "Tomb"]);
@@ -6471,8 +6449,7 @@
                         const cardsToObliterate = gameState[username].Deck.splice(0, count);
                         cardsToObliterate.forEach(card => {
                             card.boardState = "Void";
-                            const owner = card.owner || username;
-                            gameState[owner].Void.push(card);
+                            gameState[username].Void.push(card);
                         });
 
                         await sendZoneUpdate(["Deck", "Void"]);
