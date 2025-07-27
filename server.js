@@ -334,6 +334,16 @@ io.on('connection', (socket) => {
       }
   });
 
+  socket.on('request_clear_attachments', ({ gameId, from }) => {
+    socket.to(gameId).emit('confirm_clear_attachments_prompt', { from });
+  });
+
+  socket.on('clear_attachments_response', ({ gameId, confirmed }) => {
+    if (!confirmed) return;
+    attachmentsByGame[gameId] = [];
+    io.in(gameId).emit('clear_all_attachments');
+  });
+
   socket.on('play_sound', ({ effect, gameId }) => {
     if (!gameId) {
         console.warn("[play_sound] Missing gameId");

@@ -363,7 +363,7 @@
     }
     #muteBtn {
         position: absolute;
-        top: 865px;
+        top: 859px;
         left: 1948.75px;
         width: 36px;
         height: 36px;
@@ -479,6 +479,23 @@
             ">
             End Turn
         </div>
+        <div id="clear-attachments-btn" style="
+            display: none;
+            position: absolute;
+            top: 940px;
+            left: 1905px;
+            z-index: 100700;
+            background-color: lightgray;
+            color: black;
+            font-weight: bold;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 0.75em;
+            padding: 10px 10px;
+            border-radius: 2px;
+            cursor: pointer;
+            ">
+            Clear Attachments
+        </div>
         <div id="playerArsenalBox" class="card-zone"></div>
         <div id="playerChampionsBox" class="card-zone"></div>
         <div id="playerFaceDownBox" class="card-zone"></div>
@@ -492,7 +509,7 @@
         <button id="muteBtn" title="Mute/unmute sounds" style="opacity: 0; transition: opacity 1s ease-in-out;">🔊</button>
         <div id="tool-buttons" style="
             position: absolute;
-            left: 1730px;
+            left: 1710px;
             top: 850px;
             z-index: 200500;
             display: grid;
@@ -1185,6 +1202,7 @@
             drawnCards.forEach(card => {
                 card.lastBoardState = card.boardState;
                 card.boardState = "Hand";
+                card.owner = card.owner || username;
             });
             gameState[username].Hand.push(...drawnCards);
 
@@ -1239,7 +1257,10 @@
 
                         // 1️⃣ Move original hand to bottom and sync that first
                         const oldHand = player.Hand.splice(0);
-                        gameState[username].Deck.push(...oldHand);
+                        oldHand.forEach(card => {
+                            const owner = card.owner || username;
+                            gameState[owner].Deck.push(card);
+                        });
                         addGameLogEntry(`${username} elected to redraw their Starting Hand.`);
                         await sendZoneUpdate(["Deck", "Hand"]);
 
@@ -2174,7 +2195,6 @@
         });
         }
 
-        /* button positioned just above opponent portrait (tweak coords if needed) */
         const drawBtn = document.createElement('button');
         drawBtn.textContent = 'Offer Draw';
         Object.assign(drawBtn.style, {
@@ -2906,10 +2926,20 @@
             if (playerDeckCardIds.length === 0) {
                 return alert(`Could not load your deck "${playerDeckName}" (owner: ${playerUsernameParam}).`);
             }
+            const playerDeckByOwner = playerDeckCardIds.map(id => {
+                const card = allCards.find(c => c.id == id);
+                if (card) card.owner = playerUsernameParam;
+                return card;
+            });
             const opponentDeckCardIds = await getDeckFromParam("opponentDeck");
             if (opponentDeckCardIds.length === 0) {
                 return alert(`Could not load opponent’s deck "${opponentDeckName}" (owner: ${opponentUsernameParam}).`);
             }
+            const opponentDeckByOwner = opponentDeckCardIds.map(id => {
+                const card = allCards.find(c => c.id == id);
+                if (card) card.owner = opponentUsernameParam;
+                return card;
+            });
             // Keep the background image visible
             const bgImage = document.querySelector(".bg-image");
 
@@ -3292,10 +3322,10 @@
                 return;
             }
 
-            const playerDeck = playerDeckResult.card_ids;
+            const playerDeck = playerDeckByOwner.filter(c => !!c);
             shuffleDeck(playerDeck);
 
-            const opponentDeck = opponentDeckResult.card_ids;
+            const opponentDeck = opponentDeckByOwner.filter(c => !!c);
             shuffleDeck(opponentDeck);
 
             const selectedTotem = params.get("totem");
@@ -5303,10 +5333,17 @@
                 const [moved] = zoneArr.splice(idx, 1);
                 moved.boardState = toZoneKey;
                 moved.faceDown   = faceDown;
-                const targetArr = gameState[username][toZoneKey];
-                if (toZoneKey === "Deck" && placeOnTop) {
-                    targetArr.unshift(moved);
+                let targetArr;
+                if (toZoneKey === "Deck") {
+                    const deckOwner = moved.owner || username;
+                    targetArr = gameState[deckOwner][toZoneKey];
+                    if (placeOnTop) {
+                        targetArr.unshift(moved);
+                    } else {
+                        targetArr.push(moved);
+                    }
                 } else {
+                    targetArr = gameState[username][toZoneKey];
                     targetArr.push(moved);
                 }
 
@@ -6377,7 +6414,8 @@
                         const cardsToMill = gameState[username].Deck.splice(0, count);
                         cardsToMill.forEach(card => {
                             card.boardState = "Tomb";
-                            gameState[username].Tomb.push(card);
+                            const owner = card.owner || username;
+                            gameState[owner].Tomb.push(card);
                         });
 
                         await sendZoneUpdate(["Deck", "Tomb"]);
@@ -6433,7 +6471,8 @@
                         const cardsToObliterate = gameState[username].Deck.splice(0, count);
                         cardsToObliterate.forEach(card => {
                             card.boardState = "Void";
-                            gameState[username].Void.push(card);
+                            const owner = card.owner || username;
+                            gameState[owner].Void.push(card);
                         });
 
                         await sendZoneUpdate(["Deck", "Void"]);
@@ -7035,6 +7074,70 @@
 
         socket.on('excavate_cards', ({ player, count }) => {
             showExcavateWindow(player, count);
+        });
+
+        document.getElementById('clear-attachments-btn').style.display = 'block';
+
+        document.getElementById('clear-attachments-btn').addEventListener('click', () => {
+            const confirmBox = document.createElement("div");
+            confirmBox.style = `
+                position: fixed;
+                top: 50%; left: 50%;
+                transform: translate(-50%, -50%);
+                background: black; color: white;
+                padding: 20px;
+                z-index: 200000;
+                border-radius: 12px;
+                text-align: center;
+            `;
+            confirmBox.innerHTML = `
+                <p>Ask your Opponent if it's alright to clear attachments?</p>
+                <button id="ask-clear-attachments" style="margin: 10px;">Ask</button>
+                <button onclick="this.parentNode.remove()">Cancel</button>
+            `;
+            document.body.appendChild(confirmBox);
+
+            document.getElementById("ask-clear-attachments").onclick = () => {
+                socket.emit("request_clear_attachments", { gameId, from: username });
+                confirmBox.remove();
+            };
+        });
+
+        socket.on('confirm_clear_attachments_prompt', ({ from }) => {
+            const confirmBox = document.createElement("div");
+            confirmBox.style = `
+                position: fixed;
+                top: 50%; left: 50%;
+                transform: translate(-50%, -50%);
+                background: black; color: white;
+                padding: 20px;
+                z-index: 200000;
+                border-radius: 12px;
+                text-align: center;
+            `;
+            confirmBox.innerHTML = `
+                <p>${from} is asking to clear the current attachments.</p>
+                <button id="confirm-clear" style="margin: 10px;">Confirm</button>
+                <button id="deny-clear">Deny</button>
+            `;
+            document.body.appendChild(confirmBox);
+
+            document.getElementById("confirm-clear").onclick = () => {
+                socket.emit("clear_attachments_response", { gameId, confirmed: true });
+                confirmBox.remove();
+            };
+
+            document.getElementById("deny-clear").onclick = () => {
+                socket.emit("clear_attachments_response", { gameId, confirmed: false });
+                confirmBox.remove();
+            };
+        });
+
+        socket.on('clear_all_attachments', () => {
+            attachments = [];
+            saveAttachments();
+            document.querySelectorAll('.attachment-circle').forEach(el => el.remove());
+            clearAttachmentLines();
         });
 
         function showExcavateWindow(player, count) {
