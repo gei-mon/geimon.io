@@ -6086,6 +6086,24 @@ export const cards = [
     ]
   },
   {
+    id: "482",
+    name: "Achoo!",
+    image: `${cardArtFolder}/Reflex/Achoo.png`,
+    rarity: "Rare",
+    type: "Reflex",
+    condition: "",
+    cost: "",
+    tags: ["Reflex"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Bounce all other cards you control, and if you do, you must offer 1 Life for each card bounced this way.`
+      }
+    ]
+  },
+  {
     id: "541",
     name: "Xina, Forest Guardian",
     image: `${cardArtFolder}/Champions/XinaForestGuardian.png`,
@@ -8368,6 +8386,132 @@ export const cards = [
     abilities: [
       {
         text: `Market Opening: During your Intermission Phase (Mandatory): Declare 1 card type; Excavate 1. If the revealed card's type matches what you declared, add it. Otherwise, obliterate it.`
+      }
+    ]
+  },
+  {
+    id: "1321",
+    name: "Cryptik",
+    image: `${cardArtFolder}/Champions/Cryptik.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Basic, plus move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Primary","Dark"],
+    damage: 3,
+    life: 2,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Greedy <span class="line-gap"></span> Benched: From your Hand: Move to your Reserve. <span class="line-gap"></span> Dark Type: Deals double Battle Damage to Light Wildlings, and half Battle Damage (rounded down) to Metal Wildlings. <span class="line-gap"></span> My Shiny! (Exhaustion): Add the top card of your Opponent's Deck to your Hand. <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Gildgeist" from your Hand or Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1322",
+    name: "Gildgeist",
+    image: `${cardArtFolder}/Champions/Gildgeist.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Discard 1, plus move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Secondary","Dark"],
+    damage: 3,
+    life: 3,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Greedy <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Cryptik" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Dark Type: Deals double Battle Damage to Light Wildlings, and half Battle Damage (rounded down) to Metal Wildlings. <span class="line-gap"></span> Horde Builder (Exhaustion): Add the top card of your Opponent's Deck to your Hand. It can be activated without paying its cost. <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Tarnishade" from your Hand or Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1323",
+    name: "Tarnishade",
+    image: `${cardArtFolder}/Champions/Tarnishade.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Discard 2, plus move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Tertiary","Dark","Metal"],
+    damage: 5,
+    life: 4,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Greedy, Reach <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Cryptik" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Dark-Metal Type: Deals double Battle Damage to Earth, Light, and Magic Wildlings, and half Battle Damage (rounded down) to Metal and Plant Wildlings. <span class="line-gap"></span> Protect the Horde: Your discard costs are always considered fulfilled.`
+      }
+    ]
+  },
+  {
+    id: "1324",
+    name: "Cherblip",
+    image: `${cardArtFolder}/Champions/Cherblip.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Basic, plus move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Primary","Light"],
+    damage: 1,
+    life: 3,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Warded <span class="line-gap"></span> Benched: From your Hand: Move to your Reserve. <span class="line-gap"></span> Light Type: Deals double Battle Damage to Dark Wildlings, and half Battle Damage (rounded down) to Plant Wildlings. <span class="line-gap"></span> Beacon of Light (Exhaustion): Excavate 1, then return the card to either the top or bottom of your Deck. <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Wingrael" from your Hand or Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1325",
+    name: "Wingrael",
+    image: `${cardArtFolder}/Champions/Wingrael.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Your Opponent gains 4 Life, plus move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Secondary","Light"],
+    damage: 2,
+    life: 4,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Warded <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Cherblip" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Light Type: Deals double Battle Damage to Dark Wildlings, and half Battle Damage (rounded down) to Plant Wildlings. <span class="line-gap"></span> Guided by Fate (Exhaustion): Excavate 1, then either activate the card (ignoring its cost), or return the card to the bottom of your Deck, and if you do, draw 1. <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Seraphaeon" from your Hand or Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1326",
+    name: "Seraphaeon",
+    image: `${cardArtFolder}/Champions/Seraphaeon.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Your Opponent gains 8 Life, plus move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Tertiary","Light"],
+    damage: 3,
+    life: 7,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Non-Believer <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Cherblip" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Light Type: Deals double Battle Damage to Dark Wildlings, and half Battle Damage (rounded down) to Plant Wildlings. <span class="line-gap"></span> Watching Over: If a card you control is Targeted (Reflex): Change the Target to another available card you control.`
+      }
+    ]
+  },
+  {
+    id: "1380",
+    name: "Go to Sleep! Go to Sleep! Go to-",
+    image: `${cardArtFolder}/Reflex/GoToSleep.png`,
+    rarity: "Common",
+    type: "Reflex",
+    condition: "",
+    cost: "Target 1 face-up Champion on the Zone and reduce all face-up Champions you control to 1 Life (minimum of 1)",
+    tags: ["Reflex"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Flip Target face-down.`
       }
     ]
   }

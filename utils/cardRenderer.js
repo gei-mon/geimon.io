@@ -56,6 +56,8 @@ export function renderCard(card, container) {
       cardElement.classList.add("enlightened");}
     if (firstTag === "Driftmarked") {
       cardElement.classList.add("driftmarked");}
+    if (firstTag === "Wildling") {
+      cardElement.classList.add("wildling");}
     if (firstTag === "Token") {
       cardElement.classList.add("token");}
     if (secondTag === "Token") {
