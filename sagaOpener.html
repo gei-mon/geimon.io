@@ -214,6 +214,11 @@
                     case 'Golden Guardian':              return cards.filter(c=>id(c)>=1021 && id(c)<=1080);
                     case 'Focused Strike':               return cards.filter(c=>id(c)>=1081 && id(c)<=1140);
                     case 'Swashbuckling Scoundrel':      return cards.filter(c=>id(c)>=1141 && id(c)<=1200);
+                    case 'Major Arcana':                 return cards.filter(c=>id(c)>=1201 && id(c)<=1222);
+                    case 'Roaming Beasts': {
+                        const extraIds = new Set([902]);
+                        return cards.filter(c => (id(c) >= 1261 && id(c) <= 1320) || extraIds.has(id(c)));
+                    }
 
                     default: return cards;
                 }

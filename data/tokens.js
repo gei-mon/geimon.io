@@ -493,5 +493,22 @@ export const tokens = [
         text: ""
       }
     ]
+},
+{
+    id: "9030",
+    name: "Trophy Token",
+    image: `${tokenArtFolder}/Trophy.png`,
+    type: "Champion",
+    condition: "",
+    cost: "",
+    tags: ["Token"],
+    damage: 0,
+    life: 2,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: ""
+      }
+    ]
 }
 ];

@@ -2211,7 +2211,7 @@ export const cards = [
     damageThreshold: 2,
     abilities: [
       {
-        text: `Repair Specialist <span class="line-gap"></span> In The Shop: On Rally: Place 1 Obelisk from your Deck into your Reserve. That Obelisk gains \"Reserve (Reflex): Discard 1; Activate this card (ignoring its cost)\". <span class="line-gap"></span> Garage Baby: Attach 1 appropriate Equipment from your Hand or Deck to an Obelisk in your Reserve (ignoring its cost). <span class="line-gap"></span> Secret Weapon (Exhaustion): Destroy 1 Obelisk you control; Destroy 1 card on the Zone.`
+        text: `Repair Specialist <span class="line-gap"></span> In The Shop: On Rally: Move 1 Obelisk from your Deck into your Reserve. That Obelisk gains \"Reserve (Reflex): Discard 1; Activate this card (ignoring its cost)\". <span class="line-gap"></span> Garage Baby: Attach 1 appropriate Equipment from your Hand or Deck to an Obelisk in your Reserve (ignoring its cost). <span class="line-gap"></span> Secret Weapon (Exhaustion): Destroy 1 Obelisk you control; Destroy 1 card on the Zone.`
       }
     ]
   },
@@ -2283,7 +2283,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Place 1 Commander Obelisk from your Deck into your Reserve, and attach to it 1 appropriate Equipment from your Deck (ignoring its cost).`
+        text: `Move 1 Commander Obelisk from your Deck into your Reserve, and attach to it 1 appropriate Equipment from your Deck (ignoring its cost).`
       }
     ]
   },
@@ -2787,7 +2787,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Retrieve 1 Helper or Obelisk, and if you do, you can place 1 Helper or Obelisk from your Deck into your Reserve.`
+        text: `Retrieve 1 Helper or Obelisk, and if you do, you can move 1 Helper or Obelisk from your Deck into your Reserve.`
       }
     ]
   },
@@ -3399,7 +3399,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Maintenance <span class="line-gap"></span> Mill 1; Place 1 \"Castle\" Obelisk from your Deck or Tomb into your Reserve. <span class="line-gap"></span> If you control at least 1 other face-up \"Castle\" Obelisk: Discard 2; Add 1 \"Castle\" Obelisk. <span class="line-gap"></span> If Destroyed: Activate up to 3 \"Castle\" Obelisks in your Reserve.`
+        text: `Maintenance <span class="line-gap"></span> Mill 1; Move 1 \"Castle\" Obelisk from your Deck or Tomb into your Reserve. <span class="line-gap"></span> If you control at least 1 other face-up \"Castle\" Obelisk: Discard 2; Add 1 \"Castle\" Obelisk. <span class="line-gap"></span> If Destroyed: Activate up to 3 \"Castle\" Obelisks in your Reserve.`
       }
     ]
   },
@@ -3471,7 +3471,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Maintenance <span class="line-gap"></span> Your Champions gain Reach. <span class="line-gap"></span> While you control at least 1 other face-up \"Castle\" Obelisk: \"Castle\" Obelisks no longer need to be placed face-down before they can be activated. <span class="line-gap"></span> While you control at least 3 other face-up \"Castle\" Obelisks (Reflex): Target 1 card on the Zone; Destroy Target.`
+        text: `Maintenance <span class="line-gap"></span> Your Champions gain Reach. <span class="line-gap"></span> While you control at least 1 other face-up \"Castle\" Obelisk: \"Castle\" Obelisks no longer need to be set face-down before they can be activated. <span class="line-gap"></span> While you control at least 3 other face-up \"Castle\" Obelisks (Reflex): Target 1 card on the Zone; Destroy Target.`
       }
     ]
   },
@@ -6068,6 +6068,96 @@ export const cards = [
     ]
   },
   {
+    id: "429",
+    name: "Get This Man a Cigarette",
+    image: `${cardArtFolder}/Equipments/GetThisManACigarette.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `The attached Champion gains Second Strike. <span class="line-gap"></span> During the End Phase of the attached Champion's controller (Mandatory): Offer 2 Life from the attached Champion.`
+      }
+    ]
+  },
+  {
+    id: "430",
+    name: "And They're Off!",
+    image: `${cardArtFolder}/Rush/AndTheyreOff.png`,
+    rarity: "Superior",
+    type: "Rush",
+    condition: "",
+    cost: "",
+    tags: ["Rush"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Each Player chooses 1 Champion they control and then rolls a die, then the Player who rolled lower sends their Champion to the Tomb.`
+      }
+    ]
+  },
+  {
+    id: "431",
+    name: "Wife Swap",
+    image: `${cardArtFolder}/Actions/WifeSwap.png`,
+    rarity: "Rare",
+    type: "Action",
+    condition: "",
+    cost: "",
+    tags: ["Action"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Each Player chooses 1 Champion they control and switches control of those Champions with each other.`
+      }
+    ]
+  },
+  {
+    id: "432",
+    name: "Bet of a Lifetime",
+    image: `${cardArtFolder}/Actions/BetOfALifetime.png`,
+    rarity: "Common",
+    type: "Action",
+    condition: "",
+    cost: "Declare an amount of Life (Up to your current Life), then your Opponent declares if they are Matching or Declining",
+    tags: ["Action"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `If your Opponent Declines: Send this card to the Tomb with no effect. <span class="line-gap"></span> If your Opponent Matches: Then both Players mill cards until they mill a Champion. Whichever Player's Champion has the lower Damage in the Tomb loses the amount of Life declared. Whichever Player's Champion has the higher Damage in the Tomb gains the amount of Life declared.`
+      }
+    ]
+  },
+  {
+    id: "433",
+    name: "The House",
+    image: `${cardArtFolder}/Champions/TheHouse.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Dealt","Construct"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "8",
+    abilities: [
+      {
+        text: `The House Always Wins: If a die would be rolled or a coin would be flipped (Reflex): You choose the result instead. This effect can be declared and activated mid-Path.`
+      }
+    ]
+  },
+  {
     id: "481",
     name: "Honeda, Silver-Suited Samurai",
     image: `${cardArtFolder}/Champions/HonedaSilverSuitedSamurai.png`,
@@ -8390,7 +8480,7 @@ export const cards = [
     ]
   },
   {
-    id: "1321",
+    id: "1261",
     name: "Cryptik",
     image: `${cardArtFolder}/Champions/Cryptik.png`,
     rarity: "Common",
@@ -8408,7 +8498,7 @@ export const cards = [
     ]
   },
   {
-    id: "1322",
+    id: "1262",
     name: "Gildgeist",
     image: `${cardArtFolder}/Champions/Gildgeist.png`,
     rarity: "Rare",
@@ -8426,7 +8516,7 @@ export const cards = [
     ]
   },
   {
-    id: "1323",
+    id: "1263",
     name: "Tarnishade",
     image: `${cardArtFolder}/Champions/Tarnishade.png`,
     rarity: "Superior",
@@ -8444,7 +8534,7 @@ export const cards = [
     ]
   },
   {
-    id: "1324",
+    id: "1264",
     name: "Cherblip",
     image: `${cardArtFolder}/Champions/Cherblip.png`,
     rarity: "Common",
@@ -8462,7 +8552,7 @@ export const cards = [
     ]
   },
   {
-    id: "1325",
+    id: "1265",
     name: "Wingrael",
     image: `${cardArtFolder}/Champions/Wingrael.png`,
     rarity: "Rare",
@@ -8480,7 +8570,7 @@ export const cards = [
     ]
   },
   {
-    id: "1326",
+    id: "1266",
     name: "Seraphaeon",
     image: `${cardArtFolder}/Champions/Seraphaeon.png`,
     rarity: "Superior",
@@ -8498,7 +8588,43 @@ export const cards = [
     ]
   },
   {
-    id: "1380",
+    id: "1267",
+    name: "Matching Uniform",
+    image: `${cardArtFolder}/Equipments/MatchingUniform.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "",
+    cost: "Target 1 face-up Champion on the Zone",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `The attached Champion's Damage and Life become equal to the Target's at the time of activation.`
+      }
+    ]
+  },
+  {
+    id: "1268",
+    name: "Trophy Case",
+    image: `${cardArtFolder}/Obelisks/TrophyCase.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `The first time each turn a Champion you control Destroys another by battle (Mandatory): Rally 1 Trophy Token to your Zone. <br><br> When this card leaves the Zone: Destroy all Tokens rallied by this card.`
+      }
+    ]
+  },
+  {
+    id: "1320",
     name: "Go to Sleep! Go to Sleep! Go to-",
     image: `${cardArtFolder}/Reflex/GoToSleep.png`,
     rarity: "Common",
