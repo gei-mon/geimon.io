@@ -40,5 +40,6 @@ export const keywords = {
   Taunt: "This is the only card you control that your Opponent can Target for attacks and with effects. \n\n If you control 2 or more cards with this passive: Your Opponent can choose any of them to Target.",
   "Second Strike": "This card can make two attacks during each of your Battle Phases.",
   "Board Breaker": "This card cannot attack your Opponent directly.",
-  Contained: "This card cannot declare attacks."
+  Contained: "This card cannot declare attacks.",
+  Durable: "The first time each turn this card would be Destroyed by battle (Mandatory): It is not Destroyed."
 };

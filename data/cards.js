@@ -8486,7 +8486,7 @@ export const cards = [
     rarity: "Common",
     type: "Champion",
     condition: "This card is in your Reserve",
-    cost: "Basic, plus move all face-up Wildlings you control to the Reserve",
+    cost: "Basic, then move all face-up Wildlings you control to the Reserve",
     tags: ["Wildling","Primary","Dark"],
     damage: 3,
     life: 2,
@@ -8504,7 +8504,7 @@ export const cards = [
     rarity: "Rare",
     type: "Champion",
     condition: "This card is in your Reserve",
-    cost: "Discard 1, plus move all face-up Wildlings you control to the Reserve",
+    cost: "Discard 1, then move all face-up Wildlings you control to the Reserve",
     tags: ["Wildling","Secondary","Dark"],
     damage: 3,
     life: 3,
@@ -8522,7 +8522,7 @@ export const cards = [
     rarity: "Superior",
     type: "Champion",
     condition: "This card is in your Reserve",
-    cost: "Discard 2, plus move all face-up Wildlings you control to the Reserve",
+    cost: "Discard 2, then move all face-up Wildlings you control to the Reserve",
     tags: ["Wildling","Tertiary","Dark","Metal"],
     damage: 5,
     life: 4,
@@ -8540,7 +8540,7 @@ export const cards = [
     rarity: "Common",
     type: "Champion",
     condition: "This card is in your Reserve",
-    cost: "Basic, plus move all face-up Wildlings you control to the Reserve",
+    cost: "Basic, then move all face-up Wildlings you control to the Reserve",
     tags: ["Wildling","Primary","Light"],
     damage: 1,
     life: 3,
@@ -8558,7 +8558,7 @@ export const cards = [
     rarity: "Rare",
     type: "Champion",
     condition: "This card is in your Reserve",
-    cost: "Your Opponent gains 4 Life, plus move all face-up Wildlings you control to the Reserve",
+    cost: "Your Opponent gains 4 Life, then move all face-up Wildlings you control to the Reserve",
     tags: ["Wildling","Secondary","Light"],
     damage: 2,
     life: 4,
@@ -8576,7 +8576,7 @@ export const cards = [
     rarity: "Superior",
     type: "Champion",
     condition: "This card is in your Reserve",
-    cost: "Your Opponent gains 8 Life, plus move all face-up Wildlings you control to the Reserve",
+    cost: "Your Opponent gains 8 Life, then move all face-up Wildlings you control to the Reserve",
     tags: ["Wildling","Tertiary","Light"],
     damage: 3,
     life: 7,
@@ -8620,6 +8620,276 @@ export const cards = [
     abilities: [
       {
         text: `The first time each turn a Champion you control Destroys another by battle (Mandatory): Rally 1 Trophy Token to your Zone. <br><br> When this card leaves the Zone: Destroy all Tokens rallied by this card.`
+      }
+    ]
+  },
+  {
+    id: "1269",
+    name: "Dustort",
+    image: `${cardArtFolder}/Champions/Dustort.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Basic, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Primary","Earth"],
+    damage: 1,
+    life: 3,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Defender <span class="line-gap"></span> Benched: From your Hand: Move to your Reserve. <span class="line-gap"></span> Earth Type: Deals double Battle Damage to Fire and Electric Wildlings, and half Battle Damage (rounded down) to Dragon and Plant Wildlings. <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Terrashell" from your Hand or Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1270",
+    name: "Terrashell",
+    image: `${cardArtFolder}/Champions/Terrashell.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Sacrifice 1, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Secondary","Earth"],
+    damage: 1,
+    life: 5,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `Defender, Durable <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Dustort" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Earth Type: Deals double Battle Damage to Fire and Electric Wildlings, and half Battle Damage (rounded down) to Dragon and Plant Wildlings. <span class="line-gap"></span> Expand the Desert (Exhaustion): Destroy all face-up Obelisks on the Zone, then you must offer 2 Life for each card Destroyed. <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Tortremor" from your Hand or Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1271",
+    name: "Tortremor",
+    image: `${cardArtFolder}/Champions/Tortremor.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Sacrifice 2, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Tertiary","Earth"],
+    damage: 2,
+    life: 6,
+    damageThreshold: "4",
+    abilities: [
+      {
+        text: `Defender, Durable <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Dustort" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Earth Type: Deals double Battle Damage to Fire and Electric Wildlings, and half Battle Damage (rounded down) to Dragon and Plant Wildlings. <span class="line-gap"></span> King of the Wastes: This card is unaffected by card effects that do not Target it.`
+      }
+    ]
+  },
+  {
+    id: "1272",
+    name: "Tailspin",
+    image: `${cardArtFolder}/Champions/Tailspin.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Basic, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Primary","Air"],
+    damage: 2,
+    life: 2,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Reach <span class="line-gap"></span> Benched: From your Hand: Move to your Reserve. <span class="line-gap"></span> Air Type: Deals double Battle Damage to Fire and Plant Wildlings, and half Battle Damage (rounded down) to Dragon Wildlings. <span class="line-gap"></span> Little Weapon (Exhaustion): Deal 1 Damage to your Opponent. <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Whirlaptor" from your Hand or Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1273",
+    name: "Whirlaptor",
+    image: `${cardArtFolder}/Champions/Whirlaptor.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Spin 1 card from your Hand, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Secondary","Air"],
+    damage: 5,
+    life: 2,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Menace <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Tailspin" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Air Type: Deals double Battle Damage to Fire and Plant Wildlings, and half Battle Damage (rounded down) to Dragon Wildlings. <span class="line-gap"></span> Look Up!: If this card is Targeted for an attack (Reflex): Bounce this card, and if you do, you must Discard 1. <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Tempestrix" from your Hand or Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1274",
+    name: "Tempestrix",
+    image: `${cardArtFolder}/Champions/Tempestrix.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Spin 2 cards from your Hand, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Tertiary","Air"],
+    damage: 7,
+    life: 3,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Unstoppable <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Tailspin" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Air Type: Deals double Battle Damage to Fire and Plant Wildlings, and half Battle Damage (rounded down) to Dragon Wildlings. <span class="line-gap"></span> King of the Skies: While this card is face-up on the Zone: No other cards can gain the benefits of Menace or Reach.`
+      }
+    ]
+  },
+  {
+    id: "1275",
+    name: "Cindrasc",
+    image: `${cardArtFolder}/Champions/Cindrasc.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Basic, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Primary","Fire"],
+    damage: 1,
+    life: 3,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Bloodrage <span class="line-gap"></span> Benched: From your Hand: Move to your Reserve. <span class="line-gap"></span> Fire Type: Deals double Battle Damage to Dark, Plant, and Metal Wildlings, and half Battle Damage (rounded down) to Dragon and Water Wildlings. <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Scorcharger" from your Hand or Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1276",
+    name: "Scorcharger",
+    image: `${cardArtFolder}/Champions/Scorcharger.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Offer 4 Life, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Secondary","Fire"],
+    damage: 1,
+    life: 5,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Bloodrage <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Cindrasc" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Fire Type: Deals double Battle Damage to Dark, Plant, and Metal Wildlings, and half Battle Damage (rounded down) to Dragon and Water Wildlings. <span class="line-gap"></span> Incendiary Pop: At the end of a battle involving this card (Reflex): Destroy this card; Destroy the other battling Champion. <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Dragynamo" from your Hand or Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1277",
+    name: "Dragynamo",
+    image: `${cardArtFolder}/Champions/Dragynamo.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Offer 6 Life, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Tertiary","Fire","Electric"],
+    damage: 2,
+    life: 7,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Bloodrage, Menace <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Cindrasc" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Fire-Electric Type: Deals double Battle Damage to Air, Dark, and Plant Wildlings, and half Battle Damage (rounded down) to Dragon and Earth Wildlings. <span class="line-gap"></span> Burn the World: If this card is Destroyed by card effect: Obliterate this card and 5 other Wildlings from your Tomb; Destroy all Champions on the Zone.`
+      }
+    ]
+  },
+  {
+    id: "1278",
+    name: "Finlet",
+    image: `${cardArtFolder}/Champions/Finlet.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Basic, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Primary","Water"],
+    damage: 1,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Unstoppable <span class="line-gap"></span> Benched: From your Hand: Move to your Reserve. <span class="line-gap"></span> Water Type: Deals double Battle Damage to Earth and Fire Wildlings, and half Battle Damage (rounded down) to Dragon and Plant Wildlings. <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Jetfin" from your Hand or Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1279",
+    name: "Jetfin",
+    image: `${cardArtFolder}/Champions/Jetfin.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Obliterate Mill 8, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Secondary","Water"],
+    damage: 2,
+    life: 3,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Priority <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Finlet" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Water Type: Deals double Battle Damage to Earth and Fire Wildlings, and half Battle Damage (rounded down) to Dragon and Plant Wildlings. <span class="line-gap"></span> Rocket-Powered: If this card reduces another Champion to 0 Life by Battle: You, and this card, take no Damage from that battle. <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Submareign" from your Hand or Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1280",
+    name: "Submareign",
+    image: `${cardArtFolder}/Champions/Submareign.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Obliterate Mill 16, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Tertiary","Water"],
+    damage: 3,
+    life: 5,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Unstoppable <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Finlet" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Water Type: Deals double Battle Damage to Earth and Fire Wildlings, and half Battle Damage (rounded down) to Dragon and Plant Wildlings. <span class="line-gap"></span> Torpedo Launch! (Exhaustion): Target 1 face-down Champion on the Zone; Destroy Target.`
+      }
+    ]
+  },
+  {
+    id: "1281",
+    name: "Spindleaf",
+    image: `${cardArtFolder}/Champions/Spindleaf.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Basic, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Primary","Plant"],
+    damage: 1,
+    life: 1,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `Taunt <span class="line-gap"></span> Benched: From your Hand: Move to your Reserve. <span class="line-gap"></span> Plant Type: Deals double Battle Damage to Earth and Water Wildlings, and half Battle Damage (rounded down) to Dark, Light, and Metal Wildlings. <span class="line-gap"></span> Sticky Web: If this card blocks or is attacked (Reflex): Before Damage Calculation, flip the attacking Champion face-down. <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Webloom" from your Hand or Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1282",
+    name: "Webloom",
+    image: `${cardArtFolder}/Champions/Webloom.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Obliterate Mill 8, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Secondary","Plant"],
+    damage: 2,
+    life: 3,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Taunt <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Spindleaf" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Plant Type: Deals double Battle Damage to Earth and Water Wildlings, and half Battle Damage (rounded down) to Dark, Light, and Metal Wildlings. <span class="line-gap"></span> Poisonous Web: If this card blocks or is attacked (Reflex): Before Damage Calculation, the attacking Champion takes 1 Damage. <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Arachnogrove" from your Hand or Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1283",
+    name: "Arachnogrove",
+    image: `${cardArtFolder}/Champions/Arachnagrove.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Obliterate Mill 16, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Tertiary","Plant"],
+    damage: 3,
+    life: 6,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Taunt <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Spindleaf" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Plant Type: Deals double Battle Damage to Earth and Water Wildlings, and half Battle Damage (rounded down) to Dark, Light, and Metal Wildlings. <span class="line-gap"></span> Deadly Web: If this card blocks or is attacked (Mandatory, Reflex): Offer 3 Life from this card, then Destroy the attacking Champion.`
       }
     ]
   },
