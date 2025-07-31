@@ -8979,7 +8979,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `When a Champion with 1 Damage that you control battles a Champion with 5 or more Damage: Your Champion deals triple Battle Damage, and ignores damage thresholds. Additionally, you, and your Champion, take no Damage from that battle.`
+        text: `When a Champion with 1 Damage that you control battles a Champion with 5 or more Damage: Your Champion deals triple Battle Damage, and ignores Damage Thresholds. Additionally, you, and your Champion, take no Damage from that battle.`
       }
     ]
   },
@@ -9519,7 +9519,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Move 1 face-up Wildling you control to the Reserve. It cannot be Rallied until the end of the next turn.`
+        text: `Move 1 face-up Champion you control to the Reserve. It cannot be Rallied until after the end of the next turn.`
       }
     ]
   },
