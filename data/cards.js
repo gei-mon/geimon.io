@@ -7287,7 +7287,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Duelist, Priority <span class="line-gap"></span> That's My Speciality: On Rally: Declare 1 Champion Tag; This card deals double Battle Damage against Champions with that Tag. <span class="line-gap"></span> Right Tool for the Task: If this Champion has at least l attached Equipment: This card loses Duelist and gains Menace.`
+        text: `Duelist, Priority <span class="line-gap"></span> That's My Speciality: On Rally: Declare 1 Champion Tag. This card deals double Battle Damage against Champions with that Tag. <span class="line-gap"></span> Right Tool for the Task: If this Champion has at least l attached Equipment: This card loses Duelist and gains Menace.`
       }
     ]
   },
@@ -8890,6 +8890,654 @@ export const cards = [
     abilities: [
       {
         text: `Taunt <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Spindleaf" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Plant Type: Deals double Battle Damage to Earth and Water Wildlings, and half Battle Damage (rounded down) to Dark, Light, and Metal Wildlings. <span class="line-gap"></span> Deadly Web: If this card blocks or is attacked (Mandatory, Reflex): Offer 3 Life from this card, then Destroy the attacking Champion.`
+      }
+    ]
+  },
+  {
+    id: "1284",
+    name: "Mythical Showdown",
+    image: `${cardArtFolder}/Rush/MythicalShowdown.png`,
+    rarity: "Common",
+    type: "Rush",
+    condition: "",
+    cost: "Obliterate 9 Wildlings from your Tomb",
+    tags: ["Rush"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Add 1 Mythical.`
+      }
+    ]
+  },
+  {
+    id: "1285",
+    name: "Forced Evolution",
+    image: `${cardArtFolder}/Rush/ForcedEvolution.png`,
+    rarity: "Rare",
+    type: "Rush",
+    condition: "",
+    cost: "Obliterate 3 Primary Wildlings and 2 Secondary Wildlings from your Hand or Tomb",
+    tags: ["Rush"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Move 1 Tertiary Wildling from your Hand or Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1286",
+    name: "Critical Hit!",
+    image: `${cardArtFolder}/Rush/CriticalHit.png`,
+    rarity: "Rare",
+    type: "Rush",
+    condition: "",
+    cost: "Target 1 face-up Champion you control and 1 your Opponent controls",
+    tags: ["Rush"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Your Opponent's Champion takes double your Champion's Damage. Then, Destroy your Champion, and if your Champion was a Wildling, you can move 1 Primary Wildling from your Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1287",
+    name: "Turn-Based Strategy",
+    image: `${cardArtFolder}/Obelisks/TurnBasedStrategy.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `All Wildlings gain Board Breaker and Priority, but they can only Target other Wildlings for attacks.`
+      }
+    ]
+  },
+  {
+    id: "1288",
+    name: "Let's Fight God!",
+    image: `${cardArtFolder}/Obelisks/LetsFightGod.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `When a Champion with 1 Damage that you control battles a Champion with 5 or more Damage: Your Champion deals triple Battle Damage, and ignores damage thresholds. Additionally, you, and your Champion, take no Damage from that battle.`
+      }
+    ]
+  },
+  {
+    id: "1289",
+    name: "Let Me Re-Introduce Myself...",
+    image: `${cardArtFolder}/Equipments/ReIntroducing.png`,
+    rarity: "Common",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Upon Activation: Declare 1 Tag from the attached Champion. That Tag no longer applies while this card is attached.`
+      }
+    ]
+  },
+  {
+    id: "1290",
+    name: "Mortal Enemy",
+    image: `${cardArtFolder}/Equipments/MortalEnemy.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Upon Activation: Declare 1 Champion Tag. The attached Champion deals double Battle Damage against Champions with that Tag.`
+      }
+    ]
+  },
+  {
+    id: "1291",
+    name: "Hazardous Terrain",
+    image: `${cardArtFolder}/Equipments/HazardousTerrain.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "Attach only to a Wildling",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `The attached Champion cannot declare attacks. While this card is attached, each time your Opponent rallies a face-up Champion, those Champion(s) take 1 Damage.`
+      }
+    ]
+  },
+  {
+    id: "1292",
+    name: "Weather Control",
+    image: `${cardArtFolder}/Equipments/WeatherSetter.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "Attach only to a Wildling",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Upon Activation: Declare 1 of the following: Rain, Sandstorm, or Sun. <span class="line-gap"></span> Apply the following effect based on the type of weather declared: <span class="line-gap"></span> • Rain: Water Wildlings take no Battle Damage when attacking. <span class="line-gap"></span> • Sandstorm: Face-Up Champions that are not Earth or Metal take 1 Damage during each of your End Phases. <span class="line-gap"></span> • Sun: Increase face-up Fire Wildlings' Damage by 2 and face-up Plant Wildlings gain 1 Life during each of your End Phases.`
+      }
+    ]
+  },
+  {
+    id: "1293",
+    name: "Brimblight",
+    image: `${cardArtFolder}/Champions/Brimblight.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Obliterate 2 Dragon and/or Metal Wildlings from your Hand or Tomb, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Mythical","Dragon","Metal"],
+    damage: 10,
+    life: 5,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Duelist, Fortified, Priority <span class="line-gap"></span> Set the Bench: From your Hand: Move to your Reserve. <span class="line-gap"></span> Dragon-Metal Type: Deals double Battle Damage to Earth, Magic, and Metal Wildlings, and half Battle Damage (rounded down) to Dark, Light, and Plant Wildlings. <span class="line-gap"></span> Forge Guardian: Your Rallies cannot be negated.`
+      }
+    ]
+  },
+  {
+    id: "1294",
+    name: "Emberveil",
+    image: `${cardArtFolder}/Champions/Emberveil.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Spin 2 Fire and/or Magic Wildlings from your Hand or Tomb, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Mythical","Fire","Magic"],
+    damage: 6,
+    life: 9,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Priority, Undertaker <span class="line-gap"></span> Set the Bench: From your Hand: Move to your Reserve. <span class="line-gap"></span> Fire-Magic Type: Deals double Battle Damage to Dark, Light, and Plant Wildlings, and half Battle Damage (rounded down) to Water Wildlings. <span class="line-gap"></span> Cycle of Rebirth: If this card is Destroyed: Obliterate Mill 10; Move this card to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1295",
+    name: "Hearthorne",
+    image: `${cardArtFolder}/Champions/Hearthorne.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Send to your Tomb 2 Light and/or Plant Wildlings from your Hand or Reserve, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Mythical","Light","Plant"],
+    damage: 5,
+    life: 8,
+    damageThreshold: "4",
+    abilities: [
+      {
+        text: `Lifesteal, Priority <span class="line-gap"></span> Set the Bench: From your Hand: Move to your Reserve. <span class="line-gap"></span> Light-Plant Type: Deals double Battle Damage to Earth and Water Wildlings, and half Battle Damage (rounded down) to Light, Metal, and Plant Wildlings. <span class="line-gap"></span> Anti-Evil Barrier: Your Opponent cannot attach Equipments to Champions you control.`
+      }
+    ]
+  },
+  {
+    id: "1296",
+    name: "Side Strike",
+    image: `${cardArtFolder}/Actions/SideStrike.png`,
+    rarity: "Rare",
+    type: "Action",
+    condition: "",
+    cost: "Exhaust 1 face-up Champion you control and Target 1 face-up card in your Opponent's Arsenal",
+    tags: ["Action"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Destroy Target.`
+      }
+    ]
+  },
+  {
+    id: "1297",
+    name: "Switch In",
+    image: `${cardArtFolder}/Actions/SwitchIn.png`,
+    rarity: "Common",
+    type: "Action",
+    condition: "You do not control a face-up Wildling",
+    cost: "Discard 1",
+    tags: ["Action"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Rally 1 Wildling from your Reserve (ignoring its cost). <span class="line-gap"></span> If this card is in your Tomb: Obliterate this card and 3 Wildings from your Tomb; Add 1 non-Champion card that mentions a Wildling.`
+      }
+    ]
+  },
+  {
+    id: "1298",
+    name: "Headlong Rush",
+    image: `${cardArtFolder}/Actions/HeadlongRush.png`,
+    rarity: "Common",
+    type: "Action",
+    condition: "",
+    cost: "Target 1 face-up Champion you control and 1 other face-up Champion on the Zone",
+    tags: ["Action"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Both Targets take your Champion's Damage, then Exhaust your Champion.`
+      }
+    ]
+  },
+  {
+    id: "1299",
+    name: "Potion of Healing",
+    image: `${cardArtFolder}/Actions/PotionOfHealing.png`,
+    rarity: "Rare",
+    type: "Action",
+    condition: "You cannot declare an attack this turn",
+    cost: "Target 1 face-up Champion you control that is below its starting Life",
+    tags: ["Action"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Restore Target to its starting Life.`
+      }
+    ]
+  },
+  {
+    id: "1300",
+    name: "Hit It With A Rake!",
+    image: `${cardArtFolder}/Actions/HitItWithARake.png`,
+    rarity: "Common",
+    type: "Action",
+    condition: "",
+    cost: "Target 1 card in your Opponent's Tomb",
+    tags: ["Action"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Obliterate Target.`
+      }
+    ]
+  },
+  {
+    id: "1301",
+    name: "Elemental Attack",
+    image: `${cardArtFolder}/Actions/ElementalAttack.png`,
+    rarity: "Rare",
+    type: "Action",
+    condition: "",
+    cost: "Target 1 face-up Wildling you control and 1 face-up Champion your Opponent controls",
+    tags: ["Action"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Exhaust your Wildling, and if you do, your Opponent's Champion takes your Wildling's Damage. Double or half the damage dealt if the Wildling's "Type" effect would do so in battle.`
+      }
+    ]
+  },
+  {
+    id: "1302",
+    name: "A Groundhog and a Dream",
+    image: `${cardArtFolder}/Actions/GroundhogAndADream.png`,
+    rarity: "Rare",
+    type: "Action",
+    condition: "You control a face-up Champion with 1 or less Damage",
+    cost: "",
+    tags: ["Action"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `All Champions you currently control gain Unstoppable until the End Phase. Regardless of an affected Champion's Damage value, when it attacks this turn, it always deals 1 Damage. After attacking with an affected Champion, flip it face-down.`
+      }
+    ]
+  },
+  {
+    id: "1303",
+    name: "Defense Drop",
+    image: `${cardArtFolder}/Actions/DefenseDrop.png`,
+    rarity: "Common",
+    type: "Action",
+    condition: "",
+    cost: "Target 1 face-up Champion you control and 1 your Opponent controls",
+    tags: ["Action"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Exhaust your Champion, and if you do, reduce your Opponent's Champion's Damage Threshold by 2.`
+      }
+    ]
+  },
+  {
+    id: "1304",
+    name: "Rules Violation",
+    image: `${cardArtFolder}/Actions/RulesViolation.png`,
+    rarity: "Common",
+    type: "Action",
+    condition: "",
+    cost: "Exhaust 1 face-up Champion you control",
+    tags: ["Action"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Move 1 face-up Champion on the Zone to the Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1305",
+    name: "Cogmite",
+    image: `${cardArtFolder}/Champions/Cogmite.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Basic, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Primary","Metal"],
+    damage: 1,
+    life: 3,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Gravekeeper, Naive <span class="line-gap"></span> Benched: From your Hand: Move to your Reserve. <span class="line-gap"></span> Metal Type: Deals double Battle Damage to Earth and Magic Wildlings, and half Battle Damage (rounded down) to Plant Wildlings. <span class="line-gap"></span> All Alone: If this is the only Champion you control: Double its Damage (during Damage Calculation only). <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Boltarum" from your Hand or Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1306",
+    name: "Boltarum",
+    image: `${cardArtFolder}/Champions/Boltarum.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Destroy 1 card in your Arsenal, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Secondary","Metal"],
+    damage: 3,
+    life: 5,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Defender, Repair Specialist <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Cogmite" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Metal Type: Deals double Battle Damage to Earth and Magic Wildlings, and half Battle Damage (rounded down) to Plant Wildlings. <span class="line-gap"></span> Repair the World: If a card in your Arsenal is Destroyed (Reflex): Send this card to the Tomb; Retrieve that card. <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Hexanexus" from your Hand or Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1307",
+    name: "Hexanexus",
+    image: `${cardArtFolder}/Champions/Hexanexus.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Destroy 2 cards in your Arsenal, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Tertiary","Metal","Magic"],
+    damage: 5,
+    life: 5,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Defender, Necrocharge, Repair Specialist <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Cogmite" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Metal-Magic Type: Deals double Battle Damage to Dark, Dragon, Earth, Light, and Magic Wildlings, and half Battle Damage (rounded down) to Metal and Plant Wildlings. <span class="line-gap"></span> Deus Ex Machina: During the End Phase, if a face-up Construct you control did not attack this turn: It gains Non-Believer until the start of your next turn.`
+      }
+    ]
+  },
+  {
+    id: "1308",
+    name: "Hemkin",
+    image: `${cardArtFolder}/Champions/Hemkin.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Basic, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Primary","Magic"],
+    damage: 2,
+    life: 3,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Invisible, Smallfry <span class="line-gap"></span> Benched: From your Hand: Move to your Reserve. <span class="line-gap"></span> Magic Type: Deals double Battle Damage to Dark, Dragon, and Light Wildlings, and half Battle Damage (rounded down) to Metal Wildlings. <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Stitchimp" from your Hand or Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1309",
+    name: "Stitchimp",
+    image: `${cardArtFolder}/Champions/Stitchimp.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Obliterate 2 non-Champions from your Tomb, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Secondary","Magic"],
+    damage: 4,
+    life: 4,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Warded <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Hemkin" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Magic Type: Deals double Battle Damage to Dark, Dragon, and Light Wildlings, and half Battle Damage (rounded down) to Metal Wildlings. <span class="line-gap"></span> Learned Scholar(ly robes): If you would activate a non-Champion card while you control this face-up Champion (Reflex): Sacrifice this card; Ignore the cost of that non-Champion card. <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Vestalisma" from your Hand or Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1310",
+    name: "Vestalisma",
+    image: `${cardArtFolder}/Champions/Vestalisma.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Obliterate 4 non-Champions from your Tomb, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Tertiary","Magic","Light"],
+    damage: 4,
+    life: 7,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Raider, Warded <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Hemkin" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Magic-Light Type: Deals double Battle Damage to Dark, Dragon, and Light Wildlings, and half Battle Damage (rounded down) to Metal and Plant Wildlings. <span class="line-gap"></span> Master Mage(in all but name): Face-Up Mages you control gain Fortified.`
+      }
+    ]
+  },
+  {
+    id: "1311",
+    name: "Sprockid",
+    image: `${cardArtFolder}/Champions/Sprockid.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Basic, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Primary","Electric"],
+    damage: 3,
+    life: 1,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Durable <span class="line-gap"></span> Benched: From your Hand: Move to your Reserve. <span class="line-gap"></span> Electric Type: Deals double Battle Damage to Air and Water Wildlings, and half Battle Damage (rounded down) to Earth and Metal Wildlings. <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Ramverge" from your Hand or Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1312",
+    name: "Ramverge",
+    image: `${cardArtFolder}/Champions/Ramverge.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Obliterate 2 Champions from your Tomb, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Secondary","Electric"],
+    damage: 4,
+    life: 1,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `Durable, Parasite <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Sprockid" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Electric Type: Deals double Battle Damage to Air and Water Wildlings, and half Battle Damage (rounded down) to Earth and Metal Wildlings. <span class="line-gap"></span> Smack! (Exhaustion): Target 1 face-up Champion your Opponent controls; Deal 2 Damage to Target. <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Gigabex" from your Hand or Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1313",
+    name: "Gigabex",
+    image: `${cardArtFolder}/Champions/Gigabex.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Obliterate 4 Champions from your Tomb, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Tertiary","Electric"],
+    damage: 6,
+    life: 1,
+    damageThreshold: "4",
+    abilities: [
+      {
+        text: `Deathtouch <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Sprockid" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Electric Type: Deals double Battle Damage to Air and Water Wildlings, and half Battle Damage (rounded down) to Earth and Metal Wildlings. <span class="line-gap"></span> Lord of Storms (and goats): Increase the Damage Thresholds of all face-up Livestock you control by 1.`
+      }
+    ]
+  },
+  {
+    id: "1314",
+    name: "Gustail",
+    image: `${cardArtFolder}/Champions/Gustail.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Basic, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Primary","Dragon"],
+    damage: 2,
+    life: 2,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Reach <span class="line-gap"></span> Benched: From your Hand: Move to your Reserve. <span class="line-gap"></span> Dragon Type: Deals double Battle Damage to Metal Wildlings, and half Battle Damage (rounded down) to Dark and Light Wildlings. <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Draglide" from your Hand or Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1315",
+    name: "Draglide",
+    image: `${cardArtFolder}/Champions/Draglide.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Obliterate 6 cards from your Tomb, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Secondary","Dragon"],
+    damage: 3,
+    life: 3,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `Greedy, Reach <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Gustail" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Dragon Type: Deals double Battle Damage to Metal Wildlings, and half Battle Damage (rounded down) to Dark and Light Wildlings. <span class="line-gap"></span> Wing Attack (Exhaustion): Target 1 face-up Champion your Opponent control; Flip Target face-down. <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Ascendrago" from your Hand or Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "1316",
+    name: "Ascendrago",
+    image: `${cardArtFolder}/Champions/Ascendrago.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "This card is in your Reserve",
+    cost: "Obliterate 12 cards from your Tomb, then move all face-up Wildlings you control to the Reserve",
+    tags: ["Wildling","Tertiary","Dragon","Air"],
+    damage: 5,
+    life: 5,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `Greedy, Menace <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Gustail" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Dragon-Air Type: Deals double Battle Damage to Fire, Metal, and Plant Wildlings, and half Battle Damage (rounded down) to Dark, Dragon, and Light Wildlings. <span class="line-gap"></span> Mine is Mine: Cards cannot change control from you to your Opponent.`
+      }
+    ]
+  },
+  {
+    id: "1317",
+    name: "Protect!",
+    image: `${cardArtFolder}/Reflex/Protect.png`,
+    rarity: "Rare",
+    type: "Reflex",
+    condition: "An Opponent’s Champion declares an attack while you control a Wildling",
+    cost: "",
+    tags: ["Reflex"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Negate the attack, and if you do, end the Battle Phase.`
+      }
+    ]
+  },
+  {
+    id: "1318",
+    name: "Withdraw",
+    image: `${cardArtFolder}/Reflex/Withdraw.png`,
+    rarity: "Common",
+    type: "Reflex",
+    condition: "",
+    cost: "",
+    tags: ["Reflex"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Move 1 face-up Wildling you control to the Reserve. It cannot be Rallied until the end of the next turn.`
+      }
+    ]
+  },
+  {
+    id: "1319",
+    name: "Slapback",
+    image: `${cardArtFolder}/Reflex/Slapback.png`,
+    rarity: "Common",
+    type: "Reflex",
+    condition: "A Champion you control was Destroyed by battle",
+    cost: "",
+    tags: ["Reflex"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Destroy the other battling Champion.`
       }
     ]
   },
