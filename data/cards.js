@@ -6135,7 +6135,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `If your Opponent Declines: Send this card to the Tomb with no effect. <span class="line-gap"></span> If your Opponent Matches: Then both Players mill cards until they mill a Champion. Whichever Player's Champion has the lower Damage in the Tomb loses the amount of Life declared. Whichever Player's Champion has the higher Damage in the Tomb gains the amount of Life declared.`
+        text: `If your Opponent Declines: Draw 2. <span class="line-gap"></span> If your Opponent Matches: Then both Players mill cards until they mill a Champion. Whichever Player's Champion has the lower Damage in the Tomb loses the amount of Life declared. Whichever Player's Champion has the higher Damage in the Tomb gains the amount of Life declared.`
       }
     ]
   },
@@ -6154,6 +6154,24 @@ export const cards = [
     abilities: [
       {
         text: `The House Always Wins: If a die would be rolled or a coin would be flipped (Reflex): You choose the result instead. This effect can be declared and activated mid-Path.`
+      }
+    ]
+  },
+  {
+    id: "434",
+    name: "Stack the Deck",
+    image: `${cardArtFolder}/Actions/StackTheDeck.png`,
+    rarity: "Legendary",
+    type: "Action",
+    condition: "",
+    cost: "",
+    tags: ["Action"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Stack 1 card from your Deck. <span class="line-gap"></span> After you conduct your normal draw during your next Draw Phase: Obliterate Mill all but 1 card.`
       }
     ]
   },
