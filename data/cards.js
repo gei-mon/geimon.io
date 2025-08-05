@@ -663,7 +663,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Target takes 3 Damage, and if it does, Draw 1.`
+        text: `Target takes 3 Damage, then Draw 1.`
       }
     ]
   },
@@ -5551,7 +5551,7 @@ export const cards = [
     image: `${cardArtFolder}/Actions/Earthquake.png`,
     rarity: "Rare",
     type: "Action",
-    condition: "Your Opponent controls at least 1 face-down Champion",
+    condition: "You control at least 2 face-down Champions",
     cost: "",
     tags: ["Action"],
     damage: "",
@@ -5559,7 +5559,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Flip all face-down Champions on the Zone face-up.`
+        text: `Flip all face-down Champions face-up, and if you do, each Champion flipped by this effect takes 3 Damage.`
       }
     ]
   },
@@ -9411,7 +9411,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Exhaust your Champion, and if you do, reduce your Opponent's Champion's Damage Threshold by 2.`
+        text: `Exhaust your Champion, and if you do, reduce your Opponent's Champion's Damage Threshold by 2 (to a minimum of 1).`
       }
     ]
   },
