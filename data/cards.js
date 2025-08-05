@@ -177,7 +177,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Resurrect Target Champion and attach this card to it. If this card leaves the Zone, Destroy the attached Champion.`
+        text: `Resurrect Target and attach this card to it. If this card leaves the Zone, Destroy the attached Champion.`
       }
     ]
   },
@@ -3867,7 +3867,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `If 1 of the targeted Champions leaves the Zone, the other is sent to the same location.`
+        text: `If either of the Targeted Champions leaves the Zone, the other is sent to the same location.`
       }
     ]
   },
@@ -8193,7 +8193,7 @@ export const cards = [
   },
   {
     id: "951",
-    name: "Caution! Wet Paint",
+    name: "Caution! Wet Paint!",
     image: `${cardArtFolder}/Equipments/WatchingPaintDry.png`,
     rarity: "Common",
     type: "Equipment",
@@ -9321,7 +9321,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Both Targets take your Champion's Damage, then Exhaust your Champion.`
+        text: `Exhaust your Champion, and if you do, both Targets take your Champion's Damage.`
       }
     ]
   },
