@@ -5564,6 +5564,24 @@ export const cards = [
     ]
   },
   {
+    id: "310",
+    name: "Mall Ninja",
+    image: `${cardArtFolder}/Champions/MallNinja.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Nightveil","Ninja","Citizen"],
+    damage: 0,
+    life: 2,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Repair Specialist <span class="line-gap"></span> Kiosk Katana: Once while face-up on the Zone: Deal 1 Damage to your Opponent.`
+      }
+    ]
+  },
+  {
     id: "361",
     name: "Silveredge, Envoy of the Moon",
     image: `${cardArtFolder}/Champions/Silveredge.png`,
@@ -5613,7 +5631,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Duelist, Naive, Necrocharge, Priority <span class="line-gap"></span> Next Generation Inspiration: On Rally (Exhaustion): Add 1 Hero. <span class="line-gap"></span> Sunshine Sparkles: Once while this card is face-up on the Zone, if an attack is declared (Reflex): Negate that attack.`
+        text: `Duelist, Naive, Necrocharge, Priority <span class="line-gap"></span> Next Generation Inspiration: On Rally (Exhaustion): Add 1 Hero. <span class="line-gap"></span> Sunshine Sparkles: Once while face-up on the Zone, if an attack is declared (Reflex): Negate that attack.`
       }
     ]
   },
@@ -6172,6 +6190,42 @@ export const cards = [
     abilities: [
       {
         text: `Stack 1 card from your Deck. <span class="line-gap"></span> After you conduct your normal draw during your next Draw Phase: Obliterate Mill all but 1 card.`
+      }
+    ]
+  },
+  {
+    id: "435",
+    name: "Shop Till You Drop",
+    image: `${cardArtFolder}/Obelisks/ShopTillYouDrop.png`,
+    rarity: "Superior",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Either Player can, at the start of their Main Phase 1: Move directly to their End Phase; Draw 2.`
+      }
+    ]
+  },
+  {
+    id: "436",
+    name: "Stand and Salute",
+    image: `${cardArtFolder}/Actions/StandAndSalute.png`,
+    rarity: "Rare",
+    type: "Action",
+    condition: "",
+    cost: "",
+    tags: ["Action"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Flip all face-down Champions face-up, and if you do, each Champion flipped by this effect takes 1 Damage.`
       }
     ]
   },
@@ -8170,6 +8224,96 @@ export const cards = [
     abilities: [
       {
         text: `Targets immediately battle, with you deciding who is attacking and who is blocking.`
+      }
+    ]
+  },
+  {
+    id: "953",
+    name: "Gobbler",
+    image: `${cardArtFolder}/Champions/Gobbler.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Frontier","Livestock"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "4",
+    abilities: [
+      {
+        text: `Taunt <span class="line-gap"></span> Distractingly Lovely Plumage: If this card is attacked by a Commander: Destroy this card (before Damage Calculation).`
+      }
+    ]
+  },
+  {
+    id: "954",
+    name: "El Bambo",
+    image: `${cardArtFolder}/Champions/ElBambo.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Frontier","Livestock","Protector"],
+    damage: 5,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Taunt <span class="line-gap"></span> Headlights: If there is a Commander on the Zone: This card cannot attack. <span class="line-gap"></span> If Destroyed: Target 1 face-up Commander Obelisk on the Zone; Destroy Target. This effect bypasses Repair Specialist.`
+      }
+    ]
+  },
+  {
+    id: "955",
+    name: "Maize Maze",
+    image: `${cardArtFolder}/Obelisks/MaizeMaze.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Champions cannot declare attacks. <span class="line-gap"></span> During your End Phase (Mandatory): Sacrifice 2 Livestock, or if you are unable to, Destroy this card.`
+      }
+    ]
+  },
+  {
+    id: "956",
+    name: "Cure for Anxiety... And Consciousness.",
+    image: `${cardArtFolder}/Equipments/OneWeirdTrick.png`,
+    rarity: "Legendary",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `The attached Champion gains Non-Believer, but reduce its Damage to 0 and it can no longer declare attacks, or activate any of its effects.`
+      }
+    ]
+  },
+  {
+    id: "957",
+    name: "Ambulance for Hire",
+    image: `${cardArtFolder}/Obelisks/AmbulanceForHire.png`,
+    rarity: "Superior",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Maintenance <span class="line-gap"></span> Either Player can, when a Champion they control would be Destroyed (Reflex): Discard 2; Their Champion is not Destroyed, and if it was face-up, it is instead reduced to 1 Life. Then, they gain control of this card (if they did not already control it).`
       }
     ]
   },
