@@ -4155,7 +4155,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `The attached Champion gains Bulletproof. <span class="line-gap"></span> If Destroyed: Retrieve this card, and if you do, discard 1.`
+        text: `The attached Champion gains Bulletproof. <span class="line-gap"></span> If Destroyed: Retrieve this card, and if you do, you must Discard 1.`
       }
     ]
   },
@@ -6585,7 +6585,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Reach <span class="line-gap"></span> Yoo Hoo!: Target 1 face-up Champion on the Zone; Target cannot declare an attack or use its effects until the start of your next turn.`
+        text: `Reach <span class="line-gap"></span> Yoo Hoo!: Target 1 face-up Champion on the Zone; Target cannot attack or activate its effects until the start of your next turn.`
       }
     ]
   },
@@ -7161,7 +7161,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Invisible, Solitary, Unstoppable <span class="line-gap"></span> Perchance to Dream: On Rally: Target 1 face-down Champion on the Zone; Destroy Target. <span class="line-gap"></span> Blend into the Crowd: If this card is Targeted (Reflex): Bounce this card, and if you do, discard 1.`
+        text: `Invisible, Solitary, Unstoppable <span class="line-gap"></span> Perchance to Dream: On Rally: Target 1 face-down Champion on the Zone; Destroy Target. <span class="line-gap"></span> Blend into the Crowd: If this card is Targeted (Reflex): Bounce this card, and if you do, you must Discard 1.`
       }
     ]
   },
@@ -7929,7 +7929,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Basic",
-    tags: ["Righteous","Protector","Blademaster","Mage"],
+    tags: ["Righteous","Cleric","Protector","Blademaster","Mage"],
     damage: 2,
     life: 4,
     damageThreshold: "2",
