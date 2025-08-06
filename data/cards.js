@@ -4795,15 +4795,15 @@ export const cards = [
     image: `${cardArtFolder}/Actions/EngineeredPathogen.png`,
     rarity: "Rare",
     type: "Action",
-    condition: "This card can only be activated during your Main Phase 1",
-    cost: "Declare 1 Champion tag from the tags currently on the Zone",
+    condition: "This card can only be activated at the start of your Main Phase 1",
+    cost: "Declare 1 Champion Tag from the Tags currently on the Zone",
     tags: ["Action"],
     damage: 0,
     life: 0,
     damageThreshold: "",
     abilities: [
       {
-        text: `Destroy all Champions with that tag, and if you do, it becomes the End Phase.`
+        text: `Destroy all face-up Champions on the Zone with that Tag, then it becomes the End Phase.`
       }
     ]
   },
@@ -9627,7 +9627,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: `Greedy, Reach <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Gustail" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Dragon Type: Deals double Battle Damage to Metal Wildlings, and half Battle Damage (rounded down) to Dark and Light Wildlings. <span class="line-gap"></span> Wing Attack (Exhaustion): Target 1 face-up Champion your Opponent control; Flip Target face-down. <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Ascendrago" from your Hand or Deck to your Reserve.`
+        text: `Greedy, Reach <span class="line-gap"></span> Set the Bench: From your Hand: Spin this card; Move 1 "Gustail" from your Hand or Deck to your Reserve. <span class="line-gap"></span> Dragon Type: Deals double Battle Damage to Metal Wildlings, and half Battle Damage (rounded down) to Dark and Light Wildlings. <span class="line-gap"></span> Wing Attack (Exhaustion): Target 1 face-up Champion your Opponent controls; Flip Target face-down. <span class="line-gap"></span> Level Up: During your End Phase if this card is in your Reserve: Send this card to the Tomb; Move 1 "Ascendrago" from your Hand or Deck to your Reserve.`
       }
     ]
   },

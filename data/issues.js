@@ -18,5 +18,9 @@ const issueData = [
     {
         title: "Known Bug",
         text: "Cards do not go to the correct (owners) Deck, Tomb, and Void, only to the player's that clicks the button, so some shimmying has to be done."
+    },
+    {
+        title: "Known Bug",
+        text: "The Copy Deck button always fails to find the deck's cards, no clue why. Will investigate later. Just use export / import for the moment."
     }
 ];
