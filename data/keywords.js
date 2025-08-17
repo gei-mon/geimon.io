@@ -35,11 +35,14 @@ export const keywords = {
   Forged: "Increase this card&apos;s Damage by 1 for every Equipment attached to it.",
   Fortified: "Increase this card&apos;s Damage Threshold by 1 for every Obelisk you control.",
   Twitchy: "Increase this card&apos;s Damage by 1 for every Reflex in your Tomb.",
-  "Non-Believer": "This card is unaffected by other cards and effects.",
+  "Non-Believer": "This card is unaffected by your Opponent's cards and effects.",
   Taskmaster: "Increase this card&apos;s Damage by 1 for every Champion your Opponent controls.",
   Taunt: "This is the only card you control that your Opponent can Target for attacks and with effects. \n\n If you control 2 or more cards with this passive: Your Opponent can choose any of them to Target.",
   "Second Strike": "This card can make two attacks during each of your Battle Phases.",
   "Board Breaker": "This card cannot attack your Opponent directly.",
   Contained: "This card cannot declare attacks.",
-  Durable: "The first time each turn this card would be Destroyed by battle (Mandatory): It is not Destroyed."
+  Durable: "The first time each turn this card would be Destroyed by battle (Mandatory): It is not Destroyed.",
+  Dodge: "The first time each Battle Phase this card is Targeted for an attack you can either: Block with a different Champion you control or You can make the attack a direct attack.",
+  Speed: "This card's attacks cannot be responded to by other cards or effects.",
+  "Triple Strike": "This card can make three attacks during each of your Battle Phases."
 };

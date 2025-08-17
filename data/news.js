@@ -1,8 +1,8 @@
 
 const newsData = [
     {
-        date: "July 31st, 2025",
-        text: "v1.2 Alpha Released! <br> Minor quality of life improvements, and also about 80 more cards have been added! Try out the Wildlings today!"
+        date: "August 17th, 2025",
+        text: "v1.21 Alpha Released! <br> Rules clarifications regarding battle damage, rules changes regarding the reserve, added totems, added passives, bug fixes, updates to existing cards, pulled cards that functioned against ethos of the game, added a load of new cards, and streamlined the design and playability to encourage more varied deck styles."
     },
     {
         date: "July 24th, 2025",

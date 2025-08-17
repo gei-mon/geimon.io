@@ -14,7 +14,11 @@ const totems = [
         "Terrifying Toddlers": "Double the Damage of battling Champions with a current Damage of 2 or lower (During Damage Calculation only).", // Player
         "Fists Only": "Damage can only be dealt by attack.", // Player
         "Caught in your Underwear": "No Damage Thresholds.", // Player
-        "All or Nothing": "The Damage a Champion takes from a single event must Destroy it or the Damage does nothing." // Player
+        "All or Nothing": "The Damage a Champion takes from a single event must Destroy it or the Damage does nothing.", // Player
+        "Cannon Fodder": "Both Players can perform an unlimited number of Basic Rallies on their turns.",
+        "Rules as Written": "Costs cannot be ignored.",
+        "Fire Sale": "Ignore the costs on Equipment cards.",
+        "Insurance Policy": "When a face-up Mounted Commander Obelisk a Player controls is Destroyed, that Player can move a Commander Obelisk from their Deck to their Reserve."
     }
 ]
 
