@@ -519,7 +519,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Deathward <span class="line-gap"></span> Gentle Caress (Flip): If flipped face-up by battle: Instead of being Destroyed, move this card to your Arsenal and attach it to the attacking Champion. The attached Champion can no longer declare attacks, and is dealt 1 Damage during each End Phase.`
+        text: `Deathward <span class="line-gap"></span> Gentle Caress (Flip): If flipped face-up by battle: Move this card to your Arsenal and attach it to the attacking Champion. The attached Champion can no longer declare attacks, and is dealt 1 Damage during each End Phase.`
       }
     ]
   },
@@ -1311,7 +1311,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: `Bulletproof <span class="line-gap"></span> Good Morning (Flip): If flipped face-up by battle: Flip face-down the attacking Champion. <span class="line-gap"></span> Goodnight: Flip this card face-down. <span class="line-gap"></span> Barney's Prized Bottle: If Destroyed: Draw 1.`
+        text: `Bulletproof <span class="line-gap"></span> Good Morning (Flip): If flipped face-up by battle: Flip the attacking Champion face-down. <span class="line-gap"></span> Goodnight: Flip this card face-down. <span class="line-gap"></span> Barney's Prized Bottle: If Destroyed: Draw 1.`
       }
     ]
   },
@@ -1527,7 +1527,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Bootlicking (Flip): If flipped face-up by battle: Instead of being Destroyed, move this card to your Arsenal and attach it to the attacking Champion. If the attached Champion attempts to declare an attack or activate an effect, negate that attack or effect, and if you do, send it to the Tomb.`
+        text: `Bootlicking (Flip): If flipped face-up by battle: Move this card to your Arsenal and attach it to the attacking Champion. If the attached Champion attempts to declare an attack or activate an effect, negate that attack or effect, and if you do, send it to the Tomb.`
       }
     ]
   },
@@ -9573,7 +9573,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Chomp (Flip): Move this card to your Arsenal and Target 1 card on the Zone; Target's effects are negated, and Target cannot attack, block, be activated, or activate any of its effects, so long as this card remains face-up in your Arsenal. If flipped face-up by battle: Instead of being Destroyed, move this card to your Arsenal.`
+        text: `Chomp (Flip): Move this card to your Arsenal and Target 1 card on the Zone; Target's effects are negated, and Target cannot attack, block, be activated, or activate any of its effects, so long as this card remains face-up in your Arsenal.`
       }
     ]
   },
