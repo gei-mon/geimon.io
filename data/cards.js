@@ -6492,7 +6492,7 @@ export const cards = [
     tags: ["Dealt","Construct"],
     damage: 0,
     life: 1,
-    damageThreshold: "8",
+    damageThreshold: "4",
     abilities: [
       {
         text: `The House Always Wins: If a die would be rolled or a coin would be flipped (Reflex): You choose the result instead. This effect can be declared, activated, and resolved mid-Path.`
@@ -10647,7 +10647,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Basic",
-    tags: ["Cryptbound","Undead"],
+    tags: ["Cryptbound","Undead","Outlaw"],
     damage: 1,
     life: 9,
     damageThreshold: "1",
@@ -10665,7 +10665,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Basic",
-    tags: ["Cryptbound","Undead"],
+    tags: ["Cryptbound","Undead","Citizen"],
     damage: 1,
     life: 2,
     damageThreshold: "1",
