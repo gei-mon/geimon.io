@@ -45,6 +45,7 @@
         }
         #champExample1-card .card,
         #champExample2-card .card,
+        #champExample3-card .card,
         #actionExample1-card .card,
         #equipmentExample1-card .card,
         #obeliskExample1-card .card,
@@ -54,7 +55,8 @@
             zoom: 0.7;               /* shrink layout metrics too */
             transform-origin: top left;
         }
-        #champExample1-card .card-text {
+        #champExample1-card .card-text,
+        #champExample3-card .card-text {
             font-size: 20px !important;
         }
         #champExample2-card .card-text,
@@ -65,6 +67,9 @@
         }
         #champExample2-card .card-name {
             font-size: 20px !important;
+        }
+        #champExample3-card .card-name {
+            font-size: 18px !important;
         }
     </style>
 </head>
@@ -150,6 +155,8 @@
                     <br><br>
                     <span style="font-style: italic;">&emsp;&emsp;When you declare an attack, your Opponent can declare a Blocker, i.e. which Champion they are placing in front of your attack. Champions blocking take the attacking Champion's Damage. If they are reduced to 0 Life, they are Destroyed, and go to the Tomb. Blocking Champions deal their Damage to their attackers. Each Champion can only block once per Battle Phase.</span>
                     <br><br>
+                    <span style="font-style: italic;">The order of a battle goes as follows: Attack Declaration, Blocker Declaration, Flip Resolution, Damage Calculation. <br> <span style="text-decoration: underline;">To break it down better:</span> <br><br> &emsp;&emsp;1) An attack is declared by Player 1. If they have Priority on the Champion, they must declare an attack Target, or simply that they are attacking directly. <br> &emsp;&emsp;&emsp; 1b) Their Opponent, Player 2, could, if they have one, respond with a Rush card or a Reflex card or effect to that declaration. <br><br> &emsp;&emsp;2) If Player 1 was attacking directly, Player 2 can declare a blocker, or they could not. <br> &emsp;&emsp;&emsp;2b) If no card is used in response to the attack declaration, and no blocker is declared, then the attack goes through direct and skips to Damage Calculation, where that Champion's Damage is deducted from the Opponent's Life. <br><br> &emsp;&emsp;3) If a face-down blocker was declared, then before conducting Damage Calculation that Champion is flipped face-up and any Flip effects are activated. Then, a Path begins, and resolves depending on if there are any additional Steps either Player wishes to take. <br><br> &emsp;&emsp;4) Then, Damage Calculation is performed between the two battling Champions. </span>
+                    <br><br>
                     <span style="font-style: italic;">&emsp;&emsp;Damage Thresholds may have to be met in order to Damage certain Champions, but they do not reduce the Damage taken if they are met or exceeded. Each attack is separate and Champions cannot team up to overcome a Damage Threshold.</span>
                     <br><br>
                     <span style="font-style: italic;">&emsp;&emsp;Leftover Battle Damage over a Champion's Life is dealt to your Opponent. Unless stated otherwise, Champions can only attack once each during a Battle Phase. Only Battle Damage overextends to hit the Player controlling that card, targeted or effect damage to a Champion does not roll over to hit a Player. It stops when the Damage runs out, or the Champion is Destroyed. If a Champion would be Destroyed by battle, and the destruction is negated, the Champion is instead reduced to 1 Life.</span>
@@ -178,7 +185,7 @@
                     <br><br>
                     <p style="margin: 4px 0px 0;">You can only Rally 1 Champion with a Rally Cost of Basic per turn, this is referred to as a Basic Rally. Basic Champions can be Rallied face-up or face-down in the Champion Area. Basic Champions with conditions cannot be rallied facedown, a condition will be clearly stated above the cost line.</p>
                     <br>
-                    <p style="margin: 4px 0px 0;">Starting the turn after you set a Champion face-down, you can flip them face-up during one of your Main Phases. A Champion flipped face-down by a card effect cannot be Flip Rallied on the same turn. Champions are also flipped face-up during Damage Calculation (if they are attacked, or used as a blocker). You can rally as many Elite Champions (Champions with costs other than Basic) as possible per turn, as many as you can pay for, should you desire. These Elite Champions can only be rallied face-up.</p>
+                    <p style="margin: 4px 0px 0;">Starting the turn after you set a Champion face-down, you can flip them face-up during one of your Main Phases. A Champion flipped face-down by a card effect cannot be Flip Rallied on the same turn. Champions are also flipped face-up before Damage Calculation (if they are attacked, or used as a blocker). You can rally as many Elite Champions (Champions with costs other than Basic) as possible per turn, as many as you can pay for, should you desire. These Elite Champions can only be rallied face-up.</p>
                     <br>
 
                     <div id="champExample1" style="display: flex; align-items: flex-start; gap: 16px; margin-top: 16px;">
@@ -186,6 +193,14 @@
                         <div>
                             <p style="font-weight: bold; margin: 0;">Here is an Example Champion card.</p>
                             <p style="margin: 4px 0px 0;">You will notice that on a Champion card it has a few important things to take note of (From top to bottom): <br><br> <span style="text-decoration: underline;">1) Tags:</span> These are 'Cryptbound' and 'Undead' on this card, and these are used to anchor a card into an archetype and are referenced on support cards. For instance, even on this card, it says Retrieve 1 Other Undead when it enters the Tomb. That effect searches for all Champions with the Tag: Undead, and allows you to interact with them. <br><br> <span style="text-decoration: underline;">2) Passives:</span> These are effects like 'Deathward', and they apply unique effects to the cards they're on. Most of the time, these effects do not activate, they simple apply to the card or around the card. You can hover your mouse over a card's passives to read what they do. <br><br> <span style="text-decoration: underline;">3) Effects:</span> These effects trigger at specific times and are listed on a card after its passives. This card only has 1 effect, and that is when it is sent to the Tomb, from anywhere, you can optionally activate the effect to search through your Tomb and retrieve any 1 Undead other than this card. <br><br> <span style="text-decoration: underline;">4) Damage / Life / Damage Threshold:</span> In order on the bottom of a Champion are its Damage (in red), Life (in blue), and Damage Threshold (in lighter blue). These are explained in more depth in the 'What's In A Turn?' section above in the 'Battle Phase' section.</p>
+                        </div>
+                    </div>
+
+                    <br><br>
+                    <div id="champExample3" style="display: flex; align-items: flex-start; gap: 16px; margin-top: 16px;">
+                        <div id="champExample3-card"></div>
+                        <div>
+                            <p style="font-weight: bold; margin: 0;">An Example of a Champion with a Flip effect.</p>
                         </div>
                     </div>
 
@@ -385,6 +400,7 @@
 
             mountExample('Skeleton Guard',  'champExample1-card');
             mountExample('Kaemorak, Lord of Pacts',    'champExample2-card');
+            mountExample('Grimlo, Opportunistic Looter',    'champExample3-card');
             mountExample('Plans within Plans',    'actionExample1-card');
             mountExample('Two\'s Better Than One',    'equipmentExample1-card');
             mountExample('Oppressive Ward',    'obeliskExample1-card');

@@ -277,7 +277,7 @@ a:hover {
 .verdant {
   background-color: #97ff68;
 }
-.wildling {
+.foretold {
   background-color: #ceff6b;
 }
 
@@ -429,16 +429,6 @@ a:hover {
   flex-grow: 1; /* Allow the text content to take up space without affecting the bottom bar */
   text-shadow: 1px 1px 2px black, -1px -1px 2px black, 1px -1px 2px black, -1px 1px 2px black;
   padding-bottom: 60px !important;
-}
-
-.wildling .card-condition {
-  font-size: 0.6em;
-}
-.wildling .card-cost {
-  font-size: 0.6em;
-}
-.wildling .card-text {
-  padding-bottom: 125px !important;
 }
 
 .card-text .line-gap{

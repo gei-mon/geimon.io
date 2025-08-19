@@ -267,7 +267,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Resurrect Target to your Zone, it becomes an Undead.`
+        text: `Resurrect Target to your Zone, it gains the Undead Tag.`
       }
     ]
   },
@@ -519,7 +519,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Deathward <span class="line-gap"></span> Gentle Caress (Flip): If flipped face-up by battle: Instead of being Destroyed, move this card to your Arsenal and attach it to the attacking Champion. The attached Champion can no longer declare attacks, and takes 1 Damage during each End Phase.`
+        text: `Deathward <span class="line-gap"></span> Gentle Caress (Flip): If flipped face-up by battle: Instead of being Destroyed, move this card to your Arsenal and attach it to the attacking Champion. The attached Champion can no longer declare attacks, and is dealt 1 Damage during each End Phase.`
       }
     ]
   },
@@ -537,7 +537,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Deathward <br><br> Curse of the Black Vow: On Rally (Mandatory): Target 1 face-up Champion on the Zone; Target takes 2 Damage.`
+        text: `Deathward <br><br> Curse of the Black Vow: On Rally (Mandatory): Target 1 face-up Champion on the Zone; Deal 2 Damage to Target.`
       }
     ]
   },
@@ -663,7 +663,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Target takes 3 Damage, then Draw 1.`
+        text: `Deal 3 Damage to Target, then Draw 1.`
       }
     ]
   },
@@ -861,7 +861,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `All Champions on the Zone and in the Tomb are also now considered Undead.`
+        text: `All Champions on the Zone and in the Tomb gain the Undead Tag.`
       }
     ]
   },
@@ -1401,7 +1401,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Both players Mill 1. <span class="line-gap"></span> If only one player mills a Champion, the opposing player takes that Champion's Damage. If both players mill Champions, the player whose Champion has a lower Damage takes the opposing player's Champion's Damage`
+        text: `Both players Mill 1. <span class="line-gap"></span> If only one player mills a Champion, the opposing player is dealt that Champion's Damage. If both players mill Champions, the player whose Champion has a lower Damage is dealt the opposing player's Champion's Damage.`
       }
     ]
   },
@@ -1437,7 +1437,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Hostile Negotiations: If this card is Targeted by an attack or effect (Mandatory, Reflex): Destroy this card and the card that Targeted it, and if you do, the Player who Targeted this card draws 2. <span class="line-gap"></span> Loot-Filled Wagon: If Destroyed: Target 1 Equipment in your Tomb; Retrieve Target.`
+        text: `Hostile Negotiations: If this card is Targeted (Mandatory, Reflex): Destroy this card and the card that Targeted it, and if you do, the Player who Targeted this card draws 2. <span class="line-gap"></span> Loot-Filled Wagon: If Destroyed: Target 1 Equipment in your Tomb; Retrieve Target.`
       }
     ]
   },
@@ -1455,7 +1455,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Rakestepping (Reflex): This card takes its own Damage; Your Opponent cannot declare an attack this turn.`
+        text: `Rakestepping (Reflex): This card is dealt its own Damage; Your Opponent cannot declare attacks this turn.`
       }
     ]
   },
@@ -1797,7 +1797,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `If an Opponent declares an attack with a Champion that has at least 1 attached Equipment: After that attack resolves, the attacking Champion takes this card's attached Champion's Damage plus 2.`
+        text: `If an Opponent declares an attack with a Champion that has at least 1 attached Equipment: After that attack resolves, the attacking Champion is dealt this card's attached Champion's Damage plus 2.`
       }
     ]
   },
@@ -2157,7 +2157,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Your Opponent takes Damage equal to the Target's Damage.`
+        text: `Deal Damage to your Opponent equal to the Target's Damage.`
       }
     ]
   },
@@ -2409,7 +2409,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Mount <span class="line-gap"></span> Mounted (Reflex): Give control of 1 face-up Champion to your Opponent; take control of 1 face-up Champion from your Opponent. Return control of the affected Champions during the End Phase. <span class="line-gap"></span><span class="line-gap"></span> If this card is in your Reserve while you control at least 1 face-up Clockwork: You can activate this card (ignoring its cost).`
+        text: `Mount <span class="line-gap"></span> Mounted (Reflex): Give control of 1 face-up Champion to your Opponent; Take control of 1 face-up Champion from your Opponent. Return control of the affected Champions during the End Phase. <span class="line-gap"></span><span class="line-gap"></span> If this card is in your Reserve while you control at least 1 face-up Clockwork: You can activate this card (ignoring its cost).`
       }
     ]
   },
@@ -2553,7 +2553,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Mount <span class="line-gap"></span> Mounted: This card's Commander gains Unstoppable. <span class="line-gap"></span> Mounted: If this card's Commander is Targeted by an attack or effect (Reflex): Sacrifice this card; Move this card's Commander into the Reserve, and if you do, draw 1. The moved Commander gains the effect: \"Reserve: Discard 2; Activate this card (ignoring its, and its attached cards' costs).\"`
+        text: `Mount <span class="line-gap"></span> Mounted: This card's Commander gains Unstoppable. <span class="line-gap"></span> Mounted: If this card's Commander is Targeted (Reflex): Sacrifice this card; Move this card's Commander into the Reserve, and if you do, draw 1. The moved Commander gains the effect: \"Reserve: Discard 2; Activate this card (ignoring its, and its attached cards' costs).\"`
       }
     ]
   },
@@ -2745,7 +2745,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Bury 2 Equipments",
-    tags: ["Clockwork", "Marshall","Protector","Marksman"],
+    tags: ["Clockwork","Marshall","Protector","Marksman"],
     damage: 5,
     life: 3,
     damageThreshold: "3",
@@ -3093,7 +3093,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Upon Activation: Recruit 1 Clockwork, that Champion becomes this card's Commander. <span class="line-gap"></span> Mount <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted: This card's Commander cannot attack. <span class="line-gap"></span> Mounted: Target 1 face-up Champion on the Zone; Target takes 5 Damage.`
+        text: `Upon Activation: Recruit 1 Clockwork, that Champion becomes this card's Commander. <span class="line-gap"></span> Mount <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted: This card's Commander cannot attack. <span class="line-gap"></span> Mounted: Target 1 face-up Champion on the Zone; Deal 5 Damage to Target.`
       }
     ]
   },
@@ -3345,7 +3345,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Defender, Naive <span class="line-gap"></span> Security Blanket: While Equipped: This Champion is unaffected by its default Passives. <span class="line-gap"></span> Hail Mary: Destroy 1 Equipment attached to this card and Target 1 face-up Champion on the Zone; Target takes 3 Damage.`
+        text: `Defender, Naive <span class="line-gap"></span> Security Blanket: While Equipped: This Champion is unaffected by its default Passives. <span class="line-gap"></span> Hail Mary: Destroy 1 Equipment attached to this card and Target 1 face-up Champion on the Zone; Deal 3 Damage to Target.`
       }
     ]
   },
@@ -3363,7 +3363,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: `Bulletproof <span class="line-gap"></span> Grave Goods: On Rally: Attach up to 2 Equipments from your Tomb to this card (ignoring their costs). <span class="line-gap"></span> Rotting Flesh: During your End Phase (Mandatory): This card takes 3 Damage. <span class="line-gap"></span> Miraculous Recovery: If Destroyed: Obliterate this card and Target 1 Knight in your Tomb; Resurrect Target, and if you do, attach to it 1 Equipment from your Hand, Deck, or Tomb (ignoring its cost).`
+        text: `Bulletproof <span class="line-gap"></span> Grave Goods: On Rally: Attach up to 2 Equipments from your Tomb to this card (ignoring their costs). <span class="line-gap"></span> Rotting Flesh: During your End Phase (Mandatory): Deal 3 Damage to this card. <span class="line-gap"></span> Miraculous Recovery: If Destroyed: Obliterate this card and Target 1 Knight in your Tomb; Resurrect Target, and if you do, attach to it 1 Equipment from your Hand, Deck, or Tomb (ignoring its cost).`
       }
     ]
   },
@@ -3805,7 +3805,7 @@ export const cards = [
     image: `${cardArtFolder}/Reflex/FakeOut.png`,
     rarity: "Common",
     type: "Reflex",
-    condition: "A Champion you control is Targeted for an attack or effect",
+    condition: "A Champion you control is Targeted",
     cost: "",
     tags: ["Reflex"],
     damage: "",
@@ -4209,7 +4209,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `If the attached Champion deals Battle Damage: Target 1 face-up Champion on the Zone; Target takes 2 Damage.`
+        text: `If the attached Champion deals Battle Damage: Target 1 face-up Champion on the Zone; Deal 2 Damage to Target.`
       }
     ]
   },
@@ -4329,7 +4329,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Your Opponent gains 10 Life",
-    tags: ["Vivisect", "Lifebinder","Professor"],
+    tags: ["Vivisect","Lifebinder","Specialist"],
     damage: 0,
     life: 10,
     damageThreshold: "1",
@@ -4741,7 +4741,7 @@ export const cards = [
     image: `${cardArtFolder}/Actions/WeederClass.png`,
     rarity: "Rare",
     type: "Action",
-    condition: "This card can only be activated during your Main Phase 1",
+    condition: "Can only be activated during your Main Phase 1",
     cost: "It becomes your End Phase",
     tags: ["Action"],
     damage: 0,
@@ -4795,7 +4795,7 @@ export const cards = [
     image: `${cardArtFolder}/Actions/EngineeredPathogen.png`,
     rarity: "Rare",
     type: "Action",
-    condition: "This card can only be activated at the start of your Main Phase 1",
+    condition: "Can only be activated at the start of your Main Phase 1",
     cost: "Declare 1 Champion Tag from the Tags currently on the Zone",
     tags: ["Action"],
     damage: 0,
@@ -5559,7 +5559,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Flip all face-down Champions face-up, and if you do, each Champion flipped by this effect takes 3 Damage.`
+        text: `Flip all face-down Champions face-up, and if you do, deal 3 Damage to each Champion flipped face-up by this effect.`
       }
     ]
   },
@@ -5578,6 +5578,168 @@ export const cards = [
     abilities: [
       {
         text: `Repair Specialist <span class="line-gap"></span> Kiosk Katana: Once while face-up on the Zone: Deal 1 Damage to your Opponent.`
+      }
+    ]
+  },
+  {
+    id: "311",
+    name: "Super-Cool Nunchucks",
+    image: `${cardArtFolder}/Equipments/SuperCoolNunchucks.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Increase the attached Champion's Damage by 2. <span class="line-gap"></span> After resolving a battle involving the attached Champion: You take 2 Damage.`
+      }
+    ]
+  },
+  {
+    id: "312",
+    name: "Salaryman Ninja",
+    image: `${cardArtFolder}/Champions/SalarymanNinja.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Nightveil","Ninja","Citizen"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Deathward <span class="line-gap"></span> Slashing Wages (Flip): Both Players Discard their Hands and Draw 5.`
+      }
+    ]
+  },
+  {
+    id: "313",
+    name: "Ninja's Shadow",
+    image: `${cardArtFolder}/Champions/NinjaShadow.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Nightveil","Oldblood","Ninja"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Deathward <span class="line-gap"></span> Take My Hand!: If Sent to Tomb or Void: Retrieve 1 Champion with a Flip effect.`
+      }
+    ]
+  },
+  {
+    id: "314",
+    name: "Cutpurse Ninja",
+    image: `${cardArtFolder}/Champions/CutpurseNinja.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Nightveil","Ninja","Outlaw"],
+    damage: 3,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Won't Miss This (Flip): Mill 10 from your Opponent's Deck.`
+      }
+    ]
+  },
+  {
+    id: "315",
+    name: "Nesting Ninja Dolls",
+    image: `${cardArtFolder}/Champions/NestingNinjaDolls.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Nightveil","Ninja"],
+    damage: 0,
+    life: 4,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `The Ninja Inside Us All (Flip): Recruit 1 Basic Ninja face-down.`
+      }
+    ]
+  },
+  {
+    id: "316",
+    name: "Nurse Ninja",
+    image: `${cardArtFolder}/Champions/NurseNinja.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Nightveil","Ninja","Lifebinder"],
+    damage: 0,
+    life: 2,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `Back Into The Fight (Flip): Target 1 Basic Ninja in your Tomb; Resurrect Target face-down.`
+      }
+    ]
+  },
+  {
+    id: "317",
+    name: "DJ Ninja",
+    image: `${cardArtFolder}/Champions/DJNinja.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Nightveil","Crescendo","Ninja"],
+    damage: 2,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `In Da House! (Flip): Increase the Damage of all Ninjas you control by 2 while this card remains face-up on the Zone.`
+      }
+    ]
+  },
+  {
+    id: "318",
+    name: "Ninja Blender",
+    image: `${cardArtFolder}/Champions/NinjaBlender.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Nightveil","Ninja","Blademaster"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Deathward <span class="line-gap"></span> Caution! Sharp Blades! (Flip): Deal 2 Damage to your Opponent.`
+      }
+    ]
+  },
+  {
+    id: "319",
+    name: "Magicianinja",
+    image: `${cardArtFolder}/Champions/Magicianinja.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Nightveil","Ninja","Mage"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `From a Hat (Flip): Target 1 non-Champion in your Tomb; Retrieve Target.`
       }
     ]
   },
@@ -5721,7 +5883,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Bloodrage, Duelist, Priority <span class="line-gap"></span> Predator's Pounce: On Rally (Exhaustion): Target 1 face-up Champion on the Zone; Target takes 3 Damage. <span class="line-gap"></span> Weakening Strike: Champions Damaged by this card in battle can no longer block.`
+        text: `Bloodrage, Duelist, Priority <span class="line-gap"></span> Predator's Pounce: On Rally (Exhaustion): Target 1 face-up Champion on the Zone; Deal 3 Damage to Target. <span class="line-gap"></span> Weakening Strike: Champions Damaged by this card in battle can no longer block.`
       }
     ]
   },
@@ -5942,6 +6104,168 @@ export const cards = [
     ]
   },
   {
+    id: "381",
+    name: "Reboot",
+    image: `${cardArtFolder}/Reflex/Reboot.png`,
+    rarity: "Legendary",
+    type: "Reflex",
+    condition: "",
+    cost: "Obliterate your Tomb and Spin your Hand, Zone, and Reserve (minimum of 1 card from each)",
+    tags: ["Reflex"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Draw 3.`
+      }
+    ]
+  },
+  {
+    id: "382",
+    name: "Canon Event",
+    image: `${cardArtFolder}/Rush/CanonEvent.png`,
+    rarity: "Common",
+    type: "Rush",
+    condition: "",
+    cost: "Sacrifice 1",
+    tags: ["Rush"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Deal 2 Damage to your Opponent.`
+      }
+    ]
+  },
+  {
+    id: "383",
+    name: "Orbital TKO",
+    image: `${cardArtFolder}/Rush/OrbitalTKO.png`,
+    rarity: "Rare",
+    type: "Rush",
+    condition: "",
+    cost: "Send 1 face-up Hero or Villain you control to the Tomb and Target 1 face-up Champion on the Zone",
+    tags: ["Rush"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Destroy Target, and if you do, Obliterate it.`
+      }
+    ]
+  },
+  {
+    id: "384",
+    name: "Shipping",
+    image: `${cardArtFolder}/Actions/Shipping.png`,
+    rarity: "Common",
+    type: "Action",
+    condition: "",
+    cost: "Target 1 face-up Champion you control and 1 your Opponent controls",
+    tags: ["Action"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `While both Targets remain face-up on the Zone: Increase their Damages by 2.`
+      }
+    ]
+  },
+  {
+    id: "385",
+    name: "Splash Page",
+    image: `${cardArtFolder}/Actions/SplashPage.png`,
+    rarity: "Rare",
+    type: "Action",
+    condition: "Can only be activated during your Main Phase 1",
+    cost: "Target 1 face-up Champion on the Zone",
+    tags: ["Action"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Deal Damage to Target equal to the total Damage of all face-up Heroes you control, and if you do, it becomes your End Phase.`
+      }
+    ]
+  },
+  {
+    id: "386",
+    name: "External Monologue",
+    image: `${cardArtFolder}/Actions/ExternalMonologue.png`,
+    rarity: "Common",
+    type: "Action",
+    condition: "",
+    cost: "Declare the name of the top card of your Deck",
+    tags: ["Action"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Excavate 1, and if the name you declared matches the name of the revealed card: Add or Activate (ignoring its cost) the revealed card. Otherwise, Obliterate the revealed card.`
+      }
+    ]
+  },
+  {
+    id: "387",
+    name: "Onomatopoeia",
+    image: `${cardArtFolder}/Actions/Onomatopoeia.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Each time a Valiant you control is Destroyed by Battle: Place 1 Kablam Counter on this card. <span class="line-gap"></span> Remove 4 Kablam Counters from this card and Target 1 face-up Champion you control; Increase Target's Damage by 2.`
+      }
+    ]
+  },
+  {
+    id: "388",
+    name: "Surrogate Butler",
+    image: `${cardArtFolder}/Champions/SurrogateButler.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "Reflex: A Champion you control is Destroyed",
+    cost: "",
+    tags: ["Valiant","Citizen"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `Deathward, Taunt`
+      }
+    ]
+  },
+  {
+    id: "389",
+    name: "Orphan's Parents",
+    image: `${cardArtFolder}/Champions/OrphansParents.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "",
+    tags: ["Valiant","Citizen"],
+    damage: 0,
+    life: 2,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Encouraging Words: Increase the Damage and Damage Thresholds of all Heroes you control by 1. <span class="line-gap"></span> Inevitable End: If Destroyed: Move 1 Hero from your Deck to your Reserve.`
+      }
+    ]
+  },
+  {
     id: "421",
     name: "Gimme That!",
     image: `${cardArtFolder}/Actions/GimmeThat.png`,
@@ -5991,7 +6315,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `During your Intermission Phase: Roll a six-sided die, and apply the following effect: <span class="line-gap"></span> 1 • Discard 1. <span class="line-gap"></span> 2 • Draw 1. <span class="line-gap"></span> 3 • Double the Damage of 1 Champion you control until the end of this turn. <span class="line-gap"></span> 4 • Obliterate Mill 5. <span class="line-gap"></span> 5 • Set 1 non-Champion from your Tomb face-down into your Arsenal. </span><span class="line-gap"></span> 6 • Change control of this card to your Opponent.`
+        text: `During your Intermission Phase (Mandatory): Roll a six-sided die, and apply the following effect: <span class="line-gap"></span> 1 • Discard 1. <span class="line-gap"></span> 2 • Draw 1. <span class="line-gap"></span> 3 • Double the Damage of 1 Champion you control until the end of this turn. <span class="line-gap"></span> 4 • Obliterate Mill 5. <span class="line-gap"></span> 5 • Set 1 non-Champion from your Tomb face-down into your Arsenal. <span class="line-gap"></span> 6 • Change control of this card to your Opponent.`
       }
     ]
   },
@@ -6171,7 +6495,7 @@ export const cards = [
     damageThreshold: "8",
     abilities: [
       {
-        text: `The House Always Wins: If a die would be rolled or a coin would be flipped (Reflex): You choose the result instead. This effect can be declared and activated mid-Path.`
+        text: `The House Always Wins: If a die would be rolled or a coin would be flipped (Reflex): You choose the result instead. This effect can be declared, activated, and resolved mid-Path.`
       }
     ]
   },
@@ -6225,7 +6549,133 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Flip all face-down Champions face-up, and if you do, each Champion flipped by this effect takes 1 Damage.`
+        text: `Flip all face-down Champions face-up, and if you do, deal 1 Damage to each Champion flipped face-up by this effect.`
+      }
+    ]
+  },
+  {
+    id: "437",
+    name: "Turk, Used Car Salesman",
+    image: `${cardArtFolder}/Champions/TurkCarSalesman.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Dealt","Citizen"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Let's Make a Deal: Give control of 1 of your face-up Obelisks to your Opponent; Then, your Opponent chooses whether you: Draw 2, or Add the top 2 cards of your Opponent's Deck to your Hand.`
+      }
+    ]
+  },
+  {
+    id: "438",
+    name: "Cash, Now!",
+    image: `${cardArtFolder}/Obelisks/CashNow.png`,
+    rarity: "Superior",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `On Activation: Draw 2. <span class="line-gap"></span> While this card remains face-up on the Zone: You can no longer Draw or Add cards.`
+      }
+    ]
+  },
+  {
+    id: "439",
+    name: "Buy One, Get One",
+    image: `${cardArtFolder}/Obelisks/BuyOneGetOne.png`,
+    rarity: "Common",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Cards you Sacrifice count twice towards the total number.`
+      }
+    ]
+  },
+  {
+    id: "440",
+    name: "My Company, My Money",
+    image: `${cardArtFolder}/Obelisks/MyCompanyMyMoney.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Draw 1, and if you do, during the End Phase of this turn you must Discard 1, or if you are unable to, send every card from your Zone and Reserve to the Tomb.`
+      }
+    ]
+  },
+  {
+    id: "441",
+    name: "Pocket Change!",
+    image: `${cardArtFolder}/Reflex/PocketChange.png`,
+    rarity: "Rare",
+    type: "Reflex",
+    condition: "Your Opponent enters their Battle Phase",
+    cost: "",
+    tags: ["Reflex"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `It becomes your Opponent's Main Phase 2, and if it does, increase the Damage of all face-up Champions your Opponent controls by 1.`
+      }
+    ]
+  },
+  {
+    id: "442",
+    name: "Hit On 20",
+    image: `${cardArtFolder}/Actions/HitOn20.png`,
+    rarity: "Common",
+    type: "Action",
+    condition: "Your Opponent has 1 Life",
+    cost: "",
+    tags: ["Action"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Excavate 1. <span class="line-gap"></span> If the revealed card is a Champion with 1 or more Damage: Deal 1 Damage to your Opponent. Otherwise, Destroy all Champions you control.`
+      }
+    ]
+  },
+  {
+    id: "443",
+    name: "Aces Up My Sleeve",
+    image: `${cardArtFolder}/Reflex/AcesUpMySleeve.png`,
+    rarity: "Rare",
+    type: "Reflex",
+    condition: "",
+    cost: "",
+    tags: ["Reflex"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Activate 1 Action from your Hand.`
       }
     ]
   },
@@ -6333,7 +6783,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Repair Specialist, Solitary <span class="line-gap"></span> Meet My Friend: On Rally: Activate 1 Commander Obelisk from your Hand, Deck, or Reserve (ignoring its cost). <span class="line-gap"></span> Mine Now: Target 1 Equipment in either Tomb; Activate Target (ignoring its cost) and attach it to this card. <span class="line-gap"></span> Let's Bounce: If this card is Targeted for an attack or effect (Reflex): Destroy 1 card in your Arsenal; Bounce this card.`
+        text: `Repair Specialist, Solitary <span class="line-gap"></span> Meet My Friend: On Rally: Activate 1 Commander Obelisk from your Hand, Deck, or Reserve (ignoring its cost). <span class="line-gap"></span> Mine Now: Target 1 Equipment in either Tomb; Activate Target (ignoring its cost) and attach it to this card. <span class="line-gap"></span> Let's Bounce: If this card is Targeted (Reflex): Destroy 1 card in your Arsenal; Bounce this card.`
       }
     ]
   },
@@ -6478,6 +6928,546 @@ export const cards = [
     abilities: [
       {
         text: `Negate all effects resolving after this card on the current Path.`
+      }
+    ]
+  },
+  {
+    id: "670",
+    name: "Multiversal Tiring Cliche",
+    image: `${cardArtFolder}/Reflex/MultiversalTiringCliche.png`,
+    rarity: "Rare",
+    type: "Reflex",
+    condition: "A card would be reclaimed, resurrected, retrieved, or unleashed",
+    cost: "Send 3 cards from your Reserve to the Tomb",
+    tags: ["Reflex"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Negate the triggering effect.`
+      }
+    ]
+  },
+  {
+    id: "671",
+    name: "Multiversal Lens",
+    image: `${cardArtFolder}/Actions/MultiversalLens.png`,
+    rarity: "Common",
+    type: "Action",
+    condition: "",
+    cost: "",
+    tags: ["Action"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Excavate 3. Obliterate your choice of the revealed cards, and return any remaining in the same order they were in.`
+      }
+    ]
+  },
+  {
+    id: "672",
+    name: "Multiversal Life Path",
+    image: `${cardArtFolder}/Rush/MultiversalLifePath.png`,
+    rarity: "Superior",
+    type: "Rush",
+    condition: "",
+    cost: "Obliterate 1 face-up Champion you control",
+    tags: ["Rush"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Recruit 1 with the same Damage and Life it had on the Zone.`
+      }
+    ]
+  },
+  {
+    id: "673",
+    name: "Archibald, Megacorp Boss",
+    image: `${cardArtFolder}/Champions/ArchibaldMegacorpBoss.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Sacrifice 3 with 3 or more Life, including (optionally) 1 your Opponent controls",
+    tags: ["Chrome","Royal","Citizen"],
+    damage: 3,
+    life: 6,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Greedy, Reach <span class="line-gap"></span> Revoked License: This card cannot be a Commander. <span class="line-gap"></span> Midlife Crisis: Discard 2; Move 1 Commander Obelisk from your Deck to your Reserve, and if you do, you can attach to it 1 Equipment from your Deck.`
+      }
+    ]
+  },
+  {
+    id: "674",
+    name: "Sergeant Garrett, Cybercop",
+    image: `${cardArtFolder}/Champions/SergeantGarrettCybercop.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Send 2 Equipments from your Reserve to your Tomb",
+    tags: ["Chrome","Construct","Marksman","Specialist"],
+    damage: 7,
+    life: 1,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `Duelist, Priority <span class="line-gap"></span> More Cop than Machine: After resolving a battle involving a different Champion you control: Target the Opponent's Champion that was involved in that battle; Destroy Target.`
+      }
+    ]
+  },
+  {
+    id: "675",
+    name: "Jimmy, King of the Wastes",
+    image: `${cardArtFolder}/Champions/JimmyWastesKing.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Chrome","Royal"],
+    damage: 2,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Solitary <span class="line-gap"></span> Last Survivor (Exhaustion): Retrieve 1.`
+      }
+    ]
+  },
+  {
+    id: "676",
+    name: "Genevieve, Over-Leveraged Gearhead",
+    image: `${cardArtFolder}/Champions/GenevieveOverLeveragedGearhead.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "",
+    cost: "Rally 1 Dust Token to your Opponent's Zone",
+    tags: ["Chrome","Mechanic","Specialist"],
+    damage: 2,
+    life: 4,
+    damageThreshold: 1,
+    abilities: [
+      {
+        text: `Repair Specialist <br> Work To Do: If this card is in your Reserve (Exhaustion): Move 1 Commander Obelisk from your Deck to your Reserve. <span class="line-gap"></span> Ceaseless Upgrades: If this card is in your Reserve (Exhaustion): Attach 1 Equipment from your Hand or Deck to a Commander Obelisk in your Reserve. <span class="line-gap"></span> Break Free: If this card would be Rallied from your Reserve (Exhaustion): Ignore the costs of all attached cards.`
+      }
+    ]
+  },
+  {
+    id: "677",
+    name: "Guild Overlord Videl",
+    image: `${cardArtFolder}/Champions/GuildOverlordVidel.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Rally 2 Scrap Token to your Opponent's Zone",
+    tags: ["Chrome","Inventor","Specialist"],
+    damage: 1,
+    life: 1,
+    damageThreshold: "4",
+    abilities: [
+      {
+        text: `Solitary <span class="line-gap"></span> Projects Funded: If this card is in your Reserve: All Obelisks in your Reserve can be activated ignoring their costs. <span class="line-gap"></span> Declining Health: If this card is in your Reserve during your End Phase (Mandatory): Discard 2, or if you are unable to, Obliterate this card.`
+      }
+    ]
+  },
+  {
+    id: "678",
+    name: "Last-Shot Scott",
+    image: `${cardArtFolder}/Champions/LastShotScott.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Chrome","Citizen"],
+    damage: 2,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Please Say Yes (Exhaustion): Target 1 Champion your Opponent controls; Take control of Target until the End Phase, and if you do, it cannot attack this turn.`
+      }
+    ]
+  },
+  {
+    id: "679",
+    name: "Clicks Current",
+    image: `${cardArtFolder}/Champions/Clicks.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Chrome","Helper"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Click and Drag: Sacrifice this card and Target 1 Champion on the Zone; Move Target to the Reserve. <span class="line-gap"></span> Recycle Restoration: If this card is in your Tomb: Obliterate this card; Spin all Obelisks from your Tomb.`
+      }
+    ]
+  },
+  {
+    id: "680",
+    name: "Twitchless Tina, Stunt Driver Supreme",
+    image: `${cardArtFolder}/Champions/TwitchlessTina.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "Obliterate 1 Commander Obelisk from your Tomb",
+    tags: ["Chrome","Citizen"],
+    damage: 2,
+    life: 5,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Bail-Out: All Commander Obelisks this card Mounts gain Shielded if they did not already have it. <span class="line-gap"></span> Kit Car: If the Commander Obelisk this card was Mounted to is Destroyed (Reflex): Move 1 Commander Obelisk from your Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "681",
+    name: "Bustermech MK5 - Mjolnir",
+    image: `${cardArtFolder}/Obelisks/BustermechMK5Mjolnir.png`,
+    rarity: "Superior",
+    type: "Obelisk",
+    condition: "Reflex: An attack is declared against you while you control no Commanders",
+    cost: "",
+    tags: ["Commander","Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Mount <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted: This card's Commander's Damage is increased by 1, and it gains Menace, but its Life and Damage Threshold are both reduced to 1.`
+      }
+    ]
+  },
+  {
+    id: "682",
+    name: "Bustermech MK10 - Jurmangandir",
+    image: `${cardArtFolder}/Obelisks/BustermechMK10Jurmangandir.png`,
+    rarity: "Legendary",
+    type: "Obelisk",
+    condition: "",
+    cost: "Obliterate your Hand (minimum of 1 card)",
+    tags: ["Commander","Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Mount <span class="line-gap"></span> On Activation: Remove all counters from the Zone, and if you do, this card gains Horizon Counters equal to the number of counters removed. <span class="line-gap"></span> Mounted (Reflex): Remove 1 Horizon Counter from this card; Place 1 Horizon Counter on a face-up card on the Zone. <span class="line-gap"></span> If another card increases to have 3, or more, Horizon Counters on it while this card is face-up on the Zone: Obliterate that card.`
+      }
+    ]
+  },
+  {
+    id: "683",
+    name: "Slipstream",
+    image: `${cardArtFolder}/Obelisks/Slipstream.png`,
+    rarity: "Superior",
+    type: "Obelisk",
+    condition: "",
+    cost: "Discard 2",
+    tags: ["Commander","Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Mount <span class="line-gap"></span> Mounted: This card's Commander gains Unstoppable. <span class="line-gap"></span> During your End Phase: Move this card, and its Commander, to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "684",
+    name: "A.P.C. - Adaptive Patrol Carrier",
+    image: `${cardArtFolder}/Obelisks/APC.png`,
+    rarity: "Legendary",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Commander","Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Mount <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted: This card's Commander's Damage Threshold increases by 2. <span class="line-gap"></span> Mounted: This card, and its Commander, are unaffected by, and do not trigger, the effects of your Opponent's Obelisks.`
+      }
+    ]
+  },
+  {
+    id: "685",
+    name: "Overwatch",
+    image: `${cardArtFolder}/Obelisks/Overwatch.png`,
+    rarity: "Common",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Commander","Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Mount <span class="line-gap"></span> Mounted: Place 1 Tracker Counter on all face-up cards that do not currently have counters. <span class="line-gap"></span> Mounted: Remove 6 Tracker Counters from the Zone and Target 1 face-up Champion; Reduce Target to a Life and Damage Threshold of 1.`
+      }
+    ]
+  },
+  {
+    id: "686",
+    name: "Zephyr",
+    image: `${cardArtFolder}/Obelisks/Zephyr.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Commander","Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Mount <span class="line-gap"></span> Mounted: This card's Commander is unaffected by your Opponent's effects that do not Target it.`
+      }
+    ]
+  },
+  {
+    id: "687",
+    name: "Bytekite",
+    image: `${cardArtFolder}/Obelisks/Bytekite.png`,
+    rarity: "Common",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Commander","Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Mount <span class="line-gap"></span> Mounted: Target 1 face-down Champion on the Zone; Flip Target face-up (negate its flip effects), and if you do, flip it back face-down.`
+      }
+    ]
+  },
+  {
+    id: "688",
+    name: "Town Bicycle",
+    image: `${cardArtFolder}/Obelisks/TownBicycle.png`,
+    rarity: "Superior",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Commander","Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Mount <span class="line-gap"></span> Mounted: The first time each turn this card's Commander would be Exhausted by an effect, they are not.`
+      }
+    ]
+  },
+  {
+    id: "689",
+    name: "Circuitwing",
+    image: `${cardArtFolder}/Obelisks/Circuitwing.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Commander","Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Mount <span class="line-gap"></span> Mounted (Reflex): Move this card, and its Commander, to your Reserve until your next Intermission Phase.`
+      }
+    ]
+  },
+  {
+    id: "690",
+    name: "The Baron",
+    image: `${cardArtFolder}/Obelisks/Baron.png`,
+    rarity: "Superior",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Commander","Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Mount <span class="line-gap"></span> Mounted: Discard 1; Rally 1 Basic Champion from your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "691",
+    name: "Training Wheels",
+    image: `${cardArtFolder}/Equipments/TrainingWheels.png`,
+    rarity: "Common",
+    type: "Equipment",
+    condition: "Attach only to a Commander Obelisk",
+    cost: "",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `The attached Obelisk gains the effect: \"This card's Commander gains Taunt.\"`
+      }
+    ]
+  },
+  {
+    id: "692",
+    name: "Custom Paint Job",
+    image: `${cardArtFolder}/Equipments/PaintJob.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "Attach only to a Commander Obelisk",
+    cost: "",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `The attached Obelisk gains the effect: \"This card's Commander gains Speed.\"`
+      }
+    ]
+  },
+  {
+    id: "693",
+    name: "Lift Kit",
+    image: `${cardArtFolder}/Equipments/LiftKit.png`,
+    rarity: "Superior",
+    type: "Equipment",
+    condition: "Attach only to a Commander Obelisk",
+    cost: "",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `On Activation: The attached Obelisk gains one of the following effects. Either: \"This card's Commander gains Reach and Taunt.\" or \"This card's Commander gains Defender and Invisible.\"`
+      }
+    ]
+  },
+  {
+    id: "694",
+    name: "Ejection Seat",
+    image: `${cardArtFolder}/Equipments/EjectionSeat.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "Attach only to a Commander Obelisk",
+    cost: "",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Reflex: Bounce the attached Obelisk's Commander, then Destroy this card.`
+      }
+    ]
+  },
+  {
+    id: "695",
+    name: "Self-Destruct Button",
+    image: `${cardArtFolder}/Equipments/SelfDestructButton.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "Attach only to a Commander Obelisk",
+    cost: "",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Reflex: Destroy the attached Obelisk and Commander (if it has one). Then, if this effect was activated during a battle involving the Obelisk's Commander: Destroy the other battling Champion.`
+      }
+    ]
+  },
+  {
+    id: "696",
+    name: "Nitrous Pedal",
+    image: `${cardArtFolder}/Equipments/NitrousPedal.png`,
+    rarity: "Legendary",
+    type: "Equipment",
+    condition: "Attach only to a Commander Obelisk",
+    cost: "",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `The attached Obelisk gains the effect: \"This card's Commander gains Triple Strike.\" <span class="line-gap"></span> At the end of a Battle Phase in which the Obelisk's Commander declared an attack: Obliterate the attached Obelisk.`
+      }
+    ]
+  },
+  {
+    id: "697",
+    name: "Cut the Brakes",
+    image: `${cardArtFolder}/Equipments/CutTheBrakes.png`,
+    rarity: "Common",
+    type: "Equipment",
+    condition: "Attach only to a Commander Obelisk",
+    cost: "",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `The attached Obelisk gains the effect: \"This card's Commander must attack when able.\"`
+      }
+    ]
+  },
+  {
+    id: "698",
+    name: "Block It",
+    image: `${cardArtFolder}/Equipments/BlockIt.png`,
+    rarity: "Common",
+    type: "Equipment",
+    condition: "Attach only to a Commander Obelisk",
+    cost: "",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `The attached Obelisk gains the effect: \"This card's Commander gains Contained.\"`
+      }
+    ]
+  },
+  {
+    id: "699",
+    name: "Aftermarket Parts",
+    image: `${cardArtFolder}/Equipments/AftermarketParts.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "Attach only to a Commander Obelisk",
+    cost: "",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `The attached Obelisk gains Maintenance, and the effect: \"This card's Commander gains Second Strike.\" <span class="line-gap"></span> The attached Obelisk can not grant any other Passives to its Commander.`
       }
     ]
   },
@@ -6873,7 +7863,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Reach, Taunt <span class="line-gap"></span> Shocking Arrival: On Rally (Mandatory): Obliterate Mill 2. <span class="line-gap"></span> Lightning Rider: If this card is Targeted by an attack or effect: Remove 1 K-Cell Counter from anywhere on the Zone; Negate the triggering attack or effect, and if you do, Obliterate that triggering card and this card.`
+        text: `Reach, Taunt <span class="line-gap"></span> Shocking Arrival: On Rally (Mandatory): Obliterate Mill 2. <span class="line-gap"></span> Lightning Rider: If this card is Targeted: Remove 1 K-Cell Counter from anywhere on the Zone; Negate the triggering attack or effect, and if you do, Obliterate that triggering card and this card.`
       }
     ]
   },
@@ -6945,7 +7935,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Duelist, Priority <span class="line-gap"></span> Knives for Hands: On Rally (Mandatory): All other face-up Champions you control take 1 Damage. <span class="line-gap"></span> Slice and Dice (Reflex): Remove 1 K-Cell Counter from anywhere on the Zone and Target 1 face-up Champion on the Zone; Target takes 3 Damage.`
+        text: `Duelist, Priority <span class="line-gap"></span> Knives for Hands: On Rally (Mandatory): All other face-up Champions you control take 1 Damage. <span class="line-gap"></span> Slice and Dice (Reflex): Remove 1 K-Cell Counter from anywhere on the Zone and Target 1 face-up Champion on the Zone; Deal 3 Damage to Target.`
       }
     ]
   },
@@ -6963,7 +7953,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Duelist, Priority, Second Strike <span class="line-gap"></span> Venom-Coated Fangs: Remove 1 K-Cell Counter from anywhere on the Zone and Target 1 face-up Champion on the Zone; Target takes 1 Damage.`
+        text: `Duelist, Priority, Second Strike <span class="line-gap"></span> Venom-Coated Fangs: Remove 1 K-Cell Counter from anywhere on the Zone and Target 1 face-up Champion on the Zone; Deal 1 Damage to Target.`
       }
     ]
   },
@@ -7377,7 +8367,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Bloodrage, Board Breaker, Bulletproof, Priority <span class="line-gap"></span> Front and Center: This is the only Champion you can attack with during your Battle Phase. <span class="line-gap"></span> Frenzied Rage: If this card Destroys an Opponent's Champion by battle (Mandatory): It must make another attack against a Champion they control. If there are no remaining Champions on your Opponent's side, this card takes 2 Damage.`
+        text: `Bloodrage, Board Breaker, Bulletproof, Priority <span class="line-gap"></span> Front and Center: This is the only Champion you can attack with during your Battle Phase. <span class="line-gap"></span> Frenzied Rage: If this card Destroys an Opponent's Champion by battle (Mandatory): It must make another attack against a Champion they control. If there are no remaining Champions on your Opponent's side, deal 2 Damage to this card.`
       }
     ]
   },
@@ -7575,7 +8565,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Target takes 1 Damage for every Livestock and Token you control.`
+        text: `Target is dealt 1 Damage for every Livestock and Token you control.`
       }
     ]
   },
@@ -7845,7 +8835,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Target takes 3 Damage.`
+        text: `Deal 3 Damage to Target.`
       }
     ]
   },
@@ -8318,6 +9308,60 @@ export const cards = [
     ]
   },
   {
+    id: "958",
+    name: "Lobter",
+    image: `${cardArtFolder}/Champions/Lobter.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Driftmarked","Protector","Blademaster"],
+    damage: 1,
+    life: 2,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Snip Snip (Exhaustion): Declare 1 Champion effect name; Effects with that name are negated while this card remains face-up on the Zone.`
+      }
+    ]
+  },
+  {
+    id: "959",
+    name: "Wide-Stance Stan",
+    image: `${cardArtFolder}/Champions/WideStan.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Frontier","Citizen"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Manspreading Master: This card can be the Commander of up to 2 Obelisks at a time.`
+      }
+    ]
+  },
+  {
+    id: "960",
+    name: "Hundred-Gallon Hat",
+    image: `${cardArtFolder}/Equipments/HundredGallonHat.png`,
+    rarity: "Common",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `The attached Champion gains Taunt. <span class="line-gap"></span> When a non-Champion effect Targets this card, or the Champion it's attached to, add 1 20-Gallon Counter to this card. <span class="line-gap"></span> While this card has 5, or more, 20-Gallon Counters on it: The attached Champion gains Bulletproof and Warded.`
+      }
+    ]
+  },
+  {
     id: "961",
     name: "Cinder, Heavy Metal Bard",
     image: `${cardArtFolder}/Champions/CinderHeavyMetalBard.png`,
@@ -8421,7 +9465,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Increase the attached Champion's Damage Threshold by 1. <span class="line-gap"></span> At the end of a battle involving the attached Champion: Target 1 face-up Champion on the Zone; Target takes 1 Damage.`
+        text: `Increase the attached Champion's Damage Threshold by 1. <span class="line-gap"></span> At the end of a battle involving the attached Champion: Target 1 face-up Champion on the Zone; Deal 1 Damage to Target.`
       }
     ]
   },
@@ -8642,6 +9686,402 @@ export const cards = [
     ]
   },
   {
+    id: "1201",
+    name: "The Fool",
+    image: `${cardArtFolder}/Champions/TheFool.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Foretold","Citizen"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `A New Beginning: On Rally: Your Opponent Chooses, Either: Draw 2, or Increase this card's Damage Threshold by 1. If you have no cards in your Tomb: You can choose the effect instead.`
+      }
+    ]
+  },
+  {
+    id: "1202",
+    name: "The High Priestess",
+    image: `${cardArtFolder}/Champions/TheHighPriestess.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Foretold","Mage"],
+    damage: 1,
+    life: 1,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `I Call Upon the Gods: On Rally: Your Opponent Chooses, Either: This card's Damage becomes 6, or its Life becomes 9. <span class="line-gap"></span> Final Reading: If Sent to Tomb: Excavate 3, and if you do, your Opponent chooses 1 revealed card for you to add.`
+      }
+    ]
+  },
+  {
+    id: "1203",
+    name: "The Empress",
+    image: `${cardArtFolder}/Champions/TheEmpress.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "",
+    cost: "Discard 2",
+    tags: ["Foretold","Royal"],
+    damage: 2,
+    life: 3,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `One or All: On Rally: Your Opponent Chooses, Either: Other Champions you control cannot be Damaged while this card remains face-up on the Zone, or this card's Damage becomes 7 and all other Champions you control cannot deal Battle Damage while this card remains face-up on the Zone.`
+      }
+    ]
+  },
+  {
+    id: "1204",
+    name: "The Emperor",
+    image: `${cardArtFolder}/Champions/TheEmperor.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "",
+    cost: "Discard 1",
+    tags: ["Foretold","Royal"],
+    damage: 3,
+    life: 3,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Kingdom Come: On Rally: Your Opponent Chooses, Either: This card's Damage becomes 7, or this card gains Greedy and Menace.`
+      }
+    ]
+  },
+  {
+    id: "1205",
+    name: "Strength",
+    image: `${cardArtFolder}/Champions/Strength.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Foretold","Protector"],
+    damage: 2,
+    life: 3,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Unbreaking Force: Discard 1; Your Opponent Chooses, Either: Increase this card's Damage and Damage Threshold by 1, or increase this card's Life by 3.`
+      }
+    ]
+  },
+  {
+    id: "1206",
+    name: "Death",
+    image: `${cardArtFolder}/Champions/Death.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "Obliterate 5 Champions from your Tomb",
+    tags: ["Foretold","Undead"],
+    damage: 2,
+    life: 2,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `It Comes For You: Sacrifice 1; Your Opponent Chooses, Either: Increase this card's Damage and Life by 2, or reduce a Champion they control's Damage and Life by 2.`
+      }
+    ]
+  },
+  {
+    id: "1207",
+    name: "The Hanged Man",
+    image: `${cardArtFolder}/Champions/TheHangedMan.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Foretold","Outlaw"],
+    damage: 2,
+    life: 1,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `Deathward <span class="line-gap"></span> Eternal Suffering: If Destroyed: Your Opponent Chooses, Either: Draw 2, or retrieve this card.`
+      }
+    ]
+  },
+  {
+    id: "1208",
+    name: "Temperance",
+    image: `${cardArtFolder}/Champions/Temperance.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Foretold","Protector"],
+    damage: 3,
+    life: 3,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `Stalwart: On Rally: Your Opponent Chooses, Either: This card is unaffected by the effects of non-Champion cards, or this card gains Bulletproof.`
+      }
+    ]
+  },
+  {
+    id: "1209",
+    name: "The Devil",
+    image: `${cardArtFolder}/Champions/TheDevil.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "",
+    cost: "Obliterate Mill 30",
+    tags: ["Foretold","Hellfire"],
+    damage: 20,
+    life: 2,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Deathpower, Taunt <span class="line-gap"></span> We Meet on the Roadside: On Rally: Your Opponent Chooses, Either: Deal 3 Damage to your Opponent, or you Offer X Life.`
+      }
+    ]
+  },
+  {
+    id: "1210",
+    name: "The Magician",
+    image: `${cardArtFolder}/Actions/TheMagician.png`,
+    rarity: "Rare",
+    type: "Action",
+    condition: "",
+    cost: "",
+    tags: ["Action"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Your Opponent Chooses, Either: Add 1 Action, or Retrieve 1 Action.`
+      }
+    ]
+  },
+  {
+    id: "1211",
+    name: "The Lovers",
+    image: `${cardArtFolder}/Actions/TheLovers.png`,
+    rarity: "Common",
+    type: "Action",
+    condition: "",
+    cost: "",
+    tags: ["Action"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Your Opponent Chooses, Either: Both Players Draw 1, or Both Players Discard 1.`
+      }
+    ]
+  },
+  {
+    id: "1212",
+    name: "The Moon",
+    image: `${cardArtFolder}/Equipments/TheMoon.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Decrease the attached Champion's Damage by 2, and it gains Invisible and Unstoppable. <span class="line-gap"></span> If the attached Champion declares an attack: Your Opponent Chooses, Either: Your Opponent Draws 1, or Destroy this card.`
+      }
+    ]
+  },
+  {
+    id: "1213",
+    name: "The Sun",
+    image: `${cardArtFolder}/Equipments/TheSun.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Increase the attached Champion's Damage by 3, and it gains Taunt. <span class="line-gap"></span> If the attached Champion declares an attack: Your Opponent Chooses, Either: Your Opponent can activate 1 Reflex with the partial condition \"When your Opponent declares an attack.\" from their Deck, or flip this card face-down.`
+      }
+    ]
+  },
+  {
+    id: "1214",
+    name: "The Hierophant",
+    image: `${cardArtFolder}/Obelisks/TheHierophant.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Bounce 1 face-up Foretold you control, and if you do, you can Rally 1 Foretold from your Hand. <span class="line-gap"></span> If the Foretold you Rally has an \"On Rally\" effect, then your Opponent Chooses, Either: You get to choose which \"On Rally\" effect is activated, or your Opponent discards 1.`
+      }
+    ]
+  },
+  {
+    id: "1215",
+    name: "The Chariot",
+    image: `${cardArtFolder}/Obelisks/TheChariot.png`,
+    rarity: "Common",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `When the controller of this card activates its effect their Opponent Chooses, Either: Draw 2, then Discard 1, or Retrieve 1 Obelisk from either Tomb.`
+      }
+    ]
+  },
+  {
+    id: "1216",
+    name: "The Hermit",
+    image: `${cardArtFolder}/Obelisks/TheHermit.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `When the controller of this card activates its effect their Opponent Chooses, Either: Obliterate 1 Champion you control, and if you do, Obliterate 1 Champion your Opponent controls, or Obliterate your Hand (minimum of 1 card), and if you do, draw the same number of cards plus 1. <span class="line-gap"></span> If you control exactly 1 Champion, then you can choose this card's effect.`
+      }
+    ]
+  },
+  {
+    id: "1217",
+    name: "Wheel of Fortune",
+    image: `${cardArtFolder}/Obelisks/WheelOfFortune.png`,
+    rarity: "Common",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `During your End Phase (Mandatory): Roll a six-sided die, and apply the following effect: <span class="line-gap"></span> 1 • Draw 1. <span class="line-gap"></span> 2 • Discard 1. <span class="line-gap"></span> 3 • Obliterate 1 Champion on the Zone. <span class="line-gap"></span> 4 • Obliterate 1 Champion you control. <span class="line-gap"></span> 5 • Increase the Damage of all Champions you control by 2 until the end of your next turn. <span class="line-gap"></span> 6 • Offer 4 Life. <span class="line-gap"></span> Before rolling, Your Opponent Chooses, Either: You receive the effect of this card, or they receive the effect of this card.`
+      }
+    ]
+  },
+  {
+    id: "1218",
+    name: "Justice",
+    image: `${cardArtFolder}/Obelisks/Justice.png`,
+    rarity: "Common",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `If a die would be rolled or a coin would be flipped (Reflex): You choose the result instead. This effect can be declared, activated, and resolved mid-Path. <span class="line-gap"></span> During your End Phase: Your Opponent Chooses, Either: Offer 1 Life, or Your Opponent Draws 1.`
+      }
+    ]
+  },
+  {
+    id: "1219",
+    name: "The Tower",
+    image: `${cardArtFolder}/Obelisks/TheTower.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `When the controller of this card activates its effect their Opponent Chooses, Either: Destroy all Champions both Players control, or Destroy all other cards in both Players' Arsenals.`
+      }
+    ]
+  },
+  {
+    id: "1220",
+    name: "The World",
+    image: `${cardArtFolder}/Obelisks/TheWorld.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `The number of Champions your Opponent controls cannot be increased above the number that you control. <span class="line-gap"></span> During your End Phase (Mandatory): Your Opponent Chooses, Either: Your Opponent Draws 2, or Discard 2.`
+      }
+    ]
+  },
+  {
+    id: "1221",
+    name: "The Star",
+    image: `${cardArtFolder}/Rush/TheStar.png`,
+    rarity: "Legendary",
+    type: "Rush",
+    condition: "",
+    cost: "",
+    tags: ["Rush"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Your Opponent Chooses, Either: Draw an extra card during your next Draw Phase, or your Opponent does not conduct their normal draw during their next Draw Phase. <span class="line-gap"></span> If your Life is lower than your Opponent's: You choose which effect to activate.`
+      }
+    ]
+  },
+  {
+    id: "1222",
+    name: "Judgement",
+    image: `${cardArtFolder}/Reflex/Judgement.png`,
+    rarity: "Superior",
+    type: "Reflex",
+    condition: "A card or effect is activated",
+    cost: "",
+    tags: ["Reflex"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Your Opponent Chooses, Either: Negate the activation, and if you do, Destroy it, or Draw 2.`
+      }
+    ]
+  },
+  {
     id: "1223",
     name: "Matching Uniform",
     image: `${cardArtFolder}/Equipments/MatchingUniform.png`,
@@ -8691,7 +10131,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Your Opponent's Champion takes double your Champion's Damage, and if they do, Destroy your Champion.`
+        text: `Your Opponent's Champion is dealt double your Champion's Damage, and if they do, Destroy your Champion.`
       }
     ]
   },
@@ -8980,6 +10420,438 @@ export const cards = [
     abilities: [
       {
         text: `Flip Target face-down.`
+      }
+    ]
+  },
+  {
+    id: "1242",
+    name: "Herding Cats",
+    image: `${cardArtFolder}/Rush/HerdingCats.png`,
+    rarity: "Rare",
+    type: "Rush",
+    condition: "",
+    cost: "Target 1 Champion your Opponent controls",
+    tags: ["Rush"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `All face-up Champions you currently control gain Priority until the end of this turn, only if they did not already have it, and only against the Target. Also, all of your Champions affected by this card cannot attack your Opponent directly this turn.`
+      }
+    ]
+  },
+  {
+    id: "1243",
+    name: "Sustainable Practices",
+    image: `${cardArtFolder}/Obelisks/SustainablePractices.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `During your End Phase (Mandatory): Sacrifice 1, and if you do, all face-up Champions you control gain 1 Life. <span class="line-gap"></span> If you are unable to Sacrifice 1: You take 1 Damage.`
+      }
+    ]
+  },
+  {
+    id: "1244",
+    name: "Plot Armor",
+    image: `${cardArtFolder}/Equipments/PlotArmor.png`,
+    rarity: "Superior",
+    type: "Equipment",
+    condition: "",
+    cost: "Sacrifice 2",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Reflex: If the attached Champion would be Destroyed: Sacrifice 1; It is not Destroyed.`
+      }
+    ]
+  },
+  {
+    id: "1245",
+    name: "Cuteness Aggression",
+    image: `${cardArtFolder}/Equipments/CutenessAggression.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `The attached Champion gains Deathtouch, but it only applies against Champions with 0 Damage.`
+      }
+    ]
+  },
+  {
+    id: "1246",
+    name: "It Was Me All Along",
+    image: `${cardArtFolder}/Reflex/ItWasMeAllAlong.png`,
+    rarity: "Common",
+    type: "Reflex",
+    condition: "A face-up Champion you control is Targeted while you control a face-down Champion",
+    cost: "",
+    tags: ["Reflex"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Flip Target face-down, and if you do, flip 1 other face-down Champion you control face-up, and if you do, it becomes the new Target.`
+      }
+    ]
+  },
+  {
+    id: "1247",
+    name: "Wicked Pipe Shredder",
+    image: `${cardArtFolder}/Equipments/WickedPipeShredder.png`,
+    rarity: "Superior",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Each time in a turn you activate a card(s): Place 1 Combo Counter on this card for card activated (max. 5 per instance). <span class="line-gap"></span> During the End Phase, if this card has any Combo Counters on it: Remove all Combo Counters from this card, and if you do, increase the Damage of the attached Champion by the number of counters removed.`
+      }
+    ]
+  },
+  {
+    id: "1248",
+    name: "Boom! Crab Hands!",
+    image: `${cardArtFolder}/Equipments/BoomCrabHands.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "Attach only to a Champion with no other attached Equipments",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Increase the attached Champion's Damage by 3. This is the only Equipment this Champion can have attached.`
+      }
+    ]
+  },
+  {
+    id: "1249",
+    name: "Total Tubular Wave Crester",
+    image: `${cardArtFolder}/Equipments/TotalTubularWaveCrester.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Effects that would Destroy multiple cards you control do not Destroy any cards.`
+      }
+    ]
+  },
+  {
+    id: "1250",
+    name: "Irrational Exuberance",
+    image: `${cardArtFolder}/Equipments/IrrationalExuberance.png`,
+    rarity: "Legendary",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `After a battle resolves involving the attached Champion: Increase the attached Champion's Damage by 1. <span class="line-gap"></span> If this face-up card leaves your Zone: Discard your entire Hand.`
+      }
+    ]
+  },
+  {
+    id: "1251",
+    name: "Why Won't You Die?!",
+    image: `${cardArtFolder}/Rush/WhyWontYouDie.png`,
+    rarity: "Rare",
+    type: "Rush",
+    condition: "Can only be activated during the Battle Phase",
+    cost: "Destroy all face-up Equipments you control (minimum of 1) and Target 1 face-up Champion that blocked or was attacked this Phase",
+    tags: ["Rush"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Destroy Target.`
+      }
+    ]
+  },
+  {
+    id: "1252",
+    name: "Self-Destruct",
+    image: `${cardArtFolder}/Reflex/SelfDestruct.png`,
+    rarity: "Common",
+    type: "Reflex",
+    condition: "A card you control is Targeted",
+    cost: "",
+    tags: ["Reflex"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Destroy Target.`
+      }
+    ]
+  },
+  {
+    id: "1253",
+    name: "Landmine Sally",
+    image: `${cardArtFolder}/Champions/LandmineSally.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Frontier","Citizen"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Oh, Sally...: If this card is face-up: Destroy it. <span class="line-gap"></span> Right Where I Left It (Flip): If flipped face-up by battle: Destroy this card, and the other battling Champion.`
+      }
+    ]
+  },
+  {
+    id: "1254",
+    name: "Bones Malone",
+    image: `${cardArtFolder}/Champions/BonesMalone.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Cryptbound","Undead"],
+    damage: 1,
+    life: 9,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `No Regrets: If Life is offered from this card (Reflex): Target 1 Equipment in either Tomb; Retrieve Target.`
+      }
+    ]
+  },
+  {
+    id: "1255",
+    name: "Zombitten Hyperchondriac",
+    image: `${cardArtFolder}/Champions/ZombittenHyperchondriac.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Cryptbound","Undead"],
+    damage: 1,
+    life: 2,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Deathward <span class="line-gap"></span> Totally Not Infected: Non-Undead Champions Damaged in battle by this card are Destroyed during the End Phase. <span class="line-gap"></span> I'm Fine Guys: During your End Phase (Mandatory): Deal 1 Damage to this card.`
+      }
+    ]
+  },
+  {
+    id: "1256",
+    name: "Reanimated Amputee",
+    image: `${cardArtFolder}/Champions/ReanimatedAmputee.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Cryptbound","Undead"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Preferred Parking: Neither Player can Mount cards while this card is not a Commander. This card can be mounted by your Opponent's standard Mount effects to a Commander Obelisk they control. You gain the benefits of that Commander Obelisk, and can declare its effects, despite not directly controlling it.`
+      }
+    ]
+  },
+  {
+    id: "1257",
+    name: "Send Us Your Bones",
+    image: `${cardArtFolder}/Actions/SendUsYourBones.png`,
+    rarity: "Superior",
+    type: "Action",
+    condition: "",
+    cost: "Target 1 face-up Champion you control",
+    tags: ["Action"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Increase Target's Life by 1 per Champion in your Opponent's Tomb.`
+      }
+    ]
+  },
+  {
+    id: "1258",
+    name: "Bag o' Bones",
+    image: `${cardArtFolder}/Equipments/BagOBones.png`,
+    rarity: "Common",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `The attached Champion gains the Undead Tag. <span class="line-gap"></span> If the Opponent of the attached Champion's controller controls any Knights: Those Champions gain Priority only to Target the attached Champion with attacks, and they must, if able, attack the attached Champion.`
+      }
+    ]
+  },
+  {
+    id: "1259",
+    name: "Bernard's Posthumous Weekend",
+    image: `${cardArtFolder}/Equipments/BernardsPosthumousWeekend.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "",
+    cost: "Target 2 face-up Champions you control and 1 Champion in your Tomb",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Resurrect Target, and if you do, attach this card to it, also the 2 Targets on your Zone cannot attack, or activate any effects, while this card remains face-up on the Zone. <span class="line-gap"></span> The attached Champion gains the Undead Tag and Bulletproof, but it cannot attack, or activate any of its effects. If this card, or either of the 2 Targets, leaves the Zone: Obliterate the attached Champion.`
+      }
+    ]
+  },
+  {
+    id: "1260",
+    name: "Souls for Gold!",
+    image: `${cardArtFolder}/Obelisks/SoulsForGold.png`,
+    rarity: "Superior",
+    type: "Obelisk",
+    condition: "",
+    cost: "Reduce your Life to 1",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Increase the Damage of all face-up Champions you control by 3. All face-up Champions you control gain Deathward. <span class="line-gap"></span> If this card leaves the Zone: You lose the game.`
+      }
+    ]
+  },
+  {
+    id: "1261",
+    name: "Throne of Bones",
+    image: `${cardArtFolder}/Obelisks/ThroneOfBones.png`,
+    rarity: "Common",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Obliterate 3 Champions from your Tomb; Reduce the Damage Thresholds of all face-up Champions your Opponent currently controls by 1 (to a minimum of 1).`
+      }
+    ]
+  },
+  {
+    id: "1262",
+    name: "Mr Bones' Wild Rides",
+    image: `${cardArtFolder}/Obelisks/MrBonesWildRide.png`,
+    rarity: "Legendary",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Commander","Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Mount <span class="line-gap"></span> Must first be mounted by a Champion you control. You can also designate your Opponent's Champions as this card's Commander. If this card would have a Commander mounted to it, Obliterate its Commander Obelisk. <span class="line-gap"></span> Mounted: This card's Commander gains Contained. <span class="line-gap"></span> If this card's Commander leaves the Zone: This card is not Destroyed, and a new Commander must be designated. If you are unable to, Obliterate this card. <span class="line-gap"></span> If this card would be Destroyed: Destroy its Commander instead.`
+      }
+    ]
+  },
+  {
+    id: "1263",
+    name: "Zombonie",
+    image: `${cardArtFolder}/Obelisks/Zombonie.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Commander","Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Mount <span class="line-gap"></span> Mounted: Increase this card's Commander's Damage Threshold by 1. <span class="line-gap"></span> Mounted: Sacrifice 1 Undead; Increase this card's Commander's Life by 2. <span class="line-gap"></span> Mounted: Target 1 Undead your Opponent controls; Destroy Target, and if you do, Rally 1 Mulch Token to your Opponent's Zone.`
+      }
+    ]
+  },
+  {
+    id: "1264",
+    name: "Rattle 'em Boys!",
+    image: `${cardArtFolder}/Rush/RattleEmBoys.png`,
+    rarity: "Superior",
+    type: "Rush",
+    condition: "",
+    cost: "",
+    tags: ["Rush"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Halve the Life of every face-up non-Undead Champion on the Zone (rounded down, to a minimum of 1).`
+      }
+    ]
+  },
+  {
+    id: "1265",
+    name: "Another for the Fire",
+    image: `${cardArtFolder}/Reflex/AnotherForTheFire.png`,
+    rarity: "Common",
+    type: "Reflex",
+    condition: "An Undead you controlled was sent to the Tomb or Void by your Opponent",
+    cost: "Target 1 Champion on the Zone",
+    tags: ["Reflex"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Destroy Target.`
       }
     ]
   }

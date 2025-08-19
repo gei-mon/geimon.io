@@ -27,7 +27,7 @@ export const keywords = {
   Veilbind: "This card&apos;s Equipment cannot be Targeted by your Opponent&apos;s card effects.",
   Warded: "This card cannot be Targeted by your Opponent&apos;s card effects.",
   Maintenance: "During your End Phase (Mandatory): Mill 2.",
-  Mount: "On Activation: Designate 1 face-up Champion you control as this card&apos;s Commander. If you control no face-up Champions, you can use this effect to designate one during your Main Phase. \n\n The Mounted effects on this card cannot be used if it has no designated Commander. If this card&apos;s Commander leaves the Zone, you can use this effect during your Main Phase to declare a new Commander. A Champion can only be the Commander of one Obelisk at a time.",
+  Mount: "On Activation: Designate 1 face-up Champion you control as this card&apos;s Commander. If you control no face-up Champions, you can use this effect to designate one during your Main Phase. \n\n The Mounted effects on this card cannot be used if it has no designated Commander. If this card&apos;s Commander leaves the Zone, you can use this effect during your Main Phase to declare a new Commander. A Champion can only be the Commander of one Obelisk at a time. \n\n If this card is in your Reserve: You can declare a Champion in your Reserve as this card's Commander. All other rules still apply.",
   Shielded: "If this card&apos;s Commander would be destroyed (Mandatory): Destroy this card instead.",
   Lifesteal: "You gain Life equal to the Battle Damage dealt by this card.",
   Menace: "This card&apos;s attacks cannot be blocked. \n\n When this card declares an attack: Your Opponent can Sacrifice 1; Negate the attack.",
