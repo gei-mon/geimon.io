@@ -9933,7 +9933,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Bounce 1 face-up Foretold you control, and if you do, you can Rally 1 Foretold from your Hand. <span class="line-gap"></span> If the Foretold you Rally has an \"On Rally\" effect, then your Opponent Chooses, Either: You get to choose which \"On Rally\" effect is activated, or your Opponent discards 1.`
+        text: `Bounce 1 face-up Foretold you control, and if you do, you can Rally 1 Foretold from your Hand (ignoring its cost). <span class="line-gap"></span> If the Foretold you Rally has an \"On Rally\" effect, then your Opponent Chooses, Either: You get to choose which \"On Rally\" effect is activated, or your Opponent discards 1.`
       }
     ]
   },
@@ -9969,7 +9969,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `When the controller of this card activates its effect their Opponent Chooses, Either: Obliterate 1 Champion you control, and if you do, Obliterate 1 Champion your Opponent controls, or Obliterate your Hand (minimum of 1 card), and if you do, draw the same number of cards plus 1. <span class="line-gap"></span> If you control exactly 1 Champion, then you can choose this card's effect.`
+        text: `When the controller of this card activates its effect their Opponent Chooses, Either: Obliterate 1 Champion you control, and if you do, Obliterate 1 Champion your Opponent controls, or Obliterate your Hand (minimum of 1 card), and if you do, draw the same number of cards plus 1. <span class="line-gap"></span> If you control exactly 1 Champion: You can choose this card's effect.`
       }
     ]
   },
