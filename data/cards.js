@@ -10070,7 +10070,7 @@ export const cards = [
     rarity: "Superior",
     type: "Reflex",
     condition: "A card or effect is activated",
-    cost: "",
+    cost: "Discard 1",
     tags: ["Reflex"],
     damage: "",
     life: "",
