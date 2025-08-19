@@ -168,22 +168,14 @@
                 }
                 case 'Brilliant Scientist':  return cards.filter(c=>id(c)>=121  && id(c)<=180);
                 case 'Sunset Sharpshooter':  return cards.filter(c=>id(c)>=61 && id(c)<=120);
-                case 'Shining Knight':       return cards.filter(c=>id(c)>=181 && id(c)<=240);
+                case 'Shining Knight':
+                    return cards.filter(c =>
+                        (id(c) >= 181 && id(c) <= 240) ||
+                        [848,904,905,906,933,934,935,936,941,942,943,944,949].includes(id(c))
+                );
                 case 'Mad Doctor':           return cards.filter(c=>id(c)>=241 && id(c)<=300);
                 case 'Barnyard Brawl': {
-                    const allowedIds = [82,83,84,188,902,903,914,915,916,917,918,919,920,921,922,923,924,925,926,927,929,930,937,938,939,940,945,950,953,954,955,959,960,1242,1243];
-                    return cards.filter(c => allowedIds.includes(id(c)));
-                }
-                case 'Raging Berserker': {
-                    const allowedIds = [905,933];
-                    return cards.filter(c => allowedIds.includes(id(c)));
-                }
-                case 'Holy Deliverance': {
-                    const allowedIds = [906,936,943,944];
-                    return cards.filter(c => allowedIds.includes(id(c)));
-                }
-                case 'Mythic Slayer': {
-                    const allowedIds = [904,934,935,941,942,949];
+                    const allowedIds = [82,83,84,97,188,902,903,914,915,916,917,918,919,920,921,922,923,924,925,926,927,929,930,937,938,939,940,945,950,953,954,955,959,960,1242,1243];
                     return cards.filter(c => allowedIds.includes(id(c)));
                 }
                 case 'Unseen Infiltrator':           return cards.filter(c=>id(c)>=301 && id(c)<=360);

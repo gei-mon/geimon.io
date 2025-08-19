@@ -63,7 +63,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Offer 9 Life",
-    tags: ["Cryptbound", "Hellfire", "Undead", "Megalith"],
+    tags: ["Hellfire","Cryptbound","Undead","Megalith"],
     damage: 1,
     life: 10,
     damageThreshold: "1",
@@ -81,7 +81,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Mill 6",
-    tags: ["Cryptbound", "Hellfire", "Undead", "Megalith"],
+    tags: ["Hellfire","Cryptbound","Undead","Megalith"],
     damage: 20,
     life: 7,
     damageThreshold: "2",
@@ -99,7 +99,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Obliterate 2 cards you control",
-    tags: ["Cryptbound", "Hellfire", "Undead", "Megalith"],
+    tags: ["Hellfire","Cryptbound","Undead","Megalith"],
     damage: 4,
     life: 5,
     damageThreshold: 3,
@@ -585,7 +585,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Mill 9",
-    tags: ["Cryptbound","Hellfire","Specialist"],
+    tags: ["Hellfire","Cryptbound","Specialist"],
     damage: 0,
     life: 1,
     damageThreshold: "6",
@@ -603,7 +603,7 @@ export const cards = [
     type: "Champion",
     condition: "You are at 6 or less Life",
     cost: "Obliterate 6 cards you control",
-    tags: ["Cryptbound","Hellfire","Megalith","Royal"],
+    tags: ["Hellfire","Cryptbound","Megalith","Royal"],
     damage: 6,
     life: 6,
     damageThreshold: "6",
@@ -7185,7 +7185,7 @@ export const cards = [
   },
   {
     id: "684",
-    name: "A.P.C. - Adaptive Patrol Carrier",
+    name: "A.P.C. - Adaptive Pursuit Convoy",
     image: `${cardArtFolder}/Obelisks/APC.png`,
     rarity: "Legendary",
     type: "Obelisk",
@@ -10635,7 +10635,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Oh, Sally...: If this card is face-up: Destroy it. <span class="line-gap"></span> Right Where I Left It (Flip): If flipped face-up by battle: Destroy this card, and the other battling Champion.`
+        text: `Can't Stop Me! I Can't Read!: If this card is face-up: Destroy it. <span class="line-gap"></span> Right Where I Left It (Flip): If flipped face-up by battle: Destroy this card, and the other battling Champion.`
       }
     ]
   },
@@ -10785,7 +10785,7 @@ export const cards = [
   },
   {
     id: "1262",
-    name: "Mr Bones' Wild Rides",
+    name: "Mr Bones' Wild Ride",
     image: `${cardArtFolder}/Obelisks/MrBonesWildRide.png`,
     rarity: "Legendary",
     type: "Obelisk",
