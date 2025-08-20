@@ -7161,7 +7161,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Mount <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted: This card's Commander's Damage is increased by 1, and it gains Menace, but its Life and Damage Threshold are both reduced to 1.`
+        text: `Mount <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted: While mounted this card's Commander's Damage is increased by 1, and it gains Menace, but, even if it becomes unmounted, this card's Commander's Life and Damage Threshold are both reduced to 1.`
       }
     ]
   },
@@ -10779,7 +10779,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Increase the Damage of all face-up Champions you control by 3. All face-up Champions you control gain Deathward. <span class="line-gap"></span> If this card leaves the Zone: You lose the game.`
+        text: `Increase the Damage of all face-up Champions you control by 3. All face-up Champions you control gain Deathward. <span class="line-gap"></span> If this face-up card leaves the Zone: You lose the game.`
       }
     ]
   },
