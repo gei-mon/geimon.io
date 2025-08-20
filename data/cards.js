@@ -6680,6 +6680,24 @@ export const cards = [
     ]
   },
   {
+    id: "444",
+    name: "Jackpot Jones",
+    image: `${cardArtFolder}/Champions/JackpotJones.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "",
+    cost: "Discard X (minimum of 1)",
+    tags: ["Dealt","Citizen"],
+    damage: 2,
+    life: 2,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Double Down: On Rally: Discard the same number of cards used to pay this card's Rally cost; Flip a coin and call the result, if you call the result correctly, draw twice the number of cards discarded for this effect's cost. <span class="line-gap"></span> Triple Down: Discard X; Increase this card's Damage by 2 per card discarded until the end of this turn.`
+      }
+    ]
+  },
+  {
     id: "481",
     name: "Honeda, Silver-Suited Samurai",
     image: `${cardArtFolder}/Champions/HonedaSilverSuitedSamurai.png`,
@@ -10537,7 +10555,7 @@ export const cards = [
     image: `${cardArtFolder}/Equipments/BoomCrabHands.png`,
     rarity: "Rare",
     type: "Equipment",
-    condition: "Attach only to a Champion with no other attached Equipments",
+    condition: "",
     cost: "",
     tags: ["Equipment"],
     damage: "",
@@ -10545,7 +10563,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Increase the attached Champion's Damage by 3. This is the only Equipment this Champion can have attached.`
+        text: `Destroy all other Equipments this Champion has attached. This is the only Equipment this Champion can have attached. <span class="line-gap"></span> Increase the attached Champion's Damage by 3.`
       }
     ]
   },
