@@ -2599,7 +2599,7 @@ export const cards = [
     image: `${cardArtFolder}/Rush/EmergencyReset.png`,
     rarity: "Superior",
     type: "Rush",
-    condition: "",
+    condition: "Both Players' Life must be 10 or Higher",
     cost: "Obliterate all cards from your Hand, Zone, and Tomb (minimum 1 from each)",
     tags: ["Rush"],
     damage: 0,
