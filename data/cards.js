@@ -10861,7 +10861,7 @@ export const cards = [
     image: `${cardArtFolder}/Reflex/AnotherForTheFire.png`,
     rarity: "Common",
     type: "Reflex",
-    condition: "An Undead was sent to the Tomb or Void",
+    condition: "An Undead was Destroyed and sent from the Zone to the Tomb or Void",
     cost: "Target 1 Champion on the Zone",
     tags: ["Reflex"],
     damage: "",
