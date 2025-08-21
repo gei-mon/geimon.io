@@ -82,7 +82,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Offer 1 Life; Transfer control of this Token to your opponent. <br><br> If it becomes your End Phase while you control this Token (Mandatory): Destroy this Token; You take 10 Damage."
+        text: "Offer 1 Life and Exhaust 1 face-up Champion you control; Transfer control of this Token to your opponent. <br><br> If it becomes your End Phase while you control this Token (Mandatory): Destroy this Token; You take 10 Damage."
       }
     ]
 },
@@ -252,7 +252,7 @@ export const tokens = [
     damageThreshold: "1",
     abilities: [
       {
-        text: "Reflex: When an Opponent declares an attack: Sacrifice this Token; Negate that attack."
+        text: "In the Dust: When an Opponent declares an attack (Reflex): Sacrifice this Token; Negate that attack."
       }
     ]
 },

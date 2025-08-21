@@ -44,5 +44,6 @@ export const keywords = {
   Durable: "The first time each turn this card would be Destroyed by battle (Mandatory): It is not Destroyed.",
   Dodge: "The first time each Battle Phase this card is Targeted for an attack you can either: Block with a different Champion you control or You can make the attack a direct attack.",
   Speed: "This card's attacks cannot be responded to by other cards or effects.",
-  "Triple Strike": "This card can make three attacks during each of your Battle Phases."
+  "Triple Strike": "This card can make three attacks during each of your Battle Phases.",
+  "Endurance": "This card cannot be Destroyed by card effects."
 };

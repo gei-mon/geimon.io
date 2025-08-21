@@ -152,14 +152,14 @@ export const cards = [
     rarity: "Legendary",
     type: "Action",
     condition: "",
-    cost: "Offer half your Life",
+    cost: "Offer half your Life (rounded down)",
     tags: ["Action"],
     damage: "",
     life: "",
     damageThreshold: "",
     abilities: [
       {
-        text: `Resurrect or Unleash up to a total of 3 Undead.`
+        text: `Resurrect or Unleash up to 2 Undead, or 1 Basic.`
       }
     ]
   },
@@ -170,14 +170,14 @@ export const cards = [
     rarity: "Rare",
     type: "Equipment",
     condition: "",
-    cost: "Target 1 Undead in either Tomb and Offer 4 Life",
+    cost: "Offer 4 Life and Target 1 Undead in either Tomb",
     tags: ["Equipment"],
     damage: "",
     life: "",
     damageThreshold: "",
     abilities: [
       {
-        text: `Resurrect Target and attach this card to it. If this card leaves the Zone, Destroy the attached Champion.`
+        text: `Resurrect Target and attach this card to it. <span class="line-gap"></span> If this card leaves the Zone: Destroy the attached Champion.`
       }
     ]
   },
@@ -205,8 +205,8 @@ export const cards = [
     image: `${cardArtFolder}/Rush/Boom.png`,
     rarity: "Common",
     type: "Rush",
-    condition: "An Undead you control battles another Champion",
-    cost: "Destroy your Undead",
+    condition: "During Damage Calculation when a Champion you control battles another",
+    cost: "Destroy your Champion",
     tags: ["Rush"],
     damage: "",
     life: "",
@@ -231,7 +231,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Negate the Attack, and if you do, deal Damage to your Opponent equal to that Champion’s Damage.`
+        text: `Negate Target's Attack, and if you do, deal Damage to your Opponent equal to Target’s Damage.`
       }
     ]
   },
@@ -260,7 +260,7 @@ export const cards = [
     rarity: "Rare",
     type: "Action",
     condition: "",
-    cost: "Target 1 Champion in your Opponent's Tomb and Offer 4 Life",
+    cost: "Offer 4 Life and Target 1 Champion in your Opponent's Tomb",
     tags: ["Action"],
     damage: "",
     life: "",
@@ -296,7 +296,7 @@ export const cards = [
     rarity: "Common",
     type: "Action",
     condition: "",
-    cost: "Your Opponent can Retrieve up to 2",
+    cost: "Your Opponent Retrieves 1",
     tags: ["Action"],
     damage: "",
     life: "",
@@ -350,7 +350,7 @@ export const cards = [
     rarity: "Rare",
     type: "Rush",
     condition: "",
-    cost: "Target 1 Construct or Helper you control with a Damage of 1 or higher and take Damage equal to its Damage",
+    cost: "Target 1 Champion you control with a Damage of 1 or higher and take Damage equal to its Damage",
     tags: ["Rush"],
     damage: "",
     life: "",
@@ -465,7 +465,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Add 1 Cryptbound.`
+        text: `Add 1 Cryptbound. <span class="line-gap"></span> If you have no Cryptbounds in your Deck: Add 1 Basic.`
       }
     ]
   },
@@ -699,7 +699,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Recruit, Resurrect, or Unleash 1 Hellfire (ignoring its conditions). <span class="line-gap"></span> Obliterate it at the end of the 6th turn after activating this card. <span class="line-gap"></span> When it leaves the Zone, you lose the game.`
+        text: `Recruit, Resurrect, or Unleash 1 Hellfire (ignoring its conditions). <span class="line-gap"></span> Obliterate it at the end of the 6th turn after activating this card. <span class="line-gap"></span> When it leaves the Zone, you lose the game. <span class="line-gap"></span> Discard this card and 1 other: Move 1 Basic from your Tomb to your Reserve.`
       }
     ]
   },
@@ -717,7 +717,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Until your End Phase, your Offer effects instead give you that amount of Life.`
+        text: `Until your End Phase: Offer costs and effects instead give you that amount of Life.`
       }
     ]
   },
@@ -764,7 +764,7 @@ export const cards = [
     rarity: "Common",
     type: "Action",
     condition: "",
-    cost: "Your Opponent Obliterates 2 cards from your Tomb",
+    cost: "Your Opponent Obliterates 1 card from your Tomb",
     tags: ["Action"],
     damage: "",
     life: "",
@@ -969,7 +969,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Resurrect Target. <span class="line-gap"></span> During your End Phase (Mandatory): Discard 1, or if you are unable to, Destroy the Target.`
+        text: `Resurrect Target, and if you do, it gains the Undead Tag. <span class="line-gap"></span> During your End Phase (Mandatory): Discard 1, or if you are unable to, Destroy Target.`
       }
     ]
   },
@@ -998,7 +998,7 @@ export const cards = [
     rarity: "Common",
     type: "Reflex",
     condition: "You take Damage",
-    cost: "Target 1 Undead in your Tomb",
+    cost: "Target 1 Undead in either Tomb",
     tags: ["Reflex"],
     damage: "",
     life: "",
@@ -1141,7 +1141,7 @@ export const cards = [
     image: `${cardArtFolder}/Equipments/LadyJaneLadykiller.png`,
     rarity: "Rare",
     type: "Equipment",
-    condition: "Attach only to a Marksman",
+    condition: "",
     cost: "",
     tags: ["Equipment"],
     damage: 0,
@@ -1149,7 +1149,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `The turn this card is activated: Only the attached Champion can attack (this effect remains even if this card leaves the zone). <span class="line-gap"></span> The attached Champion gains Unstoppable. <span class="line-gap"></span> If this card is in your Tomb: Obliterate this card and Target 1 Marksman in your Tomb; Resurrect Target.`
+        text: `The turn this card is activated: Only the attached Champion can attack (this effect remains even if this card leaves the zone). <span class="line-gap"></span> If attached to a Marksman: The attached Champion gains Unstoppable. <span class="line-gap"></span> If this card is in your Tomb: Obliterate this card and Target 1 Marksman in your Tomb; Resurrect Target.`
       }
     ]
   },
@@ -1159,15 +1159,15 @@ export const cards = [
     image: `${cardArtFolder}/Equipments/OlReliable.png`,
     rarity: "Rare",
     type: "Equipment",
-    condition: "Attach only to a Marksman",
-    cost: "Reveal 1 other random card from your Hand",
+    condition: "",
+    cost: "",
     tags: ["Equipment"],
     damage: 0,
     life: 0,
     damageThreshold: "",
     abilities: [
       {
-        text: `<span class="line-gap"></span> This card gains 6 Bullet Counters. Increase the attached Champion's Damage by 1 per Bullet Counter this card has. <span class="line-gap"></span> After each time the attached Champion battles: Remove 1 Bullet Counter from this card. <span class="line-gap"></span> If this card has no Bullet Counters (Reflex): Destroy this card; Deal 3 Damage to 1 face-up Champion or Player.`
+        text: `So long as this card remains face-up in your Arsenal: Reveal your Hand. <span class="line-gap"></span> If attached to a Marksman: This card gains 6 Bullet Counters. Increase the attached Champion's Damage by 1 per Bullet Counter this card has. After each time the attached Champion battles: Remove 1 Bullet Counter from this card. <span class="line-gap"></span> If this card has no Bullet Counters (Reflex): Destroy this card; Deal 3 Damage to 1 face-up Champion or Player.`
       }
     ]
   },
@@ -1177,7 +1177,7 @@ export const cards = [
     image: `${cardArtFolder}/Equipments/LuckyShot.png`,
     rarity: "Common",
     type: "Equipment",
-    condition: "Attach only to a Marksman",
+    condition: "",
     cost: "",
     tags: ["Equipment"],
     damage: 0,
@@ -1185,7 +1185,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Declare 1 card type. <span class="line-gap"></span> Excavate 1, and if its card type matches what you declared you can Destroy 1 Champion on the Zone. Otherwise, Destroy the attached Champion.`
+        text: `Declare 1 card type. <span class="line-gap"></span> Excavate 1, and if its card type matches what you declared you can Destroy 1 Champion on the Zone. Otherwise, Destroy the attached Champion. <span class="line-gap"></span> If attached to a Marksman: You can excavate 3 when you use this card's effect, and if any of the revealed cards match the declared type, you can Destroy 1 Champion on the zone.`
       }
     ]
   },
@@ -1376,14 +1376,14 @@ export const cards = [
     rarity: "Rare",
     type: "Action",
     condition: "",
-    cost: "Target 1 Champion you control and Excavate 3, send all revealed Champions to the Tomb",
+    cost: "Target 1 face-up Champion you control and Excavate 3, send all revealed Champions to the Tomb",
     tags: ["Action"],
     damage: "",
     life: "",
     damageThreshold: "",
     abilities: [
       {
-        text: `Target Champion can make an additional number of attacks this Battle Phase equal to the number of revealed non-Champions.`
+        text: `Target Champion can make an additional number of attacks during your next Battle Phase equal to the number of revealed non-Champions.`
       }
     ]
   },
@@ -1573,7 +1573,7 @@ export const cards = [
     image: `${cardArtFolder}/Reflex/IThinkItWasLoaded.png`,
     rarity: "Common",
     type: "Reflex",
-    condition: "You take Damage from one of your own effects",
+    condition: "You take Damage from a card effect",
     cost: "",
     tags: ["Reflex"],
     damage: 0,
@@ -1707,7 +1707,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Target 1 of your Opponent's Champions, and if you do, this card's attached Champion cannot attack this turn; Take control of the Target until the End Phase.`
+        text: `Exhaust the attached Champion and Target 1 of your Opponent's Champions; Take control of the Target until the End Phase.`
       }
     ]
   },
@@ -1735,7 +1735,7 @@ export const cards = [
     image: `${cardArtFolder}/Equipments/GrandadsRifle.png`,
     rarity: "Common",
     type: "Equipment",
-    condition: "Attach only to a Citizen",
+    condition: "",
     cost: "",
     tags: ["Equipment"],
     damage: 0,
@@ -1743,7 +1743,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Increase the attached Champion's Damage by 3.`
+        text: `Increase the attached Champion's Damage by 2. <span class="line-gap"></span> If attached to a Citizen: The attached Champion gains Menace.`
       }
     ]
   },
@@ -1833,7 +1833,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Only an Outlaw can be designated as this card's Commander. <span class="line-gap"></span> Mount <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted: This card's Commander gains Greedy and Reach. <span class="line-gap"></span> If this card is in your Tomb while you control an Outlaw (Reflex): Discard 2; Activate this card.`
+        text: `Mount <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted: If this card's Commander is an Outlaw: They gain Greedy and Reach. <span class="line-gap"></span> If this card is in your Tomb while you control an Outlaw (Reflex): Discard 2; Activate this card.`
       }
     ]
   },
@@ -1905,7 +1905,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Stack 1 card from your Deck. <span class="line-gap"></span> During your Draw Phase, after you conduct your normal draw (Mandatory): Obliterate Mill 10.`
+        text: `Stack 1 card from your Deck. <span class="line-gap"></span> During your Draw Phase, after you conduct your normal draw (Mandatory): Obliterate Mill 15.`
       }
     ]
   },
@@ -1941,7 +1941,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Recruit 1 Frontier, it cannot attack. <span class="line-gap"></span> Destroy it during the End Phase of this turn.`
+        text: `Recruit 1 Frontier or Helper, it cannot attack. <span class="line-gap"></span> Destroy it during the End Phase of this turn.`
       }
     ]
   },
@@ -1959,7 +1959,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Flip all Champions face-down.`
+        text: `Flip all face-up non-Token Champions face-down.`
       }
     ]
   },
@@ -1977,7 +1977,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Target can attack an additional time. <span class="line-gap"></span> That Champion cannot declare an attack during your next Battle Phase.`
+        text: `Target can attack an additional time. <span class="line-gap"></span> Target cannot declare an attack during your next Battle Phase.`
       }
     ]
   },
@@ -2103,7 +2103,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Recruit 1 Helper.`
+        text: `Recruit 1 Helper. <span class="line-gap"></span> If you have no Helpers in your Deck: Recruit 1 with 0 Damage.`
       }
     ]
   },
@@ -2283,7 +2283,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Move 1 Commander Obelisk from your Deck into your Reserve, and attach to it 1 appropriate Equipment from your Deck.`
+        text: `Move 1 Commander Obelisk from your Deck to your Reserve, and if you do, you can attach to it 1 Equipment from your Deck.`
       }
     ]
   },
@@ -2819,7 +2819,7 @@ export const cards = [
     cost: "Rally 1 Scrap Token to your Opponent's Zone",
     tags: ["Clockwork", "Inventor","Specialist"],
     damage: 4,
-    life: 6,
+    life: 3,
     damageThreshold: "2",
     abilities: [
       {
@@ -2906,14 +2906,14 @@ export const cards = [
     rarity: "Common",
     type: "Action",
     condition: "",
-    cost: "Offer 2 Life for every card in your Opponent's Hand",
+    cost: "Offer 2 Life per card in your Opponent's Hand",
     tags: ["Action"],
     damage: 0,
     life: 0,
     damageThreshold: "",
     abilities: [
       {
-        text: `Retrieve 1 Action or Rush. You cannot activate Action or Rush cards for the remainder of this turn.`
+        text: `Retrieve 1 Action or Rush, and if you do, you cannot activate Action or Rush cards for the remainder of this turn.`
       }
     ]
   },
@@ -2931,7 +2931,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Until the end of this turn, each time a Token(s) is Rallied to your Opponent's Zone: They must discard 1.`
+        text: `Until the end of this turn, each time a Token(s) is Rallied to your Opponent's Zone: They must Discard 1.`
       }
     ]
   },
@@ -2977,7 +2977,7 @@ export const cards = [
     image: `${cardArtFolder}/Equipments/TrustyGoggles.png`,
     rarity: "Common",
     type: "Equipment",
-    condition: "Attach only to a Helper, Inventor, or Specialist",
+    condition: "",
     cost: "",
     tags: ["Equipment"],
     damage: 0,
@@ -2985,7 +2985,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Excavate 3, add 1 revealed Equipment or Obelisk.`
+        text: `Excavate 2, add 1 revealed Equipment or Obelisk. <span class="line-gap"></span> If attached to a Clockwork or Helper: You can instead excavate 3.`
       }
     ]
   },
@@ -3003,7 +3003,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `If the attached Champion is the Commander of an Obelisk: Increase their Damage by 5. <span class="line-gap"></span> If Destroyed: Deal 3 Damage to both Players.`
+        text: `If attached to a Commander: Increase their Damage by 5. <span class="line-gap"></span> If Destroyed: Deal 3 Damage to both Players.`
       }
     ]
   },
@@ -3031,7 +3031,7 @@ export const cards = [
     image: `${cardArtFolder}/Equipments/SqueaksBelt.png`,
     rarity: "Common",
     type: "Equipment",
-    condition: "Attach only to a Helper, Inventor, or Specialist. This is the only Equipment that Champion can have attached",
+    condition: "",
     cost: "",
     tags: ["Equipment"],
     damage: 0,
@@ -3039,7 +3039,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Target 1 Equipment in your Tomb; Retrieve Target.`
+        text: `Exhaustion: Target 1 Equipment in your Tomb; Retrieve Target. <span class="line-gap"></span> If attached to a non-Helper: This is the only Equipment the attached Champion can have attached.`
       }
     ]
   },
@@ -3049,7 +3049,7 @@ export const cards = [
     image: `${cardArtFolder}/Equipments/AntiMagicShield.png`,
     rarity: "Superior",
     type: "Equipment",
-    condition: "Attach only to a Clockwork or Helper",
+    condition: "",
     cost: "",
     tags: ["Equipment"],
     damage: 0,
@@ -3057,7 +3057,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Attached Champion gains Duelist and Non-Believer.`
+        text: `The attached Champion gains Duelist and Warded. <span class="line-gap"></span> If attached to a Clockwork or Helper: The attached Champion loses Warded and gains Non-Believer.`
       }
     ]
   },
@@ -3103,7 +3103,7 @@ export const cards = [
     image: `${cardArtFolder}/Rush/ScholarshipDinnerInterrupted.png`,
     rarity: "Common",
     type: "Rush",
-    condition: "You control at least 1 Clockwork and 1 Specialist",
+    condition: "You control at least 2 face-up Champions",
     cost: "Rally 2 Jumper Token to your Opponent's Zone",
     tags: ["Rush"],
     damage: 0,
@@ -3165,7 +3165,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Negate the activation, and if you do, destroy the card. <span class="line-gap"></span> If this card is in your Tomb, and a Reflex card is activated: Rally 1 Jumper Token to your Opponent's Zone; Set this card to your Zone.`
+        text: `Negate the activation, and if you do, destroy the card. <span class="line-gap"></span> If this card is in your Tomb, and a Reflex card is activated: Rally 1 Jumper Token to your Opponent's Zone; Set this card face-down in your Arsenal.`
       }
     ]
   },
@@ -3183,7 +3183,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Negate the negating effect, and if you do, destroy that card.`
+        text: `Negate the negating effect, and if you do, Destroy that card.`
       }
     ]
   },
@@ -3355,7 +3355,7 @@ export const cards = [
     image: `${cardArtFolder}/Champions/DarkestKnightmare.png`,
     rarity: "Superior",
     type: "Champion",
-    condition: "You have at least 1 Knight in your Tomb",
+    condition: "There is at least 1 Blademaster or Knight in either Players' Tomb",
     cost: "Basic",
     tags: ["Noble", "Undead","Knight"],
     damage: 3,
@@ -3715,15 +3715,15 @@ export const cards = [
     image: `${cardArtFolder}/Equipments/Gleam.png`,
     rarity: "Superior",
     type: "Equipment",
-    condition: "Attach only to a Blademaster or Knight",
-    cost: "Your Opponent can Retrieve 1",
+    condition: "",
+    cost: "Your Opponent Retrieves 1",
     tags: ["Equipment"],
     damage: "",
     life: "",
     damageThreshold: "",
     abilities: [
       {
-        text: `Increase the attached Champion's Damage by 5. <span class="line-gap"></span> If Sent to Tomb: You can stack this card.`
+        text: `If attached to a Blademaster or Knight: Increase the attached Champion's Damage by 5. <span class="line-gap"></span> Exhaustion: Destroy this card and Target 1 face-up Champion on the Zone; Deal 2 Damage to Target. <span class="line-gap"></span> If Sent to Tomb: Discard 1; Stack this card.`
       }
     ]
   },
@@ -3741,7 +3741,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Recruit 1 Knight with 4 or less Damage.`
+        text: `Recruit 1 Knight with 4 or less Damage. <span class="line-gap"></span> If you have no Knights in your Deck: Draw 1.`
       }
     ]
   },
@@ -3759,7 +3759,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Resurrect that Champion, and if you do, your opponent draws 2.`
+        text: `Resurrect that Champion, and if you do, your Opponent draws 2.`
       }
     ]
   },
@@ -3914,7 +3914,7 @@ export const cards = [
     rarity: "Common",
     type: "Action",
     condition: "",
-    cost: "Your opponent draws 2, and you draw 1",
+    cost: "Your Opponent draws 1",
     tags: ["Action"],
     damage: 0,
     life: 0,
@@ -3968,7 +3968,7 @@ export const cards = [
     rarity: "Common",
     type: "Rush",
     condition: "",
-    cost: "Target 1 face-up Megalith on the Zone",
+    cost: "Target 1 face-up Megalith, or a Champion with 10 or more Damage, on the Zone",
     tags: ["Rush"],
     damage: 0,
     life: 0,
@@ -4029,7 +4029,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Set face-down 1 Rush or Reflex card from your Deck to your Arsenal.`
+        text: `Set face-down 1 Rush or Reflex card from your Deck to your Arsenal (without revealing what it is).`
       }
     ]
   },
@@ -4047,7 +4047,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Double the Damage of all Knights you currently control. <span class="line-gap"></span> Destroy all affected Champions during the End Phase.`
+        text: `Double the Damage of all Knights you currently control. <span class="line-gap"></span> If you control no Knights: Then, increase the Damage of all non-Knights by 1. <span class="line-gap"></span> Destroy all affected Champions during the End Phase.`
       }
     ]
   },
@@ -4083,7 +4083,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `The attached Champion can no longer declare attacks. <span class="line-gap"></span> During the Intermission Phase of the attached Champion's controller: The Champion’s controller draws 1.`
+        text: `The attached Champion gains Contained. <span class="line-gap"></span> During the Intermission Phase of the attached Champion's controller: The Champion’s controller draws 1.`
       }
     ]
   },
@@ -4101,7 +4101,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `The attached Champion gains Priority. <span class="line-gap"></span> The attached Champion's Damage Threshold is also reduced to 1.`
+        text: `The attached Champion gains Priority, Reach, and Taunt. <span class="line-gap"></span> The attached Champion's Damage Threshold is also reduced to 1.`
       }
     ]
   },
@@ -4119,7 +4119,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Increase the attached Champion's Damage by 4. <span class="line-gap"></span> Each time the attached Champion declares an attack (Mandatory): Your Opponent draws 1.`
+        text: `Increase the attached Champion's Damage by 1. <span class="line-gap"></span> If attached to a Blademaster or Knight: Instead increase the attached Champion's Damage by 4. <span class="line-gap"></span> Each time the attached Champion declares an attack (Mandatory): Your Opponent draws 1.`
       }
     ]
   },
@@ -4147,7 +4147,7 @@ export const cards = [
     image: `${cardArtFolder}/Equipments/PlateOfTheDuskbringer.png`,
     rarity: "Superior",
     type: "Equipment",
-    condition: "Attach only to a Knight",
+    condition: "",
     cost: "Your Opponent draws 3",
     tags: ["Equipment"],
     damage: "",
@@ -4155,7 +4155,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `The attached Champion gains Bulletproof. <span class="line-gap"></span> If Destroyed: Retrieve this card, and if you do, you must Discard 1.`
+        text: `The attached Champion gains Durable. <span class="line-gap"></span> If attached to a Knight: The attached Champion loses Durable and gains Bulletproof. <span class="line-gap"></span> If Destroyed (Mandatory): Retrieve this card, and if you do, you must Discard 2.`
       }
     ]
   },
@@ -4173,7 +4173,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `The attached Champion gains Non-Believer. <span class="line-gap"></span> During your End Phase: You take 4 Damage.`
+        text: `The attached Champion gains Non-Believer. <span class="line-gap"></span> During your End Phase (Mandatory): Offer 4 Life.`
       }
     ]
   },
@@ -4191,7 +4191,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `The attached Champion gains Invisible. <span class="line-gap"></span> During your End Phase (Mandatory): Discard 1 or, if you are unable to, Destroy this card. <span class="line-gap"></span> If this card leaves the Zone: Destroy the attached Champion.`
+        text: `The attached Champion gains Invisible. <span class="line-gap"></span> During your End Phase (Mandatory): Discard 1 or, if you are unable to, Destroy this card. <span class="line-gap"></span> If Destroyed: Flip the attached Champion face-down, it cannot be Flip Rallied.`
       }
     ]
   },
@@ -4227,7 +4227,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `The attached Champion's Damage Threshold is increased by 2. <span class="line-gap"></span> Each time the attached Champion battles another (Mandatory): Your Opponent draws 1.`
+        text: `The attached Champion's Damage Threshold is increased by 2. <span class="line-gap"></span> Each time the attached Champion battles (Mandatory): Your Opponent draws 1.`
       }
     ]
   },
@@ -4364,7 +4364,7 @@ export const cards = [
     rarity: "Common",
     type: "Rush",
     condition: "",
-    cost: "Obliterate 1 Action or Reflex from your Tomb that you did not activate this turn",
+    cost: "Obliterate 1 Action or Rush from your Tomb that you did not activate this turn",
     tags: ["Rush"],
     damage: 0,
     life: 0,
@@ -4641,7 +4641,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Add 1 Vivisect.`
+        text: `Add 1 Vivisect. <span class="line-gap"></span> If you have no Vivisects in your Deck: Add 1 Basic.`
       }
     ]
   },
@@ -4670,7 +4670,7 @@ export const cards = [
     rarity: "Superior",
     type: "Action",
     condition: "",
-    cost: "Target 1 face-up Champion on the Zone, its controller gains 6 Life",
+    cost: "Target 1 face-up Champion on the Zone, its controller gains 4 Life",
     tags: ["Action"],
     damage: 0,
     life: 0,
@@ -4706,7 +4706,7 @@ export const cards = [
     rarity: "Common",
     type: "Action",
     condition: "",
-    cost: "Your Opponent gains 2 Life for every Champion you control",
+    cost: "Your Opponent gains 2 Life for every face-up Champion you control",
     tags: ["Action"],
     damage: 0,
     life: 0,
@@ -4758,10 +4758,10 @@ export const cards = [
     name: "Pop Quiz: Anatomy",
     image: `${cardArtFolder}/Actions/PopQuizAnatomy.png`,
     rarity: "Rare",
-    type: "Action",
+    type: "Rush",
     condition: "Your Opponent gained Life this turn",
     cost: "",
-    tags: ["Action"],
+    tags: ["Rush"],
     damage: 0,
     life: 0,
     damageThreshold: "",
@@ -4821,7 +4821,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Your Opponent discards 1, and if they do, you draw 1.`
+        text: `Your Opponent discards 1. <span class="line-gap"></span> Then, if you have no cards in your Hand: Draw 1.`
       }
     ]
   },
@@ -4832,7 +4832,7 @@ export const cards = [
     rarity: "Common",
     type: "Equipment",
     condition: "",
-    cost: "The attached Champion can no longer use its effects, even if this card leaves the Zone",
+    cost: "The attached Champion can no longer activate its effects, even after this card leaves the Zone",
     tags: ["Equipment"],
     damage: "",
     life: "",
@@ -4893,7 +4893,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `If Destroyed: Set 1 Reflex face-down into your Arsenal from your Deck.`
+        text: `If Destroyed: Set 1 Reflex face-down into your Arsenal from your Deck (without revealing what it is).`
       }
     ]
   },
@@ -4965,7 +4965,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `If your Opponent activates a Champion effect: Your Opponent gains 3 Life; Negate the effect, and if you do, stack the triggering Champion.`
+        text: `If your Opponent activates a Champion effect (Reflex): Your Opponent gains 3 Life; Negate the effect, and if you do, stack the triggering Champion.`
       }
     ]
   },
@@ -5066,7 +5066,7 @@ export const cards = [
     rarity: "Common",
     type: "Rush",
     condition: "",
-    cost: "You and your Opponent control the name number of Champions, and your Opponent controls at least 3 Champions",
+    cost: "You and your Opponent control the name number of face-up Champions",
     tags: ["Rush"],
     damage: 0,
     life: 0,
@@ -5091,7 +5091,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Rally 1 Champion from your Hand (ignoring its cost).`
+        text: `Rally 1 Champion from your Hand or Reserve (ignoring its cost).`
       }
     ]
   },
@@ -5163,7 +5163,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `All currently face-up Champions gain Forged until the end of this turn.`
+        text: `All face-up Champions currently on the Zone gain Forged until the end of this turn.`
       }
     ]
   },
@@ -5192,7 +5192,7 @@ export const cards = [
     rarity: "Common",
     type: "Reflex",
     condition: "An effect that Targets a card was activated",
-    cost: "Your opponent chooses to either: Draw 2 or Discard 1 random card from your hand",
+    cost: "Your Opponent Chooses, Either: Your Opponent draws 2 or Discard 1 random card",
     tags: ["Reflex"],
     damage: "",
     life: "",
@@ -5253,7 +5253,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `The attacking Champion's effects are negated until the end of the turn.`
+        text: `The attacking Champion's passives and effects are negated until the end of the turn.`
       }
     ]
   },
@@ -5289,7 +5289,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Destroy all Champions your Opponent controls with 10 or more Life.`
+        text: `Destroy all Champions your Opponent controls with 8 or more Life.`
       }
     ]
   },
@@ -5307,7 +5307,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Target can attack an additional time this turn. Target cannot block until the end of the next turn.`
+        text: `Target can attack an additional time this turn. Target cannot attack or block until the end of your next turn.`
       }
     ]
   },
@@ -5451,7 +5451,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Rally face-down from your Hand 1 Basic Champion.`
+        text: `Rally 1 Basic Champion from your Hand face-down.`
       }
     ]
   },
@@ -5785,7 +5785,7 @@ export const cards = [
     image: `${cardArtFolder}/Champions/DawnbreakOfTheSunAndMoon.png`,
     rarity: "Superior",
     type: "Champion",
-    condition: "You have at least 1 Hero in your Tomb",
+    condition: "You have at least 2 Champions in your Tomb",
     cost: "Discard 1",
     tags: ["Valiant","Protector","Hero"],
     damage: 3,
@@ -5847,7 +5847,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Add 1 Centurion. <br><br> If this card is in your Tomb: Obliterate this card and Discard 1 Centurion; Rally 1 Centurion from your Hand (ignoring its cost and conditions).`
+        text: `Add 1 Centurion. <span class="line-gap"></span> If you have no Centurions in your Deck: Add 1 Basic. <span class="line-gap"></span> If this card is in your Tomb: Obliterate this card and Discard 1 Centurion; Rally 1 Centurion from your Hand (ignoring its cost and conditions).`
       }
     ]
   },
@@ -6056,14 +6056,14 @@ export const cards = [
     rarity: "Common",
     type: "Action",
     condition: "",
-    cost: "Obliterate 2 Heroes from your Tomb",
+    cost: "Obliterate 2 Champions with a Damage of 2 or Higher from your Tomb",
     tags: ["Action"],
     damage: "",
     life: "",
     damageThreshold: "",
     abilities: [
       {
-        text: `Recruit 1 Hero.`
+        text: `Recruit 1 Hero. <span class="line-gap"></span> If you have no Heroes in your Deck: Recruit 1 Basic with a Life higher than its Damage.`
       }
     ]
   },
@@ -6091,15 +6091,15 @@ export const cards = [
     image: `${cardArtFolder}/Equipments/GoodGoneBad.png`,
     rarity: "Superior",
     type: "Equipment",
-    condition: "Attach only to a Hero",
-    cost: "Obliterate all but 1 Hero that you control (minimum of 1)",
+    condition: "",
+    cost: "Obliterate all other Champions you control (minimum of 1), apart from the attached Champion",
     tags: ["Equipment"],
     damage: "",
     life: "",
     damageThreshold: "",
     abilities: [
       {
-        text: `The attached Champion loses Duelist, and if they do, increase their Damage by 1.`
+        text: `On Activation: Deal 1 Damage to all face-up Champions your Opponent controls. <span class="line-gap"></span> If attached to a Hero or Villain: The attached Champion loses Duelist, and if they do, increase their Damage by 1. If they are the only Hero or Villain that you control: Increase their Damage by 2.`
       }
     ]
   },
@@ -6146,7 +6146,7 @@ export const cards = [
     rarity: "Rare",
     type: "Rush",
     condition: "",
-    cost: "Send 1 face-up Hero or Villain you control to the Tomb and Target 1 face-up Champion on the Zone",
+    cost: "Send 1 face-up Hero, Villain, or Champion with 5 or more Damage, you control to the Tomb and Target 1 face-up Champion on the Zone",
     tags: ["Rush"],
     damage: 0,
     life: 0,
@@ -6189,7 +6189,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Deal Damage to Target equal to the total Damage of all face-up Heroes you control, and if you do, it becomes your End Phase.`
+        text: `Deal Damage to Target equal to the total Damage of all face-up Heroes you control, and if you do, it becomes your End Phase. <span class="line-gap"></span> If you control no Heroes: Deal Damage to Target equal to the Damage of 1 face-up Champion you control, and if you do, it becomes your End Phase.`
       }
     ]
   },
@@ -6225,7 +6225,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Each time a Valiant you control is Destroyed by Battle: Place 1 Kablam Counter on this card. <span class="line-gap"></span> Remove 4 Kablam Counters from this card and Target 1 face-up Champion you control; Increase Target's Damage by 2.`
+        text: `Each time a Champion you control is Destroyed by Battle: Place 1 Kablam Counter on this card. <span class="line-gap"></span> Remove 4 Kablam Counters from this card and Target 1 face-up Champion you control; Increase Target's Damage by 2.`
       }
     ]
   },
@@ -6775,7 +6775,7 @@ export const cards = [
     image: `${cardArtFolder}/Rush/FearNot.png`,
     rarity: "Rare",
     type: "Rush",
-    condition: "A card(s) you control is Targeted while you control a face-up Protector",
+    condition: "A card(s) you control is Targeted",
     cost: "",
     tags: ["Rush"],
     damage: 0,
@@ -6783,7 +6783,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Move the Targeted card(s) to your Reserve, and if you do, draw 1 for each card moved.`
+        text: `Move the Targeted card(s) to your Reserve. <span class="line-gap"></span> Then, if you control a face-up Protector: Draw 1 for each card moved.`
       }
     ]
   },
@@ -6868,12 +6868,12 @@ export const cards = [
     condition: "",
     cost: "Obliterate Mill 2",
     tags: ["Chrome","Outlaw","Construct"],
-    damage: 2,
-    life: 2,
+    damage: 7,
+    life: 3,
     damageThreshold: "2",
     abilities: [
       {
-        text: `Maintenance, Necrocharge, Priority <span class="line-gap"></span> High-Octane Heart: On Rally (Mandatory): Target 1 Commander Obelisk in your Tomb; Activate Target (ignoring its cost) and declare this card as its Commander. If you are unable to Target, or Activate, a card, then Destroy this card. <span class="line-gap"></span> Critical Malfunction: If This card is not a Commander (Mandatory): Destroy this card.`
+        text: `Duelist, Maintenance, Priority <span class="line-gap"></span> High-Octane Heart: On Rally (Mandatory): Target 1 Commander Obelisk in your Tomb; Activate Target (ignoring its cost) and declare this card as its Commander. If you are unable to Target, or Activate, a card, then Destroy this card. <span class="line-gap"></span> Critical Malfunction: If This card is not a Commander (Mandatory): Destroy this card.`
       }
     ]
   },
@@ -6999,7 +6999,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Recruit 1 with the same Damage and Life it had on the Zone.`
+        text: `Recruit 1 with the same combined total of Damage and Life it had on the Zone.`
       }
     ]
   },
@@ -7066,7 +7066,7 @@ export const cards = [
     condition: "",
     cost: "Rally 1 Dust Token to your Opponent's Zone",
     tags: ["Chrome","Mechanic","Specialist"],
-    damage: 2,
+    damage: 4,
     life: 4,
     damageThreshold: 1,
     abilities: [
@@ -7084,8 +7084,8 @@ export const cards = [
     condition: "",
     cost: "Rally 2 Scrap Token to your Opponent's Zone",
     tags: ["Chrome","Inventor","Specialist"],
-    damage: 1,
-    life: 1,
+    damage: 2,
+    life: 5,
     damageThreshold: "4",
     abilities: [
       {
@@ -7103,7 +7103,7 @@ export const cards = [
     cost: "Basic",
     tags: ["Chrome","Citizen"],
     damage: 2,
-    life: 1,
+    life: 2,
     damageThreshold: "1",
     abilities: [
       {
@@ -7139,7 +7139,7 @@ export const cards = [
     cost: "Obliterate 1 Commander Obelisk from your Tomb",
     tags: ["Chrome","Citizen"],
     damage: 2,
-    life: 5,
+    life: 4,
     damageThreshold: "2",
     abilities: [
       {
@@ -7531,7 +7531,7 @@ export const cards = [
     image: `${cardArtFolder}/Reflex/MasterfulBattle.png`,
     rarity: "Rare",
     type: "Reflex",
-    condition: "You control a \"Master\" Mage and do not conduct your Battle Phase this turn",
+    condition: "",
     cost: "",
     tags: ["Reflex"],
     damage: "",
@@ -7539,7 +7539,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Deal 3 Damage to all face-up Champions your Opponent controls.`
+        text: `Deal 3 Damage to all face-up Champions your Opponent controls. <span class="line-gap"></span> If you do not control a face-up Mage: All face-up Champions you control also take 3 Damage.`
       }
     ]
   },
@@ -7694,14 +7694,14 @@ export const cards = [
     rarity: "Rare",
     type: "Action",
     condition: "",
-    cost: "Obliterate 1 face-up Mage you control",
+    cost: "Obliterate 1 face-up Champion you control",
     tags: ["Action"],
     damage: "",
     life: "",
     damageThreshold: "",
     abilities: [
       {
-        text: `Recruit 1 Mage.`
+        text: `Recruit 1 Mage. <span class="line-gap"></span> If you have no Mages in your Deck: Draw 1.`
       }
     ]
   },
@@ -7712,14 +7712,14 @@ export const cards = [
     rarity: "Rare",
     type: "Rush",
     condition: "",
-    cost: "Target 1 face-up \"Master\" Mage you control",
+    cost: "Target 1 face-up Mage you control",
     tags: ["Rush"],
     damage: 0,
     life: 0,
     damageThreshold: "",
     abilities: [
       {
-        text: `Exhaust the Target, and if you do, activate 1 of the following effects: <span class="line-gap"></span> • Deal 1 Damage to all face-up Champions your Opponent controls. <span class="line-gap"></span> • Excavate 2. Add 1 Revealed, and Obliterate the other. <span class="line-gap"></span> • Activate 1 of Target's non-Exhaustion effects.`
+        text: `Exhaust the Target, and if you do, activate 1 of the following effects: <span class="line-gap"></span> • Deal 1 Damage to all face-up Champions your Opponent controls. <span class="line-gap"></span> • Excavate 2. Add 1 Revealed, and Obliterate the other. <span class="line-gap"></span> • Activate 1 of Target's non-Exhaustion effects. <span class="line-gap"></span> If you control no face-up Mages: Discard this card; Destroy 1 Champion you control.`
       }
     ]
   },
@@ -7791,7 +7791,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Each time a card(s) is sent from the Zone to the Tomb: Place 1 K-Cell Counter on this card for each sent card (max. 5 per instance). <br><br> Remove 5 K-Cell Counters from this card; Add 1 Clockwork.`
+        text: `Each time a card(s) is sent from the Zone to the Tomb: Place 1 K-Cell Counter on this card for each sent card (max. 5 per instance). <br><br> Remove 5 K-Cell Counters from this card; Add 1 Clockwork. If you have no Clockworks in your Deck: Add 1 Basic.`
       }
     ]
   },
@@ -7827,7 +7827,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Each time an Equipment card(s) is activated: Place 1 K-Cell Counter on this card for each card activated (max. 5 per instance). <br><br> Remove 3 K-Cell Counters from this card and Target 1 Noble in either Tomb; Resurrect Target.`
+        text: `Each time an Equipment card(s) is activated: Place 1 K-Cell Counter on this card for each card activated (max. 5 per instance). <br><br> Remove 3 K-Cell Counters from this card and Target 1 Noble in either Tomb; Resurrect Target. If there are no Nobles in either Tomb: You can Target, and Resurrect, a Champion with 0 Damage instead.`
       }
     ]
   },
@@ -7863,7 +7863,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Remove X K-Cell Counters from any one card on the Zone and Target 1 Champion you control; Increase Target's Damage by X.`
+        text: `Remove X Counters from any one card on the Zone and Target 1 Champion you control; Increase Target's Damage by X.`
       }
     ]
   },
@@ -7899,7 +7899,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Destroy all Champions on the Zone, and if you do, Recruit 1 Kaiju to each Player's Zone. The recruited Champions must always attack if able.`
+        text: `Destroy all Champions on the Zone, and if you do, Recruit 1 Kaiju to each Player's Zone. The recruited Champions must always attack if able. <span class="line-gap"></span> If you do not have at least 2 Kaiju in your Deck: No Kaiju are recruited.`
       }
     ]
   },
@@ -7917,7 +7917,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Upon Activation: Destroy all other face-up "Arena" Obelisks on the Zone. <span class="line-gap"></span> Each time a card(s) is drawn: Place 1 K-Cell Counter on this card for each card drawn (max. 5 per instance). <span class="line-gap"></span> Remove 2 K-Cell Counters from this card; Destroy all face-up "Arena" Obelisks on the Zone, then activate 1 "Arena" Obelisk from your Hand or Deck (ignoring its cost), and if you do, place 1 K-Cell Counter on that card.`
+        text: `Upon Activation: Destroy all other face-up "Arena" Obelisks on the Zone. <span class="line-gap"></span> Each time a card(s) is drawn: Place 1 K-Cell Counter on this card for each card drawn (max. 5 per instance). <span class="line-gap"></span> Remove 2 K-Cell Counters from this card; Destroy all face-up "Arena" Obelisks on the Zone, then activate 1 "Arena" Obelisk from your Hand or Deck (ignoring its cost), and if you do, place 1 K-Cell Counter on that card. If you have no "Arena" Obelisks in your Hand or Deck, then you can instead move 1 Obelisk from your Deck to your Reserve, but it cannot be activated this turn.`
       }
     ]
   },
@@ -7927,7 +7927,7 @@ export const cards = [
     image: `${cardArtFolder}/Champions/Mechadrex.png`,
     rarity: "Legendary",
     type: "Champion",
-    condition: "Your Opponent controls a Kaiju",
+    condition: "Your Opponent controls a Kaiju, or a Champion with 7 or more Damage",
     cost: "Basic",
     tags: ["Cinemonster","Megalith","Kaiju","Construct"],
     damage: 5,
@@ -8421,7 +8421,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Mount <span class="line-gap"></span> Shielded <span class="line-gap"></span> Mounted: Increase this card's Commander's Damage and Damage Threshold by 2. <span class="line-gap"></span> If Destroyed: Deal 1 Damage to all face-up Champions on the Zone.`
+        text: `Mount <span class="line-gap"></span> Mounted: Increase this card's Commander's Damage and Damage Threshold by 2. <span class="line-gap"></span> Mounted: If this card's Commander's attack is not blocked: After Damage Calculation, move this card, and its Commander, to your Reserve. <span class="line-gap"></span> If Destroyed: Deal 1 Damage to all face-up Champions on the Zone.`
       }
     ]
   },
@@ -8511,7 +8511,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `The attached Champion cannot declare an attack unless they are the Commander of an Obelisk. <span class="line-gap"></span> The attached Champion gains Duelist and Priority. <span class="line-gap"></span> If the attached Champion battles another with a lower Damage (not including Tokens): Instead of conducting Damage Calculation, move the other Champion to the Reserve.`
+        text: `The attached Champion cannot declare attacks unless they are a Commander. <span class="line-gap"></span> The attached Champion gains Duelist and Priority. <span class="line-gap"></span> If the attached Champion battles another with a lower Damage (not including Tokens): Instead of conducting Damage Calculation, move the other Champion to the Reserve.`
       }
     ]
   },
@@ -8557,7 +8557,7 @@ export const cards = [
     image: `${cardArtFolder}/Actions/99Cows1Bull.png`,
     rarity: "Rare",
     type: "Action",
-    condition: "You control a Citizen, Livestock, or Token",
+    condition: "You control a face-up Champion with 0 Damage",
     cost: "",
     tags: ["Action"],
     damage: "",
@@ -8565,7 +8565,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Add 1 Citizen or Livestock.`
+        text: `Add 1 Citizen or Livestock. <span class="line-gap"></span> If you have no Citizens or Livestock in your Deck: Add 1 Basic.`
       }
     ]
   },
@@ -8575,7 +8575,7 @@ export const cards = [
     image: `${cardArtFolder}/Rush/RideTheBull.png`,
     rarity: "Rare",
     type: "Rush",
-    condition: "You control at least 1 Livestock or Token",
+    condition: "",
     cost: "Target 1 face-up Champion on the Zone",
     tags: ["Rush"],
     damage: "",
@@ -8583,7 +8583,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Target is dealt 1 Damage for every Livestock and Token you control.`
+        text: `Target is dealt 1 Damage for every face-up Livestock and Token you control. <span class="line-gap"></span> If you control no face-up Livestock or Tokens: You take 1 Damage, and if you do, Deal 1 Damage to Target.`
       }
     ]
   },
@@ -8601,7 +8601,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Livestock you control cannot be Targeted for attacks or Destroyed by effects.`
+        text: `Face-Up Helpers and Livestock that you control gain Endurance and Invisible.`
       }
     ]
   },
@@ -8702,14 +8702,14 @@ export const cards = [
     rarity: "Rare",
     type: "Action",
     condition: "",
-    cost: "Target 1 Livestock you control",
+    cost: "",
     tags: ["Action"],
     damage: "",
     life: "",
     damageThreshold: "",
     abilities: [
       {
-        text: `Rally 1 Echo Token of Target to your Zone.`
+        text: `Target 1 face-up Livestock on the Zone; Rally 1 Echo Token of Target to your Zone. <span class="line-gap"></span> If there are no face-up Livestock on the Zone: Rally 1 Grenade Token.`
       }
     ]
   },
@@ -8727,7 +8727,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Obliterate 1 Livestock from your Tomb; Draw 1.`
+        text: `Obliterate either 1 Livestock or 5 Champions from your Tomb; Draw 1.`
       }
     ]
   },
@@ -8737,7 +8737,7 @@ export const cards = [
     image: `${cardArtFolder}/Equipments/PloweyMcPlowerson.png`,
     rarity: "Superior",
     type: "Equipment",
-    condition: "Attach only to a Livestock",
+    condition: "",
     cost: "",
     tags: ["Equipment"],
     damage: "",
@@ -8745,7 +8745,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Target 1 card in your Arsenal; Destroy Target, and if you do, set face-down into your Arsenal another of card of the same type from your Deck.`
+        text: `The attached Champion gains Forged. <span class="line-gap"></span> If attached to a Livestock: Exhaust the attached Champion and Target 1 card in your Arsenal; Destroy Target, and if you do, set face-down into your Arsenal another of card of the same type from your Deck.`
       }
     ]
   },
@@ -8997,7 +8997,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Each time a Livestock is rallied to your Zone: Place 1 Produce Counter on this card for every card rallied (max. 5 per instance). <br><br> Remove 5 Produce Counters from this card; Draw 2.`
+        text: `Each time a Livestock is rallied to your Zone: Place 1 Produce Counter on this card for every card rallied (max. 5 per instance). <span class="line-gap"></span> Remove 5 Produce Counters from this card; Draw 2. <span class="line-gap"></span> Reflex: Obliterate this face-up card that you control; All face-up non-Token Champions you currently control have their Damage Thresholds increased by 1 until the end of this turn.`
       }
     ]
   },
@@ -9151,7 +9151,7 @@ export const cards = [
     image: `${cardArtFolder}/Equipments/ToweringTowerShield.png`,
     rarity: "Superior",
     type: "Equipment",
-    condition: "Attach only to a Protector",
+    condition: "",
     cost: "",
     tags: ["Equipment"],
     damage: "",
@@ -9159,7 +9159,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Increase the attached Champion's Damage Threshold by 2, and if you do, decrease its Damage by 3. <span class="line-gap"></span> If a card(s) you control would be Destroyed (Reflex): Obliterate this card; Those cards are not Destroyed.`
+        text: `If attached to a Protector: Increase the attached Champion's Damage Threshold by 2, and if you do, decrease its Damage by 3. <span class="line-gap"></span> If a card(s) you control would be Destroyed (Reflex): Obliterate this card; Those cards are not Destroyed.`
       }
     ]
   },
@@ -9285,7 +9285,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Champions cannot declare attacks. <span class="line-gap"></span> During your End Phase (Mandatory): Sacrifice 2 Livestock, or if you are unable to, Destroy this card.`
+        text: `Champions cannot declare attacks. <span class="line-gap"></span> Starting the turn after you activate this card, During your End Phase (Mandatory): Sacrifice 2 Livestock, or if you are unable to, Destroy this card.`
       }
     ]
   },
@@ -9879,7 +9879,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Your Opponent Chooses, Either: Add 1 Action, or Retrieve 1 Action.`
+        text: `Your Opponent Chooses, Either: Add 1 Action, or Your Opponent selects 1 Action from either their Hand, face-down Arsenal, Reserve, or Tomb for you to obtain.`
       }
     ]
   },
@@ -9951,7 +9951,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Bounce 1 face-up Foretold you control, and if you do, you can Rally 1 Foretold from your Hand (ignoring its cost). <span class="line-gap"></span> If the Foretold you Rally has an \"On Rally\" effect, then your Opponent Chooses, Either: You get to choose which \"On Rally\" effect is activated, or your Opponent discards 1.`
+        text: `Bounce 1 face-up Basic you control, and if you do, you can Rally 1 Basic from your Hand (ignoring its cost). <span class="line-gap"></span> If you Rally a Basic Foretold with this effect, and it has an \"On Rally\" effect, then your Opponent Chooses, Either: You get to choose which \"On Rally\" effect is activated, or your Opponent discards 1.`
       }
     ]
   },
@@ -10257,7 +10257,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Rally 1 Champion from your Reserve (ignoring its cost).`
+        text: `Rally 1 Champion from your Reserve face-up (ignoring its cost).`
       }
     ]
   },
@@ -10861,7 +10861,7 @@ export const cards = [
     image: `${cardArtFolder}/Reflex/AnotherForTheFire.png`,
     rarity: "Common",
     type: "Reflex",
-    condition: "An Undead you controlled was sent to the Tomb or Void by your Opponent",
+    condition: "An Undead was sent to the Tomb or Void",
     cost: "Target 1 Champion on the Zone",
     tags: ["Reflex"],
     damage: "",
