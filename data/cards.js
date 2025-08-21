@@ -1682,7 +1682,7 @@ export const cards = [
     rarity: "Superior",
     type: "Action",
     condition: "",
-    cost: "Your Opponent randomly chooses 1 card in your Hand to discard, depending on the type of card discarded, activate the following effect",
+    cost: "Your Opponent randomly chooses 1 card in your Hand to discard, depending on the type of card discarded, activate the following effect:",
     tags: ["Action"],
     damage: "",
     life: "",
@@ -4119,7 +4119,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Increase the attached Champion's Damage by 1. <span class="line-gap"></span> If attached to a Blademaster or Knight: Instead increase the attached Champion's Damage by 4. <span class="line-gap"></span> Each time the attached Champion declares an attack (Mandatory): Your Opponent draws 1.`
+        text: `Increase the attached Champion's Damage by 1. <span class="line-gap"></span> If attached to a Blademaster or Knight: Instead, increase the attached Champion's Damage by 4. <span class="line-gap"></span> Each time the attached Champion declares an attack (Mandatory): Your Opponent draws 1.`
       }
     ]
   },
@@ -4857,7 +4857,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `The attached Champion cannot be Destroyed by card effects. <span class="line-gap"></span> If Sent to Tomb: Retrieve 1 Action.`
+        text: `The attached Champion gains Endurance. <span class="line-gap"></span> If Sent to Tomb: Retrieve 1 Action.`
       }
     ]
   },
