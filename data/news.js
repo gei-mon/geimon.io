@@ -2,7 +2,7 @@
 const newsData = [
     {
         date: "August 19th, 2025",
-        text: "Added 104 New Cards! Minor text updates to other cards. Didn't get all the arts done for the new cards yet, but they're coming."
+        text: "Added 104 New Cards! Minor text updates to other cards."
     },
     {
         date: "August 17th, 2025",

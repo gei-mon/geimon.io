@@ -6214,7 +6214,7 @@ export const cards = [
   {
     id: "387",
     name: "Onomatopoeia",
-    image: `${cardArtFolder}/Actions/Onomatopoeia.png`,
+    image: `${cardArtFolder}/Obelisks/Onomatopoeia.png`,
     rarity: "Rare",
     type: "Obelisk",
     condition: "",
