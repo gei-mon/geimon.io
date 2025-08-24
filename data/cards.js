@@ -3219,7 +3219,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Flip face-down all Equipments your Opponent controls.`
+        text: `Flip all Equipments your Opponent controls face-down.`
       }
     ]
   },
@@ -5716,12 +5716,12 @@ export const cards = [
     condition: "",
     cost: "Basic",
     tags: ["Nightveil","Ninja","Blademaster"],
-    damage: 0,
+    damage: 3,
     life: 1,
     damageThreshold: "1",
     abilities: [
       {
-        text: `Deathward <span class="line-gap"></span> Caution! Sharp Blades! (Flip): Deal 2 Damage to your Opponent.`
+        text: `Deathward, Duelist <span class="line-gap"></span> Caution! Sharp Blades! (Flip): Deal 2 Damage to your Opponent.`
       }
     ]
   },
@@ -5739,7 +5739,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `From a Hat (Flip): Target 1 non-Champion in your Tomb; Retrieve Target.`
+        text: `Deathward <span class="line-gap"></span> From a Hat (Flip): Target 1 non-Champion in your Tomb; Retrieve Target.`
       }
     ]
   },
