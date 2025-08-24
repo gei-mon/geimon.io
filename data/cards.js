@@ -7030,7 +7030,7 @@ export const cards = [
     condition: "",
     cost: "Send 2 Equipments from your Reserve to your Tomb",
     tags: ["Chrome","Construct","Marksman","Specialist"],
-    damage: 7,
+    damage: 4,
     life: 1,
     damageThreshold: "3",
     abilities: [
@@ -8223,7 +8223,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `It's Me or Him: Swap this card's current Damage and Life. <span class="line-gap"></span> Dark Deal: If this card's Life is currently higher than its Damage: Offer 2 Life; Draw 1. <span class="line-gap"></span> Burning Rage: If this card's Damage is currently higher than its Life: Offer 2 Life; Deal 1 Damage to all face-up Champions your Opponent controls.`
+        text: `It's Me or Him: Swap this card's current Damage and Life. <span class="line-gap"></span> Dark Deal: If this card's Life is currently higher than its Damage (Exhaustion): Offer 2 Life; Draw 1. <span class="line-gap"></span> Burning Rage: If this card's Damage is currently higher than its Life (Exhaustion): Offer 2 Life; Deal 2 Damage to all face-up Champions your Opponent controls.`
       }
     ]
   },
