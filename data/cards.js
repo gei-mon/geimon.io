@@ -2746,8 +2746,8 @@ export const cards = [
     condition: "",
     cost: "Bury 2 Equipments",
     tags: ["Clockwork","Marshall","Protector","Marksman"],
-    damage: 5,
-    life: 3,
+    damage: 1,
+    life: 4,
     damageThreshold: "3",
     abilities: [
       {
@@ -6225,7 +6225,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Each time a Champion you control is Destroyed by Battle: Place 1 Kablam Counter on this card. <span class="line-gap"></span> Remove 4 Kablam Counters from this card and Target 1 face-up Champion you control; Increase Target's Damage by 2.`
+        text: `Each time a Champion you control is Destroyed by Battle: Place 1 Kablam Counter on this card. If a Valiant is Destroyed, then place an additional Kablam Counter on this card. <span class="line-gap"></span> Remove 4 Kablam Counters from this card and Target 1 face-up Champion you control; Increase Target's Damage by 2.`
       }
     ]
   },
