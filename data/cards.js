@@ -6038,7 +6038,7 @@ export const cards = [
     rarity: "Legendary",
     type: "Champion",
     condition: "",
-    cost: "",
+    cost: "Basic",
     tags: ["Valiant","Hellfire","Outlaw","Villain"],
     damage: 0,
     life: 1,
@@ -6236,7 +6236,7 @@ export const cards = [
     rarity: "Common",
     type: "Champion",
     condition: "Reflex: A Champion you control is Destroyed",
-    cost: "",
+    cost: "Basic",
     tags: ["Valiant","Citizen"],
     damage: 0,
     life: 1,
@@ -6254,7 +6254,7 @@ export const cards = [
     rarity: "Rare",
     type: "Champion",
     condition: "",
-    cost: "",
+    cost: "Basic",
     tags: ["Valiant","Citizen"],
     damage: 0,
     life: 2,
@@ -6262,6 +6262,78 @@ export const cards = [
     abilities: [
       {
         text: `Encouraging Words: Increase the Damage and Damage Thresholds of all Heroes you control by 1. <span class="line-gap"></span> Inevitable End: If Destroyed: Move 1 Hero from your Deck to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "390",
+    name: "The Hunger",
+    image: `${cardArtFolder}/Champions/TheHunger.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "",
+    cost: "Offer 4 Life",
+    tags: ["Valiant","Villain"],
+    damage: 1,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Durable, Priority <span class="line-gap"></span> Insatiable Hunger: If this Champion Destroys another by Battle: Remove any Passives previously granted by this effect and Add the Destroyed card's starting Damage and Life to this card, and if you do, this card gains all Passives held by the Destroyed Champion in the Tomb.`
+      }
+    ]
+  },
+  {
+    id: "391",
+    name: "Torch",
+    image: `${cardArtFolder}/Champions/Torch.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Valiant","Hero"],
+    damage: 3,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Duelist <span class="line-gap"></span> Turn Up The Heat!: Move this card to your Arsenal and attach it to a face-up Champion your Opponent controls. During each of your Opponent's Intermission Phases: The attached Champion offers 1 Life.`
+      }
+    ]
+  },
+  {
+    id: "392",
+    name: "Wynd",
+    image: `${cardArtFolder}/Champions/Wynd.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Discard 1",
+    tags: ["Valiant","Hero"],
+    damage: 3,
+    life: 1,
+    damageThreshold: "3",
+    abilities: [
+      {
+        text: `Second Strike, Speed <span class="line-gap"></span> Can't Outrun Taxes: At the start of your Battle Phase if you control this face-up card: Discard 1 or move this card to your Reserve.`
+      }
+    ]
+  },
+  {
+    id: "393",
+    name: "The Might",
+    image: `${cardArtFolder}/Champions/TheMight.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Valiant","Protector","Hero"],
+    damage: 1,
+    life: 2,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Defender, Priority <span class="line-gap"></span> Regained Power: If in the Reserve during your End Phase: Add 1 Power Counter to this card. <span class="line-gap"></span> Bided Time: On Rally: Remove all Power Counters from this card. For each counter removed: Increase this card's Damage and Life by 1. For every 3 counters removed: Increase this card's Damage Threshold by 1. If 5+ counters were removed: This card gains Durable and Speed. If 7+ counters were removed: This card gains Bulletproof.`
       }
     ]
   },
@@ -6698,6 +6770,24 @@ export const cards = [
     ]
   },
   {
+    id: "445",
+    name: "Monkey's Paw: Weaken My Enemies",
+    image: `${cardArtFolder}/Obelisks/MonkeysPaw.png`,
+    rarity: "Common",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Reduce the Damage of all Champions your Opponent controls by 3. <span class="line-gap"></span> Reduce the Damage of all Champions you control to 0.`
+      }
+    ]
+  },
+  {
     id: "481",
     name: "Honeda, Silver-Suited Samurai",
     image: `${cardArtFolder}/Champions/HonedaSilverSuitedSamurai.png`,
@@ -6730,6 +6820,24 @@ export const cards = [
     abilities: [
       {
         text: `Bounce all other cards you control, and if you do, you must offer 1 Life for each card bounced this way.`
+      }
+    ]
+  },
+  {
+    id: "483",
+    name: "Berserk Samurai, the Unbound",
+    image: `${cardArtFolder}/Champions/BerserkSamuraiUnbound.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "Can only be rallied from your Hand or Reserve by paying its cost",
+    cost: "Destroy 2 cards you control with different types",
+    tags: ["Honed","Frenzied","Blademaster","Samurai"],
+    damage: 3,
+    life: 3,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Micro-Doses, Mega-Immunity: On Rally: This card is unaffected by the effects of the types of cards Destroyed for its Rally.`
       }
     ]
   },
@@ -7742,6 +7850,204 @@ export const cards = [
     ]
   },
   {
+    id: "735",
+    name: "Celestial Guidance",
+    image: `${cardArtFolder}/Actions/CelestialGuidance.png`,
+    rarity: "Rare",
+    type: "Action",
+    condition: "",
+    cost: "",
+    tags: ["Action"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `If there are an Odd number of Champions on the Zone: Draw 1. <span class="line-gap"></span> If there is an Even number of Champions on the Zone: Excavate 2, then return the cards in an order of your choice.`
+      }
+    ]
+  },
+  {
+    id: "736",
+    name: "Kazimir’s Temporal Do-Over",
+    image: `${cardArtFolder}/Reflex/KazimirsTemporalDoOver.png`,
+    rarity: "Superior",
+    type: "Reflex",
+    condition: "It is the end of the Battle Phase",
+    cost: "Obliterate Mill 10",
+    tags: ["Reflex"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Resurrect under their Owners' control all Champions Destroyed by Battle this Phase.`
+      }
+    ]
+  },
+  {
+    id: "737",
+    name: "Mirror Hex",
+    image: `${cardArtFolder}/Rush/MirrorHex.png`,
+    rarity: "Rare",
+    type: "Rush",
+    condition: "A Champion you control is Targeted",
+    cost: "",
+    tags: ["Rush"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Move the Target to a Champion your Opponent controls, and if you do, Destroy your Targeted Champion.`
+      }
+    ]
+  },
+  {
+    id: "738",
+    name: "Westra's Staff",
+    image: `${cardArtFolder}/Equipments/WestrasStaff.png`,
+    rarity: "Superior",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Exhaustion: Target 1 face-up Champion on the Zone; Target takes 3 Damage, then the attached Champion takes 1 Damage.`
+      }
+    ]
+  },
+  {
+    id: "739",
+    name: "Phaustus' Crown",
+    image: `${cardArtFolder}/Equipments/PhaustusCrown.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Reflex: Offer 2 Life from the attached Champion and Target 1 face-up Champion on the Zone; Target can attack 1 less time during its controller's next Battle Phase.`
+      }
+    ]
+  },
+  {
+    id: "740",
+    name: "Ouroboros' Orb",
+    image: `${cardArtFolder}/Equipments/OuroborosOrb.png`,
+    rarity: "Common",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Excavate 1, then return the revealed card to either the top or bottom of the Deck.`
+      }
+    ]
+  },
+  {
+    id: "741",
+    name: "Beltair's Glasses",
+    image: `${cardArtFolder}/Equipments/BeltairsGlasses.png`,
+    rarity: "Superior",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Exhaustion: Rally 1 Echo Token of the attached Champion, and if you do, the rallied Token gains Taunt. <span class="line-gap"></span> While there is a linked Token to the attached Champion: The attached Champion gains Invisible.`
+      }
+    ]
+  },
+  {
+    id: "742",
+    name: "Kelfir's Coat",
+    image: `${cardArtFolder}/Equipments/KelfirsCoat.png`,
+    rarity: "Superior",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Exhaustion: Bottom Stack X cards from your Hand, then Draw X.`
+      }
+    ]
+  },
+  {
+    id: "743",
+    name: "Galandrel’s Bracers",
+    image: `${cardArtFolder}/Equipments/GalandrelsBracers.png`,
+    rarity: "Rare",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Target 1 face-up non-Token Champion on the Zone; Increase Target's Damage Threshold by 1, and if you do, Decrease Target's Damage by 1.`
+      }
+    ]
+  },
+  {
+    id: "744",
+    name: "Antwon's Totems",
+    image: `${cardArtFolder}/Equipments/AntwonsTotems.png`,
+    rarity: "Legendary",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `On Activation: This card gains 5 Conjuration Counters. <span class="line-gap"></span> Exhaustion: Remove X Conjuration Counters from this card and Rally 1 of the following Tokens to your Zone: <span class="line-gap"></span> 1 • Frog Token. <span class="line-gap"></span> 2 • Scrap Token. <span class="line-gap"></span> 4 • Stasis Token.`
+      }
+    ]
+  },
+  {
+    id: "745",
+    name: "Markerion's Tome",
+    image: `${cardArtFolder}/Equipments/MarkerionsTome.png`,
+    rarity: "Superior",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: 0,
+    life: 0,
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Target 1 Champion in your Opponent's Tomb; Activate 1 of Target's effects as if the attached Champion had it.`
+      }
+    ]
+  },
+  {
     id: "781",
     name: "Skaridrex, the Mighty",
     image: `${cardArtFolder}/Champions/Skaridrex.png`,
@@ -8296,6 +8602,24 @@ export const cards = [
     abilities: [
       {
         text: `One-Woman Army: If this is the only Champion you control: This card gains Taskmaster and Unstoppable. <span class="line-gap"></span> Broken Soul: Hellfire deal no Battle Damage to this card, and you take no Battle Damage from battles involving this card and a Hellfire.`
+      }
+    ]
+  },
+  {
+    id: "850",
+    name: "Glubaghuul, Lazy Parent",
+    image: `${cardArtFolder}/Champions/Glubaghuul.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Discard 1",
+    tags: ["Hellfire","Trickster"],
+    damage: 1,
+    life: 3,
+    damageThreshold: "2",
+    abilities: [
+      {
+        text: `Take My Child to Work: During your Main Phase 1: Give control of 1 other Champion to your Opponent; Draw 1, and if you do, regain control of your Champion during your Opponent's next End Phase.`
       }
     ]
   },
@@ -9398,6 +9722,24 @@ export const cards = [
     ]
   },
   {
+    id: "962",
+    name: "Ditzy Daisy, Whimsical Distraction",
+    image: `${cardArtFolder}/Champions/DitzyDaisyWhimsicalDistraction.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Crescendo","Mage"],
+    damage: 0,
+    life: 3,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Sing Along! Or Else: You cannot conduct your Battle Phase this turn: Discard 1; Your Opponent cannot conduct their next Battle Phase if this card remains face-up on the Zone.`
+      }
+    ]
+  },
+  {
     id: "1021",
     name: "Guardian Angel",
     image: `${cardArtFolder}/Champions/GuardianAngel.png`,
@@ -9412,6 +9754,60 @@ export const cards = [
     abilities: [
       {
         text: `Deathward <span class="line-gap"></span> Holy Barrier: If this card is in your Tomb (Reflex): Obliterate this card; Negate your Opponent's next attack.`
+      }
+    ]
+  },
+  {
+    id: "1022",
+    name: "Loving Angel",
+    image: `${cardArtFolder}/Champions/LovingAngel.png`,
+    rarity: "Superior",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Radiant","Protector"],
+    damage: 0,
+    life: 5,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Contained <span class="line-gap"></span> Reject Hate, Embrace Love: Target 1 face-up Champion on the Zone; Increase Target's Life by 2, and if you do, Decrease its Damage by 1.`
+      }
+    ]
+  },
+  {
+    id: "1023",
+    name: "Smothering Angel",
+    image: `${cardArtFolder}/Champions/SmotheringAngel.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Radiant","Protector"],
+    damage: 2,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Nighty Night (Flip): If flipped face-up by battle: Move this card to your Arsenal and attach it to the attacking Champion. The attached Champion's Damage is reduced by 5.`
+      }
+    ]
+  },
+  {
+    id: "1024",
+    name: "Feral Angel",
+    image: `${cardArtFolder}/Champions/FeralAngel.png`,
+    rarity: "Legendary",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Radiant","Frenzied","Protector"],
+    damage: 4,
+    life: 2,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Deathward <span class="line-gap"></span> Bad Angel: If Destroyed: Move this card to your Arsenal and attach it to a face-up Champion you control. The attached Champion's Damage is increased by 1, and it gains Board Breaker and Priority.`
       }
     ]
   },

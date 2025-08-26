@@ -20,6 +20,10 @@ const issueData = [
         text: "All cards within games are targeted by ID, not UUID, which means that clicking to target, attack, or block with 1 card mirrors the action for all cards of the same kind. Issue is only really noticeable with Tokens as all other cards are 1 per Deck."
     },
     {
+        title: "Feature Request",
+        text: "Spectating games, you want it, I want it. It'll happen one of these days."
+    },
+    {
         title: "The Nearly Impossible Feature Request",
         text: "\"Make it an auto-sim.\" If you email me about this, I'm blocking you and banning your account."
     }
