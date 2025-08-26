@@ -323,11 +323,6 @@ io.on('connection', (socket) => {
       if (!joinedRoom) {
         joinedRoom = generateRoomId();
         openRooms.set(joinedRoom, [socket.id]);
-        roomMeta.set(joinedRoom, {
-          gameType,
-          player1: user1?.username,
-          player2: user2?.username
-        });
       }
     }
 
@@ -344,6 +339,12 @@ io.on('connection', (socket) => {
 
         io.to(socketId1).emit('user_joined', { otherUser: user2.username });
         io.to(socketId2).emit('user_joined', { otherUser: user1.username });
+
+        roomMeta.set(joinedRoom, {
+          gameType,
+          player1: user1?.username,
+          player2: user2?.username
+        });
       }
   });
 
