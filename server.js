@@ -832,16 +832,18 @@ app.get("/active-games", (req, res) => {
   for (const [roomId, meta] of roomMeta.entries()) {
     const state = gameStates.get(roomId);
     if (!state) continue; // skip empty
+    console.log("roomMeta:", roomMeta);
+    console.log("gameStates:", gameStates);
 
     games.push({
       id: roomId,
       player1: meta.player1 || "Unknown",
       player2: meta.player2 || "Unknown",
       gameType: meta.gameType || "Unknown",
-      playerDeck: state.playerDeck || null,
-      opponentDeck: state.opponentDeck || null,
-      totem: state.totem || null,
-      turnOrder: state.turnOrder || null
+      playerDeck: state.playerDeck || "Unknown",
+      opponentDeck: state.opponentDeck || "Unknown",
+      totem: state.totem || "Unknown",
+      turnOrder: state.turnOrder || "Unknown"
     });
   }
   res.json(games);

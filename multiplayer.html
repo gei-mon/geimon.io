@@ -170,30 +170,31 @@
         try {
             const res = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/active-games");
             const games = await res.json();
+            console.log(games);
             const tbody = document.querySelector("#active-games tbody");
             tbody.innerHTML = "";
 
             games.forEach(g => {
-            const row = document.createElement("tr");
-            row.innerHTML = `
-                <td>${g.player1} vs ${g.player2}</td>
-                <td>${g.gameType}</td>
-            `;
-            row.style.cursor = "pointer";
-            row.onclick = () => {
-                const params = new URLSearchParams({
-                    gameId: g.id,
-                    spectator: true,
-                    playerDeck: JSON.stringify(g.gameState.playerDeck || null),
-                    opponentDeck: JSON.stringify(g.gameState.opponentDeck || null),
-                    gameType: g.gameType || null,
-                    totem: g.gameState.totem || null,
-                    turnOrder: g.gameState.turnOrder || null
-                });
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${g.player1} vs ${g.player2}</td>
+                    <td>${g.gameType}</td>
+                `;
+                row.style.cursor = "pointer";
+                row.onclick = () => {
+                    const params = new URLSearchParams({
+                        gameId: g.id,
+                        spectator: true,
+                        playerDeck: JSON.stringify(g.gameState.playerDeck || null),
+                        opponentDeck: JSON.stringify(g.gameState.opponentDeck || null),
+                        gameType: g.gameType || null,
+                        totem: g.gameState.totem || null,
+                        turnOrder: g.gameState.turnOrder || null
+                    });
 
-                window.open(`https://gei-mon.github.io/geimon.io/game.html?${params.toString()}`, "_blank");
-            };
-            tbody.appendChild(row);
+                    window.open(`https://gei-mon.github.io/geimon.io/game.html?${params.toString()}`, "_blank");
+                };
+                tbody.appendChild(row);
             });
         } catch (err) {
             console.error("Failed to fetch active games:", err);
