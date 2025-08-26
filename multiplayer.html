@@ -181,18 +181,27 @@
             `;
             row.style.cursor = "pointer";
             row.onclick = () => {
-                // open spectator view
-                window.open("https://gei-mon.github.io/geimon.io/game.html?gameId=${g.id}&spectator=true", "_blank");
+                const params = new URLSearchParams({
+                    gameId: g.id,
+                    spectator: true,
+                    playerDeck: JSON.stringify(g.gameState.playerDeck || null),
+                    opponentDeck: JSON.stringify(g.gameState.opponentDeck || null),
+                    gameType: g.gameType || null,
+                    totem: g.gameState.totem || null,
+                    turnOrder: g.gameState.turnOrder || null
+                });
+
+                window.open(`https://gei-mon.github.io/geimon.io/game.html?${params.toString()}`, "_blank");
             };
             tbody.appendChild(row);
             });
         } catch (err) {
             console.error("Failed to fetch active games:", err);
         }
-        }
+    }
 
-        updateActiveGames();
-        setInterval(updateActiveGames, 5000);
+    updateActiveGames();
+    setInterval(updateActiveGames, 1000);
 </script>
 </body>
 </html>

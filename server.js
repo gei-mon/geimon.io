@@ -618,30 +618,43 @@ io.on('connection', (socket) => {
     io.in(gameId).emit('remove_attachment', { sourceId, targetId, color });
   });
 
-  socket.on('disconnect', () => {
+  socket.on("disconnect", () => {
     const user = userMap.get(socket.id);
     if (!user) return;
 
     const { roomId, username } = user;
-    const updated = (openRooms.get(roomId) || []).filter(id => id !== socket.id);
-    if (updated.length === 0) openRooms.delete(roomId);
-    else openRooms.set(roomId, updated);
 
-    const roomSockets = openRooms.get(roomId);
-    if (roomSockets && roomSockets.length === 1) {
-      const remainingSocketId = roomSockets[0];
-      const remainingUser = userMap.get(remainingSocketId);
-      io.to(remainingSocketId).emit('user_left', { otherUser: username });
+    // Remove this socket from the room
+    const remaining = (openRooms.get(roomId) || []).filter(id => id !== socket.id);
+
+    if (remaining.length === 0) {
+      // No sockets left in the room → clean everything
+      openRooms.delete(roomId);
+      gameStates.delete(roomId);
+      roomMeta.delete(roomId);
+    } else {
+      // Update openRooms
+      openRooms.set(roomId, remaining);
+
+      // If one socket remains, notify them
+      if (remaining.length === 1) {
+        const remainingSocketId = remaining[0];
+        io.to(remainingSocketId).emit("user_left", { otherUser: username });
+      }
     }
 
+    // Always remove from userMap last
     userMap.delete(socket.id);
   });
+
   socket.on("join_game_room", ({ gameId }) => {
     socket.join(gameId);
   });
+
   socket.on("totem_fade_done", ({ gameId }) => {
     totemFadeStatus.set(gameId, true);
   });
+
 });
 
 const gameStates = new Map();
@@ -824,7 +837,11 @@ app.get("/active-games", (req, res) => {
       id: roomId,
       player1: meta.player1 || "Unknown",
       player2: meta.player2 || "Unknown",
-      gameType: meta.gameType || "Unknown"
+      gameType: meta.gameType || "Unknown",
+      playerDeck: state.playerDeck || null,
+      opponentDeck: state.opponentDeck || null,
+      totem: state.totem || null,
+      turnOrder: state.turnOrder || null
     });
   }
   res.json(games);
