@@ -831,9 +831,11 @@ app.get("/active-games", (req, res) => {
   const games = [];
   for (const [roomId, meta] of roomMeta.entries()) {
     const state = gameStates.get(roomId);
-    if (!state) continue; // skip empty
+
     console.log("roomMeta:", roomMeta);
     console.log("gameStates:", gameStates);
+
+    if (!state) continue;
 
     games.push({
       id: roomId,
