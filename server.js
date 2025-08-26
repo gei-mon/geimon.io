@@ -829,25 +829,28 @@ app.get('/lobby-status', (req, res) => {
 
 app.get("/active-games", (req, res) => {
   const games = [];
+
   for (const [roomId, meta] of roomMeta.entries()) {
-    const state = gameStates.get(roomId);
-
-    console.log("roomMeta:", roomMeta);
-    console.log("gameStates:", gameStates);
-
-    if (!state) continue;
+    const state = gameStates.get(roomId) || {}; // default to empty object if state missing
 
     games.push({
       id: roomId,
       player1: meta.player1 || "Unknown",
       player2: meta.player2 || "Unknown",
       gameType: meta.gameType || "Unknown",
-      playerDeck: (state && state.playerDeck) || "Unknown",
-      opponentDeck: (state && state.opponentDeck) || "Unknown",
-      totem: (state && state.totem) || "Unknown",
-      turnOrder: (state && state.turnOrder) || "Unknown"
+      playerDeck: state.playerDeck || null,
+      opponentDeck: state.opponentDeck || null,
+      totem: state.totem || null,
+      turnOrder: state.turnOrder || null
     });
   }
+
+  // Optional: debug info for Heroku logs
+  console.log("ACTIVE-GAMES endpoint hit");
+  console.log("roomMeta keys:", Array.from(roomMeta.keys()));
+  console.log("gameStates keys:", Array.from(gameStates.keys()));
+  console.log("Returning games count:", games.length);
+
   res.json(games);
 });
 
