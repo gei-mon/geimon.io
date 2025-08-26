@@ -20,9 +20,9 @@ export const rules = {
   Stack: "Place a designated card on the top of the Deck.",
   "Bottom Stack": "Place a designated card on the bottom of the Deck.",
   Target: "Select a card to be the recipient of an effect.",
-  Unleash: "Rally from the Void (ignoring cost). You must still meet conditions.",
+  Unleash: "Rally from your Void (ignoring cost). You must still meet conditions.",
   "Cards Controlled": "The total number of cards between a Player's Champions and cards in their Arsenal.",
   Exhaustion: "Exhaustion effects can only be used if the card has not already attacked or used an Exhaustion effect. Exhaustion effects mean that for the rest of the turn that card can no longer use other Exhaustion effects or declare attacks.",
-  Blink: "Rally from the Hand (ignoring cost). You must still meet conditions.",
-  Deploy: "Rally from the Reserve (ignoring cost). You must still meet conditions."
+  Blink: "Rally from your Hand (ignoring cost). You must still meet conditions.",
+  Deploy: "Rally from your Reserve (ignoring cost). You must still meet conditions."
 }
