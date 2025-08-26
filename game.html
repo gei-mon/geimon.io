@@ -493,6 +493,7 @@
             padding: 10px 10px;
             border-radius: 2px;
             cursor: pointer;
+            transition: opacity 1s ease-in-out;
             ">
             Clear Attachments
         </div>
@@ -3684,14 +3685,15 @@
         // Add event listener for click
         tombButton.addEventListener("click", () => {
             const popup = document.createElement("div");
+            popup.id = "player-tomb-popup";
                 popup.style.position = "fixed";
                 popup.style.top = "50%";
                 popup.style.left = "50%";
                 popup.style.transform = "translate(-50%, -50%)";
+                popup.style.minWidth = "20vw";
                 popup.style.maxWidth = "min(90%, 800px)";
                 popup.style.overflowY = "auto";
-                popup.style.maxHeight = "unset";
-                popup.style.height = "auto";
+                popup.style.height = "90vh";
                 popup.style.overflow = "visible";
                 popup.style.padding = "10px 20px";
                 popup.style.backgroundColor = "rgba(0, 0, 0, 0.85)";
@@ -3716,6 +3718,8 @@
                 const none = document.createElement("div");
                 none.textContent = "Tomb is empty.";
                 none.style.color = "white";
+                none.style.textAlign = "center";
+                none.style.flex = "1";
                 popup.appendChild(none);
             } else {
                 const cardContainer = document.createElement("div");
@@ -3724,8 +3728,12 @@
                     cardContainer.style.justifyContent = "center";
                     cardContainer.style.gap = "10px";
                     cardContainer.style.marginRight = "10px";
+                    cardContainer.style.minWidth = "18vw";
                     cardContainer.style.maxWidth = "100%";
                     cardContainer.style.overflow = "visible";
+                    cardContainer.style.flex = "1";
+                    cardContainer.style.overflowY = "auto";
+                    cardContainer.style.padding = "10px";
 
                 const scale = 0.3;
                 const cardWidth = 240;
@@ -3893,14 +3901,15 @@
         // Add event listener for click
         voidButton.addEventListener("click", () => {
             const popup = document.createElement("div");
+            popup.id = "player-void-popup";
                 popup.style.position = "fixed";
                 popup.style.top = "50%";
                 popup.style.left = "50%";
                 popup.style.transform = "translate(-50%, -50%)";
+                popup.style.minWidth = "20vw";
                 popup.style.maxWidth = "min(90%, 800px)";
                 popup.style.overflowY = "auto";
-                popup.style.maxHeight = "unset";
-                popup.style.height = "auto";
+                popup.style.height = "90vh";
                 popup.style.overflow = "visible";
                 popup.style.padding = "10px 20px";
                 popup.style.backgroundColor = "rgba(0, 0, 0, 0.85)";
@@ -3925,6 +3934,8 @@
                 const none = document.createElement("div");
                 none.textContent = "Void is empty.";
                 none.style.color = "white";
+                none.style.textAlign = "center";
+                none.style.flex = "1";
                 popup.appendChild(none);
             } else {
                 const cardContainer = document.createElement("div");
@@ -3933,8 +3944,12 @@
                     cardContainer.style.justifyContent = "center";
                     cardContainer.style.gap = "10px";
                     cardContainer.style.marginRight = "19px";
+                    cardContainer.style.minWidth = "18vw";
                     cardContainer.style.maxWidth = "100%";
                     cardContainer.style.overflow = "visible";
+                    cardContainer.style.flex = "1";
+                    cardContainer.style.overflowY = "auto";
+                    cardContainer.style.padding = "10px";
 
                 const scale = 0.3;
                 const cardWidth = 240;
@@ -4118,7 +4133,7 @@
                 popup.style.transform = "translate(-50%, -50%)";
                 popup.style.maxWidth = "min(90%, 800px)";
                 popup.style.overflowY = "auto";
-                popup.style.maxHeight = "unset";
+                popup.style.maxHeight = "90vh";
                 popup.style.height = "auto";
                 popup.style.overflow = "visible";
                 popup.style.padding = "10px 20px";
@@ -4144,6 +4159,8 @@
                 const none = document.createElement("div");
                 none.textContent = "Opponent's Tomb is empty.";
                 none.style.color = "white";
+                none.style.textAlign = "center";
+                none.style.flex = "1";
                 popup.appendChild(none);
             } else {
                 const cardContainer = document.createElement("div");
@@ -4152,8 +4169,12 @@
                     cardContainer.style.justifyContent = "center";
                     cardContainer.style.gap = "10px";
                     cardContainer.style.marginRight = "10px";
+                    cardContainer.style.minWidth = "18vw";
                     cardContainer.style.maxWidth = "100%";
                     cardContainer.style.overflow = "visible";
+                    cardContainer.style.flex = "1";
+                    cardContainer.style.overflowY = "auto";
+                    cardContainer.style.padding = "10px";
 
                 const scale = 0.3;
                 const cardWidth = 240;
@@ -4330,7 +4351,7 @@
                 popup.style.transform = "translate(-50%, -50%)";
                 popup.style.maxWidth = "min(90%, 800px)";
                 popup.style.overflowY = "auto";
-                popup.style.maxHeight = "unset";
+                popup.style.maxHeight = "90vh";
                 popup.style.height = "auto";
                 popup.style.overflow = "visible";
                 popup.style.padding = "10px 20px";
@@ -4356,6 +4377,8 @@
                 const none = document.createElement("div");
                 none.textContent = "Opponent's Void is empty.";
                 none.style.color = "white";
+                none.style.textAlign = "center";
+                none.style.flex = "1";
                 popup.appendChild(none);
             } else {
                 const cardContainer = document.createElement("div");
@@ -4364,8 +4387,12 @@
                     cardContainer.style.justifyContent = "center";
                     cardContainer.style.gap = "10px";
                     cardContainer.style.marginRight = "10px";
+                    cardContainer.style.minWidth = "18vw";
                     cardContainer.style.maxWidth = "100%";
                     cardContainer.style.overflow = "visible";
+                    cardContainer.style.flex = "1";
+                    cardContainer.style.overflowY = "auto";
+                    cardContainer.style.padding = "10px";
 
                 const scale = 0.3;
                 const cardWidth = 240;
@@ -4567,6 +4594,7 @@
         playerDeckBox.style.zIndex = "200000";
         playerDeckBox.style.pointerEvents = "auto";
         attachDeckHoverMenu();
+        document.getElementById('clear-attachments-btn').style.display = 'block';
     }, 6500);
     let deckCount = "Deck";
 
@@ -4824,6 +4852,7 @@
                         opponentLifeWindow.style.opacity = "1";
                         phaseTracker.style.opacity = "1";
                         turnCounter.style.opacity = "1";
+                        document.getElementById('clear-attachments-btn').style.display = 'block';
                     }, 0);
                     socket.emit("totem_fade_done", { gameId });
                 }
@@ -5227,6 +5256,7 @@
 
             cardElement.dataset.hoverMenuAttached = "true";
             cardElement.style.position = "relative";
+            cardElement.style.overflow = "visible";
 
             let hideTimer;
             let hoverMenu;
@@ -5235,7 +5265,7 @@
                 clearTimeout(hideTimer);
                 cardElement.style.zIndex = "120000";
                 cardElement.style.outline = "4px solid yellow";
-                if (zone === "Zone (Champion)" || zone === "Deck") {
+                if (zone === "Zone (Champion)") {
                     hoverMenu.style.display = "grid";
                 }
                 else {
@@ -5257,8 +5287,41 @@
                     }
                 }
 
-                // force initial state
-                void hoverMenu.offsetWidth;
+                // Determine which popup (if any) contains this card
+                let popup = cardElement.closest(
+                    '#player-tomb-popup, #player-void-popup, #view-popup'
+                );
+
+                if (popup) {
+                    const popupRect = popup.getBoundingClientRect();
+                    const cardRect = cardElement.getBoundingClientRect();
+
+                    // Force render to measure menu
+                    void hoverMenu.offsetWidth;
+                    void hoverMenu.offsetHeight;
+                    const menuHeight = hoverMenu.offsetHeight;
+
+                    const cardTopRelative = cardRect.top - popupRect.top;
+                    const cardBottomRelative = cardRect.bottom - popupRect.top;
+
+                    // Default: menu above card
+                    hoverMenu.style.bottom = '100%';
+                    hoverMenu.style.top = 'auto';
+
+                    // Flip below if it would overflow the top of the popup
+                    if (cardTopRelative - menuHeight < 0) {
+                        hoverMenu.style.top = '100%';
+                        hoverMenu.style.bottom = 'auto';
+                    }
+
+                    // Optional: prevent clipping at bottom of popup
+                    const popupHeight = popupRect.height;
+                    if (cardBottomRelative + menuHeight > popupHeight) {
+                        hoverMenu.style.bottom = '100%';
+                        hoverMenu.style.top = 'auto';
+                    }
+                }
+
                 if (isFaceDown) {
                     hoverMenu.style.transform = "translateX(0) translateY(-50%) rotate(90deg)";
                     hoverMenu.style.opacity   = "1";
@@ -5486,7 +5549,7 @@
                         "To Top of Deck","To Bottom of Deck"
                         ];
                     } else if (zone === "Tomb" || zone === "Void") {
-                        hoverMenu.style.fontSize = "3em";
+                        hoverMenu.style.fontSize = "2.4em";
                         opts = [
                             zone === "Tomb" ? "To Void" : "To Tomb",
                             "To Hand",
@@ -5501,12 +5564,6 @@
                         ];
                     } else if (zone === "Deck") {
                         hoverMenu.style.fontSize = "3em";
-                        hoverMenu.style.gridTemplateColumns = "repeat(2,max-content)";
-                        hoverMenu.style.gridGap = "4px 8px";
-                        hoverMenu.style.justifyContent = "center";
-                        hoverMenu.style.flexDirection = "";
-                        hoverMenu.style.columnCount = "";
-                        hoverMenu.style.bottom = "90%";
                         opts = [
                             "To Hand",
                             "To Tomb",
@@ -5956,26 +6013,26 @@
                             function showModal(message, onConfirm, onCancel) {
                                 const overlay = document.createElement("div");
                                 Object.assign(overlay.style, {
-                                position: "fixed",
-                                top: 0,
-                                left: 0,
-                                width: "100%",
-                                height: "100%",
-                                background: "rgba(0,0,0,0.5)",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                zIndex: 400000,
-                                cursor: "auto"  // show cursor over overlay
+                                    position: "fixed",
+                                    top: 0,
+                                    left: 0,
+                                    width: "100%",
+                                    height: "100%",
+                                    background: "rgba(0,0,0,0.5)",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    zIndex: 400000,
+                                    cursor: "auto"  // show cursor over overlay
                                 });
                                 const box = document.createElement("div");
                                 Object.assign(box.style, {
-                                background: "#fff",
-                                padding: "20px",
-                                borderRadius: "8px",
-                                textAlign: "center",
-                                maxWidth: "300px",
-                                cursor: "auto"  // ensure cursor is visible on modal
+                                    background: "#fff",
+                                    padding: "20px",
+                                    borderRadius: "8px",
+                                    textAlign: "center",
+                                    maxWidth: "300px",
+                                    cursor: "auto"  // ensure cursor is visible on modal
                                 });
                                 const msg = document.createElement("p");
                                 msg.textContent = message;
@@ -6503,9 +6560,10 @@
                             document.body.removeChild(confirmBox);
                         };
                     } break;
-                    case "View":
+                    case "View": {
                         // build a modal overlay
                         const overlay = document.createElement("div");
+                        overlay.id = "view-popup";
                         Object.assign(overlay.style, {
                             position:        "fixed",
                             top:             "47.5%",
@@ -6513,29 +6571,28 @@
                             transform:       "translate(-50%, -50%)",
                             width:           "60vw",
                             height:          "80vh",
-                            padding:         "0px 0px 0px",
+                            padding:         "0px",
                             backgroundColor: "rgba(0, 0, 0, 0.85)",
                             border:          "3px solid white",
                             borderRadius:    "12px",
                             zIndex:          "300000",
-                            overflow:        "visible"
+                            display:         "flex",
+                            flexDirection:   "column",
+                            gap:             "0px",
                         });
                         const scrollArea = document.createElement("div");
                         Object.assign(scrollArea.style, {
-                            position:       "absolute",
-                            top:            "0",
-                            left:           "0",
-                            width:          "100%",
-                            height:         "calc(100% - 60px)",
-                            overflowY:     "visible",
-                            display:       "grid",
-                            gridTemplateColumns: "repeat(auto-fill, minmax(85px, 1fr))",
-                            gridAutoRows:        "135px",
-                            rowGap:              "4px",
-                            columnGap:     "4px",
-                            justifyContent:"start",
-                            alignItems:    "start",
-                            padding:       "16px",
+                            flexGrow:       "1",
+                            overflowY:      "auto",
+                            display:        "grid",
+                            gridTemplateColumns: "repeat(auto-fill, minmax(120px, 1fr))",
+                            gridAutoRows:   "135px",
+                            rowGap:         "4px",
+                            columnGap:      "4px",
+                            justifyContent: "start",
+                            alignItems:     "start",
+                            padding:        "56px",
+                            boxSizing:     "border-box",
                         });
                         // add each deck card at 1/3 scale
                         gameState[username].Deck.forEach(cardObj => {
@@ -6568,36 +6625,32 @@
                             scrollArea.appendChild(el);
                         });
 
-                        overlay.appendChild(scrollArea);
-
-                        const btnContainer = document.createElement("div");
-                        Object.assign(btnContainer.style, {
-                            position:        "absolute",
-                            bottom:          "10px",    // 10px above the overlay’s bottom edge
-                            left:            "50%",
-                            transform:       "translateX(-50%)",
-                            zIndex:          "300001",  // just above the overlay content
+                        const bottomBar = document.createElement("div");
+                        Object.assign(bottomBar.style, {
+                            height:          "50px",
+                            backgroundColor: "rgba(200,200,200,0.85)",
+                            display:         "flex",
+                            justifyContent:  "center",
+                            alignItems:      "center",
+                            flexShrink:      "0",
                         });
 
-                        // close button
+                        // close button inside the bar
                         const closeBtn = document.createElement("button");
                         closeBtn.textContent = "Close";
                         Object.assign(closeBtn.style, {
-                            position:        "fixed",
-                            bottom:          "20px",
-                            left:            "50%",
-                            transform:       "translateX(-50%)",
-                            padding:         "8px 16px",
-                            fontSize:        "1em",
-                            zIndex:          "4000",
-                            cursor:          "pointer",
+                            padding: "8px 16px",
+                            fontSize: "1em",
+                            cursor: "pointer",
                         });
                         closeBtn.onclick = () => overlay.remove();
-                        overlay.appendChild(closeBtn);
-                        overlay.appendChild(btnContainer);
+
+                        bottomBar.appendChild(closeBtn);
+                        overlay.appendChild(scrollArea);
+                        overlay.appendChild(bottomBar);
 
                         document.body.appendChild(overlay);
-                        break;
+                    } break;
                 }
             });
             btn.addEventListener("mouseenter", () => btn.style.background = "#333");
@@ -6622,12 +6675,6 @@
         });
     }
 
-        /**
-         * Renders every card in one zone (hand, board, reserve, face-down piles …)
-         * – Works for both players.
-         * – Opponent face-down cards show THEIR sleeve and never preview.
-         * – Player face-down cards keep the hover preview.
-         */
         async function renderCardZone(cardsArray, containerId) {
             const container = document.getElementById(containerId);
             if (!container) return;
@@ -7052,8 +7099,6 @@
         socket.on('excavate_cards', ({ player, count }) => {
             showExcavateWindow(player, count);
         });
-
-        document.getElementById('clear-attachments-btn').style.display = 'block';
 
         document.getElementById('clear-attachments-btn').addEventListener('click', () => {
             const confirmBox = document.createElement("div");

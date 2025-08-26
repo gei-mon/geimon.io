@@ -1,6 +1,10 @@
 
 const newsData = [
     {
+        date: "August 26th, 2025",
+        text: "Added 2 new game keywords (Blink and Deploy). Updated some cards. Fixed the copy deck button. Adjusted Tomb, Void, and Deck views so that they will never go off-screen."
+    },
+    {
         date: "August 19th, 2025",
         text: "Added 104 New Cards! Minor text updates to other cards."
     },

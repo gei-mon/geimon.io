@@ -383,7 +383,7 @@
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
                             credentials: 'include',
-                            body: JSON.stringify({ deck_name: deckName })
+                            body: JSON.stringify({ deck_name: deckName, owner: userName })
                         }
                         );
                         const data = await res.json();

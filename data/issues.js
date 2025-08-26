@@ -5,10 +5,6 @@ const issueData = [
     },
     {
         title: "Known Bug",
-        text: "All cards within games are targeted by ID, not UUID, which means that clicking to target, attack, or block with 1 card mirrors the action for all cards of the same kind. Issue is only really noticeable with Tokens as all other cards are 1 per Deck."
-    },
-    {
-        title: "Known Bug",
         text: "Facedown Arsenal cards do not hover perfectly. Temporary fix implemented: Just hover the space below them to see which one is which."
     },
     {
@@ -17,10 +13,10 @@ const issueData = [
     },
     {
         title: "Known Bug",
-        text: "Cards do not go to the correct (owners) Deck, Tomb, and Void, only to the player's that clicks the button, so some shimmying has to be done."
+        text: "Cards do not go to the correct (owners) Deck, Tomb, and Void, only to the player's that clicks the button, so some shimmying has to be done to maintain a legal game state."
     },
     {
         title: "Known Bug",
-        text: "The Copy Deck button always fails to find the deck's cards, no clue why. Will investigate later. Just use export / import for the moment."
+        text: "All cards within games are targeted by ID, not UUID, which means that clicking to target, attack, or block with 1 card mirrors the action for all cards of the same kind. Issue is only really noticeable with Tokens as all other cards are 1 per Deck."
     }
 ];

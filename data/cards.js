@@ -80,7 +80,7 @@ export const cards = [
     rarity: "Legendary",
     type: "Champion",
     condition: "",
-    cost: "Mill 6",
+    cost: "Mill 10",
     tags: ["Hellfire","Cryptbound","Undead","Megalith"],
     damage: 20,
     life: 7,
@@ -285,7 +285,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `If the revealed card is a Champion, that Player can immediately Rally it (ignoring its cost).`
+        text: `If the revealed card is a Champion, that Player can immediately Blink it.`
       }
     ]
   },
@@ -2175,7 +2175,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Repair Specialist <span class="line-gap"></span> What's a Test Run?: On Rally: Activate 1 Commander Obelisk from your Hand, Deck, or Tomb (ignoring its cost). <span class="line-gap"></span> Upgrade (Exhaustion): Rally 1 Blocker Token to your Opponent's Zone; Add 1 Equipment. <span class="line-gap"></span> Emergency Transport: If this card isn't a Commander (Reflex): Obliterate Mill 6; Activate 1 Commander Obelisk from your Hand, Deck, or Tomb (ignoring its cost).`
+        text: `Repair Specialist <span class="line-gap"></span> What's a Test Run?: On Rally: Activate 1 Commander Obelisk from your Hand, Deck, or Reserve (ignoring its cost). <span class="line-gap"></span> Upgrade (Exhaustion): Rally 1 Blocker Token to your Opponent's Zone; Add 1 Equipment. <span class="line-gap"></span> Emergency Transport: If this card isn't a Commander (Reflex): Obliterate Mill 10; Activate 1 Commander Obelisk from your Hand, Deck, or Reserve (ignoring its cost).`
       }
     ]
   },
@@ -2553,7 +2553,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Mount <span class="line-gap"></span> Mounted: This card's Commander gains Unstoppable. <span class="line-gap"></span> Mounted: If this card's Commander is Targeted (Reflex): Sacrifice this card; Move this card's Commander into the Reserve, and if you do, draw 1. The moved Commander gains the effect: \"Reserve: Discard 2; Activate this card (ignoring its, and its attached cards' costs).\"`
+        text: `Mount <span class="line-gap"></span> Mounted: This card's Commander gains Unstoppable. <span class="line-gap"></span> Mounted: If this card's Commander is Targeted (Reflex): Sacrifice this card; Move this card's Commander into the Reserve, and if you do, draw 1. The moved Commander gains the effect: \"Reserve: Discard 2; Activate this card (ignoring its, and its attached cards', costs).\"`
       }
     ]
   },
@@ -2751,7 +2751,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: `Bloodrage, Duelist, Priority <span class="line-gap"></span> Fan the Hammer (Exhaustion): Discard any number of cards, and send the same number of cards from your Zone to the Tomb, then Target that many cards on the Zone; Destroy Targets.`
+        text: `Bloodrage, Duelist, Priority <span class="line-gap"></span> Fan the Hammer (Exhaustion): Discard any number of cards, and send the same number of cards from your Zone to the Tomb, then Target that many cards on the Zone; Destroy Targets. <span class="line-gap"></span> If, on your turn, your Opponent controls any face-up Champions while you control at least 1 other card and have at least 1 card in your Hand: You must activate Fan the Hammer.`
       }
     ]
   },
@@ -2823,7 +2823,7 @@ export const cards = [
     damageThreshold: "2",
     abilities: [
       {
-        text: `Gadget Man: On Rally (Exhaustion): Attach 1 Equipment to this card from your Hand, Deck, or Tomb (ignoring its cost). <span class="line-gap"></span> Contingency Plan: If this card would be Destroyed (Reflex): Rally 1 Dust Token to your Opponent's Zone; Move this card to your Reserve. <span class="line-gap"></span> Triumphant Return: If this card is in your Reserve: Sacrifice 1 Token; Rally this card (ignoring its cost).`
+        text: `Gadget Man: On Rally (Exhaustion): Attach 1 Equipment to this card from your Hand, Deck, or Tomb (ignoring its cost). <span class="line-gap"></span> Contingency Plan: If this card would be Destroyed (Reflex): Rally 1 Dust Token to your Opponent's Zone; Move this card to your Reserve. <span class="line-gap"></span> Triumphant Return: If this card is in your Reserve: Sacrifice 1 Token; Deploy this card.`
       }
     ]
   },
@@ -3067,7 +3067,7 @@ export const cards = [
     image: `${cardArtFolder}/Obelisks/BustermechMK3Blitzpeed.png`,
     rarity: "Rare",
     type: "Obelisk",
-    condition: "Can only be activated if your Opponent controls 2 or more Champions",
+    condition: "Your Opponent controls 2 or more Champions",
     cost: "",
     tags: ["Commander","Obelisk"],
     damage: 0,
@@ -3085,7 +3085,7 @@ export const cards = [
     image: `${cardArtFolder}/Obelisks/BustermechMK7ZeroBlast.png`,
     rarity: "Superior",
     type: "Obelisk",
-    condition: "Can only be activated if your Opponent controls a collective of 10+ Damage amongst their Champions",
+    condition: "Your Opponent controls a total of 10+ Damage amongst their Champions",
     cost: "",
     tags: ["Commander","Obelisk"],
     damage: 0,
@@ -3507,7 +3507,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Maintenance <span class="line-gap"></span> Champions you Destroy by battle are sent to your Opponent's Reserve, instead of their Tomb. <span class="line-gap"></span> While you control at least 2 other face-up \"Castle\" Obelisks: Target 1 Champion in your Opponent's Reserve; Rally Target to your Zone. <span class="line-gap"></span> While you control at least 4 other face-up \"Castle\" Obelisks: Target 1 Obelisk in your Tomb; Activate Target (ignoring its cost).`
+        text: `Maintenance <span class="line-gap"></span> Champions you Destroy by battle are sent to your Opponent's Reserve, instead of their Tomb. <span class="line-gap"></span> While you control at least 2 other face-up \"Castle\" Obelisks: Target 1 Champion in your Opponent's Reserve; Deploy Target to your Zone. <span class="line-gap"></span> While you control at least 4 other face-up \"Castle\" Obelisks: Target 1 Obelisk in your Tomb; Activate Target (ignoring its cost).`
       }
     ]
   },
@@ -3831,7 +3831,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Negate the attack, and if you do, you can Rally 1 Champion from your Hand (ignoring its cost).`
+        text: `Negate the attack, and if you do, you can Blink 1.`
       }
     ]
   },
@@ -5091,7 +5091,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Rally 1 Champion from your Hand or Reserve (ignoring its cost).`
+        text: `Either: Blink or Deploy 1.`
       }
     ]
   },
@@ -5451,7 +5451,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Rally 1 Basic Champion from your Hand face-down.`
+        text: `Blink 1 Basic face-down.`
       }
     ]
   },
@@ -5847,7 +5847,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Add 1 Centurion. <span class="line-gap"></span> If you have no Centurions in your Deck: Add 1 Basic. <span class="line-gap"></span> If this card is in your Tomb: Obliterate this card and Discard 1 Centurion; Rally 1 Centurion from your Hand (ignoring its cost and conditions).`
+        text: `Add 1 Centurion. <span class="line-gap"></span> If you have no Centurions in your Deck: Add 1 Basic. <span class="line-gap"></span> If this card is in your Tomb: Obliterate this card and Discard 1 Centurion; Blink 1 Centurion (ignoring its conditions).`
       }
     ]
   },
@@ -7035,7 +7035,7 @@ export const cards = [
     damageThreshold: "3",
     abilities: [
       {
-        text: `Duelist, Priority <span class="line-gap"></span> More Cop than Machine: After resolving a battle involving a different Champion you control: Target the Opponent's Champion that was involved in that battle; Destroy Target.`
+        text: `Duelist, Priority <span class="line-gap"></span> More Cop than Machine: After resolving a battle involving a different Champion you control (Mandatory, Reflex): Target the Opponent's Champion that was involved in that battle; Destroy Target.`
       }
     ]
   },
@@ -7323,7 +7323,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Mount <span class="line-gap"></span> Mounted: Discard 1; Rally 1 Basic Champion from your Reserve.`
+        text: `Mount <span class="line-gap"></span> Mounted: Discard 1; Deploy 1 Basic.`
       }
     ]
   },
@@ -7791,7 +7791,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Each time a card(s) is sent from the Zone to the Tomb: Place 1 K-Cell Counter on this card for each sent card (max. 5 per instance). <br><br> Remove 5 K-Cell Counters from this card; Add 1 Clockwork. If you have no Clockworks in your Deck: Add 1 Basic.`
+        text: `Each time a card(s) is sent from the Zone to the Tomb: Place 1 K-Cell Counter on this card for each sent card (max. 5 per instance). <br><br> Remove 5 K-Cell Counters from this card; Add 1 Clockwork, or if you have none in your Deck, Add 1 Basic.`
       }
     ]
   },
@@ -9951,7 +9951,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Bounce 1 face-up Basic you control, and if you do, you can Rally 1 Basic from your Hand (ignoring its cost). <span class="line-gap"></span> If you Rally a Basic Foretold with this effect, and it has an \"On Rally\" effect, then your Opponent Chooses, Either: You get to choose which \"On Rally\" effect is activated, or your Opponent discards 1.`
+        text: `Bounce 1 face-up Basic you control, and if you do, you can Blink 1 Basic. <span class="line-gap"></span> If you Rally a Basic Foretold with this effect, and it has an \"On Rally\" effect, then your Opponent Chooses, Either: You get to choose which \"On Rally\" effect is activated, or your Opponent discards 1.`
       }
     ]
   },
@@ -10257,7 +10257,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Rally 1 Champion from your Reserve face-up (ignoring its cost).`
+        text: `Deploy 1.`
       }
     ]
   },
