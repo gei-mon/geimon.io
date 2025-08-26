@@ -7899,7 +7899,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Move the Target to a Champion your Opponent controls, and if you do, Destroy your Targeted Champion.`
+        text: `Move the Target to a Champion your Opponent controls, and if you do, Destroy the original Target.`
       }
     ]
   },
