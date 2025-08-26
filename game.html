@@ -577,8 +577,6 @@
             const params = new URLSearchParams(window.location.search);
             const gameType = params.get("gameType") || "single"; // "single" or "match"
             const isSinglePlayer = params.get("isSinglePlayer") === "true"; // true/false
-            const isSpectator = params.get("spectator") === "true";
-
             const matchId =
                     params.get("matchId")
                 || localStorage.getItem("currentMatchId")
@@ -1060,25 +1058,6 @@
         }
 
         async function updateLocalFromGameState() {
-            if (isSpectator) {
-                const p1 = gameState.player1;
-                const p2 = gameState.player2;
-                if (!p1 || !p2) return;
-
-                // render p1 zones bottom
-                await renderCardZone(gameState[p1].Hand, "playerArsenalBox");
-                await renderCardZone(gameState[p1]["Zone (Champion)"], "playerChampionsBox");
-
-                // render p2 zones top
-                await renderCardZone(gameState[p2].Hand, "opponentArsenalBox");
-                await renderCardZone(gameState[p2]["Zone (Champion)"], "opponentChampionsBox");
-
-                // life totals
-                document.getElementById("player-life").textContent = gameState[p1].life ?? 0;
-                document.getElementById("opponent-life").textContent = gameState[p2].life ?? 0;
-                return;
-            }
-
             if (!username || !gameState || !gameState[username]) {
                 console.warn("updateLocalFromGameState: player state not ready", {
                     username, keys: Object.keys(gameState || {})
@@ -1206,15 +1185,11 @@
                 return; // ✅ This is now valid
             }
             const roomId = localStorage.getItem('roomId') || gameId;
-            socket.emit('init', { username, roomId, spectator: isSpectator });
+            socket.emit('init', { username, roomId });
 
             socket.on('connect', () => {
-                socket.emit('init', { username, roomId, spectator: isSpectator });
+                socket.emit('init', { username, roomId });
             });
-
-            if (isSpectator) {
-                socket.emit("request_full_state", { gameId });
-            }
 
             socket.on('room_joined', ({ roomId: joined }) => {
                 socket.emit('join_game_room', { gameId });
@@ -2525,10 +2500,6 @@
 
             const opponent = gameState[gameState.player1 === username ? gameState.player2 : gameState.player1];
             let opponentHand = opponent?.Hand || [];
-
-            const hand = isSpectator
-                ? gameState[opponentName].Hand
-                : (opponentHandRevealed ? gameState[opponentName].Hand : []);
 
             // Sort hand by type priority
             const typePriority = {
@@ -7128,15 +7099,6 @@
         socket.on('excavate_cards', ({ player, count }) => {
             showExcavateWindow(player, count);
         });
-
-        socket.on("sync_full_state", (state) => {
-            gameState = state;
-            updateLocalFromGameState();
-        });
-
-        if (isSpectator) {
-            document.querySelectorAll("#end-turn-button, #tool-buttons, #life-adjust-box").forEach(el => el.style.display = "none");
-        }
 
         document.getElementById('clear-attachments-btn').addEventListener('click', () => {
             const confirmBox = document.createElement("div");

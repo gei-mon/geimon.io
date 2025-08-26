@@ -295,16 +295,7 @@ if (fs.existsSync(effectsDir)) {
 }
 
 io.on('connection', (socket) => {
-  socket.on("init", ({ username, roomId, gameType, spectator }) => {
-    if (spectator) {
-      socket.join(roomId);
-      userMap.set(socket.id, { username, roomId, spectator: true });
-      socket.emit("room_joined", { roomId, spectator: true });
-
-      const state = gameStates.get(roomId);
-      if (state) socket.emit("sync_full_state", state);
-      return;
-    }
+  socket.on('init', ({ username, roomId, gameType }) => {
     let joinedRoom = roomId;
 
     if (joinedRoom && openRooms.has(joinedRoom) && openRooms.get(joinedRoom).length < 2) {
@@ -323,6 +314,7 @@ io.on('connection', (socket) => {
       if (!joinedRoom) {
         joinedRoom = generateRoomId();
         openRooms.set(joinedRoom, [socket.id]);
+        roomMeta.set(joinedRoom, { gameType });
       }
     }
 
@@ -339,12 +331,6 @@ io.on('connection', (socket) => {
 
         io.to(socketId1).emit('user_joined', { otherUser: user2.username });
         io.to(socketId2).emit('user_joined', { otherUser: user1.username });
-
-        roomMeta.set(joinedRoom, {
-          gameType,
-          player1: user1?.username,
-          player2: user2?.username
-        });
       }
   });
 
@@ -618,43 +604,30 @@ io.on('connection', (socket) => {
     io.in(gameId).emit('remove_attachment', { sourceId, targetId, color });
   });
 
-  socket.on("disconnect", () => {
+  socket.on('disconnect', () => {
     const user = userMap.get(socket.id);
     if (!user) return;
 
     const { roomId, username } = user;
+    const updated = (openRooms.get(roomId) || []).filter(id => id !== socket.id);
+    if (updated.length === 0) openRooms.delete(roomId);
+    else openRooms.set(roomId, updated);
 
-    // Remove this socket from the room
-    const remaining = (openRooms.get(roomId) || []).filter(id => id !== socket.id);
-
-    if (remaining.length === 0) {
-      // No sockets left in the room → clean everything
-      openRooms.delete(roomId);
-      gameStates.delete(roomId);
-      roomMeta.delete(roomId);
-    } else {
-      // Update openRooms
-      openRooms.set(roomId, remaining);
-
-      // If one socket remains, notify them
-      if (remaining.length === 1) {
-        const remainingSocketId = remaining[0];
-        io.to(remainingSocketId).emit("user_left", { otherUser: username });
-      }
+    const roomSockets = openRooms.get(roomId);
+    if (roomSockets && roomSockets.length === 1) {
+      const remainingSocketId = roomSockets[0];
+      const remainingUser = userMap.get(remainingSocketId);
+      io.to(remainingSocketId).emit('user_left', { otherUser: username });
     }
 
-    // Always remove from userMap last
     userMap.delete(socket.id);
   });
-
   socket.on("join_game_room", ({ gameId }) => {
     socket.join(gameId);
   });
-
   socket.on("totem_fade_done", ({ gameId }) => {
     totemFadeStatus.set(gameId, true);
   });
-
 });
 
 const gameStates = new Map();
@@ -825,33 +798,6 @@ app.get('/lobby-status', (req, res) => {
   }
 
   res.json(counts);
-});
-
-app.get("/active-games", (req, res) => {
-  const games = [];
-
-  for (const [roomId, meta] of roomMeta.entries()) {
-    const state = gameStates.get(roomId) || {}; // default to empty object if state missing
-
-    games.push({
-      id: roomId,
-      player1: meta.player1 || "Unknown",
-      player2: meta.player2 || "Unknown",
-      gameType: meta.gameType || "Unknown",
-      playerDeck: state.playerDeck || null,
-      opponentDeck: state.opponentDeck || null,
-      totem: state.totem || null,
-      turnOrder: state.turnOrder || null
-    });
-  }
-
-  // Optional: debug info for Heroku logs
-  console.log("ACTIVE-GAMES endpoint hit");
-  console.log("roomMeta keys:", Array.from(roomMeta.keys()));
-  console.log("gameStates keys:", Array.from(gameStates.keys()));
-  console.log("Returning games count:", games.length);
-
-  res.json(games);
 });
 
 app.get('/getGameState/:gameId', (req, res) => {
