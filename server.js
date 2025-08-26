@@ -842,10 +842,10 @@ app.get("/active-games", (req, res) => {
       player1: meta.player1 || "Unknown",
       player2: meta.player2 || "Unknown",
       gameType: meta.gameType || "Unknown",
-      playerDeck: state.playerDeck || "Unknown",
-      opponentDeck: state.opponentDeck || "Unknown",
-      totem: state.totem || "Unknown",
-      turnOrder: state.turnOrder || "Unknown"
+      playerDeck: (state && state.playerDeck) || "Unknown",
+      opponentDeck: (state && state.opponentDeck) || "Unknown",
+      totem: (state && state.totem) || "Unknown",
+      turnOrder: (state && state.turnOrder) || "Unknown"
     });
   }
   res.json(games);

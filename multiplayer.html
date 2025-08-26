@@ -166,6 +166,19 @@
     updateLobbyStatus();
     setInterval(updateLobbyStatus, 1000);
 
+    function formatGameType(type) {
+        switch(type) {
+            case "bestOf1":
+                return "Best of 1";
+            case "bestOf3":
+                return "Best of 3";
+            case "packMadness":
+                return "Pack Madness";
+            default:
+                return type || "Unknown";
+        }
+    }
+
     async function updateActiveGames() {
         try {
             const res = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/active-games");
@@ -178,7 +191,7 @@
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <td>${g.player1} vs ${g.player2}</td>
-                    <td>${g.gameType}</td>
+                    <td>${formatGameType(g.gameType)}</td>
                 `;
                 row.style.cursor = "pointer";
                 row.onclick = () => {
