@@ -577,6 +577,8 @@
             const params = new URLSearchParams(window.location.search);
             const gameType = params.get("gameType") || "single"; // "single" or "match"
             const isSinglePlayer = params.get("isSinglePlayer") === "true"; // true/false
+            const isSpectator = params.get("spectator") === "true";
+
             const matchId =
                     params.get("matchId")
                 || localStorage.getItem("currentMatchId")
@@ -1185,11 +1187,15 @@
                 return; // ✅ This is now valid
             }
             const roomId = localStorage.getItem('roomId') || gameId;
-            socket.emit('init', { username, roomId });
+            socket.emit('init', { username, roomId, spectator: isSpectator });
 
             socket.on('connect', () => {
-                socket.emit('init', { username, roomId });
+                socket.emit('init', { username, roomId, spectator: isSpectator });
             });
+
+            if (isSpectator) {
+                socket.emit("request_full_state", { gameId });
+            }
 
             socket.on('room_joined', ({ roomId: joined }) => {
                 socket.emit('join_game_room', { gameId });
@@ -2500,6 +2506,10 @@
 
             const opponent = gameState[gameState.player1 === username ? gameState.player2 : gameState.player1];
             let opponentHand = opponent?.Hand || [];
+
+            const hand = isSpectator
+                ? gameState[opponentName].Hand
+                : (opponentHandRevealed ? gameState[opponentName].Hand : []);
 
             // Sort hand by type priority
             const typePriority = {
@@ -7099,6 +7109,15 @@
         socket.on('excavate_cards', ({ player, count }) => {
             showExcavateWindow(player, count);
         });
+
+        socket.on("sync_full_state", (state) => {
+            gameState = state;
+            updateLocalFromGameState();
+        });
+
+        if (isSpectator) {
+            document.querySelectorAll("#end-turn-button, #tool-buttons, #life-adjust-box").forEach(el => el.style.display = "none");
+        }
 
         document.getElementById('clear-attachments-btn').addEventListener('click', () => {
             const confirmBox = document.createElement("div");

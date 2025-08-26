@@ -91,6 +91,39 @@
                 <div id="lobby-bestOf3" class="lobby-status">Checking...</div>
             </div>
         </div>
+        <h2 style="
+                text-align: center;
+                background-color: rgb(177, 177, 234);
+                border: 4px solid black;
+                border-top-left-radius: 12px;
+                border-top-right-radius: 12px;
+                color: black;
+                margin-bottom: 0;
+                padding: 6px;
+            ">
+                Active Games
+            </h2>
+
+            <table id="active-games" style="
+                width:100%;
+                color:black;
+                text-align:left;
+                border-collapse: collapse;
+                background-color: rgb(216, 212, 241);
+                border: 4px solid black;
+                border-top: none;
+                border-bottom-left-radius: 12px;
+                border-bottom-right-radius: 12px;
+                margin-top: 0;
+            ">
+            <thead>
+                <tr>
+                <th>Game Participants</th>
+                <th>Game Type</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+            </table>
 
             <br><br>
         <h2 style="text-align: center; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Mini Games</h2>
@@ -98,16 +131,6 @@
             <button class="button" onclick="window.open('saga.html', '_blank')" id="sagaButton">Pack Madness</button>
             <div id="lobby-packMadness" class="lobby-status">Checking...</div>
         </div>
-
-        <!-- <div class="container">
-            <div class="column left">
-                <button class="button" onclick="window.open('saga.html', '_blank')" id="sagaButton">Pack Madness</button>
-            </div>
-            <div class="column right">
-                <button class="button buttonDisabled" onclick="window.open('cube.html', '_blank')" id="cubeButton">Cube Draft</button>
-            </div>
-        </div> -->
-
             <br><br>
         <h2 style="text-align: center; text-shadow: 2px 2px 4px black, -2px -2px 4px black, 2px -2px 4px black, -2px 2px 4px black;">Misc</h2>
         <div style="text-align: center; margin-top: 0px;">
@@ -141,7 +164,35 @@
     }
 
     updateLobbyStatus();
-    setInterval(updateLobbyStatus, 1000); // Refresh every 10s
+    setInterval(updateLobbyStatus, 1000);
+
+    async function updateActiveGames() {
+        try {
+            const res = await fetch("https://geimon-app-833627ba44e0.herokuapp.com/active-games");
+            const games = await res.json();
+            const tbody = document.querySelector("#active-games tbody");
+            tbody.innerHTML = "";
+
+            games.forEach(g => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${g.player1} vs ${g.player2}</td>
+                <td>${g.gameType}</td>
+            `;
+            row.style.cursor = "pointer";
+            row.onclick = () => {
+                // open spectator view
+                window.open("https://gei-mon.github.io/geimon.io/game.html?gameId=${g.id}&spectator=true", "_blank");
+            };
+            tbody.appendChild(row);
+            });
+        } catch (err) {
+            console.error("Failed to fetch active games:", err);
+        }
+        }
+
+        updateActiveGames();
+        setInterval(updateActiveGames, 5000);
 </script>
 </body>
 </html>

@@ -295,7 +295,16 @@ if (fs.existsSync(effectsDir)) {
 }
 
 io.on('connection', (socket) => {
-  socket.on('init', ({ username, roomId, gameType }) => {
+  socket.on("init", ({ username, roomId, gameType, spectator }) => {
+    if (spectator) {
+      socket.join(roomId);
+      userMap.set(socket.id, { username, roomId, spectator: true });
+      socket.emit("room_joined", { roomId, spectator: true });
+
+      const state = gameStates.get(roomId);
+      if (state) socket.emit("sync_full_state", state);
+      return;
+    }
     let joinedRoom = roomId;
 
     if (joinedRoom && openRooms.has(joinedRoom) && openRooms.get(joinedRoom).length < 2) {
@@ -314,7 +323,11 @@ io.on('connection', (socket) => {
       if (!joinedRoom) {
         joinedRoom = generateRoomId();
         openRooms.set(joinedRoom, [socket.id]);
-        roomMeta.set(joinedRoom, { gameType });
+        roomMeta.set(joinedRoom, {
+          gameType,
+          player1: user1?.username,
+          player2: user2?.username
+        });
       }
     }
 
@@ -798,6 +811,22 @@ app.get('/lobby-status', (req, res) => {
   }
 
   res.json(counts);
+});
+
+app.get("/active-games", (req, res) => {
+  const games = [];
+  for (const [roomId, meta] of roomMeta.entries()) {
+    const state = gameStates.get(roomId);
+    if (!state) continue; // skip empty
+
+    games.push({
+      id: roomId,
+      player1: meta.player1 || "Unknown",
+      player2: meta.player2 || "Unknown",
+      gameType: meta.gameType || "Unknown"
+    });
+  }
+  res.json(games);
 });
 
 app.get('/getGameState/:gameId', (req, res) => {

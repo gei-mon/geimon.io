@@ -1,7 +1,7 @@
 const issueData = [
     {
         title: "You There!",
-        text: "Email 'geimon.help@gmail.com' to submit bugs as well as request features or recommend cards to add!"
+        text: "Email 'geimon.help@gmail.com' to submit bugs as well as request features or recommend cards to add! Please do not email if your idea is already on the list below."
     },
     {
         title: "Known Bug",
@@ -18,5 +18,9 @@ const issueData = [
     {
         title: "Known Bug",
         text: "All cards within games are targeted by ID, not UUID, which means that clicking to target, attack, or block with 1 card mirrors the action for all cards of the same kind. Issue is only really noticeable with Tokens as all other cards are 1 per Deck."
+    },
+    {
+        title: "The Nearly Impossible Feature Request",
+        text: "\"Make it an auto-sim.\" If you email me about this, I'm blocking you and banning your account."
     }
 ];
