@@ -9735,7 +9735,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Sing Along! Or Else: You cannot conduct your Battle Phase this turn: Discard 1; Your Opponent cannot conduct their next Battle Phase if this card remains face-up on the Zone.`
+        text: `Ah! Help! I'm Falling!: You cannot conduct your Battle Phase this turn: Discard 1; Your Opponent cannot conduct their next Battle Phase if this card remains face-up on the Zone.`
       }
     ]
   },
