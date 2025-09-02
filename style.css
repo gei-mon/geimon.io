@@ -904,7 +904,7 @@ background-color: #29c7bd;
 
 #playerFaceDownArsenalBox > div {
   flex-shrink: 0 !important;
-  margin-left: -235px !important;
+  margin-left: -220px !important;
 }
 #playerFaceDownArsenalBox .sleeve-overlay {
   transform: none !important;
@@ -926,7 +926,7 @@ background-color: #29c7bd;
 
 #opponentFaceDownArsenalBox > div {
   flex-shrink: 0 !important;
-  margin-left: -215px !important;
+  margin-left: -200px !important;
   transform: rotate(180deg) scale(0.3) !important;
 }
 #opponentFaceDownArsenalBox .sleeve-overlay {

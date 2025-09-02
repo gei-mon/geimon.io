@@ -5,10 +5,6 @@ const issueData = [
     },
     {
         title: "Known Bug",
-        text: "Facedown Arsenal cards do not hover perfectly. Temporary fix implemented: Just hover the space below them to see which one is which."
-    },
-    {
-        title: "Known Bug",
         text: "Attachments are kinda wonky. Temporary fix implemented: Use the Clear Attachments button to remove all on screen and then you can redraw them."
     },
     {
@@ -25,7 +21,7 @@ const issueData = [
     },
     {
         title: "Feature Request",
-        text: "Challenge specific opponents."
+        text: "Challenging specific opponents."
     },
     {
         title: "The Nearly Impossible Feature Request",
