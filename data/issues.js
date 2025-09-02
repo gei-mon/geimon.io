@@ -1,30 +1,22 @@
 const issueData = [
     {
         title: "You There!",
-        text: "Email 'geimon.help@gmail.com' to submit bugs as well as request features or recommend cards to add! Please do not email if your idea is already on the list below."
+        text: "Email 'geimon.help@gmail.com' to submit bugs as well as request features or recommend cards to add! Please do not email if your idea or issue is already on the list below."
     },
     {
         title: "Known Bug",
-        text: "Attachments are kinda wonky. Temporary fix implemented: Use the Clear Attachments button to remove all on screen and then you can redraw them."
-    },
-    {
-        title: "Known Bug",
-        text: "Cards do not go to the correct (owners) Deck, Tomb, and Void, only to the player's that clicks the button, so some shimmying has to be done to maintain a legal game state."
-    },
-    {
-        title: "Known Bug",
-        text: "All cards within games are targeted by ID, not UUID, which means that clicking to target, attack, or block with 1 card mirrors the action for all cards of the same kind. Issue is only really noticeable with Tokens as all other cards are 1 per Deck."
+        text: "Cards do not go to the correct (owners) Deck, Tomb, and Void, only to the player's that clicks the button. So, some shimmying has to be done to maintain a legal game state. It can be very easily worked around."
     },
     {
         title: "Feature Request",
-        text: "Spectating games, you want it, I want it. It'll happen one of these days."
+        text: "Spectating games. You want it, I want it. It'll happen one of these days. Tried once and everything broke. I'll try again soon (as of September 1st, 2025)."
     },
     {
         title: "Feature Request",
-        text: "Challenging specific opponents."
+        text: "Making challenge requests to specific other players."
     },
     {
-        title: "The Nearly Impossible Feature Request",
-        text: "\"Make it an auto-sim.\" If you email me about this, I'm blocking you and banning your account."
+        title: "The (Nearly) Impossible Feature Request",
+        text: "\"Make it an auto-sim.\" If you email me about this, I'm blocking you and banning your account. It's a dream to one day have Geimon! be an automatic simulator, however I nearly went crazy trying to do that from the ground up. For now, it just works."
     }
 ];

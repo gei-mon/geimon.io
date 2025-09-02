@@ -1,6 +1,10 @@
 
 const newsData = [
     {
+        date: "September 2nd, 2025",
+        text: "v1.23 Alpha Released! <br> Finally resolved the Facedown Arsenal cards not hovering properly. Added some new cards (all with art this time)."
+    },
+    {
         date: "August 26th, 2025",
         text: "Added 2 new game keywords (Blink and Deploy). Updated some cards. Added new cards with no art (22 of them). Fixed the copy deck button. Adjusted Tomb, Void, and Deck views so that they will never go off-screen."
     },
