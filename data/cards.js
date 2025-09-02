@@ -6045,7 +6045,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Big Inflate Charge: Obliterate Mill 60; Increase this card's Damage by 20 until the End Phase.`
+        text: `Big Eruption Charge: Obliterate Mill 60; Increase this card's Damage by 20 until the End Phase.`
       }
     ]
   },
@@ -6279,7 +6279,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Durable, Priority <span class="line-gap"></span> Insatiable Hunger: If this Champion Destroys another by Battle: Remove any Passives previously granted by this effect and Add the Destroyed card's starting Damage and Life to this card, and if you do, this card gains all Passives held by the Destroyed Champion in the Tomb.`
+        text: `Durable, Priority <span class="line-gap"></span> Insatiable Hunger: If this Champion Destroys another by Battle: Remove any Passives previously granted by this effect and increase this card's Damage and Life by the Destroyed card's Damage and Life in the Tomb, and if you do, this card gains all Passives held by the Destroyed Champion in the Tomb.`
       }
     ]
   },
@@ -7989,7 +7989,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Exhaustion: Bottom Stack X cards from your Hand, then Draw X.`
+        text: `Exhaustion: Bottom Stack X cards from your Hand; Draw X.`
       }
     ]
   },
