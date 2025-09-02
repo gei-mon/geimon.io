@@ -24,6 +24,10 @@ const issueData = [
         text: "Spectating games, you want it, I want it. It'll happen one of these days."
     },
     {
+        title: "Feature Request",
+        text: "Challenge specific opponents."
+    },
+    {
         title: "The Nearly Impossible Feature Request",
         text: "\"Make it an auto-sim.\" If you email me about this, I'm blocking you and banning your account."
     }

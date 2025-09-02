@@ -3249,7 +3249,7 @@ export const cards = [
     type: "Champion",
     condition: "",
     cost: "Your Opponent draws 2",
-    tags: ["Noble", "Protector","Knight"],
+    tags: ["Noble","Protector","Knight"],
     damage: 5,
     life: 5,
     damageThreshold: "2",
@@ -6772,7 +6772,7 @@ export const cards = [
   {
     id: "445",
     name: "Monkey's Paw: Weaken My Enemies",
-    image: `${cardArtFolder}/Obelisks/MonkeysPaw.png`,
+    image: `${cardArtFolder}/Obelisks/MonkeysPawWeakenEnemies.png`,
     rarity: "Common",
     type: "Obelisk",
     condition: "",
@@ -7887,8 +7887,8 @@ export const cards = [
   },
   {
     id: "737",
-    name: "Mirror Hex",
-    image: `${cardArtFolder}/Rush/MirrorHex.png`,
+    name: "Back Atcha!",
+    image: `${cardArtFolder}/Rush/BackAtcha.png`,
     rarity: "Rare",
     type: "Rush",
     condition: "A Champion you control is Targeted",
@@ -11266,6 +11266,24 @@ export const cards = [
     abilities: [
       {
         text: `Destroy Target.`
+      }
+    ]
+  },
+  {
+    id: "1266",
+    name: "Rampant Xenophobia",
+    image: `${cardArtFolder}/Equipments/RampantXenophobia.png`,
+    rarity: "Common",
+    type: "Equipment",
+    condition: "",
+    cost: "",
+    tags: ["Equipment"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `The attached Champion gains Board Breaker and Priority. <span class="line-gap"></span> The attached Champion must attack if there is a face-up opposing Champion that does not share a Tag with it, and it must Target such Champions with its attacks (if it's able). If the opposing Player controls 2 or more Champions with no shared Tags, the controller of the attached Champion can choose any of them to Target with its attacks.`
       }
     ]
   }
