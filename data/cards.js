@@ -6837,7 +6837,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Micro-Doses, Mega-Immunity: On Rally: This card is unaffected by the effects of the types of cards Destroyed for its Rally.`
+        text: `Micro-Doses, Mega-Immunity: On Rally: While this card remains face-up on the Zone, this card is unaffected by the effects of the types of cards Destroyed for its Rally.`
       }
     ]
   },
