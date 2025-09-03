@@ -6333,7 +6333,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Defender, Priority <span class="line-gap"></span> Regained Power: If in the Reserve during your End Phase: Add 1 Power Counter to this card. <span class="line-gap"></span> Bided Time: On Rally: Remove all Power Counters from this card. For each counter removed: Increase this card's Damage and Life by 1. For every 3 counters removed: Increase this card's Damage Threshold by 1. If 5+ counters were removed: This card gains Durable and Speed. If 7+ counters were removed: This card gains Bulletproof.`
+        text: `Defender, Priority <span class="line-gap"></span> Long Recovery: If in the Reserve during your End Phase: Add 1 Power Counter to this card. <span class="line-gap"></span> My Might Returned: On Rally: Remove all Power Counters from this card. For each counter removed: Increase this card's Damage and Life by 1. For every 3 counters removed: Increase this card's Damage Threshold by 1. If 5+ counters were removed: This card gains Durable and Speed. If 7+ counters were removed: This card gains Bulletproof.`
       }
     ]
   },
@@ -8043,7 +8043,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Target 1 Champion in your Opponent's Tomb; Activate 1 of Target's effects as if the attached Champion had it.`
+        text: `Exhaustion: Target 1 Champion in your Opponent's Tomb; Activate 1 of Target's effects as if the attached Champion had it.`
       }
     ]
   },
