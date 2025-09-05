@@ -339,7 +339,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Each Player must offer 1 Life to declare an attack.`
+        text: `Each Player must Offer 1 Life to declare an attack.`
       }
     ]
   },
@@ -609,7 +609,7 @@ export const cards = [
     damageThreshold: "6",
     abilities: [
       {
-        text: `Deathpower, Warded <span class="line-gap"></span> Unlimited Power: Offer Life in increments of 3, up to 9; This card can make 1 additional attack per 3 Life offered during your next Battle Phase. <span class="line-gap"></span> Everlasting Life: Mill 12; Gain 6 Life. <span class="line-gap"></span> Riches Beyond Your Imagination (Exhaustion): Offer 6; Draw 2.`
+        text: `Deathpower, Warded <span class="line-gap"></span> Unlimited Power: Offer Life in increments of 3, up to 9; This card can make 1 additional attack per 3 Life offered during your next Battle Phase. <span class="line-gap"></span> Everlasting Life: Mill 12; Gain 6 Life. <span class="line-gap"></span> Riches Beyond Your Imagination (Exhaustion): Offer 6 Life; Draw 2.`
       }
     ]
   },
@@ -908,7 +908,7 @@ export const cards = [
     rarity: "Rare",
     type: "Rush",
     condition: "",
-    cost: "Offer X and Target 1 Champion you control",
+    cost: "Offer X Life and Target 1 Champion you control",
     tags: ["Rush"],
     damage: "",
     life: "",
@@ -6819,7 +6819,7 @@ export const cards = [
     damageThreshold: "",
     abilities: [
       {
-        text: `Bounce all other cards you control, and if you do, you must offer 1 Life for each card bounced this way.`
+        text: `Bounce all other cards you control, and if you do, you must Offer 1 Life for each card bounced this way.`
       }
     ]
   },
