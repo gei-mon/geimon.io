@@ -14,9 +14,5 @@ const issueData = [
     {
         title: "Feature Request",
         text: "Making challenge requests to specific other players."
-    },
-    {
-        title: "The (Nearly) Impossible Feature Request",
-        text: "\"Make it an auto-sim.\" If you email me about this, I'm blocking you and banning your account. It's a dream to one day have Geimon! be an automatic simulator, however I nearly went crazy trying to do that from the ground up. For now, it just works."
     }
 ];
