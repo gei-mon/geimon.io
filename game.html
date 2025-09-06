@@ -5853,6 +5853,7 @@
                             }
                             break;
                         case "To Void":
+                            console.log("[DEBUG] Moving card to Tomb:", cardData.id, "Owner:", cardData.owner, "From zone:", zone);
                             playSoundEffect('tomb');
                             await doMove(zone, "Void",
                                 cardData.owner === username ? "playerVoidBox" : "opponentVoidBox",
@@ -5867,6 +5868,7 @@
                             }
                             break;
                         case "To Top of Deck":
+                            console.log("[DEBUG] Moving card to Tomb:", cardData.id, "Owner:", cardData.owner, "From zone:", zone);
                             playSoundEffect('set');
                             await doMove(zone, "Deck",
                                 cardData.owner === username ? "playerDeckBox" : "opponentDeckBox",
@@ -5882,6 +5884,7 @@
                             }
                             break;
                         case "To Bottom of Deck":
+                            console.log("[DEBUG] Moving card to Tomb:", cardData.id, "Owner:", cardData.owner, "From zone:", zone);
                             playSoundEffect('set');
                             await doMove(zone, "Deck",
                                 cardData.owner === username ? "playerDeckBox" : "opponentDeckBox",
