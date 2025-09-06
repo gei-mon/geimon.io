@@ -5529,37 +5529,38 @@
                     // 3) Persist change to server
                     await sendZoneUpdate([fromZone, toZoneKey], owner);
 
+                    // 🔄 Only render here for self-owned cards
+                    const mainZones = [
+                        { name: "Zone (Champion)",     container: "playerChampionsBox" },
+                        { name: "FaceDownZone",        container: "playerFaceDownBox" },
+                        { name: "Zone (Arsenal)",      container: "playerArsenalBox" },
+                        { name: "FaceDownArsenalZone", container: "playerFaceDownArsenalBox" },
+                        { name: "Reserve",             container: "playerReserveBox" },
+                        { name: "Tomb",                container: "playerTombBox" },
+                        { name: "Void",                container: "playerVoidBox" }
+                    ];
+                    mainZones.forEach(({ name, container }) => {
+                        if (fromZone === name || toZoneKey === name) {
+                            renderCardZone(gameState[owner][name], container);
+                        }
+                    });
+
+                    renderDrawnCards();
+                    renderLatestTombCard();
+                    renderLatestVoidCard();
+
                 } else {
                     // ❌ Opponent card → don't overwrite local state
                     socket.emit("request_move", {
                         gameId,
-                        cardId: cardData.id,
-                        fromZone,
-                        toZone: toZoneKey,
+                        cardId: cardData.id,       // ✅ use cardData, not card
+                        fromZone: cardData.boardState,
+                        toZone: toZoneKey,         // ✅ use the actual destination zone
+                        owner: cardData.owner,     // ✅ send real owner
                         requestedBy: username
                     });
                     return; // skip local visual re-render, server will broadcast
                 }
-
-                // 4) Re-render affected zones and visuals
-                const mainZones = [
-                    { name: "Zone (Champion)",     container: owner === username ? "playerChampionsBox"       : "opponentChampionsBox" },
-                    { name: "FaceDownZone",        container: owner === username ? "playerFaceDownBox"        : "opponentFaceDownBox" },
-                    { name: "Zone (Arsenal)",      container: owner === username ? "playerArsenalBox"         : "opponentArsenalBox" },
-                    { name: "FaceDownArsenalZone", container: owner === username ? "playerFaceDownArsenalBox" : "opponentFaceDownArsenalBox" },
-                    { name: "Reserve",             container: owner === username ? "playerReserveBox"         : "opponentReserveBox" },
-                    { name: "Tomb",                container: owner === username ? "playerTombBox"            : "opponentTombBox" },
-                    { name: "Void",                container: owner === username ? "playerVoidBox"            : "opponentVoidBox" }
-                ];
-                mainZones.forEach(({ name, container }) => {
-                    if (fromZone === name || toZoneKey === name) {
-                        renderCardZone(gameState[owner][name], container);
-                    }
-                });
-
-                renderDrawnCards();
-                renderLatestTombCard();
-                renderLatestVoidCard();
             }
             // ────────────────────────────────────────────────────────────────────────────
 
