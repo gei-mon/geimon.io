@@ -384,52 +384,6 @@ io.on('connection', (socket) => {
   socket.on('draw_response',({ gameId, from, response }) =>
     io.to(gameId).emit('draw_result',  { from, response }) );
 
-    // Handle requests from a client to move a card they don't own
-  socket.on("request_move", ({ gameId, cardId, fromZone, toZone, owner, requestedBy }) => {
-    const state = gameStates.get(gameId);
-    if (!state) {
-      console.warn("[request_move] Game not found:", gameId);
-      return;
-    }
-
-    // ✅ Prefer the explicit owner passed by the client, otherwise detect
-    const realOwner = owner && state[owner]
-      ? owner
-      : state.player1 && state[state.player1][fromZone]?.some(c => String(c.id) === String(cardId))
-        ? state.player1
-        : state.player2;
-
-    if (!realOwner || !state[realOwner]) {
-      console.warn("[request_move] Owner not found for card", cardId, "in zone", fromZone);
-      return;
-    }
-
-    // Remove the card from the source zone
-    const src = state[realOwner][fromZone];
-    const idx = src.findIndex(c => String(c.id) === String(cardId));
-    if (idx === -1) {
-      console.warn("[request_move] Card not found in", fromZone, "for", realOwner);
-      return;
-    }
-    const [card] = src.splice(idx, 1);
-
-    // Update its board state
-    card.boardState = toZone;
-
-    // Place into destination zone (auto-create if missing)
-    if (!state[realOwner][toZone]) {
-      console.warn("[request_move] Zone not found:", toZone, "for", realOwner, "- creating it");
-      state[realOwner][toZone] = [];
-    }
-    state[realOwner][toZone].push(card);
-
-    // Broadcast both zones so clients update correctly
-    io.to(gameId).emit("sync_zone", { owner: realOwner, zone: fromZone, cards: state[realOwner][fromZone] });
-    io.to(gameId).emit("sync_zone", { owner: realOwner, zone: toZone,   cards: state[realOwner][toZone] });
-
-    console.log(`[request_move] ${requestedBy} requested move of card ${cardId} (owner: ${realOwner}) from ${fromZone} → ${toZone}`);
-  });
-
   socket.on('hand_reveal', ({ gameId, from, reveal }) => {
     const state = gameStates.get(gameId);
     if (!state) {

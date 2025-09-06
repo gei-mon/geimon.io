@@ -1103,16 +1103,6 @@
             gameState[username].Hand = rehydrateZone(gameState[username].Hand, cards);
             gameState[username].Tomb = rehydrateZone(gameState[username].Tomb, cards);
 
-            ["Hand", "Deck", "Tomb", "Void", "Reserve",
-            "Zone (Champion)", "FaceDownZone",
-            "Zone (Arsenal)", "FaceDownArsenalZone"].forEach(zone => {
-                if (gameState[username][zone]) {
-                    gameState[username][zone].forEach(card => {
-                        if (!card.owner) card.owner = username;
-                    });
-                }
-            });
-
             // ✅ Now get the hydrated player object
             const player = gameState[username];
             const currentHand = player.Hand;
@@ -1176,7 +1166,6 @@
             };
 
             const opponent = gameState[ gameState.player1 === username ? gameState.player2 : gameState.player1 ];
-            const opponentName = (gameState.player1 === username ? gameState.player2 : gameState.player1);
             if (!hasInitializedOpponentState) {
                 const opponent = gameState[ gameState.player1 === username ? gameState.player2 : gameState.player1 ];
                 opponentHandRevealed = gameState[opponent]?.handRevealed ?? false;
@@ -1200,15 +1189,6 @@
                     if (cards) await renderCardZone(cards, domId);
                 }
             }
-            ["Hand", "Deck", "Tomb", "Void", "Reserve",
-            "Zone (Champion)", "FaceDownZone",
-            "Zone (Arsenal)", "FaceDownArsenalZone"].forEach(zone => {
-                if (opponent[zone]) {
-                    opponent[zone].forEach(card => {
-                        if (!card.owner) card.owner = opponentName;
-                    });
-                }
-            });
         }
 
         async function getUsername() {
@@ -1244,7 +1224,6 @@
             drawnCards.forEach(card => {
                 card.lastBoardState = card.boardState;
                 card.boardState = "Hand";
-                if (!card.owner) card.owner = username;
             });
             gameState[username].Hand.push(...drawnCards);
 
@@ -4685,20 +4664,14 @@
             const opponentUsernameParam = urlParams.get("opponentUsername")  || (isSinglePlayer ? "Bot" : username);
             const paramValue = urlParams.get(paramName);
 
-            // 1) If the param is already a JSON array of IDs, wrap into card objects and stamp owner
+            // 1) If the param is already a JSON array of IDs, use it directly
             try {
                 const parsed = JSON.parse(paramValue);
                 if (Array.isArray(parsed)) {
-                    const isOpponent = paramName === "opponentDeck";
-                    const owner      = isOpponent ? opponentUsernameParam : playerUsernameParam;
-
-                    return parsed.map(id => ({
-                        id,
-                        owner
-                    }));
+                    return parsed;
                 }
             } catch (e) {
-                // not JSON → continue to fetch by name
+            // not JSON → continue to fetch by name
             }
 
             // 2) Decide whose deck we’re fetching
@@ -4708,13 +4681,8 @@
             // 3) Fetch from the server, passing the owner
             try {
                 const data = await fetchDeckCards(paramValue, owner);
-
                 if (data.success && Array.isArray(data.card_ids)) {
-                    // ✅ wrap into card objects with owner stamped
-                    return data.card_ids.map(id => ({
-                        id,
-                        owner
-                    }));
+                    return data.card_ids;
                 } else {
                     console.error(`Deck fetch failed for '${paramName}':`, data.message);
                     return [];
@@ -4986,17 +4954,16 @@
             return data;
         }
 
-        async function sendZoneUpdate(zones, owner = username) {
+        async function sendZoneUpdate(zones) {
             const updatedZones = {};
-            zones.forEach(z => updatedZones[z] = gameState[owner][z]);
-
+            zones.forEach(z => updatedZones[z] = gameState[username][z]);
             //console.log("🔧 sendZoneUpdate ▶ payload:", updatedZones);
 
             const res = await fetch(`${serverUrl}/updateGameState`, {
                 method: "POST",
                 credentials: "include",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ gameId, owner, updatedZones })
+                body: JSON.stringify({ gameId, owner: username, updatedZones })
             });
 
             const data = await res.json();
@@ -5004,8 +4971,8 @@
 
             // merge server copy back into local
             if (data.updatedPlayerZone) {
-                gameState[owner] = data.updatedPlayerZone;
-                //console.log("🔄 state synced → Arsenal:", gameState[owner]["Zone (Arsenal)"].map(c=>c.id), "Tomb:", gameState[owner].Tomb.map(c=>c.id));
+                gameState[username] = data.updatedPlayerZone;
+                //console.log("🔄 state synced → Arsenal:", gameState[username]["Zone (Arsenal)"].map(c=>c.id), "Tomb:", gameState[username].Tomb.map(c=>c.id));
             }
 
             return data;
@@ -5430,137 +5397,118 @@
 
             // ─── helper to move card in state + UI + server ───────────────────────────
             async function doMove(fromZone, toZoneKey, containerId, faceDown, placeOnTop = false) {
-                // Determine the card's true owner
-                const owner = cardData.owner || username;
-
-                if (owner === username) {
-                    // ✅ You own this card → safe to update locally and sync to server
-
-                    // 0) Update local gameState arrays
-                    const zoneArr = gameState[owner][fromZone];
-                    const idx     = zoneArr.findIndex(c => String(c.id) === String(cardData.id));
-                    if (idx < 0) return;
-                    const [moved] = zoneArr.splice(idx, 1);
-                    moved.boardState = toZoneKey;
-                    moved.faceDown   = faceDown;
-
-                    const targetArr = gameState[owner][toZoneKey];
-                    if (toZoneKey === "Deck" && placeOnTop) {
-                        targetArr.unshift(moved);
-                    } else {
-                        targetArr.push(moved);
-                    }
-
-                    const container = document.getElementById(containerId);
-                    if (toZoneKey !== "Deck") {
-                        if (toZoneKey === "Deck" && placeOnTop) {
-                            container.prepend(cardElement);
-                        } else {
-                            container.appendChild(cardElement);
-                        }
-                    }
-
-                    cardElement.dataset.zone     = toZoneKey;
-                    cardElement.dataset.facedown = faceDown ? "true" : "false";
-
-                    const oldMenu = cardElement.querySelector(".hover-menu");
-                    if (oldMenu) oldMenu.remove();
-                    delete cardElement.dataset.hoverMenuAttached;
-                    attachHoverMenu(cardElement, moved);
-
-                    // 2) Apply visual transforms
-                    const transforms = ["scale(0.3)"];
-                    if (
-                        !faceDown ||
-                        (containerId !== "playerFaceDownBox" &&
-                        containerId !== "playerFaceDownArsenalBox")
-                    ) {
-                        const straySleeve = cardElement.querySelector(".sleeve-overlay");
-                        if (straySleeve) straySleeve.remove();
-                    }
-                    if (containerId === "playerFaceDownBox") {
-                        transforms.push("rotate(90deg)");
-                        const oldSleeve = cardElement.querySelector(".sleeve-overlay");
-                        if (oldSleeve) oldSleeve.remove();
-
-                        const sleeve = document.createElement("img");
-                        sleeve.src       = userSleeveURL;
-                        sleeve.className = "sleeve-overlay";
-                        Object.assign(sleeve.style, {
-                            position:        "absolute",
-                            top:             "0",
-                            left:            "0",
-                            width:           "260px",
-                            height:          "420px",
-                            transform:       "rotate(180deg)",
-                            transformOrigin: "center center",
-                            pointerEvents:   "none",
-                            zIndex:          "110000",
-                        });
-                        cardElement.appendChild(sleeve);
-                    }
-                    if (containerId === "playerFaceDownArsenalBox") {
-                        const oldSleeve = cardElement.querySelector(".sleeve-overlay");
-                        if (oldSleeve) oldSleeve.remove();
-
-                        const sleeve = document.createElement("img");
-                        sleeve.src       = userSleeveURL;
-                        sleeve.className = "sleeve-overlay";
-                        Object.assign(sleeve.style, {
-                            position:        "absolute",
-                            top:             "0",
-                            left:            "0",
-                            width:           "260px",
-                            height:          "420px",
-                            transformOrigin: "center center",
-                            pointerEvents:   "none",
-                            zIndex:          "110000",
-                        });
-                        cardElement.appendChild(sleeve);
-                    }
-                    if (containerId === "playerReserveBox") {
-                        transforms.push("scale(0.3)");
-                    }
-
-                    cardElement.style.transform       = transforms.join(" ");
-                    cardElement.style.transformOrigin = "center center";
-                    cardElement.style.marginLeft = "";
-
-                    // 3) Persist change to server
-                    await sendZoneUpdate([fromZone, toZoneKey], owner);
-
-                    // 🔄 Only render here for self-owned cards
-                    const mainZones = [
-                        { name: "Zone (Champion)",     container: "playerChampionsBox" },
-                        { name: "FaceDownZone",        container: "playerFaceDownBox" },
-                        { name: "Zone (Arsenal)",      container: "playerArsenalBox" },
-                        { name: "FaceDownArsenalZone", container: "playerFaceDownArsenalBox" },
-                        { name: "Reserve",             container: "playerReserveBox" },
-                        { name: "Tomb",                container: "playerTombBox" },
-                        { name: "Void",                container: "playerVoidBox" }
-                    ];
-                    mainZones.forEach(({ name, container }) => {
-                        if (fromZone === name || toZoneKey === name) {
-                            renderCardZone(gameState[owner][name], container);
-                        }
-                    });
-
-                    renderDrawnCards();
-                    renderLatestTombCard();
-                    renderLatestVoidCard();
-
+                // 0) Update local gameState arrays
+                const zoneArr = gameState[username][fromZone];
+                const idx     = zoneArr.findIndex(c => String(c.id) === String(cardData.id));
+                if (idx < 0) return;
+                const [moved] = zoneArr.splice(idx, 1);
+                moved.boardState = toZoneKey;
+                moved.faceDown   = faceDown;
+                const targetArr = gameState[username][toZoneKey];
+                if (toZoneKey === "Deck" && placeOnTop) {
+                    targetArr.unshift(moved);
                 } else {
-                    // ❌ Opponent card → don't overwrite local state
-                    socket.emit("request_move", {
-                        gameId,
-                        cardId: cardData.id,       // ✅ use cardData, not card
-                        fromZone: cardData.boardState,
-                        toZone: toZoneKey,         // ✅ use the actual destination zone
-                        owner: cardData.owner,     // ✅ send real owner
-                        requestedBy: username
-                    });
-                    return; // skip local visual re-render, server will broadcast
+                    targetArr.push(moved);
                 }
+
+                const container = document.getElementById(containerId);
+                if (toZoneKey !== "Deck") {
+                    const container = document.getElementById(containerId);
+                    if (toZoneKey === "Deck" && placeOnTop) {
+                        container.prepend(cardElement);
+                    } else {
+                        container.appendChild(cardElement);
+                    }
+                }
+                cardElement.dataset.zone     = toZoneKey;
+                cardElement.dataset.facedown = faceDown ? "true" : "false";
+
+                const oldMenu = cardElement.querySelector(".hover-menu");
+                if (oldMenu) oldMenu.remove();               // throw away the Hand menu
+                delete cardElement.dataset.hoverMenuAttached; // let attachHoverMenu run again
+                attachHoverMenu(cardElement, moved);         // moved == card’s live data object
+
+                // 2) Apply visual transforms
+                //    always shrink
+                const transforms = ["scale(0.3)"];
+                if (
+                    !faceDown ||               // we’re no longer face-down
+                    (containerId !== "playerFaceDownBox" &&
+                    containerId !== "playerFaceDownArsenalBox")
+                ) {
+                    const straySleeve = cardElement.querySelector(".sleeve-overlay");
+                    if (straySleeve) straySleeve.remove();
+                }
+                //    if facedown-champion, also rotate + sleeve overlay
+                if (containerId === "playerFaceDownBox") {
+                    transforms.push("rotate(90deg)");
+
+                    // remove any previous sleeve overlay
+                    const oldSleeve = cardElement.querySelector(".sleeve-overlay");
+                    if (oldSleeve) oldSleeve.remove();
+
+                    // add one sleeve overlay
+                    const sleeve = document.createElement("img");
+                    sleeve.src       = userSleeveURL;
+                    sleeve.className = "sleeve-overlay";
+                    Object.assign(sleeve.style, {
+                        position:        "absolute",
+                        top:             "0",
+                        left:            "0",
+                        width:           "260px",
+                        height:          "420px",
+                        transform:       "rotate(180deg)",
+                        transformOrigin: "center center",
+                        pointerEvents:   "none",
+                        zIndex:          "110000",
+                    });
+                    cardElement.appendChild(sleeve);
+                } if (containerId === "playerFaceDownArsenalBox") {
+                    const oldSleeve = cardElement.querySelector(".sleeve-overlay");
+                    if (oldSleeve) oldSleeve.remove();
+
+                    // add one sleeve overlay
+                    const sleeve = document.createElement("img");
+                    sleeve.src       = userSleeveURL;
+                    sleeve.className = "sleeve-overlay";
+                    Object.assign(sleeve.style, {
+                        position:        "absolute",
+                        top:             "0",
+                        left:            "0",
+                        width:           "260px",
+                        height:          "420px",
+                        transformOrigin: "center center",
+                        pointerEvents:   "none",
+                        zIndex:          "110000",
+                    });
+                    cardElement.appendChild(sleeve);
+                } if (containerId === "playerReserveBox") {
+                    transforms.push("scale(0.3)");
+                }
+
+                cardElement.style.transform       = transforms.join(" ");
+                cardElement.style.transformOrigin = "center center";
+                cardElement.style.marginLeft = "";
+
+                // 3) Persist change to server
+                await sendZoneUpdate([fromZone, toZoneKey]);
+                const mainZones = [
+                  { name: "Zone (Champion)",         container: "playerChampionsBox"       },
+                  { name: "FaceDownZone",            container: "playerFaceDownBox"        },
+                  { name: "Zone (Arsenal)",          container: "playerArsenalBox"         },
+                  { name: "FaceDownArsenalZone",     container: "playerFaceDownArsenalBox" },
+                  { name: "Reserve",                 container: "playerReserveBox"         },
+                ];
+                mainZones.forEach(({ name, container }) => {
+                  if (fromZone === name || toZoneKey === name) {
+                    renderCardZone(gameState[username][name], container);
+                  }
+                });
+
+                // 4) Re-render zones so spacing/layout updates
+                renderDrawnCards();
+                renderLatestTombCard();
+                renderLatestVoidCard();
             }
             // ────────────────────────────────────────────────────────────────────────────
 
@@ -5854,12 +5802,8 @@
                                 break;
                             }
                         case "To Tomb":
-                            console.log("[DEBUG] Moving card to Tomb:", cardData.id, "Owner:", cardData.owner, "From zone:", zone);
                             playSoundEffect('tomb');
-                            await doMove(zone, "Tomb",
-                                cardData.owner === username ? "playerTombBox" : "opponentTombBox",
-                                false
-                            );
+                            await doMove(zone, "Tomb", "playerTombBox", false);
                             if (cardElement.dataset.excavation === 'true') {
                                 cardElement.remove();
                                 socket.emit('excavate_card_removed', {
@@ -5869,12 +5813,8 @@
                             }
                             break;
                         case "To Void":
-                            console.log("[DEBUG] Moving card to Tomb:", cardData.id, "Owner:", cardData.owner, "From zone:", zone);
                             playSoundEffect('tomb');
-                            await doMove(zone, "Void",
-                                cardData.owner === username ? "playerVoidBox" : "opponentVoidBox",
-                                false
-                            );
+                            await doMove(zone, "Void", "playerVoidBox", false);
                             if (cardElement.dataset.excavation === 'true') {
                                 cardElement.remove();
                                 socket.emit('excavate_card_removed', {
@@ -5884,13 +5824,8 @@
                             }
                             break;
                         case "To Top of Deck":
-                            console.log("[DEBUG] Moving card to Tomb:", cardData.id, "Owner:", cardData.owner, "From zone:", zone);
                             playSoundEffect('set');
-                            await doMove(zone, "Deck",
-                                cardData.owner === username ? "playerDeckBox" : "opponentDeckBox",
-                                false,
-                                true   // put on top
-                            );
+                            await doMove(zone, "Deck", "playerDeckBox", false, true);
                             if (cardElement.dataset.excavation === 'true') {
                                 cardElement.remove();
                                 socket.emit('excavate_card_removed', {
@@ -5900,13 +5835,8 @@
                             }
                             break;
                         case "To Bottom of Deck":
-                            console.log("[DEBUG] Moving card to Tomb:", cardData.id, "Owner:", cardData.owner, "From zone:", zone);
                             playSoundEffect('set');
-                            await doMove(zone, "Deck",
-                                cardData.owner === username ? "playerDeckBox" : "opponentDeckBox",
-                                false,
-                                false  // put on bottom
-                            );
+                            await doMove(zone, "Deck", "playerDeckBox", false, false);
                             if (cardElement.dataset.excavation === 'true') {
                                 cardElement.remove();
                                 socket.emit('excavate_card_removed', {
