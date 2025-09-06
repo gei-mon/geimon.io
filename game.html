@@ -528,6 +528,10 @@
             <img id="sort-hand-btn"    src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/sort.png"     title="Sort Hand"    style="width:40px;cursor:pointer;">
             <img id="reveal-hand-btn"  src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/eye.png"      title="Reveal Hand"  style="width:40px;cursor:pointer;">
         </div>
+        <div id="totem-bubble" style="opacity: 0; transition: opacity 1s ease-in-out;">
+            <div id="totem-title"></div>
+            <div id="totem-text"></div>
+        </div>
 
         <script type="module">
             import { cards } from "./data/cards.js";
@@ -810,6 +814,23 @@
             muteBtn.addEventListener('click', () => {
                 isMuted = !isMuted;
                 muteBtn.textContent = isMuted ? '🔇' : '🔊';
+            });
+
+            const ttmBble = document.getElementById('totem-bubble');
+
+            // ⬇️ Grab totem info from the URL
+            const totem = params.get("totem") || "Totem";
+            const totemText = params.get("totemText") || "";
+
+            // ⬇️ Display it in the bubble
+            document.addEventListener("DOMContentLoaded", () => {
+            const bubbleTitle = document.getElementById("totem-title");
+            const bubbleText = document.getElementById("totem-text");
+
+            if (bubbleTitle && bubbleText) {
+                bubbleTitle.textContent = totem;
+                bubbleText.textContent = totemText;
+            }
             });
 
             // Keep a reference to the native Audio constructor
@@ -4589,6 +4610,7 @@
     setTimeout(() => {
         toolButtons.style.opacity = "1";
         muteBtn.style.opacity = "1";
+        ttmBble.style.opacity = "1";
         lifeAdjustBox.style.opacity = "1";
         playerDeckBox.style.opacity = "1";
         playerDeckBox.style.zIndex = "200000";

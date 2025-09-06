@@ -1,7 +1,7 @@
 const issueData = [
     {
         title: "You There!",
-        text: "Email 'geimon.help@gmail.com' to submit bugs as well as request features or recommend cards to add! Please do not email if your idea or issue is already on the list below."
+        text: "Email 'geimon.help@gmail.com' to submit bugs as well as request features or recommend cards to add! <br><br> You can also send the same messages on our Discord server! <br><br> Please do not email or message if your idea or issue is already on the list below."
     },
     {
         title: "Known Bug",
@@ -14,10 +14,6 @@ const issueData = [
     {
         title: "Feature Request",
         text: "Making challenge requests to specific other players."
-    },
-    {
-        title: "Feature Request",
-        text: "Make the Totem always visible on the screen. It's too easy to forget about right now."
     },
     {
         title: "The (Nearly) Impossible Feature Request",
