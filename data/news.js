@@ -1,6 +1,10 @@
 
 const newsData = [
     {
+        date: "September 6th, 2025",
+        text: "v1.24 Alpha Released! <br> Made a Discord and posted a link in the upper right-hand corner here. Use it to find opponents and talk over voice chat during your games!"
+    },
+    {
         date: "September 2nd, 2025",
         text: "v1.23 Alpha Released! <br> Finally resolved the Facedown Arsenal cards not hovering properly. Added some new cards (all with art this time)."
     },

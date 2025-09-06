@@ -143,11 +143,27 @@
             <div id="issues" class="tab-content"></div>
         </div>
 
-    <a href="https://discord.gg/ynJfZ2XW9H" target="_blank" id="discordButton" style="display: none; position: fixed; top: 10px; right: 10px; z-index: 1000;">
-        <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site%20Assets/discord.png"
-            alt="Join our Discord"
-            style="width:40px; height:40px; cursor:pointer;">
-    </a>
+    <div id="discordButton" style="display: none; align-items: center; position: fixed; top: 0px; right: 20px; z-index: 1000;">
+        <span style="margin-right: 10px; font-size: 20px; color: white; font-weight: bold; text-shadow: 1px 1px 3px black;">
+            Join our Discord to chat with other players!
+        </span>
+        <a href="https://discord.gg/ynJfZ2XW9H" target="_blank">
+            <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site%20Assets/discord.png"
+                alt="Join our Discord"
+                style="height: 160px; width: 160px; cursor:pointer;">
+        </a>
+    </div>
+
+    <div id="venmoButton" style="display: none; align-items: center; position: fixed; bottom: 0px; right: 20px; z-index: 1000;">
+        <span style="margin-right: 10px; font-size: 20px; color: white; font-weight: bold; text-shadow: 1px 1px 3px black;">
+            Donate to help support us here at Geimon!
+        </span>
+        <a href="https://venmo.com/Kieran_Fl?txn=pay&amount=5&note=Geimon!%20Donation" target="_blank">
+            <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site%20Assets/venmo.png"
+                alt="Donate Today!"
+                style="height: 160px; width: 160px; cursor:pointer;">
+        </a>
+    </div>
 
     <script src="./data/news.js"></script>
     <script src="./data/issues.js"></script>
@@ -163,6 +179,7 @@
             const profilePic = document.getElementById('profilePic');
             const rulesBtn = document.getElementById('rulesButton');
             const discordBtn = document.getElementById('discordButton');
+            const venmoBtn = document.getElementById('venmoButton');
             //const settingsBtn = document.getElementById('settingsButton');
             const multiplayerBtn = document.getElementById('multiplayerButton');
 
@@ -183,7 +200,8 @@
                     deckBtn.style.display = 'inline-block';
                     //matchBtn.style.display = 'inline-block';
                     rulesBtn.style.display = 'inline-block';
-                    discordBtn.style.display = 'inline-block';
+                    discordBtn.style.display = 'flex';
+                    venmoBtn.style.display = 'flex';
                     //minigameBtn.style.display = 'inline-block';
                     //settingsBtn.style.display = 'inline-block';
                     multiplayerBtn.style.display = 'inline-block';
