@@ -384,6 +384,50 @@ io.on('connection', (socket) => {
   socket.on('draw_response',({ gameId, from, response }) =>
     io.to(gameId).emit('draw_result',  { from, response }) );
 
+    // Handle requests from a client to move a card they don't own
+  socket.on("request_move", ({ gameId, cardId, fromZone, toZone, requestedBy }) => {
+    const state = gameStates.get(gameId);
+    if (!state) {
+      console.warn("[request_move] Game not found:", gameId);
+      return;
+    }
+
+    // Figure out which player actually owns this card
+    const owner = state.player1 && state[state.player1][fromZone]?.some(c => String(c.id) === String(cardId))
+      ? state.player1
+      : state.player2;
+
+    if (!owner || !state[owner]) {
+      console.warn("[request_move] Owner not found for card", cardId, "in zone", fromZone);
+      return;
+    }
+
+    // Remove card from the source zone
+    const src = state[owner][fromZone];
+    const idx = src.findIndex(c => String(c.id) === String(cardId));
+    if (idx === -1) {
+      console.warn("[request_move] Card not found in", fromZone, "for", owner);
+      return;
+    }
+    const [card] = src.splice(idx, 1);
+
+    // Update its board state
+    card.boardState = toZone;
+
+    // Place into destination zone
+    if (!state[owner][toZone]) {
+      console.warn("[request_move] Zone not found:", toZone, "for", owner);
+      state[owner][toZone] = [];
+    }
+    state[owner][toZone].push(card);
+
+    // Broadcast both zones so clients update correctly
+    io.to(gameId).emit("sync_zone", { owner, zone: fromZone, cards: state[owner][fromZone] });
+    io.to(gameId).emit("sync_zone", { owner, zone: toZone,   cards: state[owner][toZone] });
+
+    console.log(`[request_move] ${requestedBy} requested move of card ${cardId} (${owner}) from ${fromZone} → ${toZone}`);
+  });
+
   socket.on('hand_reveal', ({ gameId, from, reveal }) => {
     const state = gameStates.get(gameId);
     if (!state) {

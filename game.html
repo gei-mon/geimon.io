@@ -5429,119 +5429,133 @@
             }
 
             // ─── helper to move card in state + UI + server ───────────────────────────
-            async function doMove(fromZone, toZoneKey, containerId, faceDown, placeOnTop = false) {
-                // Determine the card's true owner
+            async function doMove(cardData, fromZone, toZoneKey, containerId, faceDown, placeOnTop = false) {
                 const owner = cardData.owner || username;
 
-                // 0) Update local gameState arrays
-                const zoneArr = gameState[owner][fromZone];
-                const idx     = zoneArr.findIndex(c => String(c.id) === String(cardData.id));
-                if (idx < 0) return;
-                const [moved] = zoneArr.splice(idx, 1);
-                moved.boardState = toZoneKey;
-                moved.faceDown   = faceDown;
+                if (owner === username) {
+                    // ✅ You own this card → safe to update locally and sync to server
 
-                const targetArr = gameState[owner][toZoneKey];
-                if (toZoneKey === "Deck" && placeOnTop) {
-                    targetArr.unshift(moved);
-                } else {
-                    targetArr.push(moved);
-                }
+                    // 0) Update local gameState arrays
+                    const zoneArr = gameState[owner][fromZone];
+                    const idx     = zoneArr.findIndex(c => String(c.id) === String(cardData.id));
+                    if (idx < 0) return;
+                    const [moved] = zoneArr.splice(idx, 1);
+                    moved.boardState = toZoneKey;
+                    moved.faceDown   = faceDown;
 
-                const container = document.getElementById(containerId);
-                if (toZoneKey !== "Deck") {
+                    const targetArr = gameState[owner][toZoneKey];
                     if (toZoneKey === "Deck" && placeOnTop) {
-                        container.prepend(cardElement);
+                        targetArr.unshift(moved);
                     } else {
-                        container.appendChild(cardElement);
+                        targetArr.push(moved);
                     }
-                }
 
-                cardElement.dataset.zone     = toZoneKey;
-                cardElement.dataset.facedown = faceDown ? "true" : "false";
+                    const container = document.getElementById(containerId);
+                    if (toZoneKey !== "Deck") {
+                        if (toZoneKey === "Deck" && placeOnTop) {
+                            container.prepend(cardElement);
+                        } else {
+                            container.appendChild(cardElement);
+                        }
+                    }
 
-                const oldMenu = cardElement.querySelector(".hover-menu");
-                if (oldMenu) oldMenu.remove();               // throw away the Hand menu
-                delete cardElement.dataset.hoverMenuAttached; // let attachHoverMenu run again
-                attachHoverMenu(cardElement, moved);         // moved == card’s live data object
+                    cardElement.dataset.zone     = toZoneKey;
+                    cardElement.dataset.facedown = faceDown ? "true" : "false";
 
-                // 2) Apply visual transforms
-                const transforms = ["scale(0.3)"];
-                if (
-                    !faceDown ||
-                    (containerId !== "playerFaceDownBox" &&
-                    containerId !== "playerFaceDownArsenalBox")
-                ) {
-                    const straySleeve = cardElement.querySelector(".sleeve-overlay");
-                    if (straySleeve) straySleeve.remove();
-                }
-                if (containerId === "playerFaceDownBox") {
-                    transforms.push("rotate(90deg)");
-                    const oldSleeve = cardElement.querySelector(".sleeve-overlay");
-                    if (oldSleeve) oldSleeve.remove();
+                    const oldMenu = cardElement.querySelector(".hover-menu");
+                    if (oldMenu) oldMenu.remove();
+                    delete cardElement.dataset.hoverMenuAttached;
+                    attachHoverMenu(cardElement, moved);
 
-                    const sleeve = document.createElement("img");
-                    sleeve.src       = userSleeveURL;
-                    sleeve.className = "sleeve-overlay";
-                    Object.assign(sleeve.style, {
-                        position:        "absolute",
-                        top:             "0",
-                        left:            "0",
-                        width:           "260px",
-                        height:          "420px",
-                        transform:       "rotate(180deg)",
-                        transformOrigin: "center center",
-                        pointerEvents:   "none",
-                        zIndex:          "110000",
+                    // 2) Apply visual transforms
+                    const transforms = ["scale(0.3)"];
+                    if (
+                        !faceDown ||
+                        (containerId !== "playerFaceDownBox" &&
+                        containerId !== "playerFaceDownArsenalBox")
+                    ) {
+                        const straySleeve = cardElement.querySelector(".sleeve-overlay");
+                        if (straySleeve) straySleeve.remove();
+                    }
+                    if (containerId === "playerFaceDownBox") {
+                        transforms.push("rotate(90deg)");
+                        const oldSleeve = cardElement.querySelector(".sleeve-overlay");
+                        if (oldSleeve) oldSleeve.remove();
+
+                        const sleeve = document.createElement("img");
+                        sleeve.src       = userSleeveURL;
+                        sleeve.className = "sleeve-overlay";
+                        Object.assign(sleeve.style, {
+                            position:        "absolute",
+                            top:             "0",
+                            left:            "0",
+                            width:           "260px",
+                            height:          "420px",
+                            transform:       "rotate(180deg)",
+                            transformOrigin: "center center",
+                            pointerEvents:   "none",
+                            zIndex:          "110000",
+                        });
+                        cardElement.appendChild(sleeve);
+                    }
+                    if (containerId === "playerFaceDownArsenalBox") {
+                        const oldSleeve = cardElement.querySelector(".sleeve-overlay");
+                        if (oldSleeve) oldSleeve.remove();
+
+                        const sleeve = document.createElement("img");
+                        sleeve.src       = userSleeveURL;
+                        sleeve.className = "sleeve-overlay";
+                        Object.assign(sleeve.style, {
+                            position:        "absolute",
+                            top:             "0",
+                            left:            "0",
+                            width:           "260px",
+                            height:          "420px",
+                            transformOrigin: "center center",
+                            pointerEvents:   "none",
+                            zIndex:          "110000",
+                        });
+                        cardElement.appendChild(sleeve);
+                    }
+                    if (containerId === "playerReserveBox") {
+                        transforms.push("scale(0.3)");
+                    }
+
+                    cardElement.style.transform       = transforms.join(" ");
+                    cardElement.style.transformOrigin = "center center";
+                    cardElement.style.marginLeft = "";
+
+                    // 3) Persist change to server
+                    await sendZoneUpdate([fromZone, toZoneKey], owner);
+
+                } else {
+                    // ❌ Opponent card → don't overwrite local state
+                    socket.emit("request_move", {
+                        gameId,
+                        cardId: cardData.id,
+                        fromZone,
+                        toZone: toZoneKey,
+                        requestedBy: username
                     });
-                    cardElement.appendChild(sleeve);
-                } 
-                if (containerId === "playerFaceDownArsenalBox") {
-                    const oldSleeve = cardElement.querySelector(".sleeve-overlay");
-                    if (oldSleeve) oldSleeve.remove();
-
-                    const sleeve = document.createElement("img");
-                    sleeve.src       = userSleeveURL;
-                    sleeve.className = "sleeve-overlay";
-                    Object.assign(sleeve.style, {
-                        position:        "absolute",
-                        top:             "0",
-                        left:            "0",
-                        width:           "260px",
-                        height:          "420px",
-                        transformOrigin: "center center",
-                        pointerEvents:   "none",
-                        zIndex:          "110000",
-                    });
-                    cardElement.appendChild(sleeve);
-                } 
-                if (containerId === "playerReserveBox") {
-                    transforms.push("scale(0.3)");
+                    return; // skip local visual re-render, server will broadcast
                 }
 
-                cardElement.style.transform       = transforms.join(" ");
-                cardElement.style.transformOrigin = "center center";
-                cardElement.style.marginLeft = "";
-
-                // 3) Persist change to server
-                await sendZoneUpdate([fromZone, toZoneKey], owner);
-
+                // 4) Re-render affected zones and visuals
                 const mainZones = [
-                { name: "Zone (Champion)",     container: owner === username ? "playerChampionsBox"       : "opponentChampionsBox" },
-                { name: "FaceDownZone",        container: owner === username ? "playerFaceDownBox"        : "opponentFaceDownBox" },
-                { name: "Zone (Arsenal)",      container: owner === username ? "playerArsenalBox"         : "opponentArsenalBox" },
-                { name: "FaceDownArsenalZone", container: owner === username ? "playerFaceDownArsenalBox" : "opponentFaceDownArsenalBox" },
-                { name: "Reserve",             container: owner === username ? "playerReserveBox"         : "opponentReserveBox" },
-                { name: "Tomb",                container: owner === username ? "playerTombBox"            : "opponentTombBox" },
-                { name: "Void",                container: owner === username ? "playerVoidBox"            : "opponentVoidBox" }
+                    { name: "Zone (Champion)",     container: owner === username ? "playerChampionsBox"       : "opponentChampionsBox" },
+                    { name: "FaceDownZone",        container: owner === username ? "playerFaceDownBox"        : "opponentFaceDownBox" },
+                    { name: "Zone (Arsenal)",      container: owner === username ? "playerArsenalBox"         : "opponentArsenalBox" },
+                    { name: "FaceDownArsenalZone", container: owner === username ? "playerFaceDownArsenalBox" : "opponentFaceDownArsenalBox" },
+                    { name: "Reserve",             container: owner === username ? "playerReserveBox"         : "opponentReserveBox" },
+                    { name: "Tomb",                container: owner === username ? "playerTombBox"            : "opponentTombBox" },
+                    { name: "Void",                container: owner === username ? "playerVoidBox"            : "opponentVoidBox" }
                 ];
                 mainZones.forEach(({ name, container }) => {
-                if (fromZone === name || toZoneKey === name) {
-                    renderCardZone(gameState[owner][name], container);
-                }
+                    if (fromZone === name || toZoneKey === name) {
+                        renderCardZone(gameState[owner][name], container);
+                    }
                 });
 
-                // 4) Re-render zones so spacing/layout updates
                 renderDrawnCards();
                 renderLatestTombCard();
                 renderLatestVoidCard();
