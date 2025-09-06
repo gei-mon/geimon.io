@@ -5429,7 +5429,8 @@
             }
 
             // ─── helper to move card in state + UI + server ───────────────────────────
-            async function doMove(cardData, fromZone, toZoneKey, containerId, faceDown, placeOnTop = false) {
+            async function doMove(fromZone, toZoneKey, containerId, faceDown, placeOnTop = false) {
+                // Determine the card's true owner
                 const owner = cardData.owner || username;
 
                 if (owner === username) {
