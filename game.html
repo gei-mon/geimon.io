@@ -5527,11 +5527,13 @@
                 await sendZoneUpdate([fromZone, toZoneKey], owner);
 
                 const mainZones = [
-                { name: "Zone (Champion)",     container: "playerChampionsBox"       },
-                { name: "FaceDownZone",        container: "playerFaceDownBox"        },
-                { name: "Zone (Arsenal)",      container: "playerArsenalBox"         },
-                { name: "FaceDownArsenalZone", container: "playerFaceDownArsenalBox" },
-                { name: "Reserve",             container: "playerReserveBox"         },
+                { name: "Zone (Champion)",     container: owner === username ? "playerChampionsBox"       : "opponentChampionsBox" },
+                { name: "FaceDownZone",        container: owner === username ? "playerFaceDownBox"        : "opponentFaceDownBox" },
+                { name: "Zone (Arsenal)",      container: owner === username ? "playerArsenalBox"         : "opponentArsenalBox" },
+                { name: "FaceDownArsenalZone", container: owner === username ? "playerFaceDownArsenalBox" : "opponentFaceDownArsenalBox" },
+                { name: "Reserve",             container: owner === username ? "playerReserveBox"         : "opponentReserveBox" },
+                { name: "Tomb",                container: owner === username ? "playerTombBox"            : "opponentTombBox" },
+                { name: "Void",                container: owner === username ? "playerVoidBox"            : "opponentVoidBox" }
                 ];
                 mainZones.forEach(({ name, container }) => {
                 if (fromZone === name || toZoneKey === name) {
@@ -5836,6 +5838,7 @@
                                 break;
                             }
                         case "To Tomb":
+                            console.log("[DEBUG] Moving card to Tomb:", cardData.id, "Owner:", cardData.owner, "From zone:", zone);
                             playSoundEffect('tomb');
                             await doMove(zone, "Tomb",
                                 cardData.owner === username ? "playerTombBox" : "opponentTombBox",
