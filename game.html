@@ -378,6 +378,29 @@
         align-items: center;
         justify-content: center;
     }
+    #active-totem {
+        transform: scale(0.875) translateX(54px);
+        transform-origin: top right;
+        display: flex;
+        justify-content: center;
+    }
+    #active-totem .card {
+        pointer-events: none;
+        cursor: default !important;
+    }
+    #active-totem .card-button,
+    #active-totem .attachment-circle,
+    #active-totem .target-highlight,
+    #active-totem .highlight-ring,
+    #active-totem .selection-overlay {
+        display: none !important;
+    }
+    .context-window .tab-content-container {
+        overflow-y: auto;
+    }
+    .context-window:has(#totem.tab-content.active) .tab-content-container {
+        overflow: hidden;
+    }
 </style>
 <body style="background-color:rgb(78, 78, 78);">
   <img src="https://geimon-app-833627ba44e0.herokuapp.com/Public/Images/Site Assets/try_2.png" class="bg-image" alt="">
@@ -399,12 +422,16 @@
         </div>
         <div class="context-window" id="context-window">
             <div class="tabs">
-                <button class="tab-button active" data-tab="chat">Chat</button>
+                <button class="tab-button" data-tab="chat">Chat</button>
+                <button class="tab-button active" data-tab="totem">Totem</button>
                 <button class="tab-button" data-tab="game-log">Game Log</button>
                 <button class="tab-button" data-tab="dictionary">Dictionary</button>
             </div>
             <div class="tab-content-container">
-                <div class="tab-content active" id="chat">
+                <div class="tab-content active" id="totem">
+                    <div id="active-totem"></div>
+                </div>
+                <div class="tab-content" id="chat">
                     <div id="chat-messages"></div>
                     <div id="chat-typing"></div>
                     <input id="chat-input" autocomplete="off" placeholder="Type your message…" />
@@ -535,6 +562,7 @@
 
         <script type="module">
             import { cards } from "./data/cards.js";
+            import { totemCards } from "./data/totemCards.js";
             import { totems } from './data/totems.js';
             import { tokens } from "./data/tokens.js";
             import { renderCard } from "./utils/cardRenderer.js";
@@ -816,7 +844,7 @@
                 muteBtn.textContent = isMuted ? '🔇' : '🔊';
             });
 
-            const ttmBble = document.getElementById('totem-bubble');
+            //const ttmBble = document.getElementById('totem-bubble');
 
             // ⬇️ Grab totem info from the URL
             const totem = params.get("totem") || "Totem";
@@ -824,13 +852,20 @@
 
             // ⬇️ Display it in the bubble
             document.addEventListener("DOMContentLoaded", () => {
-            const bubbleTitle = document.getElementById("totem-title");
-            const bubbleText = document.getElementById("totem-text");
+                //const bubbleTitle = document.getElementById("totem-title");
+                //const bubbleText = document.getElementById("totem-text");
 
-            if (bubbleTitle && bubbleText) {
-                bubbleTitle.textContent = totem;
-                bubbleText.textContent = totemText;
-            }
+                //if (bubbleTitle && bubbleText) {
+                //    bubbleTitle.textContent = totem;
+                //    bubbleText.textContent = totemText;
+                //}
+
+                const match = totemCards.find(c => c.name.toLowerCase().trim() === totem.toLowerCase().trim());
+
+                if (match) {
+                    const container = document.getElementById("active-totem");
+                    const totemCard = renderCard(match, container);
+                }
             });
 
             // Keep a reference to the native Audio constructor
@@ -4610,7 +4645,7 @@
     setTimeout(() => {
         toolButtons.style.opacity = "1";
         muteBtn.style.opacity = "1";
-        ttmBble.style.opacity = "1";
+        //ttmBble.style.opacity = "1";
         lifeAdjustBox.style.opacity = "1";
         playerDeckBox.style.opacity = "1";
         playerDeckBox.style.zIndex = "200000";

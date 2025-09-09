@@ -304,6 +304,17 @@ a:hover {
   text-align: center;
 }
 
+.totem {
+  background-color: #eaeaea;
+  color: #000000;
+}
+.totem .card-name {
+  text-shadow: none;
+}
+.totem .card-text {
+  text-shadow: none;
+}
+
 #token-tooltip {
   position: absolute;
   background-color: white;

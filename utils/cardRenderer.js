@@ -80,6 +80,9 @@ export function renderCard(card, container) {
   else if (card.type === "Reflex") {
     cardElement.classList.add("reflex");
   }
+  else if (card.type === "Totem") {
+    cardElement.classList.add("totem");
+  }
 
   if (card.type === "Champion" && card.cost === "Basic") {
     cardElement.classList.add("basic-cost");
