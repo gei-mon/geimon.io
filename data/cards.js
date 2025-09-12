@@ -9591,7 +9591,7 @@ export const cards = [
     damageThreshold: "1",
     abilities: [
       {
-        text: `Taunt <span class="line-gap"></span> Headlights: If there is a Commander on the Zone: This card cannot attack. <span class="line-gap"></span> If Destroyed: Target 1 face-up Commander Obelisk on the Zone; Destroy Target. This effect bypasses Repair Specialist.`
+        text: `Taunt <span class="line-gap"></span> Headlights: If there is a Commander on the Zone: This card cannot attack. <span class="line-gap"></span> Totalled: If Destroyed: Target 1 face-up Commander Obelisk on the Zone; Destroy Target. This effect bypasses Repair Specialist.`
       }
     ]
   },
