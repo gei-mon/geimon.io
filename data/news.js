@@ -1,6 +1,10 @@
 
 const newsData = [
     {
+        date: "September 17th, 2025",
+        text: "v1.26 Alpha Released! <br> Added some new cards and fixed a bug where all the menu options were not visible when excavating cards."
+    },
+    {
         date: "September 6th, 2025",
         text: "v1.24 Alpha Released! <br> Made a Discord and posted a link in the upper right-hand corner here. Use it to find opponents and talk over voice chat during your games!"
     },

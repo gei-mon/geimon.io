@@ -11286,5 +11286,113 @@ export const cards = [
         text: `The attached Champion gains Board Breaker and Priority. <span class="line-gap"></span> The attached Champion must attack if there is a face-up opposing Champion that does not share a Tag with it, and it must Target such Champions with its attacks (if it's able). If the opposing Player controls 2 or more Champions with no shared Tags, the controller of the attached Champion can choose any of them to Target with its attacks.`
       }
     ]
+  },
+  {
+    id: "1267",
+    name: "Cuisinier Rat",
+    image: `${cardArtFolder}/Champions/ChefRat.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Chrome","Specialist"],
+    damage: 0,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Priority <span class="line-gap"></span> Chef, Yes, Chef!: If this Champion battles another (after Damage Calculation): Move this card to your Arsenal and attach it to the other battling Champion, and if you do, take control of the attached Champion.`
+      }
+    ]
+  },
+  {
+    id: "1268",
+    name: "Forward Thinker",
+    image: `${cardArtFolder}/Champions/ForwardThinker.png`,
+    rarity: "Common",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Frontier","Specialist"],
+    damage: 1,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Save That for Later: Target 1 face-up card in either Player's Arsenal; Flip Target face-down.`
+      }
+    ]
+  },
+  {
+    id: "1269",
+    name: "Caffeinated Lemonade",
+    image: `${cardArtFolder}/Obelisks/CaffeinatedLemonade.png`,
+    rarity: "Superior",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `While this card is face-up in your Arsenal: You cannot activate Obelisks. <span class="line-gap"></span> During your Intermission Phase (Mandatory): All face-up Champions you control have their Life reduced by 1, then they gain 1 Caffeine Counter. If a Champion has at least the listed number of these counters, apply the effect: <span class="line-gap"></span> • 1: The Champion gains Twitchy. • 2: The Champion gains Speed. <span class="line-gap"></span> • 3: The Champion gains Second Strike. • 4: Destroy the Champion. <span class="line-gap"></span> If this card Destroys a Champion: Destroy this card. <span class="line-gap"></span> If this card leaves the Zone: Remove all Caffeine Counters on the Zone.`
+      }
+    ]
+  },
+  {
+    id: "1270",
+    name: "Madre de Dios",
+    image: `${cardArtFolder}/Champions/MadreDeDios.png`,
+    rarity: "Rare",
+    type: "Champion",
+    condition: "",
+    cost: "Basic",
+    tags: ["Chrome","Citizen"],
+    damage: 1,
+    life: 1,
+    damageThreshold: "1",
+    abilities: [
+      {
+        text: `Swinging Arm: This card can only have 1 attached Equipment at a time. <span class="line-gap"></span> Armed and Ready: While this card has an attached Equipment: This card gains Bulletproof and its Damage is increased by 2.`
+      }
+    ]
+  },
+  {
+    id: "1271",
+    name: "Lightning Rod",
+    image: `${cardArtFolder}/Obelisks/LightningRod.png`,
+    rarity: "Rare",
+    type: "Obelisk",
+    condition: "",
+    cost: "",
+    tags: ["Commander","Obelisk"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Mount <span class="line-gap"></span> Mounted: Both this card, and its Commander, gain Taunt.`
+      }
+    ]
+  },
+  {
+    id: "1272",
+    name: "Free Thinker",
+    image: `${cardArtFolder}/Actions/FreeThinker.png`,
+    rarity: "Rare",
+    type: "Action",
+    condition: "",
+    cost: "",
+    tags: ["Action"],
+    damage: "",
+    life: "",
+    damageThreshold: "",
+    abilities: [
+      {
+        text: `Return all Champions, not controlled by their Owners, back to their Owners' Zones.`
+      }
+    ]
   }
 ];

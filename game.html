@@ -6454,9 +6454,9 @@
 
                             // 3️⃣ Broadcast to everyone (including self)
                             socket.emit('excavate_cards', {
-                            gameId,
-                            player: username,
-                            count
+                                gameId,
+                                player: username,
+                                count
                             });
                         } break;
                     case "Mill": {
@@ -7274,7 +7274,8 @@
             Object.assign(container.style, {
                 display:'flex', flexWrap:'wrap', justifyContent:'center',
                 gap:'10px', overflowY:'auto', maxHeight:'70vh', marginBottom:'15px',
-                alignSelf:    'stretch', width:         '100%'
+                alignSelf:    'stretch', width:         '100%',
+                zIndex:          '400100'
             });
 
             cardsToShow.forEach(cardData => {
@@ -7283,7 +7284,7 @@
                 const enriched = { ...base, ...cardData };
 
                 const el      = renderCard(enriched);
-                    el.style.transform = 'scale(0.6)';
+                    el.style.transform = 'scale(0.425)';
                     el.style.margin = '5px';
                     el.style.pointerEvents = 'auto';
                     el.dataset.zone = 'Deck';
